@@ -1,0 +1,168 @@
+/* The no-washout difference of a switchback test under a geometric adstock, in closed form
+   (mixdyn.experiments.switchback, ADR 0056; tests/test_switchback.py reads the rationals printed
+   here as MAXIMA_BIAS and holds the simulation's mean to them).
+
+   The channel is off before the test, then on in k of B blocks of L periods, every arrangement
+   alike. Its adstock is a(t) = lam a(t - 1) + (1 - lam) s(t), s(t) = 1 in a period on, so that a
+   channel on for good reads an effect of 1 a period. The difference D is the mean adstock over
+   the periods on less the mean over the periods off, every period kept (no washout), its mean over
+   the arrangements E[D] and its bias E[D] - 1, a share of the effect a period. With
+   G = lam (1 - lam^L) / (1 - lam), the adstock a block on loses to its ramp, and r = lam^L:
+
+       E[D] - 1 = -(G / L) (1 + 1/B - r (1 - r^(B - 1)) / (B (B - 1) (1 - r)))
+
+   whatever k: a block on loses G after a block off and a block off gains what the block before it
+   left, and over the arrangements the pairs of blocks on and off are as likely at every distance.
+
+     STEP 1  E[D] - 1 by every arrangement, the adstock run period by period, against the closed
+             form, as rational functions of lam, over designs of 4 to 6 blocks of 1 to 3 periods
+     STEP 2  the closed form at lam = 0 is 0: without carryover the difference is unbiased
+     STEP 3  the closed form at B = 12, L = 4 and lam = 1/2, 4/5, the tests' MAXIMA_BIAS, against
+             every arrangement of 6 blocks on
+     STEP 4  a washout of w periods in every block after a switch leaves the bias of strictly
+             alternating blocks in their steady state -2 lam^(w+1) (1 - lam^(L-w)) /
+             ((L - w) (1 - lam) (1 + lam^L)), against the adstock run over many cycles
+     STEP 5  carryover_order's statistic at order m, the period m after each block's start less
+             the mean of its later periods, over the blocks on after a switch less those off
+             after one: under a distributed lag of order m, symbolic weights c[0..m], every
+             block's gap is 0 in every arrangement, so the statistic holds no effect and its
+             randomisation test is exact; under one of order m + 1 it is -2 c[m + 1] in every
+             arrangement with a switch into each state, 4 to 6 blocks of m + 2 and m + 3 periods,
+             m = 0, 1 (tests/test_switchback.py holds the second at m = 1)
+     STEP 6  the jackknife's t at 1 degree of freedom: two independent normal halves read
+             U / |V|, a Cauchy; its 97.5 % quantile is tan(19 %pi / 40) = 12.7062, which covers
+             0.95 by integrating the normals
+     STEP 7  the half-panel jackknife 2 d - (d_1 + d_2) / 2 against the difference d, mean over
+             every arrangement of 6 of 12 blocks of 4 whose halves keep both states (922 of 924),
+             no washout, lam = 1/2, 4/5: it takes 0.019 and 0.038 off biases of -0.254 and -0.637
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/switchback_carryover.mac */
+
+display2d : false$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+print("================================================================")$
+print("SWITCHBACK: THE NO-WASHOUT DIFFERENCE UNDER A GEOMETRIC ADSTOCK")$
+print("================================================================")$
+
+closed(lam, nb, len) := block([g, r],
+  g : lam * (1 - lam^len) / (1 - lam),
+  r : lam^len,
+  -(g / len) * (1 + 1 / nb - r * (1 - r^(nb - 1)) / (nb * (nb - 1) * (1 - r))))$
+
+/* the adstock of the states s, one a period, from 0 */
+adstock(s, lam) := block([a : 0, out : []],
+  for x in s do (a : lam * a + (1 - lam) * x, out : endcons(a, out)),
+  out)$
+
+/* the difference D of one arrangement, the set `on` of its blocks on */
+difference(on, nb, len, lam) := block([s, a, up : 0, down : 0, nup : 0, ndown : 0],
+  s : makelist(if member(1 + floor((t - 1) / len), on) then 1 else 0, t, 1, nb * len),
+  a : adstock(s, lam),
+  for t thru nb * len do
+    if s[t] = 1 then (up : up + a[t], nup : nup + 1) else (down : down + a[t], ndown : ndown + 1),
+  up / nup - down / ndown)$
+
+/* E[D] - 1 over every arrangement of k of nb blocks on */
+enumerated(nb, k, len, lam) := block([total : 0, count : 0],
+  for on in listify(powerset(setify(makelist(b, b, 1, nb)), k)) do (
+    total : total + difference(on, nb, len, lam),
+    count : count + 1),
+  total / count - 1)$
+
+/* ===== STEP 1: every arrangement against the closed form ===== */
+for nb : 4 thru 6 do
+  for k : 1 thru nb - 1 do
+    for len : 1 thru 3 do (
+      gap : ratsimp(enumerated(nb, k, len, lam) - closed(lam, nb, len)),
+      print("STEP 1  B =", nb, " k =", k, " L =", len, verdict(gap = 0)))$
+
+/* ===== STEP 2: no carryover, no bias ===== */
+print("STEP 2  lam = 0", verdict(ratsimp(closed(0, 12, 4)) = 0))$
+
+/* ===== STEP 3: the tests' design ===== */
+half : ratsimp(closed(1/2, 12, 4))$
+most : ratsimp(closed(4/5, 12, 4))$
+print("STEP 3  lam = 1/2:", half, " =", float(half))$
+print("STEP 3  lam = 4/5:", most, " =", float(most))$
+print("STEP 3  every arrangement of 6 of 12 blocks on, lam = 1/2", verdict(enumerated(12, 6, 4, 1/2) = half))$
+print("STEP 3  every arrangement of 6 of 12 blocks on, lam = 4/5", verdict(enumerated(12, 6, 4, 4/5) = most))$
+
+/* ===== STEP 4: a washout under strictly alternating blocks ===== */
+alternating(lam, len, w, cycles) := block([s, a, up : 0, down : 0, n, base],
+  s : apply(append, makelist(append(makelist(1, i, 1, len), makelist(0, i, 1, len)), c, 1, cycles)),
+  a : adstock(s, lam),
+  base : 2 * len * (cycles - 1),
+  for j : w + 1 thru len do (up : up + a[base + j], down : down + a[base + len + j]),
+  n : len - w,
+  up / n - down / n - 1)$
+steady(lam, len, w) := -2 * lam^(w + 1) * (1 - lam^(len - w)) / ((len - w) * (1 - lam) * (1 + lam^len))$
+for w : 0 thru 2 do (
+  gap : float(alternating(4/5, 4, w, 60) - steady(4/5, 4, w)),
+  print("STEP 4  w =", w, " bias", float(steady(4/5, 4, w)), verdict(abs(gap) < 1e-12)))$
+
+/* ===== STEP 5: the carryover-order statistic under a distributed lag ===== */
+/* the KPI's effect a period: the states s weighted by the kernel k over the lags 0 to length(k) - 1 */
+lagged(s, k) := makelist(
+  sum(if t - j >= 1 then k[j + 1] * s[t - j] else 0, j, 0, length(k) - 1), t, 1, length(s))$
+/* each block's first epoch, its period m + 1, less its second, the periods after */
+epoch_gaps(e, nb, len, m) := makelist(
+  e[(b - 1) * len + m + 1] - sum(e[(b - 1) * len + p + 1], p, m + 1, len - 1) / (len - m - 1),
+  b, 1, nb)$
+/* the blocks on after a switch less those off after one, the first block among neither */
+order_statistic(g, on, nb) := block([up : [], down : []],
+  for b : 2 thru nb do
+    if member(b, on) # member(b - 1, on) then
+      (if member(b, on) then up : endcons(g[b], up) else down : endcons(g[b], down)),
+  if up = [] or down = [] then 0
+  else lsum(x, x, up) / length(up) - lsum(x, x, down) / length(down))$
+states(on, nb, len) := makelist(if member(1 + floor((t - 1) / len), on) then 1 else 0, t, 1, nb * len)$
+for m : 0 thru 1 do (
+  null_ok : true, next_ok : true,
+  for nb : 4 thru 6 do
+    for len : m + 2 thru m + 3 do
+      for on in listify(disjoin({}, disjoin(setify(makelist(b, b, 1, nb)),
+                                            powerset(setify(makelist(b, b, 1, nb)))))) do (
+        s : states(on, nb, len),
+        /* an order-m kernel: every block's gap is 0, whatever the arrangement */
+        g : epoch_gaps(lagged(s, makelist(c[j], j, 0, m)), nb, len, m),
+        null_ok : null_ok and every(lambda([x], ratsimp(x) = 0), g),
+        /* an order-(m + 1) kernel: the statistic is -2 c[m + 1] where both states switch */
+        g : epoch_gaps(lagged(s, makelist(c[j], j, 0, m + 1)), nb, len, m),
+        stat : order_statistic(g, on, nb),
+        next_ok : next_ok and (stat = 0 or ratsimp(stat + 2 * c[m + 1]) = 0)),
+  print("STEP 5  order", m, ": an order-", m, "lag leaves every gap 0", verdict(null_ok)),
+  print("STEP 5  order", m, ": an order-", m + 1, "lag reads -2 c[m+1]", verdict(next_ok)))$
+
+/* ===== STEP 6: the jackknife's t at 1 degree of freedom ===== */
+/* (d1 + d2) / |d1 - d2| for iid normal halves is U / |V|, U and V iid standard normal: a Cauchy,
+   P(|U| <= c |V|) = (2 / %pi) atan(c); at c = tan(19 %pi / 40) it is 0.95 */
+cover(c) := 2 * quad_qagi(exp(-v^2 / 2) / sqrt(2 * %pi) * erf(c * v / sqrt(2)), v, 0, inf)[1]$
+t1 : tan(19 * %pi / 40)$
+print("STEP 6  t_1(0.975) = tan(19 %pi / 40) =", float(t1))$
+print("STEP 6  P(|U| <= t_1 |V|) =", cover(float(t1)), verdict(abs(cover(float(t1)) - 0.95) < 1e-10))$
+print("STEP 6  P(|U| <= 3 |V|) against 2 atan(3) / %pi", verdict(abs(cover(3.0) - float(2 * atan(3) / %pi)) < 1e-10))$
+
+/* ===== STEP 7: the half-panel jackknife's carryover bias, 12 blocks of 4, no washout ===== */
+/* the difference over the periods first to last, every period kept */
+span_difference(s, a, first, last) := block([up : 0, down : 0, nup : 0, ndown : 0],
+  for t : first thru last do
+    if s[t] = 1 then (up : up + a[t], nup : nup + 1) else (down : down + a[t], ndown : ndown + 1),
+  if nup = 0 or ndown = 0 then und else up / nup - down / ndown)$
+jackknifed(nb, len, lam) := block([full : 0, jack : 0, count : 0, s, a, whole, one, two, half],
+  half : floor((nb + 1) / 2) * len,
+  for on in listify(powerset(setify(makelist(b, b, 1, nb)), nb / 2)) do (
+    s : states(on, nb, len),
+    a : adstock(s, lam),
+    whole : span_difference(s, a, 1, nb * len),
+    one : span_difference(s, a, 1, half),
+    two : span_difference(s, a, nb * len - half + 1, nb * len),
+    if one # und and two # und then (
+      full : full + whole, jack : jack + 2 * whole - (one + two) / 2, count : count + 1)),
+  [count, full / count - 1, jack / count - 1])$
+for lam in [1/2, 4/5] do (
+  r : jackknifed(12, 4, lam),
+  print("STEP 7  lam =", lam, ":", r[1], "arrangements, the difference's bias", float(r[2]),
+        "and the jackknife's", float(r[3]),
+        verdict(r[1] = 922 and abs(r[3]) < abs(r[2]) and abs(r[3]) > 9/10 * abs(r[2]))))$

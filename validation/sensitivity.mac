@@ -1,0 +1,140 @@
+/* Sensitivity to an unobserved confounder in exact arithmetic (mixdyn.inference.sensitivity,
+   ADR 0061; tests/test_sensitivity.py runs this file and reads its verdicts).
+
+   Cinelli and Hazlett (2020, JRSS-B 82(1)), the omitted-variable bias of a regression's
+   coefficient in partial R^2, and the marginal sensitivity model's share of a lever's residual
+   variance a confounder can explain, (1 - 1/Gamma)^2, the sharp share CHC's ChannelSensitivity
+   reads since 0.22.0.
+
+     STEP 1  the bias identity on a population of three variables and a confounder: X and U
+             independent, D = X + U/2 + e_D, Y = 2 D + X + U + e_Y, every noise of variance 1.
+             The short regression's coefficient of D, U left out, misses the long one's by
+             bias^2 = R2yu R2du / (1 - R2du) var(Y | D, X) / var(D | X),
+             R2yu = R^2 of Y on U given D and X, R2du = R^2 of D on U given X (their Section 4,
+             with the sample's se^2 df the population's variance ratio)
+     STEP 2  the robustness value RV_q: equal shares r solve r^2 / (1 - r) = f_q^2, f_q the
+             partial Cohen's f times q, at r = (sqrt(f^4 + 4 f^2) - f^2) / 2, inside (0, 1)
+     STEP 3  RV_{q,alpha}: with the interval's critical f, f*, the equal-shares root at
+             f_q - f*; past f_q = 1 / f*, the worst outcome share inside the box is below the
+             box's side, sqrt(a^2 + b^2) at x = a^2 / (a^2 + b^2), and the root is
+             (f_q^2 - f*^2) / (1 + f_q^2); the two branches change at f_q f* = 1
+     STEP 4  the benchmark (their Section 6.1): a confounder k_d times as strong as X_j on the
+             treatment, independent of X_j, explains k_d R2(D ~ X_j) / (1 - R2(D ~ X_j)) of the
+             treatment's variance given X_j; its outcome share is held below their bound
+     STEP 5  the marginal sensitivity model's share at Gamma in {11/10, 3/2, 2, 3}: a two-valued
+             lever that takes the confounder's sign with probability 1 - 1/(2 Gamma) keeps its
+             density ratio inside [1/Gamma, Gamma] and reaches the share (1 - 1/Gamma)^2; the
+             bias factor sqrt(share / (1 - share)) is CHC's kappa = (Gamma - 1) / sqrt(2 Gamma - 1)
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/sensitivity.mac */
+
+display2d : false$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+print("================================================================")$
+print("SENSITIVITY TO AN UNOBSERVED CONFOUNDER, EXACTLY")$
+print("================================================================")$
+
+/* ===== STEP 1: the bias identity ===== */
+print("=== STEP 1: the omitted-variable bias in partial R^2 ===")$
+/* (Y, D, X, U) = A (eY, eD, X, U), every component of variance 1 and independent */
+a : matrix([1, 2, 2 + 1, 2 * (1/2) + 1],
+           [0, 1, 1, 1/2],
+           [0, 0, 1, 0],
+           [0, 0, 0, 1])$
+sigma : a . transpose(a)$
+cov(i, j) := sigma[i, j]$
+block_of(rows, cols) := genmatrix(lambda([r, c], cov(rows[r], cols[c])), length(rows), length(cols))$
+/* a product of a row and a column comes back as a scalar */
+scalar(m) := if matrixp(m) then m[1, 1] else m$
+/* the variance of variable i left after its regression on the variables s */
+resvar(i, s) := cov(i, i) - scalar(block_of([i], s) . invert(block_of(s, s)) . block_of(s, [i]))$
+/* the coefficient of s's first variable in i's regression on s */
+coef(i, s) := (invert(block_of(s, s)) . block_of(s, [i]))[1, 1]$
+short : coef(1, [2, 3])$
+long : coef(1, [2, 3, 4])$
+r2yu : 1 - resvar(1, [2, 3, 4]) / resvar(1, [2, 3])$
+r2du : 1 - resvar(2, [3, 4]) / resvar(2, [3])$
+print("STEP 1  short =", short, " long =", long, " R2yu =", r2yu, " R2du =", r2du)$
+print("STEP 1", verdict(
+  long = 2
+  and is((short - long)^2 = r2yu * r2du / (1 - r2du) * resvar(1, [2, 3]) / resvar(2, [3]))
+  and is(short - long > 0)))$
+
+/* ===== STEP 2: RV_q ===== */
+print("=== STEP 2: the robustness value at equal shares ===")$
+assume(f > 0)$
+rv(f) := (sqrt(f^4 + 4 * f^2) - f^2) / 2$
+print("STEP 2  r^2 - f^2 (1 - r) at the root:", ratsimp(rv(f)^2 - f^2 * (1 - rv(f))))$
+/* the root lies in (0, 1): sqrt(f^4 + 4 f^2) - f^2 < 2  <=>  f^4 + 4 f^2 < (f^2 + 2)^2 */
+print("STEP 2", verdict(
+  ratsimp(rv(f)^2 - f^2 * (1 - rv(f))) = 0
+  and ratsimp((f^2 + 2)^2 - (f^4 + 4 * f^2)) = 4
+  and every(lambda([g], is(0 < rv(g) and rv(g) < 1)), [1/100, 1/10, 1, 10])))$
+
+/* ===== STEP 3: RV_{q, alpha} ===== */
+print("=== STEP 3: the robustness value of an interval ===")$
+assume(fs > 0, fq > fs)$
+/* at equal shares the interval's se factor sqrt((1 - r)/(1 - r)) is 1, so the limit moves by the
+   bias alone and the root is STEP 2's at f_q - f* */
+/* inside the box, the outcome share x of largest reduction a sqrt(x) + b sqrt(1 - x) */
+assume(a1 > 0, b1 > 0)$
+dx : diff(a1 * sqrt(x) + b1 * sqrt(1 - x), x)$
+at_max : ratsimp(subst(x = a1^2 / (a1^2 + b1^2), dx * sqrt(x) * sqrt(1 - x)))$
+/* a1^2 = r / (1 - r), b1^2 = f*^2 / (1 - r) in units of se^2 df: the reduction at the optimum is
+   (r + f*^2) / (1 - r) = f_q^2 */
+extreme : (fq^2 - fs^2) / (1 + fq^2)$
+reached : ratsimp((extreme + fs^2) / (1 - extreme) - fq^2)$
+/* the optimum is below the side, x* = r / (r + f*^2) < r, exactly when r > 1 - f*^2 */
+switch : factor(ratsimp(extreme - (1 - fs^2)))$
+print("STEP 3  stationary point:", at_max, " reduction at the root:", reached,
+      " root less (1 - f*^2):", switch)$
+/* the two branches meet where f_q f* = 1 (so f* < 1): both read (f_q^2 - f*^2) / (1 + f_q^2) there */
+meet : map(lambda([g], ratsimp(subst([fs = g, fq = 1 / g], rv(fq - fs) - extreme))),
+           [1/10, 1/3, 1/2, 9/10])$
+print("STEP 3  the branches at f_q = 1/f*, f* in 1/10, 1/3, 1/2, 9/10:", meet)$
+print("STEP 3", verdict(
+  is(at_max = 0) and is(reached = 0)
+  and is(ratsimp(switch - (fq^2 * fs^2 - 1) / (fq^2 + 1)) = 0)
+  and is(meet = [0, 0, 0, 0])))$
+
+/* ===== STEP 4: the benchmark ===== */
+print("=== STEP 4: a confounder benchmarked against an observed covariate ===")$
+/* (Y, D, Xj, Z) = B (eY, eD, Xj, Z): D = Xj + Z + e_D, k_d = 1, so Z is as strong as Xj on D;
+   Y = 1/2 D + Xj + Z / 2 + e_Y */
+b : matrix([1, 1/2, 1/2 + 1, 1/2 + 1/2],
+           [0, 1, 1, 1],
+           [0, 0, 1, 0],
+           [0, 0, 0, 1])$
+sigma : b . transpose(b)$
+r2dxj : 1 - resvar(2, [3]) / cov(2, 2)$
+r2dz_x : 1 - resvar(2, [3, 4]) / resvar(2, [3])$
+kd : 1$
+/* the outcome side: k_y = R2(Y ~ Z | D, Xj) / R2(Y ~ Xj | D), their bound on R2(Y ~ Z | D, Xj) */
+r2yz_dx : 1 - resvar(1, [2, 3, 4]) / resvar(1, [2, 3])$
+r2yxj_d : 1 - resvar(1, [2, 3]) / resvar(1, [2])$
+ky : r2yz_dx / r2yxj_d$
+r2zxj_xd : kd * r2dxj^2 / ((1 - kd * r2dxj) * (1 - r2dxj))$
+bound : ((sqrt(ky) + sqrt(r2zxj_xd)) / sqrt(1 - r2zxj_xd))^2 * r2yxj_d / (1 - r2yxj_d)$
+print("STEP 4  R2(D~Xj) =", r2dxj, " R2(D~Z|Xj) =", r2dz_x, " R2(Y~Z|D,Xj) =", r2yz_dx,
+      " bound =", float(bound))$
+print("STEP 4", verdict(
+  is(r2dz_x = kd * r2dxj / (1 - r2dxj)) and is(r2yz_dx <= float(bound))))$
+
+/* ===== STEP 5: the marginal sensitivity model's sharp share ===== */
+print("=== STEP 5: the share (1 - 1/Gamma)^2 and CHC's kappa ===")$
+/* Z = +-1 alike; D = Z with probability p, -Z otherwise */
+share_at(g) := block([p : 1 - 1 / (2 * g), ratio_up, ratio_down, corr],
+  ratio_up : p / (1/2),            /* P(D = z | Z = z) / P(D = z) */
+  ratio_down : (1 - p) / (1/2),    /* P(D = -z | Z = z) / P(D = -z) */
+  corr : 2 * p - 1,                /* E[D Z], both of variance 1 and mean 0 */
+  [ratio_down, ratio_up, corr^2])$
+kappa(g) := (g - 1) / sqrt(2 * g - 1)$
+step5 : true$
+for g in [11/10, 3/2, 2, 3] do block([s : share_at(g)],
+  print("STEP 5  Gamma =", g, " ratios =", [s[1], s[2]], " share =", s[3],
+        " sharp =", (1 - 1/g)^2, " kappa^2 =", ratsimp(kappa(g)^2)),
+  step5 : step5 and is(s[1] = 1/g) and is(s[2] <= g) and is(s[3] = (1 - 1/g)^2)
+          and is(ratsimp(s[3] / (1 - s[3]) - kappa(g)^2) = 0))$
+print("STEP 5", verdict(step5))$

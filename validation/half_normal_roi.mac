@@ -1,0 +1,96 @@
+/* The half-normal return prior on the sampler's coordinate, its default scale, and the nested
+   model's stage-one priors read at the mediator's scale (mixdyn.models.bayes_mmm.HalfNormalRoi,
+   mixdyn.models.nested, ADR 0076 and ADR 0014; tests/test_half_normal_roi.py runs this file and
+   reads its verdicts).
+
+   The sampler moves u = log roi. Under roi ~ HalfNormal(s) the density of u is the half-normal's
+   at exp(u) times the Jacobian exp(u):
+
+     STEP 1  q(u) = log 2 - log s - log(2 pi)/2 - exp(2 u)/(2 s^2) + u integrates to 1 over the
+             real line: exp(q) is a density
+     STEP 2  dq/du = 1 - exp(2 u)/s^2, the gradient the engine's JAX takes
+     STEP 3  q falls as exp(u) to 0 on the left, so the prior's mass of returns below e is
+             erf(e/(s sqrt 2)), of order e/s: a density at 0 above 0; the log-normal's is
+             Phi((log e - mu)/sigma), which at the default's falls faster than e, e^3 and
+             e^10. At the defaults,
+             4.4 % of the half-normal's mass lies below 0.1 and 0.27 % of LogNormal(0.2, 0.9)'s,
+             and their 95th percentiles are 3.55 and 5.37
+     STEP 4  the median of HalfNormal(s) is s sqrt(2) inverse_erf(1/2), so the default scale
+             exp(1/5)/(sqrt(2) inverse_erf(1/2)) puts it at exp(1/5), RoiPrior()'s median; in
+             bfloat, the scale is 1.810854438937129 (bayes_mmm._HALF_NORMAL_SCALE)
+     STEP 5  the mediator counted c times over: its returns are c times as large, u moves by log c,
+             and the default priors read at the mediator's scale move with it: the log-normal's
+             location by log c and the half-normal's scale by c, each density on u then the same
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/half_normal_roi.mac */
+
+display2d : false$
+linel : 200$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+zero(e) := is(ratsimp(e) = 0)$
+print("================================================================")$
+print("THE HALF-NORMAL RETURN PRIOR ON THE LOG RETURN")$
+print("================================================================")$
+assume(s > 0, c > 0, sigma > 0, e > 0)$
+
+/* ===== STEP 1: a density on the log return ===== */
+q(u, s) := log(2) - log(s) - log(2 * %pi) / 2 - exp(2 * u) / (2 * s^2) + u$
+/* exp(u) = r maps the real line onto (0, inf), du = dr / r */
+mass : integrate(radcan(subst(u = log(r), exp(q(u, s))) / r), r, 0, inf)$
+print("STEP 1  the integral of exp(q) over u is", mass, verdict(zero(mass - 1)))$
+
+/* ===== STEP 2: its gradient ===== */
+g : diff(q(u, s), u)$
+print("STEP 2  dq/du =", g, verdict(zero(g - (1 - exp(2 * u) / s^2))))$
+
+/* ===== STEP 3: mass near 0 ===== */
+below : integrate(radcan(subst(u = log(r), exp(q(u, s))) / r), r, 0, e)$
+print("STEP 3  the half-normal's mass below e is", below,
+  verdict(zero(below - erf(e / (sqrt(2) * s)))))$
+slope0 : limit(below / e, e, 0, plus)$
+print("STEP 3  its mass below e over e as e -> 0 is", slope0,
+  verdict(zero(slope0 - sqrt(2) / (sqrt(%pi) * s))))$
+lognormal_below(e) := (1 + erf((log(e) - mu) / (sqrt(2) * sigma))) / 2$
+/* the mass's derivative in e is the density, so by l'Hopital the mass over e^(k + 1) goes as the
+   density over (k + 1) e^k */
+density(e) := exp(-(log(e) - 1/5)^2 / (2 * (9/10)^2)) / (e * 9/10 * sqrt(2 * %pi))$
+print("STEP 3  LogNormal(0.2, 0.9)'s density",
+  verdict(zero(diff(subst([mu = 1/5, sigma = 9/10], lognormal_below(e)), e) - density(e))))$
+/* on the log scale, L = log e -> minf: the log of the density over e^k is a quadratic in L that
+   falls without bound, so the ratio goes to 0 */
+fast : map(lambda([k], limit(radcan(log(density(exp(L)) / exp(k * L))), L, minf)), [0, 2, 9])$
+print("STEP 3  the log of its density over 1, e^2 and e^9 as e -> 0 is", fast,
+  verdict(fast = [minf, minf, minf]))$
+
+defaults_below : [bfloat(erf((1/10) / (sqrt(2) * exp(1/5) / (sqrt(2) * inverse_erf(1/2))))),
+  bfloat(subst([mu = 1/5, sigma = 9/10], lognormal_below(1/10)))]$
+print("STEP 3  at the defaults, the masses below 0.1 are", defaults_below,
+  verdict(is(abs(first(defaults_below) - 0.04404b0) < 1b-5)
+    and is(abs(second(defaults_below) - 0.002713b0) < 1b-6)))$
+tops : [bfloat(sqrt(2) * inverse_erf(19/20) * exp(1/5) / (sqrt(2) * inverse_erf(1/2))),
+  bfloat(exp(1/5 + 9/10 * sqrt(2) * inverse_erf(9/10)))]$
+print("STEP 3  their 95th percentiles are", tops,
+  verdict(is(abs(first(tops) - 3.5492b0) < 1b-4) and is(abs(second(tops) - 5.3675b0) < 1b-4)))$
+
+/* ===== STEP 4: the default scale ===== */
+median(s) := s * sqrt(2) * inverse_erf(1 / 2)$
+default : exp(1 / 5) / (sqrt(2) * inverse_erf(1 / 2))$
+fpprec : 30$
+/* the half-normal's mass below m is erf(m / (s sqrt 2)), step 3 */
+at_median : ratsimp(median(s) / (sqrt(2) * s))$
+print("STEP 4  HalfNormal(s)'s mass below its median is erf of", at_median,
+  verdict(is(at_median = inverse_erf(1 / 2)) and is(abs(bfloat(erf(at_median)) - 1 / 2) < 1b-25)))$
+print("STEP 4  the default's median is exp(1/5)", verdict(zero(median(default) - exp(1 / 5))))$
+engine : 1.810854438937129b0$
+gap : abs(bfloat(default) - engine)$
+print("STEP 4  the default scale is", bfloat(default), "the engine's", engine,
+  verdict(is(gap < 1b-15)))$
+
+/* ===== STEP 5: the mediator's unit ===== */
+normal(u, mu, sd) := -log(sd) - log(2 * %pi) / 2 - (u - mu)^2 / (2 * sd^2)$
+print("STEP 5  the log-normal at u + log c, its location moved by log c",
+  verdict(zero(normal(u + log(c), mu + log(c), sigma) - normal(u, mu, sigma))))$
+print("STEP 5  the half-normal at u + log c, its scale times c",
+  verdict(zero(radcan(q(u + log(c), c * s) - q(u, s)))))$

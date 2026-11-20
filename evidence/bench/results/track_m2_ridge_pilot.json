@@ -1,0 +1,1430 @@
+{
+ "environment": {
+  "name": "drawn",
+  "first": 900,
+  "worlds": 40
+ },
+ "mixdyn": {
+  "path": "<local checkout>",
+  "commit": "ff9c8b19658b36bc6ab1c83e3cd2ea1e59da0604",
+  "dirty": false
+ },
+ "bench": {
+  "path": "<local checkout>",
+  "commit": "e747207bc265164b9a0b79936a9914520cdc5d92",
+  "dirty": false
+ },
+ "chc": {
+  "module": "<venv>/lib/python3.14/site-packages/chc/__init__.py",
+  "installed": {
+   "url": "https://github.com/causaldyn/causal-hybrid-control",
+   "vcs_info": {
+    "vcs": "git",
+    "commit_id": "0ab2cd7af8dfc53ee059f7b4a5140b8dce3350b1",
+    "requested_revision": "0ab2cd7af8dfc53ee059f7b4a5140b8dce3350b1"
+   }
+  }
+ },
+ "worlds": [
+  {
+   "seed": 900,
+   "status quo": 0.12432630404001271,
+   "v0": {
+    "regret": 2.9895958418265832e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.09231863748787399,
+    "evaluations": 2467
+   },
+   "v1": {
+    "regret": 2.9895958418265832e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.10554359860739133,
+    "evaluations": 3666,
+    "weight": 22.444177796288425
+   },
+   "v2": {
+    "regret": 0.07236174152143511,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12445119457347152,
+    "evaluations": 3501,
+    "weight": 47.56539487047317
+   },
+   "library": {
+    "regret": 0.07162220401839535,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12455493052227105,
+    "evaluations": 5836,
+    "weight": 47.537162776195565
+   }
+  },
+  {
+   "seed": 901,
+   "status quo": 0.04164604003306931,
+   "v0": {
+    "regret": 0.0670019137288195,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.4745915638398664,
+    "evaluations": 3226
+   },
+   "v1": {
+    "regret": 0.041370327776588035,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.4653333853056683,
+    "evaluations": 5943,
+    "weight": 40.13753140228295
+   },
+   "v2": {
+    "regret": 0.06800939841738392,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.49813159606773366,
+    "evaluations": 5008,
+    "weight": 70.1908821630423
+   },
+   "library": {
+    "regret": 0.06757708050702022,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.4951136097187688,
+    "evaluations": 8190,
+    "weight": 70.46100267070418
+   }
+  },
+  {
+   "seed": 902,
+   "status quo": 0.012538263211721627,
+   "v0": {
+    "regret": 0.04236113415799033,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.2832225347281732,
+    "evaluations": 3226
+   },
+   "v1": {
+    "regret": 0.14868771446782916,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3236204763368992,
+    "evaluations": 4205,
+    "weight": 19.128206093671785
+   },
+   "v2": {
+    "regret": 0.0386948358263217,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3164051212620061,
+    "evaluations": 3369,
+    "weight": 49.83390326536452
+   },
+   "library": {
+    "regret": 0.04137928821904973,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3149302133850346,
+    "evaluations": 6573,
+    "weight": 49.94128870321198
+   }
+  },
+  {
+   "seed": 903,
+   "status quo": 0.06289343192103225,
+   "v0": {
+    "regret": 0.054735944692692384,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.44105218919647,
+    "evaluations": 5668
+   },
+   "v1": {
+    "regret": -1.3226889529495549e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.47560533995876103,
+    "evaluations": 4315,
+    "weight": 43.26984413330879
+   },
+   "v2": {
+    "regret": 0.052688344176882944,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.43409836597802104,
+    "evaluations": 3556,
+    "weight": 55.96819603800892
+   },
+   "library": {
+    "regret": 0.05268834417688338,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.43298783559793125,
+    "evaluations": 9147,
+    "weight": 56.07463413582379
+   }
+  },
+  {
+   "seed": 904,
+   "status quo": 0.1425166309947273,
+   "v0": {
+    "regret": 0.03298486083211087,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.046967779070713034,
+    "evaluations": 3677
+   },
+   "v1": {
+    "regret": 0.03298486083211087,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.11611992094119923,
+    "evaluations": 3391,
+    "weight": 38.667367561540104
+   },
+   "v2": {
+    "regret": 0.03298486083211087,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.06665317052493597,
+    "evaluations": 3259,
+    "weight": 66.69168728611587
+   },
+   "library": {
+    "regret": 0.03298486083211087,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.06509307873680072,
+    "evaluations": 7266,
+    "weight": 67.66041735045967
+   }
+  },
+  {
+   "seed": 905,
+   "status quo": 0.04309094107427252,
+   "v0": {
+    "regret": 0.09141019373630983,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12053202231536182,
+    "evaluations": 1829
+   },
+   "v1": {
+    "regret": 0.08755056519293943,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.08664521326677882,
+    "evaluations": 3754,
+    "weight": 26.258074251723865
+   },
+   "v2": {
+    "regret": 0.019087523387908114,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.0006029242303271505,
+    "evaluations": 3116,
+    "weight": 50.95605508870207
+   },
+   "library": {
+    "regret": 0.011169101023952759,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.0006918979139353332,
+    "evaluations": 6881,
+    "weight": 51.16609515271372
+   }
+  },
+  {
+   "seed": 906,
+   "status quo": 0.11365698749058925,
+   "v0": {
+    "regret": 0.2531762444775727,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.35326239444672064,
+    "evaluations": 4458
+   },
+   "v1": {
+    "regret": 0.02507971216781491,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.33040455283944514,
+    "evaluations": 5195,
+    "weight": 16.182946513948878
+   },
+   "v2": {
+    "regret": 0.025079712167815793,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.4163083976073302,
+    "evaluations": 4205,
+    "weight": 40.93730996296496
+   },
+   "library": {
+    "regret": 0.025079712167815352,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3941285506602104,
+    "evaluations": 8168,
+    "weight": 40.378460297861864
+   }
+  },
+  {
+   "seed": 907,
+   "status quo": 0.3648846458495574,
+   "v0": {
+    "regret": 0.38293313846370597,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.35394469615608026,
+    "evaluations": 3941
+   },
+   "v1": {
+    "regret": 0.07346140604425162,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.36856883890583697,
+    "evaluations": 6339,
+    "weight": 31.62016594889263
+   },
+   "v2": {
+    "regret": 9.767854120608215e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3467232234755056,
+    "evaluations": 4205,
+    "weight": 38.50307701764749
+   },
+   "library": {
+    "regret": 9.767854120608215e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3488357236345297,
+    "evaluations": 8124,
+    "weight": 38.49214170183664
+   }
+  },
+  {
+   "seed": 908,
+   "status quo": 0.09338010407842451,
+   "v0": {
+    "regret": 0.33063814581122725,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5888587918138124,
+    "evaluations": 3842
+   },
+   "v1": {
+    "regret": -3.191083639739848e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5677971609393995,
+    "evaluations": 5591,
+    "weight": 29.969220059027833
+   },
+   "v2": {
+    "regret": 0.012360368358061369,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5825843604723631,
+    "evaluations": 4139,
+    "weight": 68.48170249241656
+   },
+   "library": {
+    "regret": 0.013182818428201556,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5807500166611302,
+    "evaluations": 7574,
+    "weight": 68.66763860954104
+   }
+  },
+  {
+   "seed": 909,
+   "status quo": 0.15249627300675966,
+   "v0": {
+    "regret": 0.14296008848086691,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.1502183243716674,
+    "evaluations": 7637
+   },
+   "v1": {
+    "regret": -6.0905261517074436e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.14043555929618673,
+    "evaluations": 4557,
+    "weight": 22.644484945564802
+   },
+   "v2": {
+    "regret": -6.0905261517074436e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.17080392833693742,
+    "evaluations": 4315,
+    "weight": 46.8931564093087
+   },
+   "library": {
+    "regret": -5.220450987177809e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.16772276596365068,
+    "evaluations": 11424,
+    "weight": 47.04660465445171
+   }
+  },
+  {
+   "seed": 910,
+   "status quo": 0.2667171918103631,
+   "v0": {
+    "regret": 0.5961032258199953,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.19762117844398905,
+    "evaluations": 2907
+   },
+   "v1": {
+    "regret": 0.0,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.08051746168531553,
+    "evaluations": 3391,
+    "weight": 16.820998421412
+   },
+   "v2": {
+    "regret": 0.0,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.09088540907132628,
+    "evaluations": 3105,
+    "weight": 41.51337812983137
+   },
+   "library": {
+    "regret": 0.0,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.09187472131400097,
+    "evaluations": 6122,
+    "weight": 41.9339359079747
+   }
+  },
+  {
+   "seed": 911,
+   "status quo": 0.2405721807734341,
+   "v0": {
+    "regret": -4.511399959054056e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 1510
+   },
+   "v1": {
+    "regret": -4.511399959054056e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 4942,
+    "weight": 24.64507794390174
+   },
+   "v2": {
+    "regret": 0.01960622229257698,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 4051,
+    "weight": 36.40931069710463
+   },
+   "library": {
+    "regret": 0.022780068101691163,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 5583,
+    "weight": 36.45110161853632
+   }
+  },
+  {
+   "seed": 912,
+   "status quo": 0.12419668983230649,
+   "v0": {
+    "regret": 0.19191032264597588,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.35428191575733875,
+    "evaluations": 3611
+   },
+   "v1": {
+    "regret": 1.484714828974184e-06,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.43836501968855945,
+    "evaluations": 5745,
+    "weight": 36.87828062391845
+   },
+   "v2": {
+    "regret": 0.000576761342928722,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.35133608571223063,
+    "evaluations": 3281,
+    "weight": 60.776009419128265
+   },
+   "library": {
+    "regret": 0.000576761342928722,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3499540860953706,
+    "evaluations": 6815,
+    "weight": 60.78995909937126
+   }
+  },
+  {
+   "seed": 913,
+   "status quo": 0.28185780726195137,
+   "v0": {
+    "regret": 0.5412442197844267,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.19004153205690708,
+    "evaluations": 4722
+   },
+   "v1": {
+    "regret": 0.5412442197844267,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.18072358687142853,
+    "evaluations": 5701,
+    "weight": 27.217007719962307
+   },
+   "v2": {
+    "regret": 2.643946773134691e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.18703921996364234,
+    "evaluations": 5008,
+    "weight": 41.52200719624947
+   },
+   "library": {
+    "regret": 0.003909858261713242,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.18820808117497684,
+    "evaluations": 9411,
+    "weight": 41.344854937131075
+   }
+  },
+  {
+   "seed": 914,
+   "status quo": 0.3868153199173438,
+   "v0": {
+    "regret": 0.43376233828962585,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 1653
+   },
+   "v1": {
+    "regret": 0.19086319840659088,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 2621,
+    "weight": 16.802064104341916
+   },
+   "v2": {
+    "regret": 1.761130747817549e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 2885,
+    "weight": 39.60027933128734
+   },
+   "library": {
+    "regret": 8.805653739087745e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 4384,
+    "weight": 39.47928517471275
+   }
+  },
+  {
+   "seed": 915,
+   "status quo": 0.052729420341230133,
+   "v0": {
+    "regret": 0.08543164879421024,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.31226191620443305,
+    "evaluations": 5987
+   },
+   "v1": {
+    "regret": 0.14161942305575156,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.23400301934339351,
+    "evaluations": 3655,
+    "weight": 20.00598335685677
+   },
+   "v2": {
+    "regret": 0.14161942305575112,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.14347076970811393,
+    "evaluations": 2841,
+    "weight": 41.6564916291692
+   },
+   "library": {
+    "regret": 0.14161942305575156,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.1431871278224229,
+    "evaluations": 8674,
+    "weight": 41.66054831900179
+   }
+  },
+  {
+   "seed": 916,
+   "status quo": 0.012023084201214987,
+   "v0": {
+    "regret": 0.0479407080572669,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.14810120048318284,
+    "evaluations": 2610
+   },
+   "v1": {
+    "regret": 0.05760609781576509,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12580560751651726,
+    "evaluations": 4678,
+    "weight": 24.894030774902806
+   },
+   "v2": {
+    "regret": 0.04919788835038503,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.09620282999657345,
+    "evaluations": 3347,
+    "weight": 38.784818255586764
+   },
+   "library": {
+    "regret": 0.0734123993058068,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.10819709452803926,
+    "evaluations": 7673,
+    "weight": 36.003368674246545
+   }
+  },
+  {
+   "seed": 917,
+   "status quo": 0.1980869075320167,
+   "v0": {
+    "regret": 0.49670087411135166,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 3325
+   },
+   "v1": {
+    "regret": 0.5004617120480243,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5391520551913231,
+    "evaluations": 4535,
+    "weight": 18.57547122581969
+   },
+   "v2": {
+    "regret": 0.26813389464523074,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5168830515328483,
+    "evaluations": 3633,
+    "weight": 56.94230913809847
+   },
+   "library": {
+    "regret": 0.2675755177075535,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5193615470683709,
+    "evaluations": 7211,
+    "weight": 56.90183862939967
+   }
+  },
+  {
+   "seed": 918,
+   "status quo": 0.09142157020883462,
+   "v0": {
+    "regret": 0.23527373378940974,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.13094227072905937,
+    "evaluations": 3853
+   },
+   "v1": {
+    "regret": 0.15190511986514132,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.10354082261101225,
+    "evaluations": 3864,
+    "weight": 26.48748450951328
+   },
+   "v2": {
+    "regret": 0.048359955809253265,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.14005374218967584,
+    "evaluations": 4293,
+    "weight": 45.17522054879303
+   },
+   "library": {
+    "regret": 4.9315152242755655e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.1350722159456857,
+    "evaluations": 7827,
+    "weight": 46.46719673689285
+   }
+  },
+  {
+   "seed": 919,
+   "status quo": 0.19846174557158236,
+   "v0": {
+    "regret": 0.40242214094101925,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.43629528731217715,
+    "evaluations": 4117
+   },
+   "v1": {
+    "regret": 0.07035870711909394,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3662535964582047,
+    "evaluations": 5162,
+    "weight": 33.18885242463637
+   },
+   "v2": {
+    "regret": 0.037824154411129525,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3202817430505006,
+    "evaluations": 4260,
+    "weight": 48.74166465959944
+   },
+   "library": {
+    "regret": 0.037572485974317886,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.31600256266497445,
+    "evaluations": 7453,
+    "weight": 48.641272390142156
+   }
+  },
+  {
+   "seed": 920,
+   "status quo": 0.17932891503974607,
+   "v0": {
+    "regret": 0.5827235722973363,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.14435487031776506,
+    "evaluations": 3677
+   },
+   "v1": {
+    "regret": 0.21767283016919628,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.10285982841809724,
+    "evaluations": 3402,
+    "weight": 16.850729191890768
+   },
+   "v2": {
+    "regret": 3.5377283000457227e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.05791485069468958,
+    "evaluations": 3391,
+    "weight": 40.05412044992131
+   },
+   "library": {
+    "regret": 3.5377283000457227e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.05736610279260458,
+    "evaluations": 7024,
+    "weight": 40.15279774317201
+   }
+  },
+  {
+   "seed": 921,
+   "status quo": 0.06467529142579401,
+   "v0": {
+    "regret": 0.030668225125270728,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.03142271627240042,
+    "evaluations": 3336
+   },
+   "v1": {
+    "regret": 0.11733254304524804,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.05306936054267506,
+    "evaluations": 3611,
+    "weight": 27.292179042008737
+   },
+   "v2": {
+    "regret": 0.030668225125270728,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.060877721096764856,
+    "evaluations": 4590,
+    "weight": 46.30006781188761
+   },
+   "library": {
+    "regret": 0.030668225125270728,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.061120751747704774,
+    "evaluations": 7937,
+    "weight": 46.24334910200671
+   }
+  },
+  {
+   "seed": 922,
+   "status quo": 0.16511742079383118,
+   "v0": {
+    "regret": 0.25514715111520203,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.662046287078051,
+    "evaluations": 4007
+   },
+   "v1": {
+    "regret": 0.0238001436830735,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.6874120893772083,
+    "evaluations": 4942,
+    "weight": 37.82709655834364
+   },
+   "v2": {
+    "regret": 0.023800143683073944,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.699324312246929,
+    "evaluations": 4843,
+    "weight": 64.22028694072621
+   },
+   "library": {
+    "regret": 0.0238001436830735,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.6996259167554346,
+    "evaluations": 9114,
+    "weight": 64.20204553485206
+   }
+  },
+  {
+   "seed": 923,
+   "status quo": 0.04369239039430127,
+   "v0": {
+    "regret": 0.23097480316504534,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.35579052717235304,
+    "evaluations": 4172
+   },
+   "v1": {
+    "regret": 0.23097480316504534,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.34067309710807214,
+    "evaluations": 4205,
+    "weight": 23.246353557905596
+   },
+   "v2": {
+    "regret": 0.06316803392340278,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.305561880425961,
+    "evaluations": 6108,
+    "weight": 46.169811622518026
+   },
+   "library": {
+    "regret": 0.06255462259781547,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.30483521032687394,
+    "evaluations": 9730,
+    "weight": 46.26457055719438
+   }
+  },
+  {
+   "seed": 924,
+   "status quo": 0.10182230296816096,
+   "v0": {
+    "regret": 0.05030793952305907,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.04750692751704835,
+    "evaluations": 2500
+   },
+   "v1": {
+    "regret": 0.00851421298411149,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.04400358717885478,
+    "evaluations": 3435,
+    "weight": 27.015277157850083
+   },
+   "v2": {
+    "regret": 0.00851421298411149,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.04914532804114833,
+    "evaluations": 3611,
+    "weight": 50.64069653817493
+   },
+   "library": {
+    "regret": 0.06487885921905343,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.04753474915364101,
+    "evaluations": 6562,
+    "weight": 49.60821727736748
+   }
+  },
+  {
+   "seed": 925,
+   "status quo": 0.05128041097902681,
+   "v0": {
+    "regret": 0.053849775260821575,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3651871812811791,
+    "evaluations": 2973
+   },
+   "v1": {
+    "regret": 0.17400476646742824,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3768585237389015,
+    "evaluations": 4865,
+    "weight": 25.713827450435147
+   },
+   "v2": {
+    "regret": 0.055890203899956206,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.38784790540111924,
+    "evaluations": 3897,
+    "weight": 42.231092689736116
+   },
+   "library": {
+    "regret": 0.053849775260821575,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.38727223968605595,
+    "evaluations": 7068,
+    "weight": 42.49389712194899
+   }
+  },
+  {
+   "seed": 926,
+   "status quo": 0.3639987383816387,
+   "v0": {
+    "regret": 0.9923543379084345,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.2546061491574145,
+    "evaluations": 3754
+   },
+   "v1": {
+    "regret": -3.5414282074250905e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.21307297895141086,
+    "evaluations": 3578,
+    "weight": 33.41400673842195
+   },
+   "v2": {
+    "regret": 0.04677662075712301,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 3677,
+    "weight": 53.07780672623948
+   },
+   "library": {
+    "regret": 0.053637719480164506,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 7387,
+    "weight": 52.94624967263343
+   }
+  },
+  {
+   "seed": 927,
+   "status quo": 0.14822969123338434,
+   "v0": {
+    "regret": 0.32300708957729785,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.3714473621230317,
+    "evaluations": 3237
+   },
+   "v1": {
+    "regret": 0.1740765736224444,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.49173577163039656,
+    "evaluations": 4128,
+    "weight": 27.525979698290378
+   },
+   "v2": {
+    "regret": 0.026620913927086137,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5808040060342475,
+    "evaluations": 4876,
+    "weight": 54.464136190424405
+   },
+   "library": {
+    "regret": 0.026620913927086137,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.5800957909711983,
+    "evaluations": 8443,
+    "weight": 54.743198328158876
+   }
+  },
+  {
+   "seed": 928,
+   "status quo": 0.18078051289526623,
+   "v0": {
+    "regret": 0.005871262302370394,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 3611
+   },
+   "v1": {
+    "regret": 8.923960711301077e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.23294320042709568,
+    "evaluations": 3435,
+    "weight": 29.419253727723145
+   },
+   "v2": {
+    "regret": 0.08471114902502283,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.23056569440025754,
+    "evaluations": 3754,
+    "weight": 43.467732385681174
+   },
+   "library": {
+    "regret": 0.08924610901674075,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.22570245828472568,
+    "evaluations": 7233,
+    "weight": 43.60894185040293
+   }
+  },
+  {
+   "seed": 929,
+   "status quo": 0.22864201594763267,
+   "v0": {
+    "regret": 0.33847488635018097,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.2048301537719784,
+    "evaluations": 5657
+   },
+   "v1": {
+    "regret": 0.3354213981973505,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.196485537971918,
+    "evaluations": 6592,
+    "weight": 31.10990127108884
+   },
+   "v2": {
+    "regret": 0.01761678169244237,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.19213714356563424,
+    "evaluations": 4458,
+    "weight": 64.5196591230128
+   },
+   "library": {
+    "regret": 0.016966388259898758,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.1913081943568279,
+    "evaluations": 10225,
+    "weight": 64.70601035570247
+   }
+  },
+  {
+   "seed": 930,
+   "status quo": 0.3245215326066486,
+   "v0": {
+    "regret": 0.7062661241316905,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.006088719252204214,
+    "evaluations": 5591
+   },
+   "v1": {
+    "regret": 0.08467324590089674,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.009070949710639466,
+    "evaluations": 3743,
+    "weight": 19.900221153441883
+   },
+   "v2": {
+    "regret": -8.644728267024064e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.007244615884476509,
+    "evaluations": 3127,
+    "weight": 44.86081555072542
+   },
+   "library": {
+    "regret": -8.644728267024064e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.007270226576437898,
+    "evaluations": 8729,
+    "weight": 44.74975364723681
+   }
+  },
+  {
+   "seed": 931,
+   "status quo": 0.03901018849854226,
+   "v0": {
+    "regret": 0.11281288426702571,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12051929675634973,
+    "evaluations": 4546
+   },
+   "v1": {
+    "regret": 0.019401613058289562,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.10433566078507775,
+    "evaluations": 4964,
+    "weight": 35.30466953953963
+   },
+   "v2": {
+    "regret": 0.00047665004422625575,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.01591682042142285,
+    "evaluations": 4194,
+    "weight": 50.286907100245664
+   },
+   "library": {
+    "regret": 0.001634865910501387,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.017953469067371487,
+    "evaluations": 8377,
+    "weight": 50.11609357850196
+   }
+  },
+  {
+   "seed": 932,
+   "status quo": 0.19393744569150798,
+   "v0": {
+    "regret": -3.4515572596754907e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 3622
+   },
+   "v1": {
+    "regret": 0.00018899255992899994,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.14563792584929142,
+    "evaluations": 4546,
+    "weight": 21.780126334325693
+   },
+   "v2": {
+    "regret": 0.02972123137386075,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.23250100353453493,
+    "evaluations": 5844,
+    "weight": 42.93363162748388
+   },
+   "library": {
+    "regret": 0.03676504920502634,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.23377216954553662,
+    "evaluations": 9774,
+    "weight": 43.20295390028047
+   }
+  },
+  {
+   "seed": 933,
+   "status quo": 0.07217296907936391,
+   "v0": {
+    "regret": 0.012970101346031826,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.4839137375738419,
+    "evaluations": 5470
+   },
+   "v1": {
+    "regret": 0.0601401022919339,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.529279542803328,
+    "evaluations": 3952,
+    "weight": 25.941815506352448
+   },
+   "v2": {
+    "regret": 0.0601401022919339,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 3622,
+    "weight": 29.78699159468706
+   },
+   "library": {
+    "regret": 0.0601401022919339,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 8751,
+    "weight": 29.798950097900413
+   }
+  },
+  {
+   "seed": 934,
+   "status quo": 0.24288964441358454,
+   "v0": {
+    "regret": 0.04950937248448313,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.2070803353132621,
+    "evaluations": 3710
+   },
+   "v1": {
+    "regret": 1.0491384785518773e-14,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.17695456663246556,
+    "evaluations": 4381,
+    "weight": 27.405453916410746
+   },
+   "v2": {
+    "regret": 1.0491384785518773e-14,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12807133921984423,
+    "evaluations": 4403,
+    "weight": 45.629158817405425
+   },
+   "library": {
+    "regret": 1.0491384785518773e-14,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.1296829490638943,
+    "evaluations": 9114,
+    "weight": 45.203917162345554
+   }
+  },
+  {
+   "seed": 935,
+   "status quo": 0.10839138871834628,
+   "v0": {
+    "regret": 0.09080820470577644,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.14965166583918021,
+    "evaluations": 3842
+   },
+   "v1": {
+    "regret": 0.3553246740649573,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.2390514008474107,
+    "evaluations": 4755,
+    "weight": 26.39524849953097
+   },
+   "v2": {
+    "regret": 0.00235459906985419,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.20649364646250615,
+    "evaluations": 4876,
+    "weight": 43.72645513643999
+   },
+   "library": {
+    "regret": 0.004428911683128596,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.20929123878945083,
+    "evaluations": 9565,
+    "weight": 43.41274454728781
+   }
+  },
+  {
+   "seed": 936,
+   "status quo": 0.1321746168946488,
+   "v0": {
+    "regret": 0.20667828065702507,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.11073632420454456,
+    "evaluations": 4139
+   },
+   "v1": {
+    "regret": 0.16173736439260275,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.16152979415019572,
+    "evaluations": 4458,
+    "weight": 32.45458983841888
+   },
+   "v2": {
+    "regret": 0.0062537545427950895,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.2418308184996173,
+    "evaluations": 2951,
+    "weight": 51.45884145313558
+   },
+   "library": {
+    "regret": 0.0062537545427950895,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.25071921725816876,
+    "evaluations": 6870,
+    "weight": 52.19061249517855
+   }
+  },
+  {
+   "seed": 937,
+   "status quo": 0.12017333996064847,
+   "v0": {
+    "regret": 0.21615246072841407,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.16211003720182054,
+    "evaluations": 3809
+   },
+   "v1": {
+    "regret": -9.062617377997647e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.16475549635434122,
+    "evaluations": 5404,
+    "weight": 23.67041657203819
+   },
+   "v2": {
+    "regret": -9.062617377997647e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12978375729480102,
+    "evaluations": 4337,
+    "weight": 47.6510204618781
+   },
+   "library": {
+    "regret": -9.062617377997647e-16,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.12955495326908428,
+    "evaluations": 8652,
+    "weight": 47.59500544819844
+   }
+  },
+  {
+   "seed": 938,
+   "status quo": 0.05968153259213874,
+   "v0": {
+    "regret": 0.2104716405465575,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.2545092869193991,
+    "evaluations": 4216
+   },
+   "v1": {
+    "regret": 0.2497050344789062,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.22939479713573557,
+    "evaluations": 3435,
+    "weight": 24.574076332025204
+   },
+   "v2": {
+    "regret": 0.19330638851721685,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.19523698480760363,
+    "evaluations": 3292,
+    "weight": 50.75562936050635
+   },
+   "library": {
+    "regret": 0.19944538835952627,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.19619402218889273,
+    "evaluations": 7783,
+    "weight": 50.75984179320808
+   }
+  },
+  {
+   "seed": 939,
+   "status quo": 0.1828618544769167,
+   "v0": {
+    "regret": 0.32312679131228084,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 1389
+   },
+   "v1": {
+    "regret": 2.185197519781912e-15,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 2522,
+    "weight": 25.976870204725206
+   },
+   "v2": {
+    "regret": 0.1100033057994433,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 2434,
+    "weight": 44.28163817925594
+   },
+   "library": {
+    "regret": 0.12082708686397746,
+    "failure": null,
+    "moved": null,
+    "penalty": 0.00010000000000000009,
+    "evaluations": 3977,
+    "weight": 44.354191701058824
+   }
+  }
+ ]
+}

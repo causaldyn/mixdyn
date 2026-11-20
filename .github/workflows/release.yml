@@ -1,0 +1,121 @@
+name: release
+
+# A draft for the public repository. It never runs here: no tag is pushed to this private
+# repository, and mixdyn is published from a fresh history of the cleaned tree (ADR 0054). Until
+# then pyproject.toml keeps the `Private :: Do Not Upload` classifier, which PyPI refuses, and the
+# build job below stops on it before anything is uploaded.
+#
+# In the public repository: cut a release by pushing a signed tag, `git tag -s v0.1.0 -m ... && git
+# push origin v0.1.0`. Publishing uses PyPI Trusted Publishing (OIDC), no stored token. One-time
+# PyPI-side setup: add the repository, this `release.yml` workflow and the `pypi` environment as a
+# trusted publisher of the `mixdyn` project.
+
+on:
+  push:
+    tags: ["v*"]
+
+# Nothing by default: each job below names exactly the scopes it needs.
+permissions: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Install uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
+        with:
+          # the floor, not the newest: the wheel is `py3-none-any`, so the build interpreter does not
+          # reach the artefact, and building on the oldest supported one keeps that true
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: uv build
+      # The tag names the version the wheel must carry, and the wheel must be uploadable: PyPI
+      # refuses the private classifier, and a refusal after the sdist went up would leave half a
+      # release on the index.
+      - name: Check the wheel's version, licence and classifiers
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          wheel=$(ls dist/*.whl)
+          case "$wheel" in
+            "dist/mixdyn-$version-py3-none-any.whl") ;;
+            *) echo "the wheel $wheel does not carry the tag's version $version"; exit 1 ;;
+          esac
+          unzip -p "$wheel" '*.dist-info/METADATA' > METADATA
+          grep -qx 'License-Expression: Apache-2.0' METADATA
+          if grep -q 'Private :: Do Not Upload' METADATA; then
+            echo "the wheel still carries the private classifier: remove it from pyproject.toml"
+            exit 1
+          fi
+      # The notes are the changelog's section for this version, not a pointer to it, extracted so
+      # the two cannot drift. They are built here, before the upload, so a version without a
+      # section stops the release before PyPI has it.
+      - name: Build the release notes from CHANGELOG.md
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="## [$version]" '
+            index($0, v) == 1 { found = 1 }
+            found && /^## \[/ && index($0, v) != 1 { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "CHANGELOG.md has no '## [$version]' section: refusing to publish empty notes"
+            exit 1
+          fi
+          # GitHub caps a release body at 125 000 characters and rejects the call above it.
+          if [ "$(wc -c < notes.md)" -gt 120000 ]; then
+            head -c 119000 notes.md > notes.trimmed
+            printf '\n\n_Truncated; the full entry is in [CHANGELOG.md](CHANGELOG.md)._\n' \
+              >> notes.trimmed
+            mv notes.trimmed notes.md
+          fi
+          wc -c notes.md
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: notes
+          path: notes.md
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # OIDC token for PyPI Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          name: dist
+          path: dist/
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+
+  # Last on purpose: a Release is the claim that this version is out, and PyPI is the step that can
+  # still fail.
+  github-release:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # create the Release object
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          name: notes
+          path: .
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file notes.md

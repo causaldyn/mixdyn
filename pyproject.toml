@@ -1,0 +1,83 @@
+[project]
+name = "mixdyn"
+version = "0.1.0"
+description = "Media-mix modelling engine: dynamic linear models, geo hierarchies and budget plans."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Ilia Gradina" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering",
+    "Typing :: Typed",
+]
+# Runtime packages are limited to the allow-list in allowed-runtime-packages.txt, which CI enforces
+# against uv.lock (ADR 0001).
+dependencies = [
+    "causal-hybrid-control>=1.2.0",
+    "jax>=0.4.30",
+    "numpy>=2.3",
+    "scipy>=1.16",
+]
+
+[project.urls]
+Homepage = "https://github.com/causaldyn/mixdyn"
+Source = "https://github.com/causaldyn/mixdyn"
+Issues = "https://github.com/causaldyn/mixdyn/issues"
+Changelog = "https://github.com/causaldyn/mixdyn/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "hypothesis>=6.100",
+    "ruff>=0.6",
+    "ty>=0.0.61",
+    # frames for the tests alone: read_panel takes pandas and polars frames, and neither is a
+    # runtime package; 2.3.3 is the first pandas with wheels for Python 3.14
+    "pandas>=2.3.3",
+    "polars>=1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mixdyn"]
+
+# evidence/ is the ADRs' scripts and records, which no install runs; scorecard/ needs the bench, which
+# no install has; tests/ reads both and its fixtures, so it runs from the repository, not the sdist
+[tool.hatch.build.targets.sdist]
+exclude = ["evidence", "scorecard", "tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "scripts", "."]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF", "C4", "PERF", "PIE", "PT", "PTH", "RET", "FURB"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+pythonpath = ["scripts", "."]
+filterwarnings = ["error"]
+
+[tool.ty.environment]
+python-version = "3.12"
+extra-paths = ["scripts", "tests"]
+
+[tool.ty.src]
+include = ["src/mixdyn", "scripts", "tests", "scorecard"]
+
+[tool.ty.analysis]
+# the bench enters the scorecard's harness through PYTHONPATH, outside the lock
+allowed-unresolved-imports = ["causaldyn_bench.**"]

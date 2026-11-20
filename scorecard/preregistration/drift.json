@@ -1,0 +1,2772 @@
+{
+ "worlds": 100,
+ "pilot worlds": 10,
+ "primary": "dlm mixture",
+ "time-varying": "pymc-marketing shared",
+ "items": [
+  {
+   "item": {
+    "name": "P1",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.18416748862395313,
+   "pilot half-width": 0.15983351516416136,
+   "pilot sd": 0.5624042352099948,
+   "scored": 500,
+   "chances": {
+    "below": 0.9436747967166333,
+    "across": 0.052680851144205884,
+    "above": 0.003644352139160772
+   },
+   "predicted": "below",
+   "chance": 0.9436747967166333
+  },
+  {
+   "item": {
+    "name": "P1",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.15716362563112618,
+   "pilot half-width": 0.14751347447703012,
+   "pilot sd": 0.5190538587055076,
+   "scored": 500,
+   "chances": {
+    "below": 0.9231480118096633,
+    "across": 0.07121818386392575,
+    "above": 0.005633804326410916
+   },
+   "predicted": "below",
+   "chance": 0.9231480118096633
+  },
+  {
+   "item": {
+    "name": "P1",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.04801010986961462,
+   "pilot half-width": 0.08002514442386575,
+   "pilot sd": 0.28158349705972785,
+   "scored": 500,
+   "chances": {
+    "below": 0.7100111177696002,
+    "across": 0.24608875578359654,
+    "above": 0.043900126446803224
+   },
+   "predicted": "below",
+   "chance": 0.7100111177696002
+  },
+  {
+   "item": {
+    "name": "P1",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.013823052904224467,
+   "pilot half-width": 0.15000095126508045,
+   "pilot sd": 0.5278065128603587,
+   "scored": 500,
+   "chances": {
+    "below": 0.22280431865549724,
+    "across": 0.4375162599621419,
+    "above": 0.3396794213823609
+   },
+   "predicted": "across",
+   "chance": 0.4375162599621419
+  },
+  {
+   "item": {
+    "name": "P2",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing shared",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.02061799502291103,
+   "pilot half-width": 0.06570524227708892,
+   "pilot sd": 0.23119623249341742,
+   "scored": 500,
+   "chances": {
+    "below": 0.11918349865708712,
+    "across": 0.37729960529350204,
+    "above": 0.5035168960494109
+   },
+   "predicted": "above",
+   "chance": 0.5035168960494109
+  },
+  {
+   "item": {
+    "name": "P2",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing channel",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.038060259966645436,
+   "pilot half-width": 0.05512565972562157,
+   "pilot sd": 0.19396998474689264,
+   "scored": 500,
+   "chances": {
+    "below": 0.7657209611281158,
+    "across": 0.20362795976392528,
+    "above": 0.030651079107958886
+   },
+   "predicted": "below",
+   "chance": 0.7657209611281158
+  },
+  {
+   "item": {
+    "name": "P3",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "orbit",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.010106844638058346,
+   "pilot half-width": 0.20273381295104975,
+   "pilot sd": 0.7133569884065656,
+   "scored": 500,
+   "chances": {
+    "below": 0.24737695121440526,
+    "across": 0.44187080755618063,
+    "above": 0.3107522412294141
+   },
+   "predicted": "across",
+   "chance": 0.44187080755618063
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "walk",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.04037800183488193,
+   "pilot half-width": 0.3947846645024661,
+   "pilot sd": 0.5518709069660612,
+   "scored": 100,
+   "chances": {
+    "below": 0.21700450140915648,
+    "across": 0.4257781212484696,
+    "above": 0.3572173773423739
+   },
+   "predicted": "across",
+   "chance": 0.4257781212484696
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "walk",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.022590194689386573,
+   "pilot half-width": 0.2790151527839951,
+   "pilot sd": 0.3900362888164205,
+   "scored": 100,
+   "chances": {
+    "below": 0.2297006777859121,
+    "across": 0.42941065087368246,
+    "above": 0.34088867134040546
+   },
+   "predicted": "across",
+   "chance": 0.42941065087368246
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "walk",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.055193870411328394,
+   "pilot half-width": 0.25206539254945864,
+   "pilot sd": 0.3523631217447076,
+   "scored": 100,
+   "chances": {
+    "below": 0.45125895823017853,
+    "across": 0.39262066195938516,
+    "above": 0.15612037981043636
+   },
+   "predicted": "below",
+   "chance": 0.45125895823017853
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "walk",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.10464766075497747,
+   "pilot half-width": 0.3490408386899968,
+   "pilot sd": 0.48792544781039726,
+   "scored": 100,
+   "chances": {
+    "below": 0.12229849090140082,
+    "across": 0.35892813889106745,
+    "above": 0.5187733702075317
+   },
+   "predicted": "above",
+   "chance": 0.5187733702075317
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "trend",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.011441598708201457,
+   "pilot half-width": 0.08819866261206968,
+   "pilot sd": 0.12329322870294136,
+   "scored": 100,
+   "chances": {
+    "below": 0.20136994027666044,
+    "across": 0.41992966769858364,
+    "above": 0.3787003920247559
+   },
+   "predicted": "across",
+   "chance": 0.41992966769858364
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "trend",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.08118109415518031,
+   "pilot half-width": 0.32484214415259555,
+   "pilot sd": 0.4540980054030774,
+   "scored": 100,
+   "chances": {
+    "below": 0.14239451253767582,
+    "across": 0.3805773024663858,
+    "above": 0.4770281849959384
+   },
+   "predicted": "above",
+   "chance": 0.4770281849959384
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "trend",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.012559836011479234,
+   "pilot half-width": 0.02026993795520391,
+   "pilot sd": 0.02833541940536622,
+   "scored": 100,
+   "chances": {
+    "below": 0.7604013262041929,
+    "across": 0.19708611533154466,
+    "above": 0.04251255846426246
+   },
+   "predicted": "below",
+   "chance": 0.7604013262041929
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "trend",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.2928352412025475,
+   "pilot half-width": 0.49942684738030807,
+   "pilot sd": 0.6981505919798705,
+   "scored": 100,
+   "chances": {
+    "below": 0.04768315984558832,
+    "across": 0.2132491763478931,
+    "above": 0.7390676638065186
+   },
+   "predicted": "above",
+   "chance": 0.7390676638065186
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "step",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.5853387157898495,
+   "pilot half-width": 0.6140475764113845,
+   "pilot sd": 0.8583793226657763,
+   "scored": 100,
+   "chances": {
+    "below": 0.910552802191869,
+    "across": 0.07630216640520758,
+    "above": 0.013145031402923462
+   },
+   "predicted": "below",
+   "chance": 0.910552802191869
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "step",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.7412624057693844,
+   "pilot half-width": 0.48907524185538803,
+   "pilot sd": 0.6836800452660257,
+   "scored": 100,
+   "chances": {
+    "below": 0.987205446515039,
+    "across": 0.01089241108693049,
+    "above": 0.0019021423980304572
+   },
+   "predicted": "below",
+   "chance": 0.987205446515039
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "step",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.17567250263837905,
+   "pilot half-width": 0.35621452648304286,
+   "pilot sd": 0.4979535718603247,
+   "scored": 100,
+   "chances": {
+    "below": 0.6736614297356169,
+    "across": 0.26089594594648025,
+    "above": 0.06544262431790282
+   },
+   "predicted": "below",
+   "chance": 0.6736614297356169
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "step",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.37744190068452815,
+   "pilot half-width": 0.4516792721797369,
+   "pilot sd": 0.6314040843246704,
+   "scored": 100,
+   "chances": {
+    "below": 0.8703720594678124,
+    "across": 0.10970005033641221,
+    "above": 0.019927890195775417
+   },
+   "predicted": "below",
+   "chance": 0.8703720594678124
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "season",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.2982700396656836,
+   "pilot half-width": 0.3675814185686859,
+   "pilot sd": 0.513843391320751,
+   "scored": 100,
+   "chances": {
+    "below": 0.8604822342981358,
+    "across": 0.11780992937585684,
+    "above": 0.02170783632600741
+   },
+   "predicted": "below",
+   "chance": 0.8604822342981358
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "season",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.1557616250343024,
+   "pilot half-width": 0.21996534037307017,
+   "pilot sd": 0.30749034298424804,
+   "scored": 100,
+   "chances": {
+    "below": 0.8114497579930062,
+    "across": 0.15731659066107595,
+    "above": 0.031233651345917827
+   },
+   "predicted": "below",
+   "chance": 0.8114497579930062
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "season",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.025783664148529794,
+   "pilot half-width": 0.09878697077900038,
+   "pilot sd": 0.13809466289412103,
+   "scored": 100,
+   "chances": {
+    "below": 0.48630092145301995,
+    "across": 0.37598637422526965,
+    "above": 0.1377127043217104
+   },
+   "predicted": "below",
+   "chance": 0.48630092145301995
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "season",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.06296568618074694,
+   "pilot half-width": 0.19294214576388824,
+   "pilot sd": 0.2697145217352531,
+   "scored": 100,
+   "chances": {
+    "below": 0.54090115797122,
+    "across": 0.34649831629553135,
+    "above": 0.11260052573324869
+   },
+   "predicted": "below",
+   "chance": 0.54090115797122
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "revert",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.08904828820731595,
+   "pilot half-width": 0.22574046155375435,
+   "pilot sd": 0.31556340572046077,
+   "scored": 100,
+   "chances": {
+    "below": 0.5968611926548715,
+    "across": 0.3125175177741152,
+    "above": 0.09062128957101334
+   },
+   "predicted": "below",
+   "chance": 0.5968611926548715
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "revert",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.00743461380348919,
+   "pilot half-width": 0.14002949697357772,
+   "pilot sd": 0.19574773907238976,
+   "scored": 100,
+   "chances": {
+    "below": 0.247023208121186,
+    "across": 0.4329182447332542,
+    "above": 0.32005854714555976
+   },
+   "predicted": "across",
+   "chance": 0.4329182447332542
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "revert",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.029159323861643403,
+   "pilot half-width": 0.08146120519775507,
+   "pilot sd": 0.11387491267344475,
+   "scored": 100,
+   "chances": {
+    "below": 0.10189560898537256,
+    "across": 0.3310390461622581,
+    "above": 0.5670653448523694
+   },
+   "predicted": "above",
+   "chance": 0.5670653448523694
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "revert",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.11203994942887241,
+   "pilot half-width": 0.13718797457762097,
+   "pilot sd": 0.19177556466232923,
+   "scored": 100,
+   "chances": {
+    "below": 0.021308834652630986,
+    "across": 0.11601378668687756,
+    "above": 0.8626773786604914
+   },
+   "predicted": "above",
+   "chance": 0.8626773786604914
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "static",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.02158252554662651,
+   "pilot half-width": 0.24334221554522406,
+   "pilot sd": 0.34016896113560835,
+   "scored": 100,
+   "chances": {
+    "below": 0.34677090040325775,
+    "across": 0.4281873791374419,
+    "above": 0.22504172045930032
+   },
+   "predicted": "across",
+   "chance": 0.4281873791374419
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "static",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.008843142390601454,
+   "pilot half-width": 0.15838008690191072,
+   "pilot sd": 0.22140009494562088,
+   "scored": 100,
+   "chances": {
+    "below": 0.32207995599681566,
+    "across": 0.43263669079293254,
+    "above": 0.24528335321025174
+   },
+   "predicted": "across",
+   "chance": 0.43263669079293254
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "static",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.0028277101448208977,
+   "pilot half-width": 0.018313973840611675,
+   "pilot sd": 0.02560117011208765,
+   "scored": 100,
+   "chances": {
+    "below": 0.18800460756661375,
+    "across": 0.41359455783502547,
+    "above": 0.3984008345983608
+   },
+   "predicted": "across",
+   "chance": 0.41359455783502547
+  },
+  {
+   "item": {
+    "name": "P4",
+    "k": 0,
+    "group": "static",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.014257977022081151,
+   "pilot half-width": 0.11804514794678825,
+   "pilot sd": 0.16501573824413326,
+   "scored": 100,
+   "chances": {
+    "below": 0.20637438855982324,
+    "across": 0.42197649008618354,
+    "above": 0.3716491213539932
+   },
+   "predicted": "across",
+   "chance": 0.42197649008618354
+  },
+  {
+   "item": {
+    "name": "P5",
+    "k": 0,
+    "group": "walk",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "clause",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.04664970345314123,
+   "pilot half-width": 0.2989917255385107,
+   "pilot sd": 0.41796161194922715,
+   "scored": 100,
+   "chances": {
+    "kept": 0.6002931211869043,
+    "broken": 0.3997068788130958
+   },
+   "predicted": "kept",
+   "chance": 0.6002931211869043
+  },
+  {
+   "item": {
+    "name": "P5",
+    "k": 0,
+    "group": "trend",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "clause",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.2003351146233408,
+   "pilot half-width": 0.4287000078367516,
+   "pilot sd": 0.5992812877860604,
+   "scored": 100,
+   "chances": {
+    "kept": 0.3458151867881388,
+    "broken": 0.6541848132118612
+   },
+   "predicted": "broken",
+   "chance": 0.6541848132118612
+  },
+  {
+   "item": {
+    "name": "P5",
+    "k": 0,
+    "group": "step",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "clause",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.5546659194088479,
+   "pilot half-width": 0.4773135585712047,
+   "pilot sd": 0.6672383457646782,
+   "scored": 100,
+   "chances": {
+    "kept": 0.9936866819104323,
+    "broken": 0.006313318089567683
+   },
+   "predicted": "kept",
+   "chance": 0.9936866819104323
+  },
+  {
+   "item": {
+    "name": "P5",
+    "k": 0,
+    "group": "season",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "clause",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.1119998847244531,
+   "pilot half-width": 0.23630041014627357,
+   "pilot sd": 0.3303251959602439,
+   "scored": 100,
+   "chances": {
+    "kept": 0.9302190906086889,
+    "broken": 0.06978090939131104
+   },
+   "predicted": "kept",
+   "chance": 0.9302190906086889
+  },
+  {
+   "item": {
+    "name": "P5",
+    "k": 0,
+    "group": "revert",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "clause",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.028524347675903373,
+   "pilot half-width": 0.1247363125861188,
+   "pilot sd": 0.17436934143644653,
+   "scored": 100,
+   "chances": {
+    "kept": 0.5406738475707304,
+    "broken": 0.45932615242926966
+   },
+   "predicted": "kept",
+   "chance": 0.5406738475707304
+  },
+  {
+   "item": {
+    "name": "P5",
+    "k": 0,
+    "group": "static",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "clause",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.020886035109171787,
+   "pilot half-width": 0.15048923378302942,
+   "pilot sd": 0.21036944289903967,
+   "scored": 100,
+   "chances": {
+    "kept": 0.8036145297498059,
+    "broken": 0.1963854702501942
+   },
+   "predicted": "kept",
+   "chance": 0.8036145297498059
+  },
+  {
+   "item": {
+    "name": "P5",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "clause",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.0782313276761831,
+   "pilot half-width": 0.14858671772440876,
+   "pilot sd": 0.5228302665954069,
+   "scored": 500,
+   "chances": {
+    "kept": 0.9421191929974257,
+    "broken": 0.05788080700257433
+   },
+   "predicted": "kept",
+   "chance": 0.9421191929974257
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "status quo",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.0782313276761831,
+   "pilot half-width": 0.14858671772440876,
+   "pilot sd": 0.5228302665954069,
+   "scored": 500,
+   "chances": {
+    "below": 0.6605394505056974,
+    "across": 0.2815797424917283,
+    "above": 0.05788080700257433
+   },
+   "predicted": "below",
+   "chance": 0.6605394505056974
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.25100493960854847,
+   "pilot half-width": 0.19397915051037812,
+   "pilot sd": 0.6825520647370172,
+   "scored": 500,
+   "chances": {
+    "below": 0.0017345165321107736,
+    "across": 0.030815118862809965,
+    "above": 0.9674503646050793
+   },
+   "predicted": "above",
+   "chance": 0.9674503646050793
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.1302738571523267,
+   "pilot half-width": 0.17077552778069233,
+   "pilot sd": 0.600905761194315,
+   "scored": 500,
+   "chances": {
+    "below": 0.022664170082804087,
+    "across": 0.17181035409808443,
+    "above": 0.8055254758191115
+   },
+   "predicted": "above",
+   "chance": 0.8055254758191115
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.2794290568226734,
+   "pilot half-width": 0.19028657980867994,
+   "pilot sd": 0.6695590613652622,
+   "scored": 500,
+   "chances": {
+    "below": 0.0006621420463038102,
+    "across": 0.014830348702212781,
+    "above": 0.9845075092514834
+   },
+   "predicted": "above",
+   "chance": 0.9845075092514834
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing shared",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.2771811969887707,
+   "pilot half-width": 0.1964053582564068,
+   "pilot sd": 0.6910891322629635,
+   "scored": 500,
+   "chances": {
+    "below": 0.0009130026590994709,
+    "across": 0.019005355435888216,
+    "above": 0.9800816419050123
+   },
+   "predicted": "above",
+   "chance": 0.9800816419050123
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing channel",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.1620599373311654,
+   "pilot half-width": 0.16013568225320943,
+   "pilot sd": 0.5634674668510381,
+   "scored": 500,
+   "chances": {
+    "below": 0.007308477029536185,
+    "across": 0.0848295445092464,
+    "above": 0.9078619784612174
+   },
+   "predicted": "above",
+   "chance": 0.9078619784612174
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.16646389820453464,
+   "pilot half-width": 0.18676323381630677,
+   "pilot sd": 0.6571615069087664,
+   "scored": 500,
+   "chances": {
+    "below": 0.01286794123997201,
+    "across": 0.12218969317362316,
+    "above": 0.8649423655864048
+   },
+   "predicted": "above",
+   "chance": 0.8649423655864048
+  },
+  {
+   "item": {
+    "name": "P6",
+    "k": 4,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "orbit",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.28375015539898446,
+   "pilot half-width": 0.17981810255136635,
+   "pilot sd": 0.6327237584585738,
+   "scored": 500,
+   "chances": {
+    "below": 0.00035287253192836405,
+    "across": 0.009025421032576642,
+    "above": 0.990621706435495
+   },
+   "predicted": "above",
+   "chance": 0.990621706435495
+  },
+  {
+   "item": {
+    "name": "P7",
+    "k": 0,
+    "group": "drifting",
+    "axis": "lengthscale",
+    "first": "pymc-marketing shared",
+    "second": null,
+    "level": 13,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -10.44279103710451,
+   "pilot half-width": 1.1285323257036841,
+   "pilot sd": 3.9709528936735214,
+   "scored": 500,
+   "chances": {
+    "below": 1.0,
+    "across": -7.176439963224484e-24,
+    "above": 7.176439963224484e-24
+   },
+   "predicted": "below",
+   "chance": 1.0
+  },
+  {
+   "item": {
+    "name": "P7",
+    "k": 0,
+    "group": "drifting",
+    "axis": "multiplier",
+    "first": "pymc-marketing shared",
+    "second": null,
+    "level": 1.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.08712866142310659,
+   "pilot half-width": 0.07869907930798302,
+   "pilot sd": 0.2769174879528725,
+   "scored": 500,
+   "chances": {
+    "below": 0.0045791187657713275,
+    "across": 0.061780938922231465,
+    "above": 0.9336399423119972
+   },
+   "predicted": "above",
+   "chance": 0.9336399423119972
+  },
+  {
+   "item": {
+    "name": "P7",
+    "k": 0,
+    "group": "drifting",
+    "axis": "lengthscale",
+    "first": "pymc-marketing channel",
+    "second": null,
+    "level": 13,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -9.869861488534468,
+   "pilot half-width": 2.01017518783995,
+   "pilot sd": 7.07317885109448,
+   "scored": 500,
+   "chances": {
+    "below": 0.9999999999944351,
+    "across": 5.464264893939352e-12,
+    "above": 1.0061699469178233e-13
+   },
+   "predicted": "below",
+   "chance": 0.9999999999944351
+  },
+  {
+   "item": {
+    "name": "P7",
+    "k": 0,
+    "group": "drifting",
+    "axis": "multiplier",
+    "first": "pymc-marketing channel",
+    "second": null,
+    "level": 1.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.16703007233912037,
+   "pilot half-width": 0.10459949977972229,
+   "pilot sd": 0.36805298073149834,
+   "scored": 500,
+   "chances": {
+    "below": 0.00031604394937652613,
+    "across": 0.008262277463066847,
+    "above": 0.9914216785875566
+   },
+   "predicted": "above",
+   "chance": 0.9914216785875566
+  },
+  {
+   "item": {
+    "name": "P8",
+    "k": 0,
+    "group": "walk",
+    "axis": "roi_covered",
+    "first": "stacked",
+    "second": null,
+    "level": 0.9,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.16666666666666669,
+   "pilot half-width": 0.2191225437120903,
+   "pilot sd": 0.30631219449089386,
+   "scored": 100,
+   "chances": {
+    "below": 0.8377655015854398,
+    "across": 0.13626239061172593,
+    "above": 0.025972107802834234
+   },
+   "predicted": "below",
+   "chance": 0.8377655015854398
+  },
+  {
+   "item": {
+    "name": "P8",
+    "k": 0,
+    "group": "walk",
+    "axis": "roi_covered",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.9,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.20000000000000004,
+   "pilot half-width": 0.13535654601453478,
+   "pilot sd": 0.1892154040658489,
+   "scored": 100,
+   "chances": {
+    "below": 0.985362086320419,
+    "across": 0.01248081964002334,
+    "above": 0.002157094039557665
+   },
+   "predicted": "below",
+   "chance": 0.985362086320419
+  },
+  {
+   "item": {
+    "name": "P8",
+    "k": 0,
+    "group": "walk",
+    "axis": "roi_covered",
+    "first": "pymc-marketing",
+    "second": null,
+    "level": 0.9,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.3333333333333333,
+   "pilot half-width": 0.19631124719549548,
+   "pilot sd": 0.27442420078285484,
+   "scored": 100,
+   "chances": {
+    "below": 0.9932588839094537,
+    "across": 0.005686497542985183,
+    "above": 0.0010546185475611013
+   },
+   "predicted": "below",
+   "chance": 0.9932588839094537
+  },
+  {
+   "item": {
+    "name": "P8",
+    "k": 0,
+    "group": "walk",
+    "axis": "roi_covered",
+    "first": "pymc-marketing shared",
+    "second": null,
+    "level": 0.9,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.20000000000000004,
+   "pilot half-width": 0.13535654601453478,
+   "pilot sd": 0.1892154040658489,
+   "scored": 100,
+   "chances": {
+    "below": 0.985362086320419,
+    "across": 0.01248081964002334,
+    "above": 0.002157094039557665
+   },
+   "predicted": "below",
+   "chance": 0.985362086320419
+  },
+  {
+   "item": {
+    "name": "P8",
+    "k": 0,
+    "group": "walk",
+    "axis": "roi_covered",
+    "first": "pymc-marketing channel",
+    "second": null,
+    "level": 0.9,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.23333333333333334,
+   "pilot half-width": 0.15896820132681436,
+   "pilot sd": 0.2222222222222222,
+   "scored": 100,
+   "chances": {
+    "below": 0.9848466857561281,
+    "across": 0.012925043893941713,
+    "above": 0.0022282703499301826
+   },
+   "predicted": "below",
+   "chance": 0.9848466857561281
+  },
+  {
+   "item": {
+    "name": "P8",
+    "k": 0,
+    "group": "walk",
+    "axis": "roi_covered",
+    "first": "meridian",
+    "second": null,
+    "level": 0.9,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.06666666666666664,
+   "pilot half-width": 0.07540523875994018,
+   "pilot sd": 0.105409255338946,
+   "scored": 100,
+   "chances": {
+    "below": 0.016787371510615788,
+    "across": 0.09475169199080025,
+    "above": 0.8884609364985839
+   },
+   "predicted": "above",
+   "chance": 0.8884609364985839
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "walk",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.0026133176259782813,
+   "pilot half-width": 0.014601034553148293,
+   "pilot sd": 0.02041083888515232,
+   "scored": 100,
+   "chances": {
+    "below": 0.41833132758819985,
+    "across": 0.40632632394605933,
+    "above": 0.17534234846574076
+   },
+   "predicted": "below",
+   "chance": 0.41833132758819985
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "walk",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.004000504343204394,
+   "pilot half-width": 0.011158744916452409,
+   "pilot sd": 0.015598849781580226,
+   "scored": 100,
+   "chances": {
+    "below": 0.10171566887822425,
+    "across": 0.3307622960116917,
+    "above": 0.567522035110084
+   },
+   "predicted": "above",
+   "chance": 0.567522035110084
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "walk",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "pymc-marketing shared",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.004059768794005089,
+   "pilot half-width": 0.012095488804279094,
+   "pilot sd": 0.016908327442323044,
+   "scored": 100,
+   "chances": {
+    "below": 0.548625629863968,
+    "across": 0.3420170831307551,
+    "above": 0.10935728700527692
+   },
+   "predicted": "below",
+   "chance": 0.548625629863968
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "walk",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "pymc-marketing channel",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.020893503220919846,
+   "pilot half-width": 0.025660936520102245,
+   "pilot sd": 0.03587151575098452,
+   "scored": 100,
+   "chances": {
+    "below": 0.8616460062855341,
+    "across": 0.11685797203493307,
+    "above": 0.021496021679532806
+   },
+   "predicted": "below",
+   "chance": 0.8616460062855341
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "walk",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "orbit",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.05375590876107037,
+   "pilot half-width": 0.03319157884727448,
+   "pilot sd": 0.04639862783212664,
+   "scored": 100,
+   "chances": {
+    "below": 0.9911296150155668,
+    "across": 0.007514859830184823,
+    "above": 0.0013555251542483318
+   },
+   "predicted": "below",
+   "chance": 0.9911296150155668
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "step",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.014389477426021868,
+   "pilot half-width": 0.015247708910918027,
+   "pilot sd": 0.02131482730320256,
+   "scored": 100,
+   "chances": {
+    "below": 0.9077509935294958,
+    "across": 0.07865339182933237,
+    "above": 0.013595614641171785
+   },
+   "predicted": "below",
+   "chance": 0.9077509935294958
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "step",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 0.0048608944100236515,
+   "pilot half-width": 0.015884030110033743,
+   "pilot sd": 0.02220434300341418,
+   "scored": 100,
+   "chances": {
+    "below": 0.11996896281743638,
+    "across": 0.35606982727870473,
+    "above": 0.5239612099038589
+   },
+   "predicted": "above",
+   "chance": 0.5239612099038589
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "step",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "pymc-marketing shared",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.0055293016052656695,
+   "pilot half-width": 0.018922072924528154,
+   "pilot sd": 0.026451234015631507,
+   "scored": 100,
+   "chances": {
+    "below": 0.5124178880013701,
+    "across": 0.3623814734037004,
+    "above": 0.1252006385949295
+   },
+   "predicted": "below",
+   "chance": 0.5124178880013701
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "step",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "pymc-marketing channel",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.008325882385409458,
+   "pilot half-width": 0.018060092618067854,
+   "pilot sd": 0.025246268635041966,
+   "scored": 100,
+   "chances": {
+    "below": 0.6493640417747317,
+    "across": 0.27777990314449674,
+    "above": 0.07285605508077156
+   },
+   "predicted": "below",
+   "chance": 0.6493640417747317
+  },
+  {
+   "item": {
+    "name": "P9",
+    "k": 0,
+    "group": "step",
+    "axis": "crps",
+    "first": "dlm mixture",
+    "second": "orbit",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": -0.044046641966873676,
+   "pilot half-width": 0.03094224908752392,
+   "pilot sd": 0.04325428164496227,
+   "scored": 100,
+   "chances": {
+    "below": 0.9822755219138255,
+    "across": 0.015141490239888204,
+    "above": 0.0025829878462862972
+   },
+   "predicted": "below",
+   "chance": 0.9822755219138255
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "past",
+    "first": "stacked",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 7,
+   "scored": 500,
+   "interval": [
+    36,
+    120
+   ],
+   "predicted": "36-120 of 500",
+   "chance": 0.9030245924718947
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "past",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "past",
+    "first": "pymc-marketing",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 49,
+   "scored": 500,
+   "interval": [
+    461,
+    499
+   ],
+   "predicted": "461-499 of 500",
+   "chance": 0.9253837139802666
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "past",
+    "first": "pymc-marketing shared",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 50,
+   "scored": 500,
+   "interval": [
+    481,
+    500
+   ],
+   "predicted": "481-500 of 500",
+   "chance": 0.950366339651423
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "past",
+    "first": "pymc-marketing channel",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 50,
+   "scored": 500,
+   "interval": [
+    481,
+    500
+   ],
+   "predicted": "481-500 of 500",
+   "chance": 0.950366339651423
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "past",
+    "first": "meridian",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 49,
+   "scored": 500,
+   "interval": [
+    461,
+    499
+   ],
+   "predicted": "461-499 of 500",
+   "chance": 0.9253837139802666
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "failure",
+    "first": "stacked",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "failure",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "failure",
+    "first": "pymc-marketing",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "failure",
+    "first": "pymc-marketing shared",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "failure",
+    "first": "pymc-marketing channel",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "failure",
+    "first": "meridian",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "failure",
+    "first": "orbit",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot count": 0,
+   "scored": 500,
+   "interval": [
+    0,
+    19
+   ],
+   "predicted": "0-19 of 500",
+   "chance": 0.9503663396511753
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "stacked",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": true
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.21331713495441498,
+   "pilot half-width": 0.16619912255306168,
+   "pilot sd": 0.5848028200845413,
+   "scored": 500,
+   "chances": {
+    "below": 0.9660459201749523,
+    "across": 0.032119389112400434,
+    "above": 0.0018346907126472916
+   },
+   "predicted": "below",
+   "chance": 0.9660459201749523
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "cvar 0.1",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": true
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.15911301236517392,
+   "pilot half-width": 0.14967473222918679,
+   "pilot sd": 0.5266586499280802,
+   "scored": 500,
+   "chances": {
+    "below": 0.9225172085383775,
+    "across": 0.07178309834350753,
+    "above": 0.005699693118114982
+   },
+   "predicted": "below",
+   "chance": 0.9225172085383775
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": true
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.0784517672375046,
+   "pilot half-width": 0.14857646467150173,
+   "pilot sd": 0.5227941893035272,
+   "scored": 500,
+   "chances": {
+    "below": 0.6615970602525888,
+    "across": 0.2808444174473473,
+    "above": 0.05755852230006392
+   },
+   "predicted": "below",
+   "chance": 0.6615970602525888
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "meridian",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": true
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.07918960427489226,
+   "pilot half-width": 0.1485188697962772,
+   "pilot sd": 0.5225915309204001,
+   "scored": 500,
+   "chances": {
+    "below": 0.6651863236932813,
+    "across": 0.27834103139787125,
+    "above": 0.056472644908847416
+   },
+   "predicted": "below",
+   "chance": 0.6651863236932813
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing shared",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": true
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.0782313276761831,
+   "pilot half-width": 0.14858671772440876,
+   "pilot sd": 0.5228302665954069,
+   "scored": 500,
+   "chances": {
+    "below": 0.6605394505056974,
+    "across": 0.2815797424917283,
+    "above": 0.05788080700257433
+   },
+   "predicted": "below",
+   "chance": 0.6605394505056974
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "pymc-marketing channel",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": true
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.0782313276761831,
+   "pilot half-width": 0.14858671772440876,
+   "pilot sd": 0.5228302665954069,
+   "scored": 500,
+   "chances": {
+    "below": 0.6605394505056974,
+    "across": 0.2815797424917283,
+    "above": 0.05788080700257433
+   },
+   "predicted": "below",
+   "chance": 0.6605394505056974
+  },
+  {
+   "item": {
+    "name": "P10",
+    "k": 0,
+    "group": "drifting",
+    "axis": "regret",
+    "first": "dlm mixture",
+    "second": "orbit",
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": true
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.010106844638058346,
+   "pilot half-width": 0.20273381295104975,
+   "pilot sd": 0.7133569884065656,
+   "scored": 500,
+   "chances": {
+    "below": 0.24737695121440526,
+    "across": 0.44187080755618063,
+    "above": 0.3107522412294141
+   },
+   "predicted": "across",
+   "chance": 0.44187080755618063
+  },
+  {
+   "item": {
+    "name": "P11",
+    "k": 0,
+    "group": "every law",
+    "axis": "moved",
+    "first": "meridian",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 60,
+   "pilot missing": 0,
+   "pilot count": 60,
+   "scored": 600,
+   "interval": [
+    580,
+    600
+   ],
+   "predicted": "580-600 of 600",
+   "chance": 0.955470549802107
+  },
+  {
+   "item": {
+    "name": "P11",
+    "k": 4,
+    "group": "every law",
+    "axis": "moved",
+    "first": "meridian",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 60,
+   "pilot missing": 0,
+   "pilot count": 60,
+   "scored": 600,
+   "interval": [
+    580,
+    600
+   ],
+   "predicted": "580-600 of 600",
+   "chance": 0.955470549802107
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "walk",
+    "axis": "uplift",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 2.2359549864087045,
+   "pilot half-width": 2.1053698991235406,
+   "pilot sd": 2.943104178559335,
+   "scored": 100,
+   "chances": {
+    "below": 0.008957787974566266,
+    "across": 0.053452992428741686,
+    "above": 0.9375892195966921
+   },
+   "predicted": "above",
+   "chance": 0.9375892195966921
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "trend",
+    "axis": "uplift",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 2.7085639030173128,
+   "pilot half-width": 1.3133233276195735,
+   "pilot sd": 1.8358994183994504,
+   "scored": 100,
+   "chances": {
+    "below": 0.00034678762071807523,
+    "across": 0.0016062686000823945,
+    "above": 0.9980469437791996
+   },
+   "predicted": "above",
+   "chance": 0.9980469437791996
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "step",
+    "axis": "uplift",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 3.4247692995193524,
+   "pilot half-width": 1.9662371046638822,
+   "pilot sd": 2.748609943166626,
+   "scored": 100,
+   "chances": {
+    "below": 0.0009182743848944628,
+    "across": 0.0048701443703421665,
+    "above": 0.9942115812447634
+   },
+   "predicted": "above",
+   "chance": 0.9942115812447634
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "season",
+    "axis": "uplift",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 1.9831889628819088,
+   "pilot half-width": 1.6719296417386351,
+   "pilot sd": 2.3371964788261894,
+   "scored": 100,
+   "chances": {
+    "below": 0.005805959136346187,
+    "across": 0.0350057376445283,
+    "above": 0.9591883032191255
+   },
+   "predicted": "above",
+   "chance": 0.9591883032191255
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "revert",
+    "axis": "uplift",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 1.8864863758982544,
+   "pilot half-width": 1.1425223069424497,
+   "pilot sd": 1.5971360553123704,
+   "scored": 100,
+   "chances": {
+    "below": 0.0012245477054371806,
+    "across": 0.006715231652530185,
+    "above": 0.9920602206420326
+   },
+   "predicted": "above",
+   "chance": 0.9920602206420326
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "static",
+    "axis": "uplift",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot mean": 1.8351187752996896,
+   "pilot half-width": 0.7194292883728315,
+   "pilot sd": 1.0056927980539183,
+   "scored": 100,
+   "chances": {
+    "below": 8.961848399187935e-05,
+    "across": 0.0003321603760105818,
+    "above": 0.9995782211399975
+   },
+   "predicted": "above",
+   "chance": 0.9995782211399975
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "walk",
+    "axis": "covered",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot count": 7,
+   "scored": 100,
+   "interval": [
+    43,
+    89
+   ],
+   "predicted": "43-89 of 100",
+   "chance": 0.9044176027095576
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "trend",
+    "axis": "covered",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot count": 7,
+   "scored": 100,
+   "interval": [
+    43,
+    89
+   ],
+   "predicted": "43-89 of 100",
+   "chance": 0.9044176027095576
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "step",
+    "axis": "covered",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot count": 8,
+   "scored": 100,
+   "interval": [
+    54,
+    95
+   ],
+   "predicted": "54-95 of 100",
+   "chance": 0.9106621743087573
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "season",
+    "axis": "covered",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot count": 10,
+   "scored": 100,
+   "interval": [
+    82,
+    100
+   ],
+   "predicted": "82-100 of 100",
+   "chance": 0.95500776952864
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "revert",
+    "axis": "covered",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot count": 9,
+   "scored": 100,
+   "interval": [
+    66,
+    99
+   ],
+   "predicted": "66-99 of 100",
+   "chance": 0.9259795475239907
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "static",
+    "axis": "covered",
+    "first": "dlm mixture",
+    "second": null,
+    "level": 0.0,
+    "kind": "share",
+    "gated": false
+   },
+   "pilot n": 10,
+   "pilot missing": 0,
+   "pilot count": 9,
+   "scored": 100,
+   "interval": [
+    66,
+    99
+   ],
+   "predicted": "66-99 of 100",
+   "chance": 0.9259795475239907
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "stacked",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 1.7812592275015142,
+   "pilot half-width": 0.36241892832644795,
+   "pilot sd": 1.275239051094615,
+   "scored": 500,
+   "chances": {
+    "below": 9.748851149792955e-14,
+    "across": 5.287659199382233e-12,
+    "above": 0.9999999999946149
+   },
+   "predicted": "above",
+   "chance": 0.9999999999946149
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "cvar 0.1",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 1.0563618644001762,
+   "pilot half-width": 0.38554640229599507,
+   "pilot sd": 1.3566174109262374,
+   "scored": 500,
+   "chances": {
+    "below": 2.046331872626197e-07,
+    "across": 1.2180433373476518e-05,
+    "above": 0.9999876149334392
+   },
+   "predicted": "above",
+   "chance": 0.9999876149334392
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "dlm plug-in",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 2.4184490025884395,
+   "pilot half-width": 0.6668549944758643,
+   "pilot sd": 2.3464545141171835,
+   "scored": 500,
+   "chances": {
+    "below": 4.833996455346281e-10,
+    "across": 3.2457726062418146e-08,
+    "above": 0.9999999670588743
+   },
+   "predicted": "above",
+   "chance": 0.9999999670588743
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "dlm cvar 0.1",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 0.79965902279184,
+   "pilot half-width": 0.4187708468522315,
+   "pilot sd": 1.473523857685764,
+   "scored": 500,
+   "chances": {
+    "below": 4.754880474124542e-05,
+    "across": 0.0017130600323559397,
+    "above": 0.9982393911629028
+   },
+   "predicted": "above",
+   "chance": 0.9982393911629028
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "pymc-marketing",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 1.8924066911849844,
+   "pilot half-width": 0.40947499506420354,
+   "pilot sd": 1.4408146576778573,
+   "scored": 500,
+   "chances": {
+    "below": 6.41408168926558e-13,
+    "across": 3.734357267859423e-11,
+    "above": 0.999999999962015
+   },
+   "predicted": "above",
+   "chance": 0.999999999962015
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "pymc-marketing shared",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 1.5855102015227032,
+   "pilot half-width": 0.4190802601180979,
+   "pilot sd": 1.4746125863605648,
+   "scored": 500,
+   "chances": {
+    "below": 1.670752900196513e-10,
+    "across": 1.1125736443240442e-08,
+    "above": 0.9999999887071883
+   },
+   "predicted": "above",
+   "chance": 0.9999999887071883
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "pymc-marketing channel",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 1.5375829988563816,
+   "pilot half-width": 0.3884467677869447,
+   "pilot sd": 1.3668228915107798,
+   "scored": 500,
+   "chances": {
+    "below": 5.135132081332936e-11,
+    "across": 3.3626940121322946e-09,
+    "above": 0.9999999965859546
+   },
+   "predicted": "above",
+   "chance": 0.9999999965859546
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "meridian",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": -0.006406969511012514,
+   "pilot half-width": 0.06033161138108605,
+   "pilot sd": 0.21228810317358543,
+   "scored": 500,
+   "chances": {
+    "below": 0.3495134394753915,
+    "across": 0.43551199205480484,
+    "above": 0.21497456846980367
+   },
+   "predicted": "across",
+   "chance": 0.43551199205480484
+  },
+  {
+   "item": {
+    "name": "P12",
+    "k": 0,
+    "group": "drifting",
+    "axis": "uplift",
+    "first": "orbit",
+    "second": null,
+    "level": 0.0,
+    "kind": "verdict",
+    "gated": false
+   },
+   "pilot n": 50,
+   "pilot missing": 0,
+   "pilot mean": 2.6092237518606343,
+   "pilot half-width": 0.513206874809131,
+   "pilot sd": 1.8058147544030163,
+   "scored": 500,
+   "chances": {
+    "below": 3.3448770951885643e-14,
+    "across": 1.7356116543965072e-12,
+    "above": 0.999999999998231
+   },
+   "predicted": "above",
+   "chance": 0.999999999998231
+  }
+ ]
+}

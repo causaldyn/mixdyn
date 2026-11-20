@@ -1,0 +1,2042 @@
+{
+  "name": "M3: the claim by family and rung over every family M3 covers",
+  "status": "frozen on 2026-11-17 on the author's confirmation, before any confirmatory world of the run is fitted",
+  "margin": 0.05,
+  "reader": "hall",
+  "claim": {
+    "by": "family and rung",
+    "alpha": 0.025,
+    "multiplicity": "a fixed sequence over the verdicts that claim a comparison, each at 0.025 in the declared order; the first that does not hold ends the confirmatory claims, every later verdict read and printed not confirmed",
+    "order rule": "each family and rung by its predictive on the check split, every claimed comparison within together, highest first; ties by family, then rung",
+    "claimed if predictive at least": 0.5,
+    "headline": "against each rival at its recommended settings: every family and rung claimed whole, none predicted to fail, every verdict holds at 0.025, an intersection-union test with no adjustment; the tuned columns reported beside it, never in it",
+    "comparison reads": "complete cases, as in M2; the status quo standing in for every failed plan printed beside it as a secondary readout",
+    "declaration": {
+      "per_rung": true,
+      "reader": "hall",
+      "confirmatory": true,
+      "order": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          9,
+          0
+        ],
+        [
+          9,
+          4
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          10,
+          4
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          13,
+          4
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          3,
+          4
+        ]
+      ]
+    },
+    "tuned rivals": "not claimed: no predictive (no development record). A comparison enters the claim only with a predictive of at least 0.5, and no development record of a tuned setting lies on the check split. meridian tuned and robyn tuned are read and printed beside every verdict of their root, outside the intersection-union test, the fixed sequence and Holm's step-down: the root caps each at its own worlds, the cap exploratory (Declaration.caps, Declaration.exploratory_caps), so each is read on every declared world. Meridian's tuning chose by its health card and its out-of-sample prediction, never by regret. The predictives, the order and the expected count read the recommended rivals alone. pymc-marketing tuned is not run (arms.rivals.tuned)"
+  },
+  "secondary": {
+    "past bounds": "every stage of every fit, the two-stage arm's first stage included",
+    "narrow margin": 0.01,
+    "gain at k = 0": [
+      "the best plan less the status quo",
+      "meridian less the status quo"
+    ],
+    "against the default": {
+      "reading": "margin held less dlm cvar 0.1 at k = 0, paired by world on the complete cases, each arm's failures counted",
+      "by run": "every root that runs both, with the paired 95 % Student-t interval",
+      "pooled": "over the confirmatory runs at k = 0 (families 0, 2, 3, 5, 7, 12 and 13; 12 and 13 past the cap there, out of the claim, their worlds as fresh): every complete case one world, the variance stratified by run (sum of n_f s_f^2 over N^2), the 95 % interval on the normal quantile",
+      "declared by": "Declaration.default_less, read by scorecard.claim.against_default (ADR 0094)",
+      "enters": "no verdict, no Holm's list and no headline",
+      "why": "the claim's arm replaced the pilot's winner after the pilot; this reads that replacement on worlds no one has read"
+    }
+  },
+  "seeds": {
+    "confirmatory": "causaldyn_bench.scorecard.seeds.confirmatory: family f, environment e from 200000 + 20000 f + 1000 (e + 10)",
+    "family 0": {
+      "drawn": [
+        12000,
+        12999
+      ],
+      "reference": [
+        22000,
+        22999
+      ]
+    },
+    "family 15": "no confirmatory files: family 15 is exploratory, read on M2's scored worlds of demo (seeds 501000-501099), as M2's files hold them",
+    "families 17 to 20": "exploratory: the first 60 worlds of each environment's scored block (causaldyn_bench.scorecard.seeds); their pilot seeds 30-99 were read by the screen and the time guard (m3.md, departures, item 8)",
+    "disclosed": "confirmatory worlds 270000 and 270001 (family 3, r-0.9, k = 0) were exported and fitted by ridge in a rehearsal on 2026-11-16; ridge is outside the claim, and the two worlds stay in the block"
+  },
+  "development": {
+    "set": "M2's scored worlds, every root",
+    "split": "rank by seed within family and environment; rank mod 3 == 2 or a -robyn root's world: check; else fit",
+    "selection": {
+      "data": "fit split",
+      "score": "max over confirmatory families and rivals of the mean paired difference, candidate less rival",
+      "failed fit": "plays the status quo, as the bench scores it, and is counted; no complete-case reading",
+      "tie": 0.005,
+      "tie break": [
+        "fewest CPU-seconds a fit",
+        "fewest settings"
+      ],
+      "geo": "families 8 and 10 (geos-3, geos-8) scored apart, with the geo candidates",
+      "guard": {
+        "rung": "tested",
+        "families": [
+          4,
+          14
+        ],
+        "reference": "stacked",
+        "most": 0.02,
+        "rule": "a candidate whose mean regret per euro on either family's fit split exceeds the reference's by more than the most is out, before the score's winner is read"
+      }
+    },
+    "candidates": {
+      "unit": "CPU-seconds a fit, as select reads them",
+      "the pilot's": {
+        "0": {
+          "dlm cvar 0.1": 835,
+          "dlm cvar 0.1 vs equal": 835
+        },
+        "tested": {
+          "stacked": 320,
+          "stacked, concave hill": "out by the S-curve guard (family 4 +0.0610)",
+          "stacked, concave hill, lift-row pick": "out by the S-curve guard (family 4 +0.0803, family 14 +0.0253)"
+        },
+        "geo": {
+          "bayes geo plug-in": 3768,
+          "geo dlm": 117
+        }
+      },
+      "the claim's arms, designed after the pilot": {
+        "0": {
+          "margin held": 1
+        },
+        "tested": {
+          "gs held": 53
+        },
+        "geo": {
+          "geo eb": 0
+        }
+      }
+    },
+    "winners": {
+      "0": "margin held",
+      "tested": "gs held",
+      "geo": "geo eb",
+      "the pilot's select": {
+        "0": "dlm cvar 0.1",
+        "tested": "stacked",
+        "geo": "bayes geo plug-in"
+      },
+      "how": "the claim's arms are not the pilot's winners: each is a rule designed after the pilot's first reading, and the selection rule run on the development set's records of the final arms picks them (m3.md, departures)"
+    },
+    "pilot preregistration": "scorecard/preregistration/m3-pilot.md"
+  },
+  "sizing": {
+    "script": "scorecard/preregistration/m3_sizing.py",
+    "rule": "N = (2.8016 sd / margin)^2 worlds in tens, sd the largest paired SD (ddof 1) of the verdict's comparisons with the recommended rivals on the fit split, the family's environments pooled, complete cases (families 9, 12, 13: every pilot world); a family declares the largest N over its rungs, at least the floor, split evenly over its environments and rounded up; a verdict whose N passes the cap is exploratory, and a family whose largest N passes it declares the floor",
+    "level": "0.025 a verdict: the fixed sequence tests each verdict at 0.025, no inflation for the number of verdicts",
+    "power": 0.8,
+    "floor": 240,
+    "cap": 520,
+    "predictive": {
+      "split": "check",
+      "stages": [
+        "check worlds drawn with replacement, as many as each environment holds",
+        "the declared N drawn from those"
+      ],
+      "failed fit": "drawn and left out of the comparison's complete cases, as the claim reads it",
+      "resamples": 4000,
+      "seed": 20261116
+    },
+    "script sha256": "3d1d516bf80413f9ae3673fda4c57320579402b7480992d1e46f30532e30ea8e"
+  },
+  "families": {
+    "0": {
+      "environments": [
+        "drawn",
+        "reference"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "yes, both rungs",
+      "worlds": 175,
+      "needed": {
+        "0": 350,
+        "tested": 310
+      },
+      "declared": 350
+    },
+    "1": {
+      "environments": [
+        "walk",
+        "trend",
+        "step",
+        "season",
+        "revert",
+        "static"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, on M2's scored worlds, both rungs (the no-test clause read there)",
+      "worlds": 40
+    },
+    "2": {
+      "environments": [
+        "kappa-0.5",
+        "kappa-1",
+        "kappa-2"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "yes, both rungs",
+      "worlds": 80,
+      "needed": {
+        "0": 240,
+        "tested": 110
+      },
+      "declared": 240
+    },
+    "3": {
+      "environments": [
+        "r-0.9",
+        "r-0.97",
+        "r-0.99"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "yes, both rungs",
+      "worlds": 90,
+      "needed": {
+        "0": 270,
+        "tested": 130
+      },
+      "declared": 270
+    },
+    "4": {
+      "environments": [
+        "hill-2",
+        "weibull-2",
+        "logistic-4"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, on M2's scored worlds, both rungs (the no-test clause read there)",
+      "worlds": 80
+    },
+    "5": {
+      "environments": [
+        "rho-0",
+        "rho-0.3",
+        "rho-0.6"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "yes, both rungs",
+      "worlds": 80,
+      "needed": {
+        "0": 240,
+        "tested": 120
+      },
+      "declared": 240
+    },
+    "6": {
+      "environments": [
+        "cliff",
+        "saturation",
+        "both"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, on M2's scored worlds, both rungs (the no-test clause read there)",
+      "worlds": 80
+    },
+    "7": {
+      "environments": [
+        "L-52",
+        "L-78",
+        "L-104"
+      ],
+      "rungs": [
+        0,
+        "k_max(L)"
+      ],
+      "in the claim": "yes, both rungs (the tested rung k_max(L))",
+      "worlds": 80,
+      "needed": {
+        "0": 210,
+        "tested": 100
+      },
+      "declared": 240
+    },
+    "8": {
+      "environments": [
+        "policy-0",
+        "policy-0.5"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "yes, both rungs (the geo rule)",
+      "worlds": 120,
+      "needed": {
+        "0": 10,
+        "tested": 10
+      },
+      "declared": 240
+    },
+    "9": {
+      "environments": [
+        "spillover-0.2",
+        "spillover-0.5"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "yes, both rungs (the geo rule)",
+      "worlds": 120,
+      "needed": {
+        "0": 20,
+        "tested": 20
+      },
+      "declared": 240
+    },
+    "10": {
+      "environments": [
+        "geos-3",
+        "geos-8"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "yes, both rungs, geos-3 and geos-8 (the geo rule); Meridian capped, exploratory",
+      "worlds": 120,
+      "needed": {
+        "0": 20,
+        "tested": 20
+      },
+      "declared": 240
+    },
+    "12": {
+      "environments": [
+        "priors"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: both rungs past the cap (N 3270 at k = 0, 4340 at rung 4), exploratory, run at the floor",
+      "worlds": 240,
+      "needed": {
+        "0": 3270,
+        "tested": 4340
+      },
+      "declared": 240
+    },
+    "13": {
+      "environments": [
+        "priors"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "rung 4 yes; rung 0 past the cap (N 580), exploratory, every rival there declared predicted but meridian tuned, read beside the claim at every rung",
+      "worlds": 240,
+      "needed": {
+        "0": 580,
+        "tested": 110
+      },
+      "declared": 240
+    },
+    "14": {
+      "environments": [
+        "genre"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, on M2's scored worlds, both rungs (the no-test clause read there)",
+      "worlds": 240
+    },
+    "15": {
+      "environments": [
+        "demo"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, on M2's scored worlds, both rungs (the no-test clause read there)",
+      "worlds": 100
+    },
+    "17": {
+      "name": "twins",
+      "environments": [
+        "curve",
+        "line"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, every arm but Robyn",
+      "worlds": 60
+    },
+    "18": {
+      "name": "long term",
+      "environments": [
+        "unbuilt",
+        "unread"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, every arm but Robyn",
+      "worlds": 60
+    },
+    "19": {
+      "name": "flat",
+      "environments": [
+        "flat-meta",
+        "flat-pla",
+        "flat-tv"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, every arm but Robyn",
+      "worlds": 60
+    },
+    "20": {
+      "name": "promotions",
+      "environments": [
+        "independent",
+        "tv-0.5",
+        "tv-0.8"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "in the claim": "no: exploratory, every arm but Robyn",
+      "worlds": 60
+    }
+  },
+  "exploratory": {
+    "past the cap": [
+      [
+        12,
+        0
+      ],
+      [
+        12,
+        4
+      ],
+      [
+        13,
+        0
+      ]
+    ],
+    "families": {
+      "1, 4, 6, 14, 15": "on M2's scored worlds, both rungs; the rivals' M2 records reused",
+      "17, 18, 19, 20": "60 worlds an environment, every arm but Robyn, both rungs"
+    },
+    "robyn": "20 worlds an environment on families 9, 12 and 13, recommended and tuned",
+    "not run": {
+      "geos-50": "family 10's 50-geo environment is not in M3; its only reading is the audit on fresh worlds, exploratory",
+      "bayes geo plug-in": "the pilot's geo winner; about 1690 CPU-hours",
+      "families 11 and 16": "11 withdrawn; 16's files and licence had not come at the freeze"
+    }
+  },
+  "arms": {
+    "k = 0 candidates": {
+      "the pilot's": [
+        "dlm cvar 0.1",
+        "dlm cvar 0.1 vs equal"
+      ],
+      "the claim's arm": "margin held, the margin arm's variant (the noise mixture under the time guard)",
+      "beside the claim": "dlm cvar 0.1, the pilot's winner, the dlm arm's variant, on the author's decision of 2026-11-17: run as a recorded arm beside margin held on every fresh world the claim's arm plans (the main roots of families 0, 2, 3, 5, 7, 12, 13 and 17 to 20, both rungs; not on M2's worlds of families 1, 4, 6, 14 and 15), never a rival nor a candidate; read against margin held beside the claim (secondary, against the default)"
+    },
+    "tested-rung candidates": {
+      "the pilot's": [
+        "stacked",
+        "stacked, concave hill",
+        "stacked, concave hill, lift-row pick"
+      ],
+      "the claim's arm": "gs held, a composite (scorecard.composite): the anchored arm's anchored held routes, the bayes arm's stacked is routed to"
+    },
+    "geo candidates": {
+      "the pilot's": [
+        "bayes geo plug-in",
+        "geo dlm"
+      ],
+      "the claim's arm": "geo eb, the geo-eb arm, at both rungs"
+    },
+    "recorded": {
+      "margin": [
+        "margin",
+        "margin guarded",
+        "margin ranged",
+        "margin curved",
+        "margin curved noise"
+      ],
+      "dlm": [
+        "dlm plug-in",
+        "dlm mixture",
+        "dlm cvar 0.1",
+        "dlm cvar 0.1 vs equal"
+      ],
+      "anchored": [
+        "anchored",
+        "anchored curved"
+      ],
+      "bayes": [
+        "stacked",
+        "cvar 0.1",
+        "cvar 0.1 vs equal"
+      ],
+      "composites": [
+        "gs curved, assembled from anchored curved and stacked"
+      ],
+      "ridge": [
+        "ridge"
+      ],
+      "chc": [
+        "chc",
+        "chc cvar 0.1 vs equal"
+      ],
+      "voi": "voi, voi meridian, voi no test: family 0 drawn, rungs 1 and 2, 60 worlds",
+      "decisions": "flighting, scenarios, plan table, with bayes: family 0 drawn, rung 4, 60 worlds",
+      "geo readers": "read-tbr, read-sc, read-sdid, switchback and geo-dlm, with bayes: family 8 policy-0, rung 4, 60 worlds"
+    },
+    "rivals": {
+      "meridian": "Meridian 2.1.0, its recommended settings (roi priors, automatic knot selection)",
+      "pymc-marketing": "PyMC-Marketing 1.3.0 (pytensor 3.3.6, numba 0.68.0), logistic saturation, static intercept",
+      "orbit": "Orbit KTR 1.1.5.1, log-log; no yearly seasonality where the history less 13 weeks is under 52",
+      "robyn": "Robyn 3.12.1, genre ranges, recommended settings, 20 worlds an environment on families 9, 12 and 13, exploratory",
+      "tuned": {
+        "chosen by": "scorecard/tuned.json (scorecard.tuning select --write), on the pilot's tuning",
+        "meridian tuned": "contribution knots-13: --media-prior-type contribution --knot-weeks 13",
+        "pymc-marketing tuned": "logistic static, the recommended settings: PyMC-Marketing's tuning chose its recommended setting; its tuned column is its recommended column and is not run twice (a run that declares it is refused: scorecard.tools.recommended)",
+        "robyn tuned": "--ts-validation, in each Robyn root"
+      }
+    }
+  },
+  "robyn": {
+    "development": "M2's stored plans on M2's families",
+    "anew": [
+      "9",
+      "12",
+      "13"
+    ],
+    "cpus a process": 3.0,
+    "worlds": "the first 20 confirmatory worlds of each environment, rungs 0 and 4, robyn and robyn tuned"
+  },
+  "reuse": {
+    "rule": "a tool's record is taken where the export's digest is the one its record names and the tool's pinned files are the same at both runs' bench commits",
+    "log": "logs/reused.jsonl",
+    "roots": {
+      "e0-f1": "M2's f1: meridian, pymc-marketing, orbit",
+      "e0-f4": "M2's f4: meridian, pymc-marketing, orbit",
+      "e0-f6": "M2's f6: meridian, pymc-marketing, orbit",
+      "e0-f14": "M2's f14: meridian, pymc-marketing, orbit",
+      "e0-f15": "M2's f15: meridian, pymc-marketing, orbit",
+      "et-f1": "M2's f1: meridian, pymc-marketing, orbit",
+      "et-f4": "M2's f4: meridian, pymc-marketing, orbit",
+      "et-f6": "M2's f6: meridian, pymc-marketing, orbit",
+      "et-f14": "M2's f14: meridian, pymc-marketing, orbit",
+      "et-f15": "M2's f15: meridian, pymc-marketing, orbit"
+    },
+    "accepted": {
+      "scripts/meridian_arm.py": "changed between M2's bench commit 316fada and 67f92b7 only by the options a tuned arm passes; the pilot's replay check refitted family 0 drawn's seeds 10021 and 10022 at k = 0 and moved no channel's spend (largest 0 of the budget, threshold 1e-6)",
+      "scripts/pymc_marketing_arm.py": "the same, the same two worlds, largest move 0"
+    }
+  },
+  "predicted": [
+    {
+      "family": 12,
+      "rung": 0,
+      "rival": "orbit",
+      "mean": 0.018,
+      "read on": "30 pilot worlds (no fit split)",
+      "predictive": 0.434
+    }
+  ],
+  "forecasts": {
+    "from": "the pilot's check split",
+    "items": "none beside the verdicts: the verdicts' predictives are M3's forecasts",
+    "excluded": "every item the pilot selected",
+    "expected": {
+      "in the fixed sequence": 16.94,
+      "verdicts": 17,
+      "the cap not applied": 19.26,
+      "verdicts, the cap not applied": 20
+    }
+  },
+  "pins": {
+    "mixdyn": "the commit that marks this file frozen",
+    "causal-hybrid-control": "1.3.0",
+    "bench": "67f92b7478b0a1423538d77e62d8198923c52a85",
+    "jax": "0.12.0",
+    "meridian": "2.1.0",
+    "pymc-marketing": "1.3.0, pytensor 3.3.6, numba 0.68.0",
+    "orbit": "1.1.5.1",
+    "robyn": "3.12.1"
+  },
+  "limits": {
+    "rule": "M2's memory cap and timeout of the arm's cost class on the family its cost is read from (family 9 family 8's; 12, 13 and 17-20 family 0's), the timeout stretched by the arm's cost factor; the class's slots and CPUs a process",
+    "by family": {
+      "0": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3000,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "decisions": [
+          "2G",
+          18000,
+          16,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "voi": [
+          "2G",
+          6000,
+          16,
+          1.0
+        ]
+      },
+      "1": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2820,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          1500,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          600,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          720,
+          12,
+          1.5
+        ]
+      },
+      "2": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2880,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          7620,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "11G",
+          1560,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "11G",
+          1560,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          720,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "3": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2880,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "8G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "9G",
+          1380,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "9G",
+          1380,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "4": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2940,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          1380,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ]
+      },
+      "5": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2880,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "11G",
+          7680,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "17G",
+          1380,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "17G",
+          1380,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "6": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2880,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "15G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ]
+      },
+      "7": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2400,
+          16,
+          1.0
+        ],
+        "chc": [
+          "1G",
+          540,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "6G",
+          4800,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "10G",
+          1140,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "10G",
+          1140,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          480,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          720,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "8": {
+        "bayes": [
+          "2G",
+          11580,
+          16,
+          1.0
+        ],
+        "chc": [
+          "1G",
+          540,
+          4,
+          1.0
+        ],
+        "geo-dlm": [
+          "4G",
+          4380,
+          16,
+          1.0
+        ],
+        "geo-eb": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "30G",
+          9960,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "30G",
+          9960,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          540,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          2340,
+          12,
+          1.5
+        ],
+        "read-sc": [
+          "2G",
+          11580,
+          16,
+          1.0
+        ],
+        "read-sdid": [
+          "2G",
+          11580,
+          16,
+          1.0
+        ],
+        "read-tbr": [
+          "2G",
+          11580,
+          16,
+          1.0
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "switchback": [
+          "2G",
+          11580,
+          16,
+          1.0
+        ]
+      },
+      "9": {
+        "chc": [
+          "1G",
+          540,
+          4,
+          1.0
+        ],
+        "geo-eb": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "30G",
+          9960,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "30G",
+          9960,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          540,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          2340,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "robyn": [
+          "4G",
+          22440,
+          8,
+          3.0
+        ],
+        "robyn tuned": [
+          "4G",
+          25860,
+          8,
+          3.0
+        ]
+      },
+      "10": {
+        "chc": [
+          "1G",
+          540,
+          4,
+          1.0
+        ],
+        "geo-eb": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "23G",
+          6540,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "23G",
+          6540,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          540,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "6G",
+          12060,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "12": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3000,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "robyn": [
+          "4G",
+          22380,
+          8,
+          3.0
+        ],
+        "robyn tuned": [
+          "4G",
+          25740,
+          8,
+          3.0
+        ]
+      },
+      "13": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3000,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "robyn": [
+          "4G",
+          22380,
+          8,
+          3.0
+        ],
+        "robyn tuned": [
+          "4G",
+          25740,
+          8,
+          3.0
+        ]
+      },
+      "14": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          2820,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          5160,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          1200,
+          12,
+          1.5
+        ]
+      },
+      "15": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3420,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "10G",
+          4860,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          1980,
+          12,
+          1.5
+        ]
+      },
+      "17": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3000,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "18": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3000,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "19": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3000,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "20": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "bayes": [
+          "2G",
+          3000,
+          16,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "dlm": [
+          "9G",
+          9060,
+          16,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "meridian tuned": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      }
+    },
+    "columns": [
+      "memory",
+      "timeout, s",
+      "slots",
+      "CPUs a process"
+    ]
+  },
+  "compute": {
+    "core-hours": 5302,
+    "from": "the run kit's cost model on the declared worlds (M2's and the pilot's recorded CPU a process, one simulation on one 192-CPU box): a planning figure, not a timing",
+    "one box": "m6a.48xlarge: makespan 36.5 h, box 40.2 h, $72.7 median; every process at its p90 wall, makespan 47.4 h, box 52.0 h, $100.3 at the p90 price",
+    "by family": {
+      "0": 499.4,
+      "1": 33.9,
+      "2": 283.9,
+      "3": 324.4,
+      "4": 32.6,
+      "5": 277.7,
+      "6": 33.5,
+      "7": 209.1,
+      "8": 596.0,
+      "9": 815.5,
+      "10": 293.2,
+      "12": 469.3,
+      "13": 465.3,
+      "14": 31.7,
+      "15": 14.6,
+      "17": 139.9,
+      "18": 136.9,
+      "19": 210.5,
+      "20": 209.9,
+      "the refresh cell": 224.8
+    },
+    "by arm": {
+      "dlm": 1322.1,
+      "meridian tuned": 781.2,
+      "meridian": 772.6,
+      "bayes": 530.5,
+      "pymc-marketing": 516.0,
+      "robyn tuned": 400.6,
+      "robyn": 348.6,
+      "orbit": 185.8,
+      "margin (costed as dlm)": 104.8,
+      "chc": 101.0,
+      "decisions": 49.4,
+      "ridge": 35.3,
+      "voi": 31.2,
+      "read-tbr": 29.3,
+      "read-sdid": 29.0,
+      "read-sc": 28.6,
+      "switchback": 28.6,
+      "margin": 3.0,
+      "anchored": 2.8,
+      "geo-eb": 1.2,
+      "geo-dlm": 0.5
+    },
+    "by family and arm": {
+      "0": {
+        "bayes": 53.8,
+        "chc": 10.1,
+        "decisions": 49.4,
+        "dlm": 199.9,
+        "meridian": 47.6,
+        "meridian tuned": 47.8,
+        "orbit": 20.7,
+        "pymc-marketing": 34.8,
+        "ridge": 3.5,
+        "voi": 31.2,
+        "margin": 0.3,
+        "anchored": 0.3
+      },
+      "1": {
+        "margin": 0.2,
+        "bayes": 33.5,
+        "anchored": 0.2
+      },
+      "2": {
+        "chc": 7.4,
+        "dlm": 137.1,
+        "meridian": 32.6,
+        "meridian tuned": 32.9,
+        "orbit": 13.8,
+        "pymc-marketing": 25.2,
+        "ridge": 2.6,
+        "margin": 0.2,
+        "bayes": 31.9,
+        "anchored": 0.2
+      },
+      "3": {
+        "chc": 8.7,
+        "dlm": 161.5,
+        "meridian": 34.7,
+        "meridian tuned": 34.6,
+        "orbit": 15.7,
+        "pymc-marketing": 29.6,
+        "ridge": 2.7,
+        "margin": 0.2,
+        "bayes": 36.5,
+        "anchored": 0.2
+      },
+      "4": {
+        "margin": 0.2,
+        "bayes": 32.2,
+        "anchored": 0.2
+      },
+      "5": {
+        "chc": 7.5,
+        "dlm": 134.2,
+        "meridian": 30.9,
+        "meridian tuned": 30.9,
+        "orbit": 13.8,
+        "pymc-marketing": 25.7,
+        "ridge": 2.4,
+        "margin": 0.2,
+        "bayes": 31.9,
+        "anchored": 0.2
+      },
+      "6": {
+        "margin": 0.2,
+        "bayes": 33.1,
+        "anchored": 0.2
+      },
+      "7": {
+        "chc": 6.0,
+        "dlm": 85.3,
+        "meridian": 27.8,
+        "meridian tuned": 27.8,
+        "orbit": 12.3,
+        "pymc-marketing": 22.3,
+        "ridge": 2.2,
+        "margin": 0.2,
+        "bayes": 25.0,
+        "anchored": 0.2
+      },
+      "8": {
+        "bayes": 29.2,
+        "chc": 6.5,
+        "geo-dlm": 0.5,
+        "meridian": 165.6,
+        "meridian tuned": 167.5,
+        "orbit": 12.8,
+        "pymc-marketing": 95.2,
+        "read-sc": 28.6,
+        "read-sdid": 29.0,
+        "read-tbr": 29.3,
+        "ridge": 2.8,
+        "switchback": 28.6,
+        "geo-eb": 0.4
+      },
+      "9": {
+        "chc": 7.6,
+        "meridian": 160.9,
+        "meridian tuned": 160.8,
+        "orbit": 12.9,
+        "pymc-marketing": 97.9,
+        "ridge": 2.8,
+        "robyn": 173.0,
+        "robyn tuned": 199.2,
+        "geo-eb": 0.4
+      },
+      "10": {
+        "chc": 6.6,
+        "meridian": 102.7,
+        "meridian tuned": 106.7,
+        "orbit": 12.7,
+        "pymc-marketing": 61.3,
+        "ridge": 2.8,
+        "geo-eb": 0.4
+      },
+      "12": {
+        "chc": 7.6,
+        "dlm": 135.9,
+        "meridian": 31.8,
+        "meridian tuned": 32.4,
+        "orbit": 14.3,
+        "pymc-marketing": 23.7,
+        "ridge": 2.4,
+        "robyn": 87.7,
+        "robyn tuned": 101.1,
+        "margin": 0.2,
+        "bayes": 32.0,
+        "anchored": 0.2
+      },
+      "13": {
+        "chc": 7.6,
+        "dlm": 132.6,
+        "meridian": 32.1,
+        "meridian tuned": 32.2,
+        "orbit": 14.2,
+        "pymc-marketing": 23.5,
+        "ridge": 2.4,
+        "robyn": 87.9,
+        "robyn tuned": 100.3,
+        "margin": 0.2,
+        "bayes": 32.1,
+        "anchored": 0.2
+      },
+      "14": {
+        "margin": 0.2,
+        "bayes": 31.3,
+        "anchored": 0.2
+      },
+      "15": {
+        "margin": 0.1,
+        "bayes": 14.4,
+        "anchored": 0.1
+      },
+      "17": {
+        "chc": 3.6,
+        "dlm": 67.3,
+        "meridian": 16.2,
+        "meridian tuned": 16.3,
+        "orbit": 7.1,
+        "pymc-marketing": 11.9,
+        "ridge": 1.2,
+        "margin": 0.1,
+        "bayes": 16.1,
+        "anchored": 0.1
+      },
+      "18": {
+        "chc": 3.5,
+        "dlm": 64.9,
+        "meridian": 16.1,
+        "meridian tuned": 16.0,
+        "orbit": 7.2,
+        "pymc-marketing": 11.8,
+        "ridge": 1.2,
+        "margin": 0.1,
+        "bayes": 16.0,
+        "anchored": 0.1
+      },
+      "19": {
+        "chc": 5.2,
+        "dlm": 102.0,
+        "meridian": 24.2,
+        "meridian tuned": 24.2,
+        "orbit": 10.7,
+        "pymc-marketing": 17.8,
+        "ridge": 1.8,
+        "margin": 0.2,
+        "bayes": 24.3,
+        "anchored": 0.1
+      },
+      "20": {
+        "chc": 5.4,
+        "dlm": 101.4,
+        "meridian": 24.1,
+        "meridian tuned": 24.6,
+        "orbit": 10.6,
+        "pymc-marketing": 17.8,
+        "ridge": 1.8,
+        "margin": 0.2,
+        "bayes": 23.9,
+        "anchored": 0.1
+      },
+      "the refresh cell": {
+        "bayes": 33.3,
+        "chc": 7.7,
+        "margin (costed as dlm)": 104.8,
+        "meridian tuned": 26.5,
+        "meridian": 25.3,
+        "orbit": 7.0,
+        "pymc-marketing": 17.5,
+        "ridge": 2.7
+      }
+    },
+    "beside the claim": "dlm cvar 0.1 beside the k = 0 claim's arm: about 1322 core-hours, 8.8 box hours and $16.0 at the median ($22.9 at the p90)",
+    "not run": "pymc-marketing tuned: the tuning chose PyMC-Marketing's recommended setting, so its tuned column is its recommended column; about 512 core-hours fewer than the same run with that column fitted at the default's cost (4467)",
+    "overstated": "the refresh cell's k = 0 jobs are charged as dlm's though margin runs them",
+    "budget": {
+      "usd": 121.0,
+      "credits": 81.28,
+      "credits as of": "AWS's estimate of 2026-11-17",
+      "paid at most": 40.0
+    },
+    "guard": {
+      "box": "one m6a.48xlarge spot instance; c6a.48xlarge not used (77 box hours at the median)",
+      "max price an hour": 1.92,
+      "billed clock": "the box's uptime summed over its boots (m3-autostop.sh), each boot charged its start before the clock",
+      "deadline, billed hours": 52.5,
+      "deadline rule": "no world starts whose p90 wall would end past the deadline (M3_DEADLINE, set by run-box.sh from the clock at each start); no outcome is read to set or move it",
+      "hard stop, billed hours": 55.5,
+      "hard stop rule": "the box powers off once it has also been up 45 minutes since its last boot",
+      "worst case usd": 117.7,
+      "worst case": "56.5 box hours at $1.925 with the address ($108.8: the hard stop, one restart's 45-minute pull window, the boots' starts); the 200 GiB gp3 volume for 5 days at $0.12 a GiB-month ($4.0); the image's snapshot, 23 GB for a month ($1.4); 30 GB out at $0.12 ($3.6)",
+      "p90": "the work ends after 51.5 billed hours, provisioning included: the deadline does not bind",
+      "if the deadline binds": "every root advances in seed order, so the roots with the most work are cut first: at the p90 walls the geo roots of families 8, 9 and 10 end last, then 12 and 13, then 0; a family and rung whose declared worlds are not whole is reported as not run, and the fixed sequence stops at its first such verdict: with family 0 whole and family 8 not, at most (0, 0) to (5, 4) are confirmed, the sequence stopping at (8, 0); with family 0 not whole, none is"
+    }
+  }
+}

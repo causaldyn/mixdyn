@@ -1,0 +1,116 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Install uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
+        with:
+          python-version: "3.14"
+      - name: Sync dependencies
+        # --locked fails when uv.lock is stale against pyproject.toml rather than quietly
+        # re-resolving, so the dependency gate below reads the lock that was reviewed.
+        run: uv sync --locked
+      - name: Format check
+        run: uv run ruff format --check .
+      - name: Lint
+        run: uv run ruff check .
+      - name: Type check
+        run: uv run ty check
+      - name: Dependency gate
+        run: uv run python scripts/check_runtime_deps.py
+
+  # A posterior test samples four chains of 2000 iterations one after another, minutes each: a geo
+  # world's about three times a one-geo world's, a Student-t world's about three times a normal
+  # one's (`--durations` prints them). Run in turn they took most of the suite's half hour. The
+  # groups below split them by those times, and `rest` runs the suite without exactly the node ids
+  # the groups name, so a test no group names, a new world's among them, runs there: removing a
+  # group means removing its ids from `rest`'s too. `rest` runs again on the oldest CPythons the
+  # engine supports (ADR 0054) and on the newest, its node ids the same list.
+  test:
+    name: test (${{ matrix.group }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - group: posterior-1
+            tests: >-
+              tests/test_bayes_geo.py::test_the_posterior_is_stan_s[student]
+          - group: posterior-2
+            tests: >-
+              tests/test_bayes_geo.py::test_the_posterior_is_stan_s[normal]
+              tests/test_bayes_geo.py::test_the_posterior_is_stan_s[tanh]
+              tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[lognormal-uniform]
+              tests/test_bayes_mmm.py::test_on_qr_coordinates_the_posterior_is_stan_s
+          - group: posterior-3
+            tests: >-
+              tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[normal-uniform]
+              tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[normal-pathfinder]
+              tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[student-uniform]
+              tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[tanh-uniform]
+              tests/test_nested.py::test_the_joint_posterior_is_stan_s[both]
+              tests/test_nested.py::test_the_joint_posterior_is_stan_s[mediated]
+          - group: rest
+            tests: &rest >-
+              tests
+              --deselect tests/test_bayes_geo.py::test_the_posterior_is_stan_s[student]
+              --deselect tests/test_bayes_geo.py::test_the_posterior_is_stan_s[normal]
+              --deselect tests/test_bayes_geo.py::test_the_posterior_is_stan_s[tanh]
+              --deselect tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[lognormal-uniform]
+              --deselect tests/test_bayes_mmm.py::test_on_qr_coordinates_the_posterior_is_stan_s
+              --deselect tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[normal-uniform]
+              --deselect tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[normal-pathfinder]
+              --deselect tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[student-uniform]
+              --deselect tests/test_bayes_mmm.py::test_the_posterior_is_stan_s[tanh-uniform]
+              --deselect tests/test_nested.py::test_the_joint_posterior_is_stan_s[both]
+              --deselect tests/test_nested.py::test_the_joint_posterior_is_stan_s[mediated]
+          - group: rest-3.12
+            python: "3.12"
+            tests: *rest
+          - group: rest-3.13
+            python: "3.13"
+            tests: *rest
+          - group: rest-3.15
+            python: "3.15"
+            tests: *rest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Install uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
+        with:
+          python-version: ${{ matrix.python || '3.14' }}
+      - name: Sync dependencies
+        run: uv sync --locked
+      - name: Cache JAX's compiled programs
+        # JAX's own key for a program hashes its HLO, jaxlib's version, the compile options and
+        # the CPU's model and features, so a program compiled on another runner model is never
+        # loaded here. Programs that compile in under a second are not kept.
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: ${{ runner.temp }}/jax-cache
+          key: jax-${{ matrix.group }}-${{ hashFiles('uv.lock') }}-${{ github.sha }}
+          restore-keys: jax-${{ matrix.group }}-${{ hashFiles('uv.lock') }}-
+      - name: Runner CPU
+        # A digest pinned on one CPU class moves on another: OpenBLAS and numpy pick their kernels
+        # by the CPU, so the log names the class each leg ran on.
+        run: |
+          lscpu | grep -E '^Model name:'
+          uv run python -c "import numpy; numpy.show_runtime()"
+      - name: Tests
+        env:
+          JAX_COMPILATION_CACHE_DIR: ${{ runner.temp }}/jax-cache
+        # set -f: a node id's brackets are not a glob.
+        run: |
+          set -f
+          uv run pytest ${{ matrix.tests }} --durations=10

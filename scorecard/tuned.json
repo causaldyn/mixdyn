@@ -1,0 +1,125 @@
+{
+ "meridian": {
+  "best": "contribution knots-13",
+  "candidate": "contribution knots-13",
+  "lost": {
+   "contribution aks": "the health card",
+   "contribution knots-8": "out of sample, past one standard error of the best",
+   "mroi aks": "the health card",
+   "mroi knots-13": "the health card",
+   "mroi knots-8": "the health card",
+   "roi aks": "the health card",
+   "roi knots-13": "the health card",
+   "roi knots-8": "the health card"
+  },
+  "options": [
+   "--media-prior-type",
+   "contribution",
+   "--knot-weeks",
+   "13"
+  ],
+  "records": "92f0ed11ad56ce456d97584c7b65a696dd2d492d67c5c7a9f753ef0c64ee4d9a",
+  "rival": "meridian",
+  "summary": {
+   "contribution aks": {
+    "failed": 0.0,
+    "health": 85.83042849638673,
+    "pass": 0.6785714285714286,
+    "worlds": 140
+   },
+   "contribution knots-13": {
+    "difference": 0.0,
+    "error": 0.0,
+    "failed": 0.0,
+    "health": 99.17149969390135,
+    "out": 0.15163060931688793,
+    "pass": 1.0,
+    "worlds": 140
+   },
+   "contribution knots-8": {
+    "difference": 0.011677824743748424,
+    "error": 0.006395430012891485,
+    "failed": 0.0,
+    "health": 98.95764223395848,
+    "out": 0.16330843406063636,
+    "pass": 0.9928571428571429,
+    "worlds": 140
+   },
+   "mroi aks": {
+    "failed": 0.0,
+    "health": 91.67431366906676,
+    "pass": 0.7428571428571429,
+    "worlds": 140
+   },
+   "mroi knots-13": {
+    "failed": 0.0,
+    "health": 97.27472557343081,
+    "pass": 0.9214285714285714,
+    "worlds": 140
+   },
+   "mroi knots-8": {
+    "failed": 0.0,
+    "health": 97.21621370608108,
+    "pass": 0.9357142857142857,
+    "worlds": 140
+   },
+   "roi aks": {
+    "failed": 0.0,
+    "health": 92.99467756630078,
+    "pass": 0.7928571428571428,
+    "worlds": 140
+   },
+   "roi knots-13": {
+    "failed": 0.0,
+    "health": 97.51708058682294,
+    "pass": 0.95,
+    "worlds": 140
+   },
+   "roi knots-8": {
+    "failed": 0.0,
+    "health": 97.68628383938892,
+    "pass": 0.9214285714285714,
+    "worlds": 140
+   }
+  },
+  "tied": [
+   "contribution knots-13"
+  ],
+  "worlds out of sample": 140
+ },
+ "pymc-marketing": {
+  "best": "logistic static",
+  "candidate": "logistic static",
+  "lost": {
+   "hill static": "the sampler's mixing",
+   "logistic varying": "the sampler's mixing"
+  },
+  "options": [],
+  "records": "a1bb64c7895c6477558271a185861f4af9e9cd0d4fad0dba25eecab5377e8639",
+  "rival": "pymc-marketing",
+  "summary": {
+   "hill static": {
+    "failed": 0.0,
+    "mixed": 0.007142857142857143,
+    "worlds": 140
+   },
+   "logistic static": {
+    "difference": 0.0,
+    "error": 0.0,
+    "failed": 0.0,
+    "mixed": 0.8,
+    "out": 0.10330103161714342,
+    "worlds": 140
+   },
+   "logistic varying": {
+    "failed": 0.0,
+    "mixed": 0.3,
+    "worlds": 140
+   }
+  },
+  "tied": [
+   "logistic static"
+  ],
+  "worlds out of sample": 140
+ }
+}

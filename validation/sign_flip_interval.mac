@@ -1,0 +1,78 @@
+/* The ends of the pairs' sign-flip interval in closed form (mixdyn.experiments.reading.read_pairs,
+   ADR 0058).
+
+   P pairs contribute c_1 .. c_P, the lift their sum. Under a lift L shared alike by the pairs each
+   contribution is c_p - L / P, and an assignment of signs s reads a(s) - b(s) L, a(s) = sum_p s_p
+   c_p, b(s) = mean_p s_p; the observed signs, all +1, read lift - L. With u = L - lift above the
+   estimate and a' = a - b lift, an assignment is as far from 0 as the observed one while
+
+       |a' - b u| >= u,   that is for 0 <= u <= |a'| / (1 + sign(a') b),   |b| < 1,
+
+   and for every u at |b| = 1. Below the estimate, u = lift - L, b turns to -b.
+
+     STEP 1  an assignment's reading under a shared lift is a - b L, for every sign of 3 pairs
+     STEP 2  (a' - b u)^2 - u^2 = (a' - (1 + b) u) (a' + (1 - b) u), so for |b| < 1 the set of
+             u >= 0 where an assignment is as far is [0, |a'| / (1 + sign(a') b)]: checked at
+             rational a' and b on either side of the end
+     STEP 3  over every sign of 4 pairs of rational contributions, the count of assignments as far
+             as the observed one at rational u above and below the estimate, by the definition,
+             against the count of ends at or past u
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/sign_flip_interval.mac */
+
+display2d : false$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+print("================================================================")$
+print("THE PAIRS' SIGN-FLIP INTERVAL")$
+print("================================================================")$
+
+/* every sign vector of n pairs */
+signs(n) := if n = 0 then [[]] else
+  append(map(lambda([s], cons(1, s)), signs(n - 1)), map(lambda([s], cons(-1, s)), signs(n - 1)))$
+
+/* ===== STEP 1: an assignment under a shared lift ===== */
+cs : [c1, c2, c3]$
+ok : true$
+for s in signs(3) do (
+  shared : sum(s[p] * (cs[p] - L / 3), p, 1, 3),
+  closed : sum(s[p] * cs[p], p, 1, 3) - (sum(s[p], p, 1, 3) / 3) * L,
+  ok : ok and is(ratsimp(shared - closed) = 0))$
+print("STEP 1  every sign of 3 pairs reads a - b L", verdict(ok))$
+
+/* ===== STEP 2: the end of one assignment ===== */
+print("STEP 2  the factorisation",
+  verdict(is(ratsimp((ap - b * u)^2 - u^2 - (ap - (1 + b) * u) * (ap + (1 - b) * u)) = 0)))$
+far(ap, b, u) := is(abs(ap - b * u) >= u)$
+reach(ap, b) := abs(ap) / (1 + signum(ap) * b)$
+ok : true$
+for ap in [-3, -1/2, 1/7, 2, 5] do
+  for b in [-3/4, -1/3, 0, 1/5, 9/10] do (
+    r : reach(ap, b),
+    ok : ok and far(ap, b, 0) and far(ap, b, r / 2) and far(ap, b, r)
+            and not far(ap, b, r * (1 + 1/1000)) and not far(ap, b, 2 * r + 1))$
+print("STEP 2  as far on [0, |a'| / (1 + sign(a') b)] and not past it", verdict(ok))$
+
+/* ===== STEP 3: every assignment of 4 pairs ===== */
+c : [3, -1, 5/2, 7/4]$
+P : 4$
+lift : sum(c[p], p, 1, P)$
+count_far(u, side) := block([n : 0, L, obs],
+  L : lift + side * u,
+  obs : abs(lift - L),
+  for s in signs(P) do
+    if abs(sum(s[p] * (c[p] - L / P), p, 1, P)) >= obs then n : n + 1,
+  n)$
+count_ends(u, side) := block([n : 0, a, b, ap],
+  for s in signs(P) do (
+    a : sum(s[p] * c[p], p, 1, P),
+    b : sum(s[p], p, 1, P) / P,
+    ap : a - b * lift,
+    if abs(b) = 1 or reach(ap, side * b) >= u then n : n + 1),
+  n)$
+ok : true$
+for side in [1, -1] do
+  for u in makelist(k / 8, k, 0, 160) do
+    ok : ok and is(count_far(u, side) = count_ends(u, side))$
+print("STEP 3  the count as far at 161 points either side, by definition and by the ends", verdict(ok))$

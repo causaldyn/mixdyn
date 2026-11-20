@@ -1,0 +1,100 @@
+/* Synthetic difference in differences' weights in exact arithmetic (mixdyn.experiments.sdid,
+   ADR 0048; tests/test_sdid.py reads the rationals printed here as MAXIMA_*).
+
+   Arkhangelsky, Athey, Hirshberg, Imbens and Wager (2021), Algorithm 1, on one treated unit and
+   four controls over four periods before and one after: the panel TINY of the tests, the treated
+   unit its first row. Each weight problem minimises, over an intercept and the simplex,
+       ||w0 + a w - b||^2 + ridge ||w||^2,
+   and a point is its optimum where, on its support S, the gradient in w is one level mu and the
+   weights are positive, and off S the gradient is at or above mu. The problem is convex, so the
+   point is unique where the ridge is positive.
+
+     STEP 1  the noise level sigma^2: the controls' first differences over the pre-period, about
+             their mean, over N_co (T_pre - 1)
+     STEP 2  the unit weights at ridge zeta^2 T_pre, zeta^2 = (N_tr T_post)^(1/2) sigma^2: every
+             support enumerated, one point meeting the conditions, the tests' MAXIMA_UNIT
+     STEP 3  the time weights at ridge (1e-6 sigma)^2 N_co: the same, the tests' MAXIMA_TIME
+     STEP 4  the effect, the double difference of the weighted gaps, the tests' MAXIMA_TAU
+     STEP 5  without the intercept the unit problem's optimum is another point: the intercept
+             takes each unit's level, and dropping it moves the weights
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/sdid_simplex_weights.mac */
+
+display2d : false$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+print("================================================================")$
+print("SYNTHETIC DIFFERENCE IN DIFFERENCES: THE SIMPLEX WEIGHTS, EXACTLY")$
+print("================================================================")$
+
+tiny : matrix([-3, 4, 2, 4, 1],
+              [2, -1, 3, -3, -3],
+              [-1, 2, 0, 3, 4],
+              [-1, -1, 0, 1, 0],
+              [1, 4, 2, -2, -1])$
+nco : 4$  tpre : 4$
+y(i, t) := tiny[i, t]$   /* unit i, period t; unit 1 treated, units 2..5 the controls */
+
+/* ===== STEP 1: the noise level ===== */
+steps : makelist(makelist(y(i, t + 1) - y(i, t), t, 1, tpre - 1), i, 2, nco + 1)$
+steps : apply(append, steps)$
+dbar : apply("+", steps) / length(steps)$
+sigma2 : apply("+", map(lambda([d], (d - dbar)^2), steps)) / length(steps)$
+print("STEP 1  sigma^2 =", sigma2)$
+print("STEP 1", verdict(sigma2 = 341/36))$
+
+/* The optimum of ||w0 + a w - b||^2 + ridge ||w||^2 over the simplex, `a` rows by n columns, with
+   (intercept = true) or without the intercept: every support's stationary point, kept where it
+   meets the conditions. Returns the list of the points kept. */
+simplex_points(a, b, ridge, intercept) := block(
+  [rows : length(a), n : length(a[1]), found : [], supports, vars, ws, res, grad, eqs, sol, w, mu],
+  supports : delete({}, powerset(setify(makelist(j, j, 1, n)))),
+  for s in listify(supports) do (
+    s : listify(s),
+    ws : makelist(concat(v, j), j, s),
+    w : makelist(if member(j, s) then concat(v, j) else 0, j, 1, n),
+    res : makelist((if intercept then c0 else 0) + sum(a[r][j] * w[j], j, 1, n) - b[r], r, 1, rows),
+    grad : makelist(2 * sum(a[r][j] * res[r], r, 1, rows) + 2 * ridge * w[j], j, 1, n),
+    eqs : append(makelist(grad[j] = m0, j, s), [apply("+", ws) = 1],
+                 if intercept then [apply("+", res) = 0] else []),
+    vars : append(ws, [m0], if intercept then [c0] else []),
+    sol : linsolve(eqs, vars),
+    if sol # [] and freeof(%r1, sol) and length(sol) = length(vars) then (
+      w : subst(sol, w),
+      mu : subst(sol, m0),
+      grad : subst(sol, grad),
+      if every(lambda([j], is(w[j] > 0)), s)
+         and every(lambda([j], member(j, s) or is(grad[j] - mu >= 0)), makelist(j, j, 1, n))
+      then found : endcons(w, found))),
+  found)$
+
+/* ===== STEP 2: the unit weights ===== */
+print("=== STEP 2: the unit weights over the controls, rows the pre-periods ===")$
+aunit : makelist(makelist(y(i, t), i, 2, nco + 1), t, 1, tpre)$
+bunit : makelist(y(1, t), t, 1, tpre)$
+unit : simplex_points(aunit, bunit, 1 * sigma2 * tpre, true)$
+print("STEP 2  points meeting the conditions:", unit)$
+print("STEP 2", verdict(unit = [[0, 594227/1202964, 721327/2405928, 496147/2405928]]))$
+
+/* ===== STEP 3: the time weights ===== */
+print("=== STEP 3: the time weights over the pre-periods, rows the controls ===")$
+atime : makelist(makelist(y(i, t), t, 1, tpre), i, 2, nco + 1)$
+btime : makelist(y(i, tpre + 1), i, 2, nco + 1)$
+time : simplex_points(atime, btime, sigma2 * nco / 10^12, true)$
+print("STEP 3  points meeting the conditions:", time)$
+print("STEP 3", verdict(time = [[0, 51750000000341/348750000000682, 0,
+                                 297000000000341/348750000000682]]))$
+
+/* ===== STEP 4: the effect ===== */
+print("=== STEP 4: the double difference ===")$
+gap(i) := y(i, tpre + 1) - sum(time[1][t] * y(i, t), t, 1, tpre)$
+tau : gap(1) - sum(unit[1][i - 1] * gap(i), i, 2, nco + 1)$
+print("STEP 4  tau =", tau)$
+print("STEP 4", verdict(tau = -45729841500088089881/13533345000026465208))$
+
+/* ===== STEP 5: the intercept matters ===== */
+print("=== STEP 5: the unit problem without its intercept ===")$
+bare : simplex_points(aunit, bunit, 1 * sigma2 * tpre, false)$
+print("STEP 5  points meeting the conditions:", bare)$
+print("STEP 5", verdict(length(bare) = 1 and bare # unit))$

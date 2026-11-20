@@ -1,0 +1,153 @@
+/* The identities the closed-form model over geos relies on (mixdyn.models.geo_eb,
+   mixdyn.decisions.geo_plan.plan_mixture, ADR 0090; tests/test_geo_eb.py runs this file and reads
+   its verdicts).
+
+   For geo g, y_g = X_g b_g + e_g with e_g ~ N(0, s_g^2 I), b_g = mu + delta_g, the tests Gaussian
+   rows on the b's, and beta = (mu, delta_1, ..., delta_G) normal about 0 of precision P0:
+
+     STEP 1  FWL: each geo's intercept, season and trend partialled out of its KPI and its columns
+             leave the channels' coefficients and the residual sum of squares of the full
+             regression
+     STEP 2  I1: (y - X b)'(y - X b) = RSS + (bh - b)' X'X (bh - b), bh the least squares
+     STEP 3  I2: the integral over u of exp(-(u'L u - 2 u'h)/2) N(u; 0, P0^-1) is
+             sqrt(det P0 / det A) exp(h'A^-1 h / 2), A = P0 + L: in one dimension symbolically,
+             in two by completing the square and numerically
+     STEP 4  the closed form assembled, two geos, one channel, one test row, exactly: the
+             Gaussian density of (y_1, y_2, lift) has log determinant
+             sum_g n log s_g^2 + log se^2 + log det A - log det P0 and quadratic form
+             sum_g RSS_g / s_g^2 + c0 - h'A^-1 h, A = P0 + sum_g E_g' V_g E_g + v v'/se^2,
+             h = sum_g E_g' V_g bh_g + v lift/se^2, c0 = sum_g bh_g' V_g bh_g + lift^2/se^2,
+             V_g = X_g'X_g / s_g^2, E_g the map from beta to b_g
+     STEP 5  I5: the Michaelis-Menten column scaled to its margin at u = 1,
+             F(u) = u/(1 + u/k) (1 + 1/k)^2, has margin 1 at u = 1, slope
+             ((1 + 1/k)/(1 + u/k))^2 and tends to the line u as k -> inf
+     STEP 6  I4: a channel bought nationally, split by the population shares p_g, is one cell of
+             the national spend W: sum_g p_g b_g x F(p_g W/(p_g x)) = (sum_g p_g b_g) x F(W/x),
+             and a cell's worth over the horizons, b s sum_h F((c_h + w r_h)/s), has slope
+             b sum_h r_h F'((c_h + w r_h)/s) in the weekly spend w
+
+   Run: timeout 120 maxima --very-quiet -Q -b validation/geo_eb.mac */
+
+display2d : false$
+linel : 200$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+zero(e) := is(ratsimp(e) = 0)$
+print("================================================================")$
+print("THE CLOSED-FORM MODEL OVER GEOS")$
+print("================================================================")$
+
+/* ===== STEP 1: Frisch-Waugh-Lovell, n = 4, an intercept and a trend partialled out ===== */
+N1 : matrix([1, 1], [1, 2], [1, 3], [1, 4])$
+X1 : matrix([x1], [x2], [x3], [x4])$
+Y1 : matrix([y1], [y2], [y3], [y4])$
+Z1 : addcol(N1, X1)$
+full : invert(transpose(Z1) . Z1) . transpose(Z1) . Y1$
+M1 : ident(4) - N1 . invert(transpose(N1) . N1) . transpose(N1)$
+Xr : M1 . X1$
+Yr : M1 . Y1$
+partial : (transpose(Xr) . Yr) / (transpose(Xr) . Xr)$
+print("STEP 1  the channel's coefficient, full less partialled:",
+  verdict(zero(full[3, 1] - partial)))$
+rfull : Y1 - Z1 . full$
+rpart : Yr - Xr * partial$
+print("STEP 1  the residual sum of squares, full less partialled:",
+  verdict(zero(transpose(rfull) . rfull - transpose(rpart) . rpart)))$
+
+/* ===== STEP 2: I1, n = 4, p = 2 ===== */
+X : matrix([1, x11], [1, x21], [1, x31], [1, x41])$
+y : matrix([y1], [y2], [y3], [y4])$
+be : matrix([b1], [b2])$
+XtX : transpose(X) . X$
+bh : invert(XtX) . transpose(X) . y$
+r : y - X . bh$
+lhs1 : transpose(y - X . be) . (y - X . be)$
+rhs1 : transpose(r) . r + transpose(bh - be) . XtX . (bh - be)$
+print("STEP 2  the least-squares split of the quadratic form:", verdict(zero(lhs1 - rhs1)))$
+
+/* ===== STEP 3: I2 ===== */
+assume(p0 > 0, l > 0)$
+lhs2 : integrate(exp(-(l*u^2 - 2*u*hh)/2) * sqrt(p0/(2*%pi)) * exp(-p0*u^2/2), u, minf, inf)$
+rhs2 : sqrt(p0/(p0 + l)) * exp(hh^2/(2*(p0 + l)))$
+print("STEP 3  the Gaussian integral in one dimension:", verdict(zero(radcan(lhs2/rhs2) - 1)))$
+A2 : matrix([a11, a12], [a12, a22])$
+uv : matrix([u1], [u2])$
+hv : matrix([h1], [h2])$
+square : transpose(uv - invert(A2) . hv) . A2 . (uv - invert(A2) . hv)
+  - transpose(hv) . invert(A2) . hv$
+print("STEP 3  completing the square in two dimensions:",
+  verdict(zero(transpose(uv) . A2 . uv - 2 * transpose(hv) . uv - square)))$
+P0 : matrix([2, 0], [0, 3])$
+L2 : matrix([5, 1], [1, 4])$
+hn : matrix([7/10], [-3/10])$
+A : P0 + L2$
+qf(M, a1, a2) := M[1, 1]*a1^2 + 2*M[1, 2]*a1*a2 + M[2, 2]*a2^2$
+f2(u1, u2) := float(exp(-(qf(L2, u1, u2) - 2*(hn[1, 1]*u1 + hn[2, 1]*u2))/2)
+    * sqrt(determinant(P0))/(2*%pi) * exp(-qf(P0, u1, u2)/2))$
+num : quad_qags(lambda([u1], quad_qags(lambda([u2], f2(u1, u2)), u2, -12, 12,
+    epsrel = 1e-12)[1]), u1, -12, 12, epsrel = 1e-12)[1]$
+exact : float(sqrt(determinant(P0)/determinant(A)) * exp(qf(invert(A), hn[1, 1], hn[2, 1])/2))$
+print("STEP 3  the Gaussian integral in two dimensions, numeric over exact", num/exact,
+  verdict(is(abs(num/exact - 1) < 1e-10)))$
+
+/* ===== STEP 4: the closed form assembled, exactly ===== */
+G1 : matrix([1], [2], [4])$
+G2 : matrix([3], [1], [2])$
+w1 : matrix([2], [3], [7])$
+w2 : matrix([5], [1], [4])$
+s1 : 2$
+s2 : 3$
+se2 : 1/2$
+lift : 7/4$
+z1 : 3/2$
+z2 : -1/3$
+v : matrix([z1 + z2], [z1], [z2])$
+Pp : matrix([1/5, 0, 0], [0, 1/2, 0], [0, 0, 1/2])$
+E1 : matrix([1, 1, 0])$
+E2 : matrix([1, 0, 1])$
+ols(Xg, yg) := (transpose(Xg) . yg) / (transpose(Xg) . Xg)$
+rss(Xg, yg) := transpose(yg) . yg - (transpose(Xg) . yg) * ols(Xg, yg)$
+V1 : (transpose(G1) . G1) / s1$
+V2 : (transpose(G2) . G2) / s2$
+Ac : Pp + transpose(E1) . E1 * V1 + transpose(E2) . E2 * V2 + v . transpose(v) / se2$
+hc : transpose(E1) * V1 * ols(G1, w1) + transpose(E2) * V2 * ols(G2, w2) + v * lift / se2$
+c0 : V1 * ols(G1, w1)^2 + V2 * ols(G2, w2)^2 + lift^2 / se2$
+quadc : rss(G1, w1) / s1 + rss(G2, w2) / s2 + c0 - transpose(hc) . invert(Ac) . hc$
+/* the brute force: (y_1, y_2, lift) = M beta + noise, M's rows X_g E_g and v' */
+M : matrix(
+  [G1[1, 1], G1[1, 1], 0], [G1[2, 1], G1[2, 1], 0], [G1[3, 1], G1[3, 1], 0],
+  [G2[1, 1], 0, G2[1, 1]], [G2[2, 1], 0, G2[2, 1]], [G2[3, 1], 0, G2[3, 1]],
+  [v[1, 1], v[2, 1], v[3, 1]])$
+noise : diag_matrix(s1, s1, s1, s2, s2, s2, se2)$
+S : M . invert(Pp) . transpose(M) + noise$
+wv : matrix([2], [3], [7], [5], [1], [4], [lift])$
+quadb : transpose(wv) . invert(S) . wv$
+print("STEP 4  the determinant, brute force over closed form:",
+  verdict(zero(determinant(S) - s1^3 * s2^3 * se2 * determinant(Ac) / determinant(Pp))))$
+print("STEP 4  the quadratic form, brute force less closed form:",
+  verdict(zero(quadb - quadc)))$
+/* the posterior mean of b_1 is mu + delta_1 at A^-1 h, the brute force's conditional mean */
+post : invert(Ac) . hc$
+cond : invert(Pp) . transpose(M) . invert(S) . wv$
+print("STEP 4  the posterior mean, closed form less conditional mean:",
+  verdict(zero(transpose(post - cond) . (post - cond))))$
+
+/* ===== STEP 5: I5, the column scaled to its margin at 1 ===== */
+f(u) := u/(1 + u/k)$
+/* define evaluates the margin at 1 once, so F5 takes an expression as well as a variable */
+define(F5(u), f(u)/subst(u = 1, diff(f(u), u)))$
+print("STEP 5  the scaled curve is u/(1 + u/k) (1 + 1/k)^2:",
+  verdict(zero(F5(u) - u/(1 + u/k)*(1 + 1/k)^2)))$
+print("STEP 5  its margin at 1:", verdict(zero(subst(u = 1, diff(F5(u), u)) - 1)))$
+print("STEP 5  its slope:", verdict(zero(diff(F5(u), u) - ((1 + 1/k)/(1 + u/k))^2)))$
+print("STEP 5  the line as k -> inf:", verdict(zero(limit(F5(u), k, inf) - u)))$
+
+/* ===== STEP 6: I4, a national channel one cell; a cell's slope ===== */
+lhs6 : sum(p[g]*bb[g]*xb*F5(p[g]*W/(p[g]*xb)), g, 1, 3)$
+rhs6 : sum(p[g]*bb[g], g, 1, 3)*xb*F5(W/xb)$
+print("STEP 6  a national channel split by population is one cell:", verdict(zero(lhs6 - rhs6)))$
+worth6 : b*s*(F5((c1 + w*r1)/s) + F5((c2 + w*r2)/s))$
+slope6 : b*(r1*subst(u = (c1 + w*r1)/s, diff(F5(u), u))
+  + r2*subst(u = (c2 + w*r2)/s, diff(F5(u), u)))$
+print("STEP 6  a cell's slope is its worth's derivative:", verdict(zero(diff(worth6, w) - slope6)))$

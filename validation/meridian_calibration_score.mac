@@ -1,0 +1,68 @@
+/* Meridian's channel-calibration score as the calibration loop's arm reads it
+   (scorecard/arms/voi.py, ADR 0077; tests/scorecard/test_voi_arm.py runs this file and reads its
+   verdicts). A channel's score is 0.5 implausible + 0.25 variance + 0.25 bias, each in points of
+   100:
+
+     STEP 1  LogNormal(mu, s)'s density at x = exp(mu + s z) is exp(-z^2/2 - s z) times a constant,
+             so the ends za < zb of its highest-density interval, of equal density, satisfy
+             za = -zb - 2 s
+     STEP 2  at Meridian's default return prior, mu = 0.2 and s = 0.9, the 80 % highest-density
+             interval's width over the median, exp(s zb) - exp(s za), is 2.068704 (the arm's
+             PRIOR_WIDTH, 2.0687): its mass is 0.8 and its ends' densities are equal
+     STEP 3  the implausible-ROI bowl 100 exp(-log 2 (z / d)^2), z the log of the mean return over
+             sqrt(0.5 * 20), d = log(sqrt(20 / 0.5) / share), is 100 at the bounds' geometric mean
+             and 50 at either bound at a share of 1
+     STEP 4  the variance bowl is 50 at a width ratio times share of 1, twice the ideal 0.5; the
+             bias score 100 b^(log 0.5 / log 0.1) is 50 at a correlation b of 0.1 and 100 at 1
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/meridian_calibration_score.mac */
+
+display2d : false$
+linel : 200$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+zero(e) := is(ratsimp(e) = 0)$
+print("================================================================")$
+print("MERIDIAN'S CHANNEL-CALIBRATION SCORE")$
+print("================================================================")$
+assume(s > 0)$
+
+/* ===== STEP 1: the highest-density interval's ends ===== */
+pdf(x, mu, s) := exp(-(log(x) - mu)^2 / (2 * s^2)) / (x * s * sqrt(2 * %pi))$
+shape : radcan(log(pdf(exp(mu + s * z), mu, s)) + z^2 / 2 + s * z)$
+print("STEP 1  log density + z^2/2 + s z does not move with z", verdict(zero(diff(shape, z))))$
+level(z) := -z^2 / 2 - s * z$
+print("STEP 1  the density at za = -zb - 2 s is the density at zb",
+  verdict(zero(level(-zb - 2 * s) - level(zb))))$
+
+/* ===== STEP 2: the default prior's width ratio ===== */
+fpprec : 30$
+phi(z) := (1 + erf(z / sqrt(2))) / 2$
+mass(zb) := bfloat(phi(zb) - phi(-zb - 2 * (9/10)))$
+top : bf_find_root(mass(zb) - 4/5, zb, 0, 5)$
+bottom : -top - 2 * (9/10)$
+ratio : bfloat(exp(9/10 * top) - exp(9/10 * bottom))$
+print("STEP 2  the interval's mass is", mass(top), verdict(is(abs(mass(top) - 4/5) < 1b-25)))$
+ends : [exp(1/5 + 9/10 * bottom), exp(1/5 + 9/10 * top)]$
+gap : bfloat(pdf(first(ends), 1/5, 9/10) - pdf(second(ends), 1/5, 9/10))$
+print("STEP 2  its ends' densities differ by", gap, verdict(is(abs(gap) < 1b-25)))$
+print("STEP 2  its width over the median is", ratio,
+  verdict(is(abs(ratio - 2.068704b0) < 1b-6) and is(abs(ratio - 2.0687b0) < 5b-5)))$
+
+/* ===== STEP 3: the implausible-ROI bowl ===== */
+bowl(z, d) := 100 * exp(-log(2) * (z / d)^2)$
+centre : sqrt(1/2 * 20)$
+print("STEP 3  100 at the bounds' geometric mean", verdict(zero(bowl(log(centre / centre), d) - 100)))$
+half_width : log(sqrt(20 / (1/2)) / 1)$
+print("STEP 3  50 at 20 at a share of 1",
+  verdict(zero(radcan(bowl(log(20 / centre), half_width)) - 50)))$
+print("STEP 3  50 at 0.5 at a share of 1",
+  verdict(zero(radcan(bowl(log((1/2) / centre), half_width)) - 50)))$
+
+/* ===== STEP 4: the variance bowl and the bias score ===== */
+print("STEP 4  the variance bowl is 50 at 1",
+  verdict(zero(bowl(log(1 / (1/2)), log(1 / (1/2))) - 50)))$
+bias(b) := 100 * b^(log(1/2) / log(1/10))$
+print("STEP 4  the bias score is 50 at 0.1", verdict(zero(radcan(bias(1/10)) - 50)))$
+print("STEP 4  the bias score is 100 at 1", verdict(zero(bias(1) - 100)))$

@@ -1,0 +1,141 @@
+/* Hall's one-look reader of the claim (scorecard.claim, reader "hall"; the bench's
+   causaldyn_bench.scorecard.gate.hall; tests/scorecard/test_claim_reader.py reads the values
+   printed here as MAXIMA_*).
+
+   Hall (1992), "On the removal of skewness by transformation", Journal of the Royal Statistical
+   Society B 54(1), eq. 2.2 with section 2.4's mean (a = 1/3, b = 1/6): for x the margin less each
+   paired difference, n of them, T = sqrt(n) mean(x) / sigma, sigma and the skewness gamma of x on
+   divisor n, the claim is shown where
+       g(T) = T + c T^2 + c^2 T^3 / 3 + c / 2,   c = gamma / (3 sqrt(n)),
+   reaches z_0.975.
+
+     STEP 1  g is the paper's transform: sqrt(n) (S + a gamma S^2 + a^2 gamma^2 S^3 / 3 + b gamma / n)
+             at S = T / sqrt(n), a = 1/3, b = 1/6
+     STEP 2  g is monotone, its slope (1 + c T)^2, with the closed-form inverse
+             ((1 + 3 c (z - c / 2))^(1/3) - 1) / c; without skew it is T
+     STEP 3  the closed-form case: on the studentised mean's Edgeworth expansion
+             P(T <= x) = Phi(x) + n^(-1/2) gamma (2 x^2 + 1) / 6 phi(x) + O(1/n), the law of g(T)
+             is Phi's to order n^(-1/2); T's own is not
+     STEP 4  g at three fixed samples, exactly, then to 40 digits: of the margin less the
+             differences (the claim's reading) and of the differences (its losses' reading)
+     STEP 5  200 000 draws of n = 520 differences (the claim's most worlds, CAP) whose margin less
+             each is log-normal, sigma_log = 1/4, less its mean, read at the true tie: Hall's size
+             within 2 Monte Carlo SEs of 0.025 one-sided, Student's t on 519 degrees of freedom
+             more than 4 off
+
+   Hall's level is right to order n^(-1/2), not exactly: on these differences its excess over
+   0.025 is about one Monte Carlo SE at n = 520 (+1.0 SE on average over 16 seeds of the same
+   simulation in numpy, 3 of them past 2 SEs), so STEP 5's band is held by its fixed seed, 1992,
+   chosen before the step first ran; Student's t is 6 to 9 SEs off on every one of them.
+
+   Maxima 5.46 on GCL: no call reads 216 arguments or more, so no list longer than that is
+   applied to "+".
+
+   Run: timeout 1800 maxima --very-quiet -Q -b validation/hall_reader.mac */
+
+display2d : false$
+ratprint : false$
+fpprec : 40$
+linel : 400$
+load(distrib)$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+print("================================================================")$
+print("HALL'S ONE-LOOK READER: THE CUBIC THAT REMOVES THE SKEWNESS")$
+print("================================================================")$
+
+c_of(gam, n) := gam / (3 * sqrt(n))$
+g(t, c) := t + c * t^2 + c^2 * t^3 / 3 + c / 2$
+
+/* ===== STEP 1: the paper's transform ===== */
+paper(s, gam, n, a, b) := sqrt(n) * (s + a * gam * s^2 + a^2 * gam^2 * s^3 / 3 + b * gam / n)$
+step1 : radcan(g(t, c_of(gam, n)) - paper(t / sqrt(n), gam, n, 1/3, 1/6))$
+print("STEP 1  g less the paper's =", step1)$
+print("STEP 1", verdict(step1 = 0))$
+
+/* ===== STEP 2: monotone, its inverse, no skew ===== */
+slope : ratsimp(diff(g(t, c), t) - (1 + c * t)^2)$
+ginv(z, c) := ((1 + 3 * c * (z - c / 2))^(1/3) - 1) / c$
+inverse : radcan(g(ginv(z, c), c) - z)$
+unskewed : g(t, 0)$
+print("STEP 2  slope less (1 + c T)^2 =", slope, "; g(ginv(z)) - z =", inverse, "; g at c = 0:",
+      unskewed)$
+print("STEP 2", verdict(slope = 0 and inverse = 0 and unskewed = t))$
+
+/* ===== STEP 3: the order n^(-1/2) term removed ===== */
+Phi(x) := (1 + erf(x / sqrt(2))) / 2$
+phi(x) := exp(-x^2 / 2) / sqrt(2 * %pi)$
+/* T's law to order e = n^(-1/2) */
+law(x, e) := Phi(x) + e * gam * (2 * x^2 + 1) / 6 * phi(x)$
+/* g(T) <= z where T <= ginv(z), c = e gamma / 3; ginv's series in c, checked to order c^2 */
+series : ratdisrep(taylor(ginv(z, c), c, 0, 2))$
+print("STEP 3  ginv's series:", series, "; g of it less z, to order c^2:",
+      ratsimp(ratdisrep(taylor(g(series, c) - z, c, 0, 2))))$
+transformed : taylor(law(subst(c = e * gam / 3, series), e) - Phi(z), e, 0, 1)$
+first_order : ratsimp(coeff(expand(transformed), e, 1))$
+untransformed : ratsimp(coeff(expand(taylor(law(z, e) - Phi(z), e, 0, 1)), e, 1))$
+print("STEP 3  P(g(T) <= z) - Phi(z), its n^(-1/2) term:", first_order)$
+print("STEP 3  P(T <= z) - Phi(z), its n^(-1/2) term:", untransformed)$
+print("STEP 3", verdict(first_order = 0 and ratsimp(untransformed / (gam * phi(z))) # 0))$
+
+/* ===== STEP 4: three fixed samples ===== */
+mean_of(x) := block([s : 0], for v in x do s : s + v, s / length(x))$
+central(x, p) := block([m : mean_of(x), s : 0], for v in x do s : s + (v - m)^p, s / length(x))$
+hall_of(x) := block([n : length(x), sig, gam],
+  sig : sqrt(central(x, 2)),
+  gam : central(x, 3) / sig^3,
+  g(sqrt(n) * mean_of(x) / sig, c_of(gam, n)))$
+samples : [
+  [1/20, [-3/100, -1/100, 0, 2/100, 7/100, 1/100]],
+  [1/10, [1/10, 1/10, 1/10, 1/10, -9/10, 2/10, 0, -1/10]],
+  [1/50, [-2/50, 0, 1/50, 1/50, 3/50, 9/50, -4/50, 0, 2/50, -5/50]]
+]$
+step4 : true$
+for k : 1 thru length(samples) do block([margin : samples[k][1], d : samples[k][2], within, loss],
+  within : hall_of(map(lambda([v], margin - v), d)),
+  loss : hall_of(d),
+  print("STEP 4  sample", k, "margin", margin, ": g of the margin less D =", bfloat(within),
+        "; g of D =", bfloat(loss)),
+  /* the exact value and its float agree, and a sample that skews has c away from 0 */
+  step4 : step4 and abs(float(within) - float(bfloat(within))) < 1e-12
+                and abs(float(loss) - float(bfloat(loss))) < 1e-12
+                and central(d, 3) # 0)$
+print("STEP 4", verdict(step4))$
+
+/* ===== STEP 5: the size on log-normal differences ===== */
+/* each draw's n values of x = margin - D, log-normal less its mean, by Box and Muller's pairs;
+   the counts of draws Hall's reader and Student's t show the claim in */
+sizes(reps, n, s, z, tq) := block([hall : 0, stud : 0, mu, s1, s2, s3, u, v, r, a, b, m, var,
+                                   sig, gam, tt, c, gt],
+  mode_declare([reps, n, hall, stud], fixnum,
+               [s, z, tq, mu, s1, s2, s3, u, v, r, a, b, m, var, sig, gam, tt, c, gt], float),
+  mu : exp(s * s / 2.0),
+  for k : 1 thru reps do (
+    s1 : 0.0, s2 : 0.0, s3 : 0.0,
+    for i : 1 thru n / 2 do (
+      u : 1.0 - random(1.0), v : 6.283185307179586 * random(1.0),
+      r : sqrt(-2.0 * log(u)),
+      a : exp(s * r * cos(v)) - mu, b : exp(s * r * sin(v)) - mu,
+      s1 : s1 + a + b, s2 : s2 + a * a + b * b, s3 : s3 + a * a * a + b * b * b),
+    m : s1 / n,
+    var : s2 / n - m * m,
+    sig : sqrt(var),
+    gam : (s3 / n - 3.0 * m * s2 / n + 2.0 * m * m * m) / (var * sig),
+    tt : m / (sig / sqrt(float(n))),
+    c : gam / (3.0 * sqrt(float(n))),
+    gt : tt + c * tt * tt + c * c * tt * tt * tt / 3.0 + c / 2.0,
+    if gt >= z then hall : hall + 1,
+    /* Student's t reads the SD on divisor n - 1 */
+    if tt * sqrt((n - 1.0) / n) >= tq then stud : stud + 1),
+  [hall, stud])$
+compile(sizes)$
+set_random_state(make_random_state(1992))$
+draws : 200000$  worlds : 520$  alpha : 0.025$
+counted : sizes(draws, worlds, 0.25, float(quantile_normal(1 - alpha, 0, 1)),
+                float(quantile_student_t(1 - alpha, worlds - 1)))$
+hall_size : float(counted[1] / draws)$
+student_size : float(counted[2] / draws)$
+se : sqrt(alpha * (1 - alpha) / draws)$
+print("STEP 5  Hall's size", hall_size, "(", (hall_size - alpha) / se, "SEs ); Student's",
+      student_size, "(", (student_size - alpha) / se, "SEs ); SE", se)$
+print("STEP 5", verdict(abs(hall_size - alpha) <= 2 * se and abs(student_size - alpha) > 4 * se))$

@@ -1,0 +1,73 @@
+/* The power audit's A/A flag: an exact two-sided binomial test of a 5 % size at 1 %
+   (mixdyn.experiments.audit_power, ADR 0055).
+
+   An audit counts the k of its m backtests whose readouts do not overlap that read a lift where
+   there is none. Under a reader of size exactly 1/20, independent across them, k is binomial
+   (m, 1/20). The p-value is twice the smaller tail, at most 1,
+
+       p(k) = min(1, 2 min(P(X <= k), P(X >= k))),
+
+   and the audit is flagged where p(k) <= 1/100. In exact rationals:
+
+     STEP 1  for every m from 1 to 150 the flagged counts are an upper run k >= u(m), and a lower
+             run k <= l(m) from m = 104 on and never below it; their chance under a size of 1/20
+             is at most 1/100
+     STEP 2  u(m) at the counts tests/test_geo_design.py pins: 2, 3, 4, 4, 4, 5, 5, 6, 8, 8, 13, 13
+             at m = 2, 3, 8, 12, 13, 16, 19, 25, 49, 50, 103, 104, and l(104) = 0
+     STEP 3  at m = 1 no count is flagged
+     STEP 4  the flag's chance at m = 8, 13, 19 and 25 for readers of size 1/20, 1/10, 3/20, 1/5
+             and 3/10, printed; it rises with the size at each m
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/geo_aa_flag.mac */
+
+display2d : false$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+print("================================================================")$
+print("THE POWER AUDIT'S A/A FLAG")$
+print("================================================================")$
+
+p0 : 1/20$
+alpha : 1/100$
+pmf(m, p) := makelist(binomial(m, k) * p^k * (1 - p)^(m - k), k, 0, m)$
+/* [P(X = k)], [P(X <= k)], [P(X >= k)], k = 0 .. m, each at index k + 1 */
+tails(m, p) := block([f : pmf(m, p), lo : [], up : [], s : 0],
+  for x in f do (s : s + x, lo : endcons(s, lo)),
+  s : 0,
+  for x in reverse(f) do (s : s + x, up : cons(s, up)),
+  [f, lo, up])$
+flagged(m) := block([t : tails(m, p0)],
+  sublist(makelist(k, k, 0, m),
+          lambda([k], min(1, 2 * min(t[2][k + 1], t[3][k + 1])) <= alpha)))$
+chance(m, p) := block([f : pmf(m, p)],
+  lreduce("+", cons(0, map(lambda([k], f[k + 1]), flagged(m)))))$
+upper(m) := sublist(flagged(m), lambda([k], k >= m * p0))$
+lower(m) := sublist(flagged(m), lambda([k], k < m * p0))$
+
+/* ===== STEP 1: runs, and a chance of at most 1/100 ===== */
+ok : true$
+for m : 1 thru 150 do block([up : upper(m), lo : lower(m)],
+  if up # [] and up # makelist(k, k, first(up), m) then ok : false,
+  if lo # [] and lo # makelist(k, k, 0, last(lo)) then ok : false,
+  if is(lo = []) # is(m < 104) then ok : false,
+  if chance(m, p0) > alpha then ok : false)$
+print("STEP 1  m = 1 .. 150: runs, a lower run from m = 104, a chance at most 1/100", verdict(ok))$
+
+/* ===== STEP 2: the upper run's start at the counts the tests pin ===== */
+pinned : [[2, 2], [3, 3], [8, 4], [12, 4], [13, 4], [16, 5], [19, 5], [25, 6], [49, 8], [50, 8],
+          [103, 13], [104, 13]]$
+starts : map(lambda([c], [c[1], first(upper(c[1]))]), pinned)$
+print("STEP 2  u(m):", starts, "and l(104) =", last(lower(104)),
+      verdict(starts = pinned and lower(104) = [0]))$
+
+/* ===== STEP 3: nothing is flagged at m = 1 ===== */
+print("STEP 3  m = 1 flags", flagged(1), verdict(flagged(1) = []))$
+
+/* ===== STEP 4: the flag's chance by the reader's size ===== */
+sizes : [1/20, 1/10, 3/20, 1/5, 3/10]$
+ok : true$
+for m in [8, 13, 19, 25] do block([c : map(lambda([p], chance(m, p)), sizes)],
+  print("STEP 4  m =", m, ": the chance of a flag at sizes", sizes, "is", float(c)),
+  for i : 2 thru length(c) do if c[i] <= c[i - 1] then ok : false)$
+print("STEP 4  the chance rises with the size at each m", verdict(ok))$

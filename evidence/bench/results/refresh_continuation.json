@@ -1,0 +1,167 @@
+{
+ "provenance": {
+  "mixdyn": {
+   "path": "<local checkout>",
+   "commit": "33ed7a5e79e4b729f5181b2e8a14a75157105ea8",
+   "dirty": false
+  },
+  "bench": {
+   "path": "<local checkout>",
+   "commit": "ea24f2d6a829541e480b6944c72072ae744b64ef",
+   "dirty": false
+  },
+  "environment": {
+   "JAX_ENABLE_X64": "1",
+   "JAX_PLATFORMS": "cpu",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "PJRT_NPROC": "1",
+   "XLA_FLAGS": null
+  }
+ },
+ "weight": 0.25,
+ "worlds": [
+  {
+   "environment": "drawn",
+   "seed": 900,
+   "weeks": 156,
+   "most rhat": 1.0084307547301357,
+   "channels": {
+    "pla": {
+     "tempered prior": [
+      0.7017477240369909,
+      0.8401994369571856
+     ],
+     "full mean return": 5.542769214628697,
+     "refresh mean return": 6.5004270018663615,
+     "gap": 0.332565693531657,
+     "seed to seed": 0.08926733546681137,
+     "sd ratio": 0.6784973022590116,
+     "gap on the previous window": 0.30828761427693324,
+     "drift": {
+      "channel": "pla",
+      "before": 6.239170428388127,
+      "after": 6.48021364292808,
+      "low": 1.9087830304371234,
+      "high": 9.997376570347067,
+      "level": 0.8,
+      "leaves": false
+     }
+    },
+    "meta": {
+     "tempered prior": [
+      0.2,
+      0.9
+     ],
+     "full mean return": 4.519793378032129,
+     "refresh mean return": 3.131653354723076,
+     "gap": -0.216204915300015,
+     "seed to seed": -0.08079792591150069,
+     "sd ratio": 0.8824831941139549,
+     "gap on the previous window": -0.2511747291519719,
+     "drift": {
+      "channel": "meta",
+      "before": 4.000770380855744,
+      "after": 3.1236293234625396,
+      "low": 0.45984458804769573,
+      "high": 11.639484900384495,
+      "level": 0.8,
+      "leaves": false
+     }
+    },
+    "tv": {
+     "tempered prior": [
+      0.06552334847425294,
+      0.8744559746696987
+     ],
+     "full mean return": 1.1801269402513999,
+     "refresh mean return": 1.0718567672543104,
+     "gap": -0.11059069847869,
+     "seed to seed": -0.013530505728661107,
+     "sd ratio": 0.989421830159278,
+     "gap on the previous window": -0.0917455805074974,
+     "drift": {
+      "channel": "tv",
+      "before": 1.0642339138821288,
+      "after": 1.0348548566628433,
+      "low": 0.2728556559095662,
+      "high": 2.1683266471423166,
+      "level": 0.8,
+      "leaves": false
+     }
+    }
+   }
+  },
+  {
+   "environment": "reference",
+   "seed": 900,
+   "weeks": 156,
+   "most rhat": 1.009562195088619,
+   "channels": {
+    "pla": {
+     "tempered prior": [
+      0.9703422794017027,
+      0.7933123704286449
+     ],
+     "full mean return": 8.063737354494801,
+     "refresh mean return": 8.813480101025778,
+     "gap": 0.2326214086785055,
+     "seed to seed": -0.10365243651207354,
+     "sd ratio": 0.7290690608954729,
+     "gap on the previous window": 0.22384519777305018,
+     "drift": {
+      "channel": "pla",
+      "before": 8.746954284702642,
+      "after": 8.785617441229821,
+      "low": 4.30988749026627,
+      "high": 12.439187745811905,
+      "level": 0.8,
+      "leaves": false
+     }
+    },
+    "meta": {
+     "tempered prior": [
+      0.2,
+      0.9
+     ],
+     "full mean return": 3.9972821041689968,
+     "refresh mean return": 3.197906776842387,
+     "gap": -0.1446080051501137,
+     "seed to seed": 0.060768147553052605,
+     "sd ratio": 0.9550929427467021,
+     "gap on the previous window": -0.147363273732077,
+     "drift": {
+      "channel": "meta",
+      "before": 3.879571940862983,
+      "after": 3.1897931147220935,
+      "low": 0.4292096752746609,
+      "high": 11.940127830979925,
+      "level": 0.8,
+      "leaves": false
+     }
+    },
+    "tv": {
+     "tempered prior": [
+      0.04313460393356087,
+      0.8693110404358685
+     ],
+     "full mean return": 1.0569675176339088,
+     "refresh mean return": 0.9339562863794819,
+     "gap": -0.13294048200783778,
+     "seed to seed": -0.02086765836724679,
+     "sd ratio": 0.9740845551180716,
+     "gap on the previous window": -0.11381543464395927,
+     "drift": {
+      "channel": "tv",
+      "before": 0.9921364390406582,
+      "after": 0.9033218451904674,
+      "low": 0.26230047994722017,
+      "high": 1.9972727852027383,
+      "level": 0.8,
+      "leaves": false
+     }
+    }
+   }
+  }
+ ]
+}

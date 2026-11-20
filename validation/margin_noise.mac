@@ -1,0 +1,110 @@
+/* The error models of the margin regression's noise mixture
+   (mixdyn.models.margin_mmm.NoiseMixture, ADR 0091; tests/test_margin_mmm.py runs this file and
+   reads its verdicts).
+
+   The errors are u_t = d_t (a_t + e_t): a_t a stationary AR(1) of coefficient rho, e_t white
+   noise independent of it, the AR(1)'s share of their variance w, and d_t^2 the variance ratio
+   h on a promoted week, 1 on another.
+
+     STEP 1  the AR(1) of innovation variance w s2 (1 - rho^2) has variance w s2 and
+             autocovariance w s2 rho^k, so cov(a_t + e_t, a_(t+k) + e_(t+k)) is
+             s2 (w rho^k + (1 - w) [k = 0]): the matrix the regression factors, at s2 = 1
+     STEP 2  the determinant of the AR(1) correlation matrix of order n is (1 - rho^2)^(n - 1),
+             n = 2..5
+     STEP 3  its Cholesky factor has the first column rho^(i - 1) and sqrt(1 - rho^2) rho^(i - j)
+             below, and the factor's inverse is Prais and Winsten's transform over
+             sqrt(1 - rho^2): the first week as it is, each other less rho times the week before
+             it, over sqrt(1 - rho^2); n = 4
+     STEP 4  with a flat prior on the q nuisance columns and the precision P x' S^-1 x on each
+             of the C channel columns, the covariance c S in place of S gives |c S| = c^n |S|,
+             each precision and the residual sum of squares 1/c of itself, and
+             |X' S^-1 X + Lambda| c^-(q + C) of itself; on an AR(1) of 3 weeks, a level and a
+             channel
+     STEP 5  so the log evidence
+               -1/2 log|S| + 1/2 sum log Lambda_c - 1/2 log|X' S^-1 X + Lambda|
+               - (n - q)/2 log RSS
+             is the same at c S and at S, for every n, q and C: the error models are compared on
+             any common scale of their covariances; with n in place of n - q, the degrees of
+             freedom under a proper prior on every column, it would move by q/2 log c
+     STEP 6  weeks scaled by D = diag(d): |D S D| = |D|^2 |S| and (D S D)^-1 = D^-1 S^-1 D^-1, so
+             the weeks are whitened by S's factor after their division by d; n = 3
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/margin_noise.mac */
+
+display2d : false$
+linel : 200$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+zero(e) := is(ratsimp(e) = 0)$
+zeros(m) := every(lambda([e], is(ratsimp(e) = 0)), flatten(args(m)))$
+print("================================================================")$
+print("THE NOISE MIXTURE'S ERROR MODELS")$
+print("================================================================")$
+
+/* ===== STEP 1: the AR(1) beside white noise ===== */
+/* stationarity: g0 = rho^2 g0 + v; each lag multiplies by rho */
+v : w * s2 * (1 - rho^2)$
+g0 : rhs(first(solve(g = rho^2 * g + v, g)))$
+ar(k) := g0 * rho^k$
+print("STEP 1  the errors' autocovariance is s2 (w rho^k + (1 - w) [k = 0])",
+  verdict(zero(g0 - w * s2)
+    and zero(ar(0) + (1 - w) * s2 - s2)
+    and every(lambda([k], zero(ar(k) - rho * ar(k - 1)) and zero(ar(k) - w * s2 * rho^k)),
+      [1, 2, 3, 4])))$
+
+/* ===== STEP 2: the determinant ===== */
+R(n) := genmatrix(lambda([i, j], rho^abs(i - j)), n, n)$
+print("STEP 2  the AR(1) correlation matrix's determinant is (1 - rho^2)^(n - 1)",
+  verdict(every(lambda([n], zero(determinant(R(n)) - (1 - rho^2)^(n - 1))), [2, 3, 4, 5])))$
+
+/* ===== STEP 3: the factor, and Prais and Winsten's transform ===== */
+/* t stands for sqrt(1 - rho^2): the factor's entries are polynomials in rho and t */
+F : genmatrix(lambda([i, j], if j > i then 0 elseif j = 1 then rho^(i - 1) else t * rho^(i - j)),
+  4, 4)$
+onto(e) := ratsimp(subst(t^2 = 1 - rho^2, expand(e)))$
+PW : genmatrix(lambda([i, j],
+  if i = 1 then (if j = 1 then 1 else 0)
+  elseif j = i then 1 / t elseif j = i - 1 then -rho / t else 0), 4, 4)$
+print("STEP 3  the factor times its transpose is the matrix, and its inverse the transform",
+  verdict(zeros(matrixmap(onto, F . transpose(F) - R(4)))
+    and zeros(matrixmap(onto, PW . F - ident(4)))))$
+
+/* ===== STEP 4: the pieces of the evidence under a scaled covariance ===== */
+/* 3 weeks, a level z (flat prior), a channel x of prior precision P x' S^-1 x, sales y */
+z : matrix([1], [1], [1])$
+x : matrix([x1], [x2], [x3])$
+y : matrix([y1], [y2], [y3])$
+X : addcol(z, x)$
+pieces(S) := block([Si, lam, A, b, rss],
+  Si : invert(S),
+  lam : P * (transpose(x) . Si . x),
+  A : transpose(X) . Si . X + matrix([0, 0], [0, lam]),
+  b : invert(A) . transpose(X) . Si . y,
+  rss : transpose(y) . Si . y - transpose(y) . Si . X . b,
+  [determinant(S), lam, determinant(A), rss])$
+one : pieces(R(3))$
+scaled : pieces(c * R(3))$
+print("STEP 4  |c S| = c^3 |S|; the precision and RSS are 1/c of theirs; |A| is c^-2 of its",
+  verdict(zero(scaled[1] - c^3 * one[1])
+    and zero(scaled[2] - one[2] / c)
+    and zero(scaled[3] - one[3] / c^2)
+    and zero(scaled[4] - one[4] / c)))$
+
+/* ===== STEP 5: the evidence on a common scale, for every n, q and C ===== */
+/* the logs of |S|, of the precisions' product, of |A| and of RSS at S, and their shifts at c S */
+L(c) := -1/2 * (n * log(c) + logS) + 1/2 * (sumloglam - C * log(c))
+  - 1/2 * (logA - (q + C) * log(c)) - 1/2 * (n - q) * (logRSS - log(c))$
+print("STEP 5  the log evidence at c S less the one at S is 0",
+  verdict(zero(L(c) - L(1))))$
+/* with n in place of n - q, the degrees of freedom under a proper prior on every column */
+Lridge(c) := -1/2 * (n * log(c) + logS) + 1/2 * (sumloglam - C * log(c))
+  - 1/2 * (logA - (q + C) * log(c)) - 1/2 * n * (logRSS - log(c))$
+print("STEP 5  with n for n - q the difference is q/2 log c",
+  verdict(zero(Lridge(c) - Lridge(1) - q / 2 * log(c))))$
+
+/* ===== STEP 6: the weeks' own scales ===== */
+D : diag_matrix(d1, d2, d3)$
+print("STEP 6  |D S D| = |D|^2 |S| and (D S D)^-1 = D^-1 S^-1 D^-1",
+  verdict(zero(determinant(D . R(3) . D) - (d1 * d2 * d3)^2 * determinant(R(3)))
+    and zeros(invert(D . R(3) . D) - invert(D) . invert(R(3)) . invert(D))))$

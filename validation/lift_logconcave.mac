@@ -1,0 +1,120 @@
+/* The shape of the lift term in each model that reads a lift test: log-concave in the model's lift
+   where the term is normal, and where it is not, where it bends the other way
+   (mixdyn.calibration, ADR 0015; tests/test_calibration.py runs this file and reads its verdicts).
+
+   A test reports a lift x with a standard error se. The model's lift L is a channel's coefficient
+   times the gap in its saturated spend between the spend as the test ran and as planned, summed
+   over the readout: in the one-geo model (mixdyn.models.bayes_mmm) and the nested one, the
+   estimate's term is log N(x; L, se); in the model over geos (mixdyn.models.bayes_geo), the same,
+   L summed over the test's geos, each geo's effect weighted by its population; a lift series'
+   gaps are jointly normal about the coefficient times each period's gap in saturated spend, under
+   the series' covariance, whose inverse is W' W; a geo test (chc.lift.LiftTest) in the one-geo
+   model reads each gap as normal about the model's at the sampled scale test_sigma; and the DLM
+   (mixdyn.models.dlm_lift) reads its tests jointly normal given the observational variance V, and
+   Student t with V integrated out.
+
+     STEP 1  the estimate's term: d2/dL2 log N(x; L, se) = -1/se^2 < 0 at every L, x and se > 0,
+             its one maximum at L = x
+     STEP 2  the model over geos: L = sum_g w_g d_g b_g, linear in the geos' effects b_g, so the
+             term's Hessian in them is -(w d)(w d)'/se^2, v' H v = -(sum_g w_g d_g v_g)^2/se^2,
+             three geos
+     STEP 3  a lift series of three periods: the Hessian in the lifts is -W' W, v' H v = -|W v|^2
+             for a lower-triangular W, and along the coefficient b, L_t = b g_t, the second
+             derivative is -|W g|^2
+     STEP 4  a geo test's gap at the sampled scale: concave in L at every scale, -exp(-2 t) with
+             t = log test_sigma; jointly in (L, t) the Hessian's determinant is
+             -2 (x - L)^2 exp(-4 t), below 0 wherever L differs from x: a saddle, NOT jointly
+             concave
+     STEP 5  the sampler's coordinate, u = log roi, L = c exp(u) with c > 0 the lift at a return
+             of 1: d2/du2 = -c exp(u) (2 c exp(u) - x)/se^2, above 0 wherever 0 < L < x/2: the
+             estimate's term is log-concave in L, NOT in log roi below half the lift
+     STEP 6  the DLM's tests with V integrated out, Student t of nu degrees and scale s:
+             d/dL = (nu + 1)(x - L)/(nu s^2 + (x - L)^2), 0 at L = x alone, one mode;
+             d2/dL2 = -(nu + 1)(nu s^2 - (x - L)^2)/(nu s^2 + (x - L)^2)^2, above 0 wherever
+             |x - L| > sqrt(nu) s: NOT log-concave there. Given V the term is STEP 3's normal
+     STEP 7  the contrast: a Gamma of mean L and SD se, the term PyMC-Marketing read lift tests
+             with before it moved to a normal, at x = 1 and se = 1/4 bends upward at L = 3/10,
+             where the normal's second derivative is -16
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/lift_logconcave.mac */
+
+display2d : false$
+linel : 200$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+zero(e) := is(ratsimp(e) = 0)$
+zeros(m) := every(lambda([e], zero(e)), flatten(args(m)))$
+print("================================================================")$
+print("THE LIFT TERM'S SHAPE IN THE MODEL'S LIFT")$
+print("================================================================")$
+assume(se > 0, s > 0, nu > 0, c > 0)$
+
+/* ===== STEP 1: the estimate's term ===== */
+normal(x, L, sd) := -log(sd) - log(2 * %pi) / 2 - (x - L)^2 / (2 * sd^2)$
+one : diff(normal(x, L, se), L)$
+two : diff(normal(x, L, se), L, 2)$
+print("STEP 1  d/dL =", ratsimp(one), verdict(zero(one - (x - L) / se^2)))$
+print("STEP 1  d2/dL2 =", two, verdict(zero(two + 1 / se^2) and is(two < 0)))$
+
+/* ===== STEP 2: the model over geos ===== */
+geos : x - (w1 * d1 * b1 + w2 * d2 * b2 + w3 * d3 * b3)$
+hg : hessian(-geos^2 / (2 * se^2), [b1, b2, b3])$
+vg : matrix([v1, v2, v3])$
+quad : (vg . hg . transpose(vg))$
+print("STEP 2  v' H v + (sum w d v)^2/se^2 = 0",
+  verdict(zero(quad + (w1 * d1 * v1 + w2 * d2 * v2 + w3 * d3 * v3)^2 / se^2)))$
+
+/* ===== STEP 3: a lift series ===== */
+W : matrix([a11, 0, 0], [a21, a22, 0], [a31, a32, a33])$
+gaps : matrix([y1], [y2], [y3])$
+lifts : matrix([L1], [L2], [L3])$
+r : W . (gaps - lifts)$
+series : -(transpose(r) . r) / 2$
+hs : hessian(series, [L1, L2, L3])$
+print("STEP 3  the Hessian in the lifts is -W' W", verdict(zeros(hs + transpose(W) . W)))$
+vs : matrix([v1], [v2], [v3])$
+wv : W . vs$
+print("STEP 3  v' H v = -|W v|^2", verdict(zero((transpose(vs) . hs . vs) + (transpose(wv) . wv))))$
+shape : matrix([g1], [g2], [g3])$
+along : subst([L1 = b * g1, L2 = b * g2, L3 = b * g3], series)$
+wg : W . shape$
+print("STEP 3  along the coefficient, d2/db2 = -|W g|^2",
+  verdict(zero(diff(along, b, 2) + (transpose(wg) . wg))))$
+
+/* ===== STEP 4: a geo test's gap at the sampled scale ===== */
+gap(x, L, t) := -t - log(2 * %pi) / 2 - (x - L)^2 * exp(-2 * t) / 2$
+ht : hessian(gap(x, L, t), [L, t])$
+print("STEP 4  d2/dL2 =", ht[1, 1], verdict(zero(ht[1, 1] + exp(-2 * t)) and is(ht[1, 1] < 0)))$
+dt : determinant(ht)$
+print("STEP 4  det =", ratsimp(dt), verdict(zero(dt + 2 * (x - L)^2 * exp(-4 * t))))$
+print("STEP 4  at x = 1, L = 0, t = 0 the determinant is", subst([x = 1, L = 0, t = 0], dt),
+  ": a saddle", verdict(is(subst([x = 1, L = 0, t = 0], dt) < 0)))$
+
+/* ===== STEP 5: the sampler's coordinate ===== */
+logroi : normal(x, c * exp(u), se)$
+du2 : diff(logroi, u, 2)$
+print("STEP 5  d2/du2 + c e^u (2 c e^u - x)/se^2 = 0",
+  verdict(zero(du2 + c * exp(u) * (2 * c * exp(u) - x) / se^2)))$
+quarter : ratsimp(subst(u = log(x / (4 * c)), du2))$
+print("STEP 5  at L = x/4, d2/du2 =", quarter, verdict(zero(quarter - x^2 / (8 * se^2))))$
+
+/* ===== STEP 6: the DLM's tests with the variance integrated out ===== */
+student(x, L) := -(nu + 1) / 2 * log(1 + (x - L)^2 / (nu * s^2))$
+t1 : diff(student(x, L), L)$
+t2 : diff(student(x, L), L, 2)$
+print("STEP 6  d/dL", verdict(zero(t1 - (nu + 1) * (x - L) / (nu * s^2 + (x - L)^2))))$
+print("STEP 6  its only root is L = x", verdict(solve(num(ratsimp(t1)) = 0, L) = [L = x]))$
+print("STEP 6  d2/dL2",
+  verdict(zero(t2 + (nu + 1) * (nu * s^2 - (x - L)^2) / (nu * s^2 + (x - L)^2)^2)))$
+far : ratsimp(subst(L = x - 2 * sqrt(nu) * s, t2))$
+print("STEP 6  at |x - L| = 2 sqrt(nu) s, d2/dL2 =", far, verdict(is(far > 0)))$
+
+/* ===== STEP 7: the contrast, a Gamma of mean L and SD se ===== */
+gamma_term(x, L, sd) := (L^2 / sd^2) * log(L / sd^2) - log_gamma(L^2 / sd^2)
+  + (L^2 / sd^2 - 1) * log(x) - (L / sd^2) * x$
+g2 : diff(gamma_term(x, L, sd), L, 2)$
+bent : float(subst([x = 1, sd = 1/4, L = 3/10], g2))$
+print("STEP 7  the Gamma's d2/dL2 at x = 1, se = 1/4, L = 3/10 is", bent, verdict(bent > 0))$
+print("STEP 7  the normal's there is", subst([se = 1/4], two),
+  verdict(subst([se = 1/4], two) = -16))$

@@ -1,0 +1,30 @@
+# The packages the engine may install at run time (ADR 0001). scripts/check_runtime_deps.py fails
+# CI when uv.lock resolves one that is not here. A name on this list is permission, not a
+# dependency: the lock holds only what the code imports. Every addition is the author's decision.
+
+# General numerical packages.
+numpy
+scipy
+
+# causal-hybrid-control and its runtime closure: JAX, the solvers built on it, and what they need.
+causal-hybrid-control
+absl-py
+diffrax
+equinox
+jax
+jaxlib
+jaxtyping
+lineax
+ml-dtypes
+opt-einsum
+optax
+optimistix
+typing-extensions
+wadler-lindig
+
+# scikit-learn, which the author counts as general (2026-10-01), and its runtime closure.
+scikit-learn
+cloudpickle
+joblib
+narwhals
+threadpoolctl

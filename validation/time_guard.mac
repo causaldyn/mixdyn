@@ -1,0 +1,97 @@
+/* The reach of the time guard (mixdyn.decisions.margin_plan.time_held, ADR 0092;
+   tests/test_margin_plan.py runs this file and reads its verdicts).
+
+   The guard holds a channel whose weekly spend has an absolute Pearson correlation with the
+   week's number above 4/5. Without noise, two shapes of a spend that follows time:
+
+     STEP 1  a step: the spend is 0 up to the fraction a of the history and 1 after it, the time
+             uniform on [0, 1]. Its covariance with the time is a (1 - a) / 2 and its variance
+             a (1 - a), the time's 1/12: the squared correlation is 3 a (1 - a)
+     STEP 2  so the step is held where 3 a (1 - a) > 16/25, between a = 1/2 - sqrt(33)/30 and
+             1/2 + sqrt(33)/30: from 31 % to 69 % of the history, and a step at the middle has a
+             correlation of sqrt(3)/2
+     STEP 3  over the weeks 0 .. T - 1 themselves, a step at the week k has the squared
+             correlation 3 k (T - k) / (T^2 - 1): the sums in closed form, and the definition
+             summed week by week at T = 12 and 156
+     STEP 4  a ramp: the spend rises in a straight line over the first fraction b of the history
+             and is level after it. Its covariance with the time is b/4 - b^2/6 and its variance
+             b/3 - b^2/4: the squared correlation is b (3 - 2 b)^2 / (4 - 3 b)
+     STEP 5  which rises with b, its slope 12 (3 - 2 b) (1 - b)^2 / (4 - 3 b)^2, from 0 to 1, and
+             passes 16/25 between b = 359/1000 and 360/1000: a ramp is held from 36 % of the
+             history; a ramp over three quarters of it has a correlation of 0.98
+
+   Run: timeout 300 maxima --very-quiet -Q -b validation/time_guard.mac */
+
+display2d : false$
+linel : 200$
+ratprint : false$
+/* batch echoes the source, so the failing verdict is built here, never written whole */
+verdict(ok) := if ok then "(PASS)" else sconcat("(FA", "IL)")$
+zero(e) := is(ratsimp(e) = 0)$
+print("================================================================")$
+print("THE TIME GUARD'S REACH")$
+print("================================================================")$
+assume(a > 0, a < 1, b > 0, b < 1)$
+/* the time's moments on [0, 1] */
+mt : integrate(t, t, 0, 1)$
+vt : integrate(t^2, t, 0, 1) - mt^2$
+
+/* ===== STEP 1: a step at the fraction a ===== */
+ms : integrate(1, t, a, 1)$
+cs : integrate(t, t, a, 1) - mt * ms$
+vs : ms - ms^2$
+rs : cs^2 / (vs * vt)$
+print("STEP 1  a step's squared correlation with the time is 3 a (1 - a)",
+  verdict(zero(cs - a * (1 - a) / 2) and zero(vs - a * (1 - a)) and zero(vt - 1/12)
+    and zero(rs - 3 * a * (1 - a))))$
+
+/* ===== STEP 2: where a step is held ===== */
+lo : 1/2 - sqrt(33) / 30$
+hi : 1/2 + sqrt(33) / 30$
+at(e, x) := ratsimp(subst(a = x, e))$
+print("STEP 2  a step is held between 1/2 - sqrt(33)/30 and 1/2 + sqrt(33)/30, 31 % to 69 %",
+  verdict(zero(at(rs, lo) - 16/25) and zero(at(rs, hi) - 16/25)
+    and is(at(rs, 30/100) < 16/25) and is(at(rs, 31/100) > 16/25)
+    and is(at(rs, 69/100) > 16/25) and is(at(rs, 70/100) < 16/25)
+    and is(float(lo) > 0.308) and is(float(lo) < 0.309)
+    and is(float(hi) > 0.691) and is(float(hi) < 0.692)
+    and zero(at(rs, 1/2) - 3/4)))$
+
+/* ===== STEP 3: the weeks themselves ===== */
+/* weeks 0 .. T - 1, the spend 1 from the week k on; the sums in closed form */
+st : T * (T - 1) / 2$
+stt : (T - 1) * T * (2 * T - 1) / 6$
+sx : T - k$
+stx : (k + T - 1) * (T - k) / 2$
+closed : (stx / T - (st / T) * (sx / T))^2 / ((sx / T - (sx / T)^2) * (stt / T - (st / T)^2))$
+/* the definition, summed a week at a time */
+weekly(n, j) := block([x, mx, mw, c, vx, vw],
+  x : makelist(if w >= j then 1 else 0, w, 0, n - 1),
+  mx : sum(x[w + 1], w, 0, n - 1) / n,
+  mw : sum(w, w, 0, n - 1) / n,
+  c : sum((x[w + 1] - mx) * (w - mw), w, 0, n - 1),
+  vx : sum((x[w + 1] - mx)^2, w, 0, n - 1),
+  vw : sum((w - mw)^2, w, 0, n - 1),
+  c^2 / (vx * vw))$
+print("STEP 3  over the weeks 0 .. T - 1 it is 3 k (T - k) / (T^2 - 1)",
+  verdict(zero(closed - 3 * k * (T - k) / (T^2 - 1))
+    and every(lambda([j], zero(weekly(12, j) - 3 * j * (12 - j) / (12^2 - 1))), [1, 4, 6, 11])
+    and every(lambda([j], zero(weekly(156, j) - 3 * j * (156 - j) / (156^2 - 1))),
+      [1, 39, 48, 78, 108, 155])))$
+
+/* ===== STEP 4: a ramp over the first fraction b, level after it ===== */
+mr : integrate(t / b, t, 0, b) + integrate(1, t, b, 1)$
+cr : integrate(t^2 / b, t, 0, b) + integrate(t, t, b, 1) - mt * mr$
+vr : integrate((t / b)^2, t, 0, b) + integrate(1, t, b, 1) - mr^2$
+rr : cr^2 / (vr * vt)$
+print("STEP 4  a ramp's squared correlation with the time is b (3 - 2 b)^2 / (4 - 3 b)",
+  verdict(zero(cr - (b / 4 - b^2 / 6)) and zero(vr - (b / 3 - b^2 / 4))
+    and zero(rr - b * (3 - 2 * b)^2 / (4 - 3 * b))))$
+
+/* ===== STEP 5: where a ramp is held ===== */
+ramp(x) := ratsimp(subst(b = x, rr))$
+print("STEP 5  it rises with b, and a ramp is held from 36 % of the history",
+  verdict(zero(diff(rr, b) - 12 * (3 - 2 * b) * (1 - b)^2 / (4 - 3 * b)^2)
+    and zero(limit(rr, b, 0, plus)) and zero(limit(rr, b, 1, minus) - 1)
+    and is(ramp(359/1000) < 16/25) and is(ramp(360/1000) > 16/25)
+    and is(float(sqrt(ramp(3/4))) > 0.981) and is(float(sqrt(ramp(3/4))) < 0.983)))$

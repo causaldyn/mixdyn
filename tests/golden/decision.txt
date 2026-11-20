@@ -1,0 +1,90 @@
+decision
+title: the tiny world's next four weeks
+geo: national
+currency: EUR
+periods: 4
+budget: 325.5
+gain: 479.9
+current_gain: 476.3
+spend:
+  - channel: tv
+    current: 32.59
+    planned: 40.09
+  - channel: search
+    current: 48.79
+    planned: 41.29
+health:
+  max_rhat: 1.004
+  ppp: 0.465
+  ppp_se: 0.04224
+  negative_baseline: 0.23
+  shift:
+    tv: -0.1982
+    search: 0.2031
+  width:
+    tv: 0.1888
+    search: 0.1176
+  consistency:
+    tv: 0.57
+    search: 0.76
+  thresholds:
+    max_rhat: 1.2
+    min_ppp: 0.05
+    max_negative_baseline: 0.2
+  flags:
+    rhat: pass
+    ppp: pass
+    negative_baseline: fail
+reconciliation:
+  parts:
+    - base
+    - tv
+    - search
+  periods:
+    | date | kpi | base | tv | search | total | residual |
+    | --- | --- | --- | --- | --- | --- | --- |
+    | 2024-01-01 | 1083 | 1000 | 30.59 | 54.73 | 1085 | -2.688 |
+    | 2024-01-08 | 1109 | 1000 | 45.07 | 64.69 | 1110 | -0.7546 |
+    | 2024-01-15 | 1133 | 1000 | 63.95 | 66.87 | 1131 | 1.76 |
+    | 2024-01-22 | 1126 | 1000 | 53.14 | 71.24 | 1124 | 1.88 |
+    | 2024-01-29 | 1135 | 1000 | 62.76 | 71.28 | 1134 | 0.4801 |
+    | 2024-02-05 | 1133 | 1000 | 64.21 | 66.26 | 1130 | 2.31 |
+    | 2024-02-12 | 1120 | 1000 | 51.2 | 67.99 | 1119 | 0.6936 |
+    | 2024-02-19 | 1134 | 1000 | 66.54 | 71.29 | 1138 | -3.462 |
+    | 2024-02-26 | 1134 | 1000 | 60.75 | 70.32 | 1131 | 2.969 |
+    | 2024-03-04 | 1148 | 1000 | 71.49 | 71.12 | 1143 | 5.773 |
+    | 2024-03-11 | 1147 | 1000 | 73.36 | 75.02 | 1148 | -1.038 |
+    | 2024-03-18 | 1130 | 1000 | 64.77 | 75.17 | 1140 | -10.15 |
+    | 2024-03-25 | 1120 | 1000 | 60.38 | 59.41 | 1120 | 0.05361 |
+    | 2024-04-01 | 1111 | 1000 | 53.06 | 61.1 | 1114 | -3.234 |
+    | 2024-04-08 | 1132 | 1000 | 65.69 | 68.85 | 1135 | -2.358 |
+    | 2024-04-15 | 1133 | 1000 | 70.93 | 56.52 | 1127 | 5.274 |
+    | 2024-04-22 | 1118 | 1000 | 56.43 | 59.24 | 1116 | 2.094 |
+    | 2024-04-29 | 1131 | 1000 | 62.32 | 67.43 | 1130 | 1.512 |
+    | 2024-05-06 | 1130 | 1000 | 53.53 | 72.85 | 1126 | 3.836 |
+    | 2024-05-13 | 1109 | 1000 | 49.69 | 60.29 | 1110 | -1.085 |
+next_test:
+  verdict: test
+  tests:
+    - tv x0 for 2 at 0.2
+    - search x0 for 2 at 0.2
+  channels:
+    - tv
+    - search
+  reduction: 1.433
+  error: 0.833
+  cost: 25.42
+  net_value: 2.392
+  predicted_net_value: 1.291
+  evpi: 5.006
+  evpi_error: 2.463
+  draws: 16
+events:
+  - on: 2024-05-13
+    what: fitted on twenty weeks
+  - on: 2024-05-14
+    what: planned the next four weeks
+compute:
+  device: cpu
+  wall_seconds: 12.5
+unidentified: none
