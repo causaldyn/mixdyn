@@ -4,14 +4,18 @@ promise."""
 
 from __future__ import annotations
 
+import decimal
 import json
 from pathlib import Path
+from types import ModuleType
 
 import numpy as np
 import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
+from mixdyn.inference import sensitivity
+from mixdyn.models import bayes_mmm
 from mixdyn.transforms import (
     Geometric,
     Hill,
@@ -21,6 +25,7 @@ from mixdyn.transforms import (
     half_saturation,
     robyn_weibull,
     saturate,
+    saturation,
 )
 
 FIXTURE = json.loads(
@@ -159,3 +164,14 @@ def test_robyn_s_share_moves_earlier_values_when_the_series_grows() -> None:
 def test_what_it_cannot_transform_is_refused(make, match: str) -> None:
     with pytest.raises(ValueError, match=match):
         make()
+
+
+@pytest.mark.parametrize("module", [saturation, bayes_mmm, sensitivity], ids=lambda m: m.__name__)
+def test_the_tanh_constant_is_atanh_one_half_correctly_rounded(module: ModuleType) -> None:
+    """`atanh(1/2) = ln(3)/2` from decimal arithmetic, not from the platform's libm, whose
+    rounding varies: glibc 2.39 returns the double one ulp below, 2.43 the nearest one, which
+    Maxima's 50-digit `log(3)/2` puts 0.41 ulp away. Every module's constant is the nearest."""
+    context = decimal.Context(prec=40)
+    nearest = float(context.divide(context.ln(3), 2))
+    assert nearest.hex() == "0x1.193ea7aad030bp-1"
+    assert nearest == module._TANH_HALF

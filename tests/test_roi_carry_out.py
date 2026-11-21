@@ -66,9 +66,9 @@ RECORDED = {
         "density lognormal": "60771b0fb8c6ad50",
         "density normal": "5bb51c95ae380da9",
         "density student": "1a928b6ccd2aff13",
-        "density tanh": "3772bc24e339e794",
+        "density tanh": "af9f6191c4dd4f9d",
         "fit normal": "632eb313674de615",
-        "fit tanh": "a7693601c7f123dc",
+        "fit tanh": "36c34a2beb7a71c3",
     },
 }
 """Each case's digest under each machine's dispatch (`dispatch.key`): the default model's density
@@ -77,11 +77,11 @@ digests go in after checking that the tree before the change under review draws 
 there, so that a record holds the machine's bits and not a change's.
 
 The first key is an AVX2 Zen 3 machine's with glibc 2.43, natively and in Ubuntu 26.04; the second
-is the same machine's in Ubuntu 24.04, whose glibc 2.39 returns `atanh(1/2)`, the tanh curve's
-constant, one ulp below its correctly rounded value, so only tanh moves. That row's tanh
-digests are the ones GitHub's ubuntu-24.04 runners drew on 2026-11-01, at an EPYC 7763's speed. On
-the Zen 3, XLA held to AVX or to SSE4.2 moves all six digests and OpenBLAS held to its Sandy Bridge
-kernels both fits'; numpy on its baseline loops, OpenBLAS held to Zen's and two CPUs move none."""
+is the same machine's in Ubuntu 24.04, glibc 2.39, which draws the same digests since the tanh
+curve's constant `atanh(1/2)` is a literal: glibc 2.39's `math.atanh(0.5)` is one ulp below the
+correctly rounded value, and it moved both tanh digests there. On the Zen 3, XLA held to AVX or to
+SSE4.2 moves all six digests and OpenBLAS held to its Sandy Bridge kernels both fits'; numpy on its
+baseline loops, OpenBLAS held to Zen's and two CPUs move none."""
 
 BEFORE_KEYS = {
     "a cloud sandbox with AVX-512 in Ubuntu 24.04 on 2026-10-28": {
@@ -91,6 +91,10 @@ BEFORE_KEYS = {
         "density tanh": "1f63e0f572fb054e",
         "fit normal": "35837240149fdcfc",
         "fit tanh": "ccbcd9530d92475d",
+    },
+    "GitHub's ubuntu-24.04 runners at an EPYC 7763's speed on 2026-11-01": {
+        "density tanh": "3772bc24e339e794",
+        "fit tanh": "a7693601c7f123dc",
     },
     "GitHub's ubuntu-24.04 runners of three legs on 2026-11-07": {
         "fit normal": "263b0c220c35b762",
@@ -102,10 +106,12 @@ BEFORE_KEYS = {
         "fit tanh": "af7c22b607e4cf7e",
     },
 }
-"""Digests drawn before digests were keyed, on machines with AVX-512 whose dispatch no log names
-(the runners of 2026-11-01, an AVX2 class, drew the second key's). Each drew, in the cases not
-listed, one of the digests recorded then, which one is unknown. A key not in `RECORDED` fails
-naming the machines here that drew the same digest; it goes under the key the failure prints."""
+"""Digests drawn before digests were keyed, on machines whose dispatch no log names. Each drew, in
+the cases not listed, one of the digests recorded then, which one is unknown. A key not in
+`RECORDED` fails naming the machines here that drew the same digest; it goes under the key the
+failure prints. The tanh digests of the machines with glibc 2.39 are the tree's before the tanh
+constant was a literal, and no machine draws them now: the 2026-11-01 runners' are the AVX2 Zen 3's
+under glibc 2.39 then."""
 
 
 def _held(case: str, drawn: str) -> None:
@@ -152,12 +158,12 @@ def test_a_default_fit_draws_what_it_drew_before(name: str) -> None:
 
 
 def test_a_digest_is_held_to_its_own_dispatch_s_record(monkeypatch: pytest.MonkeyPatch) -> None:
-    """A recorded key holds its digest and refuses another key's; a key with no record fails
+    """A recorded key holds its digest and refuses another machine's; a key with no record fails
     with the key and the digest, naming the machine that drew it before keys."""
     monkeypatch.setattr(dispatch, "key", lambda: ZEN3)
     _held("fit tanh", "36c34a2beb7a71c3")
     with pytest.raises(AssertionError, match="'fit tanh' under Dispatch"):
-        _held("fit tanh", "a7693601c7f123dc")
+        _held("fit tanh", "ccbcd9530d92475d")
     forged = dataclasses.replace(ZEN3, openblas="numpy=SkylakeX scipy=SkylakeX")
     monkeypatch.setattr(dispatch, "key", lambda: forged)
     with pytest.raises(pytest.fail.Exception) as failed:

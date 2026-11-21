@@ -28,8 +28,10 @@ from chc import response
 
 type _Array = npt.NDArray[np.float64]
 
-_TANH_HALF = math.atanh(0.5)
-"""Where `tanh` reaches half its ceiling."""
+_TANH_HALF = 0.5493061443340549
+"""Where `tanh` reaches half its ceiling, `atanh(1/2) = ln(3)/2` correctly rounded. A literal
+rather than `math.atanh(0.5)`, whose rounding is the platform libm's: glibc 2.39's is one ulp
+low, and every number of a tanh curve moved with it there."""
 
 
 @dataclass(frozen=True, slots=True)

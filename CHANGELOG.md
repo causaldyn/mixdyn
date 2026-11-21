@@ -26,6 +26,12 @@ changes a public name.
 - **The README said Meridian ran on a capped number of family 10's worlds.** Its cap there equals
   the family's worlds: it ran on every world, and is read beside the verdict because the cap is
   declared exploratory, as in M2.
+- **A tanh curve's fit no longer depends on the platform's libm.** The curve's constant
+  `atanh(1/2)` was `math.atanh(0.5)`, which glibc 2.39 (Ubuntu 24.04) returns one ulp below the
+  correctly rounded `ln(3)/2` that glibc 2.43 returns, and a seeded fit's draws then differ by more
+  than the last bit. It is now the correctly rounded literal in `models.bayes_mmm`,
+  `transforms` and `inference.sensitivity` (ADR 0096). Under glibc 2.43 every number is unchanged;
+  under glibc 2.39 the constant and every number built on it are glibc 2.43's.
 
 ## [0.1.1] — 2026-11-21
 
