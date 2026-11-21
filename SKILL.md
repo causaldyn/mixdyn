@@ -3,6 +3,7 @@ name: mixdyn-media-mix
 description: Fit, check and plan a media mix with mixdyn, one gate at each step. Use when asked to build or run a media-mix model (MMM) on a weekly panel of a KPI and media spend, to read a lift or geo test into one, or to recommend a budget split from one. Walks read, fit, diagnostics, tests, plan and report, and stops where the engine's own checks fail.
 ---
 
+<!-- --8<-- [start:walkthrough] -->
 # A media mix with mixdyn, gated at every step
 
 **Fitted is not approved.** A model that fits the KPI has not shown that its returns are causal:

@@ -6,6 +6,7 @@
 [![license](https://img.shields.io/pypi/l/mixdyn)](https://github.com/causaldyn/mixdyn/blob/main/LICENSE)
 [![scorecard](https://api.scorecard.dev/projects/github.com/causaldyn/mixdyn/badge)](https://scorecard.dev/viewer/?uri=github.com/causaldyn/mixdyn)
 
+<!-- --8<-- [start:intro] -->
 A media-mix modelling (MMM) engine in Python and JAX: regressions, discount dynamic linear models,
 Bayesian models with lift and geo tests in the likelihood, geo hierarchies, test readers and budget
 plans, computed without a UI. Built on
@@ -24,6 +25,8 @@ pip install mixdyn        # Python 3.12 or later
 The runtime packages are NumPy, SciPy, JAX and causal-hybrid-control, with what those bring in: no
 probabilistic-programming language and no other MMM package (ADR 0001).
 
+<!-- --8<-- [end:intro] -->
+<!-- --8<-- [start:record] -->
 ## A first plan
 
 ```python
@@ -260,6 +263,7 @@ rolling origin on the short-history family, each origin's forecast score. Measur
 sell a refresh loop whose results stay stable; the cell measures that stability on worlds whose
 truth is known, for this engine's arms and the rivals'.
 
+<!-- --8<-- [end:record] -->
 ## Working on it
 
 ```bash

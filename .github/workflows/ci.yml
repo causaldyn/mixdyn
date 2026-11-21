@@ -114,3 +114,19 @@ jobs:
         run: |
           set -f
           uv run pytest ${{ matrix.tests }} --durations=10
+
+  # The documentation site's build, strict, as docs.yml builds it before deploying: a page that
+  # names a missing file, a broken link or a docstring the renderer cannot read fails here, on the
+  # push that brought it, not on the release that deploys it.
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Install uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884  # v10.3.0
+        with:
+          python-version: "3.14"
+      - name: Sync dependencies
+        run: uv sync --locked --group docs
+      - name: Build the site
+        run: uv run --group docs mkdocs build --strict
