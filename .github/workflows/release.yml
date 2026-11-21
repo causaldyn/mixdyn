@@ -1,14 +1,10 @@
 name: release
 
-# A draft for the public repository. It never runs here: no tag is pushed to this private
-# repository, and mixdyn is published from a fresh history of the cleaned tree (ADR 0054). Until
-# then pyproject.toml keeps the `Private :: Do Not Upload` classifier, which PyPI refuses, and the
-# build job below stops on it before anything is uploaded.
-#
-# In the public repository: cut a release by pushing a signed tag, `git tag -s v0.1.0 -m ... && git
-# push origin v0.1.0`. Publishing uses PyPI Trusted Publishing (OIDC), no stored token. One-time
-# PyPI-side setup: add the repository, this `release.yml` workflow and the `pypi` environment as a
-# trusted publisher of the `mixdyn` project.
+# Cut a release by pushing a signed tag, `git tag -s v0.1.0 -m ... && git push origin v0.1.0`.
+# Publishing uses PyPI Trusted Publishing (OIDC), no stored token. One-time PyPI-side setup: add the
+# repository, this `release.yml` workflow and the `pypi` environment as a trusted publisher of the
+# `mixdyn` project. The build job below stops on a wheel that carries the `Private :: Do Not
+# Upload` classifier, which PyPI refuses, before anything is uploaded.
 
 on:
   push:
