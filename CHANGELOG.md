@@ -20,6 +20,9 @@ changes a public name.
   `evidence/results/m3_record.json` and writes them into the README, and `tests/test_readme.py`
   fails where a table differs from what it writes, or where a cell of the typed claim table drifts
   from the run's reading.
+- **Build provenance on each release**: the release workflow attests the wheel's and the sdist's
+  provenance with GitHub's attestation action, checks the bundle against both files before the
+  upload, and attaches it to the GitHub release as `mixdyn-<version>.provenance.sigstore.json`.
 
 ### Fixed
 
