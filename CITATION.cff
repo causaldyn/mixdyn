@@ -10,7 +10,7 @@ authors:
 repository-code: "https://github.com/causaldyn/mixdyn"
 url: "https://pypi.org/project/mixdyn/"
 license: Apache-2.0
-version: 0.1.1
+version: 0.2.0
 date-released: "2026-11-21"
 abstract: >-
   A media-mix modelling (MMM) engine in Python and JAX: regressions, discount dynamic linear models,

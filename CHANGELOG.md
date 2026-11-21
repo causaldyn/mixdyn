@@ -5,7 +5,13 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
-## [Unreleased]
+## [0.2.0] — 2026-11-21
+
+The margin regression reads under the noise mixture by default. Without it, its ridge prior pulled
+the sales' level into the channels' margins, which grew with the level: up to 5.5 times the truth
+at a level of 20 000 on 20 seeds. Every fit that relied on the default moves; `noise=None` gives
+the old fit to the bit, and the scorecard's arms pass it. The mixture's memory is bounded, and a
+fit that would not fit in memory stops before it starts.
 
 ### Added
 
