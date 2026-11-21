@@ -49,11 +49,18 @@ DENSITY_DIGESTS = {
     "lognormal": {"39fa47895fe7446e", "60771b0fb8c6ad50"},
     "normal": {"0cf8950637769a9e", "5bb51c95ae380da9"},
     "student": {"967797f3df106e39", "1a928b6ccd2aff13"},
-    "tanh": {"1f63e0f572fb054e", "af9f6191c4dd4f9d", "3772bc24e339e794"},
+    "tanh": {"1f63e0f572fb054e", "af9f6191c4dd4f9d", "3772bc24e339e794", "5477b9d7d6cbfb36"},
 }
 FIT_DIGESTS = {
     "normal": {"35837240149fdcfc", "632eb313674de615", "263b0c220c35b762"},
-    "tanh": {"ccbcd9530d92475d", "36c34a2beb7a71c3", "a7693601c7f123dc", "def58ee14e153863"},
+    "tanh": {
+        "ccbcd9530d92475d",
+        "36c34a2beb7a71c3",
+        "a7693601c7f123dc",
+        "def58ee14e153863",
+        "dbddb83d18fdc8c5",
+        "af7c22b607e4cf7e",
+    },
 }
 """Recorded on the model before the option existed under JAX's CPU backend, one digest for each
 of two x86-64 machines whose vector extensions differ, the second with AVX2 and no AVX-512: XLA
@@ -71,7 +78,16 @@ digests and no density's, and some parameter's draws then differ by more than si
 spread of its own 40 draws, so no tolerance short of the posterior's width holds a fit across
 classes. origin/main could not be run there; on the AVX2 machine natively and with XLA held to
 AVX and to SSE4.2, the model before the option and the one these were recorded on gave the same
-digests."""
+digests.
+
+The digests after those are two more classes', the public repository's GitHub runners on
+2026-11-21 (image ubuntu-26.04, four vCPUs) with AVX-512: on an AMD EPYC 9V45 the densities read
+the recorded bits and the tanh fit does not (`dbddb83d18fdc8c5`); on an Intel Xeon Platinum 8573C
+the tanh density (`5477b9d7d6cbfb36`) and fit (`af7c22b607e4cf7e`) both move. In the same run an
+AMD EPYC 7763 (AVX2) read the recorded digests, as the AVX2 machine does at 2, 4 and 16 CPUs; an
+EPYC 9V45 read the recorded fit on the private repository's runners (ubuntu-24.04, two vCPUs) on
+2026-11-08, so the image or the core count moves it. The model before the option could not be run
+on either class."""
 
 
 @pytest.mark.parametrize("name", sorted(STAN["cases"]))
