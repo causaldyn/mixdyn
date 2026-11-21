@@ -17,6 +17,8 @@ import numpy.typing as npt
 import pytest
 from scipy import special, stats
 
+import dispatch
+from dispatch import Dispatch
 from mixdyn import Cadence, Channel, MediaPanel, Revenue
 from mixdyn.decisions import returns
 from mixdyn.models.bayes_geo import BayesGeoSpec
@@ -45,49 +47,79 @@ def _digest(*arrays: npt.ArrayLike) -> str:
     return h.hexdigest()[:16]
 
 
-DENSITY_DIGESTS = {
-    "lognormal": {"39fa47895fe7446e", "60771b0fb8c6ad50"},
-    "normal": {"0cf8950637769a9e", "5bb51c95ae380da9"},
-    "student": {"967797f3df106e39", "1a928b6ccd2aff13"},
-    "tanh": {"1f63e0f572fb054e", "af9f6191c4dd4f9d", "3772bc24e339e794", "5477b9d7d6cbfb36"},
-}
-FIT_DIGESTS = {
-    "normal": {"35837240149fdcfc", "632eb313674de615", "263b0c220c35b762"},
-    "tanh": {
-        "ccbcd9530d92475d",
-        "36c34a2beb7a71c3",
-        "a7693601c7f123dc",
-        "def58ee14e153863",
-        "dbddb83d18fdc8c5",
-        "af7c22b607e4cf7e",
+ZEN3 = Dispatch(
+    numpy="exp=X86_V3 log=X86_V3 tanh=X86_V3 expm1=baseline(X86_V2) log1p=baseline(X86_V2)",
+    openblas="numpy=Haswell scipy=Haswell",
+    xla="znver3 avx avx2 f16c fma sse sse2 sse3 sse4.1 sse4.2 sse4a ssse3",
+    libc="glibc 2.43",
+)
+RECORDED = {
+    ZEN3: {
+        "density lognormal": "60771b0fb8c6ad50",
+        "density normal": "5bb51c95ae380da9",
+        "density student": "1a928b6ccd2aff13",
+        "density tanh": "af9f6191c4dd4f9d",
+        "fit normal": "632eb313674de615",
+        "fit tanh": "36c34a2beb7a71c3",
+    },
+    dataclasses.replace(ZEN3, libc="glibc 2.39"): {
+        "density lognormal": "60771b0fb8c6ad50",
+        "density normal": "5bb51c95ae380da9",
+        "density student": "1a928b6ccd2aff13",
+        "density tanh": "3772bc24e339e794",
+        "fit normal": "632eb313674de615",
+        "fit tanh": "a7693601c7f123dc",
     },
 }
-"""Recorded on the model before the option existed under JAX's CPU backend, one digest for each
-of two x86-64 machines whose vector extensions differ, the second with AVX2 and no AVX-512: XLA
-compiles for the host's extensions, which move the last bits. On a third class, record the
-digests origin/main gives there and check that the change gives the same before adding them. The
-third tanh digests are the GitHub runners', recorded after the option: only tanh moves there, and
-the other two classes still read what they read before it.
+"""Each case's digest under each machine's dispatch (`dispatch.key`): the default model's density
+and gradient at Stan's 25 points of each world, and a short seeded fit's draws. A new key's
+digests go in after checking that the tree before the change under review draws the same ones
+there, so that a record holds the machine's bits and not a change's.
 
-The last digest of each is a fourth class's: the GitHub runners of CI's 3.12, 3.13 and 3.14 legs
-on 2026-11-07, all three alike, whose logs name no CPU. There the densities read the recorded
-bits and the fits do not: a fit starts from Pathfinder, whose optimizer and Cholesky factors run
-OpenBLAS, which picks its kernels by the CPU, and NUTS carries a last bit into every later draw.
-On the AVX2 machine, OpenBLAS held to its Sandy Bridge or Nehalem kernels moves both fits'
-digests and no density's, and some parameter's draws then differ by more than six times the
-spread of its own 40 draws, so no tolerance short of the posterior's width holds a fit across
-classes. origin/main could not be run there; on the AVX2 machine natively and with XLA held to
-AVX and to SSE4.2, the model before the option and the one these were recorded on gave the same
-digests.
+The first key is an AVX2 Zen 3 machine's with glibc 2.43, natively and in Ubuntu 26.04; the second
+is the same machine's in Ubuntu 24.04, whose glibc 2.39 returns `atanh(1/2)`, the tanh curve's
+constant, one ulp below its correctly rounded value, so only tanh moves. That row's tanh
+digests are the ones GitHub's ubuntu-24.04 runners drew on 2026-11-01, at an EPYC 7763's speed. On
+the Zen 3, XLA held to AVX or to SSE4.2 moves all six digests and OpenBLAS held to its Sandy Bridge
+kernels both fits'; numpy on its baseline loops, OpenBLAS held to Zen's and two CPUs move none."""
 
-The digests after those are two more classes', the public repository's GitHub runners on
-2026-11-21 (image ubuntu-26.04, four vCPUs) with AVX-512: on an AMD EPYC 9V45 the densities read
-the recorded bits and the tanh fit does not (`dbddb83d18fdc8c5`); on an Intel Xeon Platinum 8573C
-the tanh density (`5477b9d7d6cbfb36`) and fit (`af7c22b607e4cf7e`) both move. In the same run an
-AMD EPYC 7763 (AVX2) read the recorded digests, as the AVX2 machine does at 2, 4 and 16 CPUs; an
-EPYC 9V45 read the recorded fit on the private repository's runners (ubuntu-24.04, two vCPUs) on
-2026-11-08, so the image or the core count moves it. The model before the option could not be run
-on either class."""
+BEFORE_KEYS = {
+    "a cloud sandbox with AVX-512 in Ubuntu 24.04 on 2026-10-28": {
+        "density lognormal": "39fa47895fe7446e",
+        "density normal": "0cf8950637769a9e",
+        "density student": "967797f3df106e39",
+        "density tanh": "1f63e0f572fb054e",
+        "fit normal": "35837240149fdcfc",
+        "fit tanh": "ccbcd9530d92475d",
+    },
+    "GitHub's ubuntu-24.04 runners of three legs on 2026-11-07": {
+        "fit normal": "263b0c220c35b762",
+        "fit tanh": "def58ee14e153863",
+    },
+    "an AMD EPYC 9V45 on GitHub's ubuntu-26.04 on 2026-11-21": {"fit tanh": "dbddb83d18fdc8c5"},
+    "an Intel Xeon Platinum 8573C on GitHub's ubuntu-26.04 on 2026-11-21": {
+        "density tanh": "5477b9d7d6cbfb36",
+        "fit tanh": "af7c22b607e4cf7e",
+    },
+}
+"""Digests drawn before digests were keyed, on machines with AVX-512 whose dispatch no log names
+(the runners of 2026-11-01, an AVX2 class, drew the second key's). Each drew, in the cases not
+listed, one of the digests recorded then, which one is unknown. A key not in `RECORDED` fails
+naming the machines here that drew the same digest; it goes under the key the failure prints."""
+
+
+def _held(case: str, drawn: str) -> None:
+    """Holds `drawn` to the digest `RECORDED` holds for `case` under this machine's dispatch."""
+    key = dispatch.key()
+    recorded = RECORDED.get(key, {})
+    if case not in recorded:
+        before = [where for where, held in BEFORE_KEYS.items() if held.get(case) == drawn]
+        drew = f", the digest {' and '.join(before)} drew" if before else ""
+        pytest.fail(
+            f"no {case!r} digest is recorded under this machine's dispatch: it drew {drawn!r}"
+            f"{drew}; record it as RECORDED[{key!r}][{case!r}]"
+        )
+    assert drawn == recorded[case], f"{case!r} under {key!r}"
 
 
 @pytest.mark.parametrize("name", sorted(STAN["cases"]))
@@ -96,10 +128,10 @@ def test_the_default_density_and_gradient_are_the_ones_recorded_before(name: str
     panel, tests, estimates, spec = stan_world(name)
     model = bayes_model(panel, NATIONAL, spec, tests=tests, estimates=estimates)
     out = [model.log_density(p) for p in np.array(STAN["cases"][name]["points"])]
-    assert _digest([v for v, _ in out], *[g for _, g in out]) in DENSITY_DIGESTS[name]
+    _held(f"density {name}", _digest([v for v, _ in out], *[g for _, g in out]))
 
 
-@pytest.mark.parametrize("name", sorted(FIT_DIGESTS))
+@pytest.mark.parametrize("name", ["normal", "tanh"])
 def test_a_default_fit_draws_what_it_drew_before(name: str) -> None:
     """A short seeded fit over the last 80 weeks: every draw and each observation's log
     likelihood, bit for bit."""
@@ -116,8 +148,25 @@ def test_a_default_fit_draws_what_it_drew_before(name: str) -> None:
         warmup=60,
         draws=20,
     )
-    drawn = _digest(*(fit.draws[k] for k in sorted(fit.draws)), fit.log_likelihood)
-    assert drawn in FIT_DIGESTS[name]
+    _held(f"fit {name}", _digest(*(fit.draws[k] for k in sorted(fit.draws)), fit.log_likelihood))
+
+
+def test_a_digest_is_held_to_its_own_dispatch_s_record(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A recorded key holds its digest and refuses another key's; a key with no record fails
+    with the key and the digest, naming the machine that drew it before keys."""
+    monkeypatch.setattr(dispatch, "key", lambda: ZEN3)
+    _held("fit tanh", "36c34a2beb7a71c3")
+    with pytest.raises(AssertionError, match="'fit tanh' under Dispatch"):
+        _held("fit tanh", "a7693601c7f123dc")
+    forged = dataclasses.replace(ZEN3, openblas="numpy=SkylakeX scipy=SkylakeX")
+    monkeypatch.setattr(dispatch, "key", lambda: forged)
+    with pytest.raises(pytest.fail.Exception) as failed:
+        _held("fit tanh", "dbddb83d18fdc8c5")
+    assert str(failed.value) == (
+        "no 'fit tanh' digest is recorded under this machine's dispatch: it drew "
+        "'dbddb83d18fdc8c5', the digest an AMD EPYC 9V45 on GitHub's ubuntu-26.04 on 2026-11-21 "
+        f"drew; record it as RECORDED[{forged!r}]['fit tanh']"
+    )
 
 
 def _carried(spec: BayesSpec, *channels: str) -> BayesSpec:

@@ -102,11 +102,13 @@ jobs:
           key: jax-${{ matrix.group }}-${{ hashFiles('uv.lock') }}-${{ github.sha }}
           restore-keys: jax-${{ matrix.group }}-${{ hashFiles('uv.lock') }}-
       - name: Runner CPU
-        # A digest pinned on one CPU class moves on another: OpenBLAS and numpy pick their kernels
-        # by the CPU, so the log names the class each leg ran on.
+        # A digest of exact bits moves with the kernels numpy, OpenBLAS, XLA and libm pick on the
+        # runner, so the log names the CPU and the dispatch key the pinned digests are held by
+        # (tests/dispatch.py).
         run: |
           lscpu | grep -E '^Model name:'
           uv run python -c "import numpy; numpy.show_runtime()"
+          uv run python tests/dispatch.py
       - name: Tests
         env:
           JAX_COMPILATION_CACHE_DIR: ${{ runner.temp }}/jax-cache
