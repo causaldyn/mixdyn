@@ -1,5 +1,11 @@
 # mixdyn
 
+[![ci](https://github.com/causaldyn/mixdyn/actions/workflows/ci.yml/badge.svg)](https://github.com/causaldyn/mixdyn/actions/workflows/ci.yml)
+[![pypi](https://img.shields.io/pypi/v/mixdyn)](https://pypi.org/project/mixdyn/)
+[![python](https://img.shields.io/pypi/pyversions/mixdyn)](https://pypi.org/project/mixdyn/)
+[![license](https://img.shields.io/pypi/l/mixdyn)](https://github.com/causaldyn/mixdyn/blob/main/LICENSE)
+[![scorecard](https://api.scorecard.dev/projects/github.com/causaldyn/mixdyn/badge)](https://scorecard.dev/viewer/?uri=github.com/causaldyn/mixdyn)
+
 A media-mix modelling (MMM) engine in Python and JAX: regressions, discount dynamic linear models,
 Bayesian models with lift and geo tests in the likelihood, geo hierarchies, test readers and budget
 plans, computed without a UI. Built on

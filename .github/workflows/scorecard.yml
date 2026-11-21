@@ -1,0 +1,38 @@
+name: scorecard
+
+# OpenSSF Scorecard grades the supply chain rather than the code: are actions pinned, is a branch
+# protected, is publishing tokenless, are dependencies watched. It publishes its result so the
+# README's badge resolves.
+on:
+  branch_protection_rule:
+  schedule:
+    - cron: "17 6 * * 1"
+  push:
+    branches: [main]
+
+permissions: read-all
+
+jobs:
+  analysis:
+    # The same tree also lives in a private repository, where Scorecard cannot publish and a run
+    # would only spend minutes: the job runs on the public repository alone.
+    if: github.repository == 'causaldyn/mixdyn'
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write  # upload the SARIF to the Security tab
+      id-token: write         # sign the results so the badge is verifiable
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e  # v2.5.0
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          # Publishes the score and the check names, not the source.
+          publish_results: true
+      - uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
+        with:
+          sarif_file: results.sarif
