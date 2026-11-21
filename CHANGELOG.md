@@ -5,6 +5,28 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
+## [Unreleased]
+
+### Added
+
+- **The README's record of M3, generated from the run's records**: a conflict-of-interest
+  section; the error bars' definition and their source of variability; the complete cases behind
+  every cell of the claim's table; the tuned rivals' reading, `meridian tuned` and `robyn tuned`
+  beside Meridian and Robyn at their recommended settings, with their numbers; a versions table of
+  every arm (each record's packages, Python, commits and settings); a compute table per family and
+  per arm (CPU model, threads, CPU quota, peak memory, wall a process, core-hours); and a paragraph
+  on where an MMM checked by experiments sits against multi-touch attribution, with its sources.
+  `scripts/readme_record.py` reads the tables from the records into
+  `evidence/results/m3_record.json` and writes them into the README, and `tests/test_readme.py`
+  fails where a table differs from what it writes, or where a cell of the typed claim table drifts
+  from the run's reading.
+
+### Fixed
+
+- **The README said Meridian ran on a capped number of family 10's worlds.** Its cap there equals
+  the family's worlds: it ran on every world, and is read beside the verdict because the cap is
+  declared exploratory, as in M2.
+
 ## [0.1.1] — 2026-11-21
 
 The project's public pages, and no change to the engine: `src/` is byte-identical to 0.1.0's, so
