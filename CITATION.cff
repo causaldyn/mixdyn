@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+title: "mixdyn"
+message: "If you use this software, please cite it using these metadata."
+type: software
+authors:
+  - given-names: Ilia
+    family-names: Gradina
+    affiliation: "Independent Researcher"
+    orcid: "https://orcid.org/0009-0008-0911-8765"
+repository-code: "https://github.com/causaldyn/mixdyn"
+url: "https://pypi.org/project/mixdyn/"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-11-20"
+abstract: >-
+  A media-mix modelling (MMM) engine in Python and JAX: regressions, discount dynamic linear models,
+  Bayesian models with lift and geo tests in the likelihood, geo hierarchies, test readers and budget
+  plans, computed without a UI, built on causal-hybrid-control. Its one pre-registered run of the
+  causaldyn bench is a non-inferiority result stated with its losses, not a claim to be best.
+keywords:
+  - marketing mix modeling
+  - media mix modeling
+  - causal inference
+  - bayesian inference
+  - budget allocation
+  - lift tests
+  - geo experiments
+  - jax
