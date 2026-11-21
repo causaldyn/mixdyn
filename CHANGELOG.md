@@ -5,6 +5,24 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
+## [0.1.1] — 2026-11-21
+
+The project's public pages, and no change to the engine: `src/` is byte-identical to 0.1.0's, so
+every fit, plan and number 0.1.0 gives, 0.1.1 gives.
+
+### Added
+
+- **A documentation site**, https://causaldyn.github.io/mixdyn/, built with mkdocs-material and
+  mkdocstrings and deployed by each release from its tag: the README's example and measured record,
+  the walkthrough of `SKILL.md`, the scope, and an API reference over every public module. A strict
+  build of it runs in CI on every push. The decision records stay on GitHub.
+- **`CITATION.cff`**, which Zenodo archives each release with; a test keeps its version and date
+  equal to the package's and to this file's. **`SECURITY.md`**: reports go through GitHub's private
+  vulnerability reporting, and every file on PyPI carries a PEP 740 attestation of the workflow that
+  uploaded it. **`CODE_OF_CONDUCT.md`**: the Contributor Covenant 2.1.
+- **README badges**: CI, the PyPI version, the supported Pythons, the licence, the documentation
+  site and the OpenSSF Scorecard, whose workflow now runs on this repository.
+
 ## [0.1.0] — 2026-11-20
 
 The first public release. The engine's history before it is not public; this section lists what

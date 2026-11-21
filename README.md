@@ -4,6 +4,7 @@
 [![pypi](https://img.shields.io/pypi/v/mixdyn)](https://pypi.org/project/mixdyn/)
 [![python](https://img.shields.io/pypi/pyversions/mixdyn)](https://pypi.org/project/mixdyn/)
 [![license](https://img.shields.io/pypi/l/mixdyn)](https://github.com/causaldyn/mixdyn/blob/main/LICENSE)
+[![docs](https://img.shields.io/website?url=https%3A%2F%2Fcausaldyn.github.io%2Fmixdyn%2F&label=docs)](https://causaldyn.github.io/mixdyn/)
 [![scorecard](https://api.scorecard.dev/projects/github.com/causaldyn/mixdyn/badge)](https://scorecard.dev/viewer/?uri=github.com/causaldyn/mixdyn)
 
 <!-- --8<-- [start:intro] -->
