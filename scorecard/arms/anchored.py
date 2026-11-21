@@ -2,16 +2,17 @@
 `gs` reads (`scorecard.composite`). ADR 0088 records the rule and what it was measured at.
 
 **The plan.** Each channel's margin, the KPI a unit of weekly spend returns, is read off the
-export's history by the margin regression (`mixdyn.models.margin_mmm`), as the `margin` arm reads
-it (`scorecard.arms.margin`); the export's lift tests are read as each channel's return per euro
-and anchor the margins, the regression's bias read by moments (`mixdyn.calibration.anchors`); the
-anchored margins are shrunk towards their common level by empirical Bayes, and the plan is the
-corner a straight-line response makes of the shrunk means (`mixdyn.decisions.margin_plan`). Where
-the regression raises `mixdyn.models.margin_mmm.DegenerateFitError`, the tests alone are shrunk and
-planned, each channel's return per euro of variance its standard error squared. At k = 0 the export
-holds no lift row: the plan is the regression's alone, the `margin` arm's, and no world is routed.
-An export where some channels have tests and others none is refused, and so is a geo export,
-its market too: the rule reads one national history, and a geo export's tests are its geos'.
+export's history by the margin regression without its noise mixture (`mixdyn.models.margin_mmm`,
+`noise=None`), as the `margin` arm reads it (`scorecard.arms.margin`); the export's lift tests are
+read as each channel's return per euro and anchor the margins, the regression's bias read by
+moments (`mixdyn.calibration.anchors`); the anchored margins are shrunk towards their common level
+by empirical Bayes, and the plan is the corner a straight-line response makes of the shrunk means
+(`mixdyn.decisions.margin_plan`). Where the regression raises
+`mixdyn.models.margin_mmm.DegenerateFitError`, the tests alone are shrunk and planned, each
+channel's return per euro of variance its standard error squared. At k = 0 the export holds no lift
+row: the plan is the regression's alone, the `margin` arm's, and no world is routed. An export
+where some channels have tests and others none is refused, and so is a geo export, its market too:
+the rule reads one national history, and a geo export's tests are its geos'.
 
 **The route.** The rule plays `stacked`'s plan, the engine's static Bayesian model
 (`scorecard.arms.bayes`), where a straight line is not to be trusted: where some channel's tests
@@ -204,6 +205,7 @@ class Anchored:
                 observation.controls.get("promotion"),
                 observation.controls.get("price"),
                 observation.kernel_length,
+                noise=None,
             )
         except DegenerateFitError as error:
             if tests is None:

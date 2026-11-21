@@ -21,7 +21,9 @@ is a straight line in the week and a promotion flag that is its promoted weeks' 
 among them; a channel whose columns the nuisance
 columns span has a margin of exactly 0, its prior's, within the square root of the rounding unit
 of the span and not past it; without a mixture the fit is assembled as it was before one, to the
-bit; and Maxima proves the error models' identities."""
+bit; by default the fit is the mixture's, and on the README's history its margins are the truth's
+within two deviations and the same at any level of the sales, which moves the margins without a
+mixture; and Maxima proves the error models' identities."""
 
 from __future__ import annotations
 
@@ -57,7 +59,7 @@ RELATIVE = 1e-9
 
 @pytest.mark.parametrize("world", PARITY, ids=name)
 def test_the_margins_and_their_covariance_are_the_research_codes(world):
-    fit = fit_margins(*arrays(world))
+    fit = fit_margins(*arrays(world), noise=None)
     research = world["research"]
     np.testing.assert_allclose(fit.mean, research["mean"], rtol=RELATIVE, atol=0.0)
     np.testing.assert_allclose(fit.cov, research["cov"], rtol=RELATIVE, atol=0.0)
@@ -79,7 +81,7 @@ def test_a_kernel_as_long_as_the_history_fits_where_the_research_code_raised():
     sales, spend, promotion, price, kernel = arrays(LONG)
     assert kernel == sales.size == 156
     assert LONG["research"]["error"].startswith("ValueError")
-    fit = fit_margins(sales, spend, promotion, price, kernel)
+    fit = fit_margins(sales, spend, promotion, price, kernel, noise=None)
     assert (fit.burn_in, fit.rows) == (BURN_IN, 156 - BURN_IN)
     assert np.all(np.isfinite(fit.mean))
     assert np.all(np.isfinite(fit.cov))
@@ -117,7 +119,7 @@ def _world(
 
 @pytest.mark.parametrize("weeks", [104, 156])
 def test_a_kernel_of_the_histories_length_fits(weeks):
-    fit = fit_margins(*_world(weeks, kernel=weeks), weeks)
+    fit = fit_margins(*_world(weeks, kernel=weeks), weeks, noise=None)
     assert (fit.burn_in, fit.rows) == (BURN_IN, weeks - BURN_IN)
     assert np.all(np.isfinite(fit.mean))
     assert np.all(np.linalg.eigvalsh(fit.cov) > 0.0)
@@ -132,7 +134,7 @@ def test_at_a_negligible_prior_a_kernel_of_the_historys_length_finds_the_worlds_
     deviations; at 1e-9 the retentions found are the world's and the margins lie within 3."""
     monkeypatch.setattr(margin_mmm, "PRIOR", 1e-9)
     margins = np.array([2.0, 0.5, 1.2])
-    fit = fit_margins(*_world(156, kernel=156, margins=tuple(margins)), 156)
+    fit = fit_margins(*_world(156, kernel=156, margins=tuple(margins)), 156, noise=None)
     assert fit.top == (0.5, 0.3, 0.7)
     sd = np.sqrt(np.diag(fit.cov))
     assert np.all(np.abs(fit.mean - margins) < 3.0 * sd)
@@ -145,9 +147,11 @@ def test_a_history_without_a_control_fits_without_its_columns(promotion, price):
     column each; a control the history lacks leaves out its own, and the rest of the design is the
     same."""
     sales, spend, flag, cost = _world(156)
-    full = fit_margins(sales, spend, flag, cost, 6)
+    full = fit_margins(sales, spend, flag, cost, 6, noise=None)
     assert len(full.phases) > 0
-    fit = fit_margins(sales, spend, flag if promotion else None, cost if price else None, 6)
+    fit = fit_margins(
+        sales, spend, flag if promotion else None, cost if price else None, 6, noise=None
+    )
     lost = (not promotion) + (0 if price else 1 + len(full.phases))
     assert (fit.columns, fit.rows) == (full.columns - lost, full.rows)
     assert fit.phases == (full.phases if price else ())
@@ -162,7 +166,7 @@ def test_at_a_negligible_prior_a_history_without_the_controls_finds_the_worlds_m
     monkeypatch.setattr(margin_mmm, "PRIOR", 1e-9)
     margins = np.array([2.0, 0.5, 1.2])
     sales, spend, _, _ = _world(156, margins=tuple(margins), controls=False)
-    fit = fit_margins(sales, spend, None, None, 6)
+    fit = fit_margins(sales, spend, None, None, 6, noise=None)
     assert fit.phases == ()
     assert fit.top == (0.5, 0.3, 0.7)
     sd = np.sqrt(np.diag(fit.cov))
@@ -176,7 +180,7 @@ def test_the_prior_sets_the_margin_of_a_channel_whose_spend_never_moves_and_of_n
     moves by its coefficient of variation of about 0.3."""
     sales, spend, flag, price = _world(156)
     spend[:, 2] = spend[:, 2].mean()
-    fit = fit_margins(sales, spend, flag, price, 6)
+    fit = fit_margins(sales, spend, flag, price, 6, noise=None)
     np.testing.assert_array_equal(fit.prior_share[:2], [0.0, 0.0])
     assert fit.prior_share[2] == pytest.approx(1.0, rel=0.0, abs=1e-12)
 
@@ -202,7 +206,7 @@ def test_the_spend_before_the_history_is_imputed_at_its_first_13_weeks_mean(monk
 
     monkeypatch.setattr(margin_mmm, "adstock", spy)
     sales, spend, flag, price = _world(104, kernel=104)
-    fit_margins(sales, spend, flag, price, 104)
+    fit_margins(sales, spend, flag, price, 104, noise=None)
     assert len(seen) == spend.shape[1] * len(margin_mmm.RETENTIONS)
     means = spend[:PRESAMPLE].mean(axis=0)
     for column, length, before in seen:
@@ -212,7 +216,7 @@ def test_the_spend_before_the_history_is_imputed_at_its_first_13_weeks_mean(monk
 
 @pytest.mark.parametrize(("kernel", "burn_in"), [(1, 0), (6, 5), (14, 13), (15, 13), (104, 13)])
 def test_the_burn_in_is_the_kernels_reach_back_at_most_13_weeks(kernel, burn_in):
-    fit = fit_margins(*_world(104, kernel=kernel), kernel)
+    fit = fit_margins(*_world(104, kernel=kernel), kernel, noise=None)
     assert (fit.burn_in, fit.rows) == (burn_in, 104 - burn_in)
 
 
@@ -249,14 +253,14 @@ def test_a_history_too_short_for_the_design_raises_the_typed_error():
     the flag, the price, the events and the 3 channels."""
     sales, spend, flag, price = _world(20)
     with pytest.raises(DegenerateFitError, match="no residual degree of freedom"):
-        fit_margins(sales, spend, flag, price, 6)
+        fit_margins(sales, spend, flag, price, 6, noise=None)
 
 
 def test_sales_the_design_fits_exactly_raise_the_typed_error_not_a_nan():
     """The research code's AR(1) coefficient was 0/0 on a residual of 0."""
     _, spend, flag, price = _world(104)
     with pytest.raises(DegenerateFitError, match="0/0"):
-        fit_margins(np.zeros(104), spend, flag, price, 6)
+        fit_margins(np.zeros(104), spend, flag, price, 6, noise=None)
 
 
 @pytest.mark.parametrize(
@@ -282,8 +286,8 @@ def test_the_curved_fit_whose_curves_are_lines_is_the_linear_fit():
     the quarter's mean slope of a line, 1 to rounding."""
     sales, spend, flag, price = _world(156)
     quo = spend[-52:].mean(axis=0)
-    linear = fit_margins(sales, spend, flag, price, 6)
-    curved = fit_curved_margins(sales, spend, flag, price, 6, quo, 13, math.inf)
+    linear = fit_margins(sales, spend, flag, price, 6, noise=None)
+    curved = fit_curved_margins(sales, spend, flag, price, 6, quo, 13, math.inf, noise=None)
     fit = curved.margins
     np.testing.assert_allclose(fit.mean, linear.mean, rtol=RELATIVE, atol=0.0)
     np.testing.assert_allclose(fit.cov, linear.cov, rtol=RELATIVE, atol=0.0)
@@ -301,7 +305,7 @@ def test_each_curve_has_slope_1_at_the_status_quo_falls_and_rises_by_its_integra
     spend, and `H_c(p) - H_c(s_c)` is the integral of `H'_c` from `s_c` to `p`."""
     sales, spend, flag, price = _world(156, kernel=kernel)
     quo = spend[-52:].mean(axis=0)
-    curved = fit_curved_margins(sales, spend, flag, price, kernel, quo, 13)
+    curved = fit_curved_margins(sales, spend, flag, price, kernel, quo, 13, noise=None)
     assert curved.shaped.all()
     np.testing.assert_array_equal(curved.half_saturation, HALF_SATURATION * quo)
     np.testing.assert_allclose(curved.weights.sum(axis=1), 1.0, rtol=1e-12, atol=0.0)
@@ -324,7 +328,7 @@ def test_each_curve_has_slope_1_at_the_status_quo_falls_and_rises_by_its_integra
 def test_the_planning_adstock_is_each_channels_adstock_at_its_retention_of_most_weight():
     sales, spend, flag, price = _world(156)
     quo = spend[-52:].mean(axis=0)
-    curved = fit_curved_margins(sales, spend, flag, price, 6, quo, 13)
+    curved = fit_curved_margins(sales, spend, flag, price, 6, quo, 13, noise=None)
     before = spend[:PRESAMPLE].mean(axis=0)
     top = np.argmax(curved.weights, axis=1)
     expected = np.column_stack(
@@ -603,20 +607,20 @@ def test_under_a_mixture_a_nuisance_column_that_is_0_on_the_weeks_read_is_droppe
         plain.top,
         plain.top_weight,
     )
-    assert fit_margins(sales, spend, flag, early, 6).columns == 6 + 6 + 1 + 1 + 2 + 3
+    assert fit_margins(sales, spend, flag, early, 6, noise=None).columns == 6 + 6 + 1 + 1 + 2 + 3
 
 
 def test_under_a_mixture_the_trends_knots_are_its_own_52_weeks_apart():
     """156 weeks hold interior knots at 26, 52, 78, 104 and 130, or at 52 and 104: three columns
     fewer; a mixture with knots every 26 weeks keeps them."""
     sales, spend, flag, price = _world(156)
-    default = fit_margins(sales, spend, flag, price, 6)
+    ridge = fit_margins(sales, spend, flag, price, 6, noise=None)
     fit = fit_margins(sales, spend, flag, price, 6, noise=NoiseMixture())
-    assert (default.columns - fit.columns, fit.rows) == (3, default.rows)
+    assert (ridge.columns - fit.columns, fit.rows) == (3, ridge.rows)
     close = fit_margins(sales, spend, flag, price, 6, noise=_one(0.6, 0.85, 2.0))
     assert close.columns == fit.columns
     every = dataclasses.replace(_one(0.6, 0.85, 2.0), knot_every=26)
-    assert fit_margins(sales, spend, flag, price, 6, noise=every).columns == default.columns
+    assert fit_margins(sales, spend, flag, price, 6, noise=every).columns == ridge.columns
 
 
 def test_a_mixture_of_one_error_model_reports_it_and_no_mixture_reports_an_ar1_alone():
@@ -629,8 +633,8 @@ def test_a_mixture_of_one_error_model_reports_it_and_no_mixture_reports_an_ar1_a
     assert 1.0 < mixed.promoted < 8.0
     assert mixed.top_weight < 1.0
     assert np.all((mixed.retention > 0.1) & (mixed.retention < 0.9))
-    default = fit_margins(sales, spend, flag, price, 6)
-    assert (default.share, default.promoted) == (1.0, 1.0)
+    ridge = fit_margins(sales, spend, flag, price, 6, noise=None)
+    assert (ridge.share, ridge.promoted) == (1.0, 1.0)
 
 
 def test_at_a_negligible_prior_the_mixture_reads_the_errors_a_world_was_made_with(monkeypatch):
@@ -681,7 +685,7 @@ def test_nuisance_columns_the_weeks_do_not_tell_apart_raise_the_typed_error(nois
     price = np.ones(156)
     with pytest.raises(DegenerateFitError, match="do not tell the design's 14 nuisance columns"):
         fit_margins(sales, spend, flag, price, 6, noise=noise)
-    assert np.all(np.isfinite(fit_margins(sales, spend, flag, price, 6).mean))
+    assert np.all(np.isfinite(fit_margins(sales, spend, flag, price, 6, noise=None).mean))
 
 
 def _reproduced(control):
@@ -713,7 +717,7 @@ def test_a_control_the_other_nuisance_columns_reproduce_raises_the_typed_error(c
     )
     with pytest.raises(DegenerateFitError, match=message):
         fit_curved_margins(sales, spend, flag, price, 6, quo, 13, noise=NoiseMixture())
-    ridge = fit_curved_margins(sales, spend, flag, price, 6, quo, 13).margins
+    ridge = fit_curved_margins(sales, spend, flag, price, 6, quo, 13, noise=None).margins
     assert np.all(np.isfinite(ridge.mean))
     assert not ridge.spanned.any()
 
@@ -749,7 +753,7 @@ def test_under_a_mixture_a_channel_the_nuisance_columns_span_has_a_margin_of_exa
         sd = np.sqrt(np.diag(fit.cov))
         assert sd[2] > 5.0 * sd[:2].max()
         assert np.all(np.abs(fit.cov[2, :2]) < 1e-6 * sd[2] * sd[:2])
-    plain = fit_margins(sales, spend, None, price, 6)
+    plain = fit_margins(sales, spend, None, price, 6, noise=None)
     assert not plain.spanned.any()
     assert plain.mean[2] != 0.0
 
@@ -789,16 +793,15 @@ def test_under_a_mixture_a_history_too_short_for_the_columns_kept_raises_the_typ
 
 @pytest.mark.parametrize("world", [*PARITY, LONG], ids=name)
 def test_without_a_mixture_the_fit_is_assembled_as_before_one_to_the_bit(world, monkeypatch):
-    """`noise` is None unless given: no error model is fitted, and the fit is each retention
-    combination's regression mixed by its evidence, in the arithmetic it had before the mixture,
-    to the bit."""
+    """With `noise=None` no error model is fitted, and the fit is each retention combination's
+    regression mixed by its evidence, in the arithmetic it had before the mixture, to the bit."""
 
     def refuse(*_args):
         raise AssertionError("an error model was fitted")
 
     monkeypatch.setattr(margin_mmm, "_noise_fits", refuse)
     sales, spend, promotion, price, kernel = arrays(world)
-    fit = fit_margins(sales, spend, promotion, price, kernel)
+    fit = fit_margins(sales, spend, promotion, price, kernel, noise=None)
     history = margin_mmm._read(sales, spend, promotion, price, kernel)
     combos = list(itertools.product(RETENTIONS, repeat=spend.shape[1]))
     fits = [
@@ -827,6 +830,62 @@ def test_without_a_mixture_the_fit_is_assembled_as_before_one_to_the_bit(world, 
     assert fit.phi == float(w @ np.array([f.phi for f in fits]))
     assert (fit.share, fit.promoted) == (1.0, 1.0)
     assert not fit.spanned.any()
+
+
+def _readme_world(level):
+    """The README's history at the sales' `level`: three channels of i.i.d. uniform weekly spend,
+    each through an adstock of retention 0.5 over 8 weeks, margins of 1.5, 3.0 and 0.5, and white
+    noise of deviation 25 over 104 weeks."""
+    rng = np.random.default_rng(0)
+    spend = rng.uniform([60.0, 20.0, 15.0], [180.0, 80.0, 55.0], size=(104, 3))
+    carried = np.column_stack([adstock(s, 0.5, 8, s[:13].mean()) for s in spend.T])
+    return level + carried @ np.array([1.5, 3.0, 0.5]) + rng.normal(0.0, 25.0, 104), spend
+
+
+def test_by_default_the_fit_is_the_mixtures():
+    """`fit_margins` and `fit_curved_margins` without `noise` fit under `NoiseMixture()`."""
+    sales, spend = _readme_world(5000.0)
+    quo = spend[-13:].mean(axis=0)
+    pairs = (
+        (
+            fit_margins(sales, spend, None, None, 8),
+            fit_margins(sales, spend, None, None, 8, noise=NoiseMixture()),
+        ),
+        (
+            fit_curved_margins(sales, spend, None, None, 8, quo, 13).margins,
+            fit_curved_margins(sales, spend, None, None, 8, quo, 13, noise=NoiseMixture()).margins,
+        ),
+    )
+    for got, want in pairs:
+        for field in ("mean", "cov", "retention", "prior_share", "spanned"):
+            np.testing.assert_array_equal(getattr(got, field), getattr(want, field))
+        assert (got.phi, got.share, got.promoted, got.top) == (
+            want.phi,
+            want.share,
+            want.promoted,
+            want.top,
+        )
+
+
+def test_by_default_the_sales_level_moves_no_margin_and_the_truth_is_read():
+    """The README's history, its sales 200 noise deviations up. The mixture's flat prior leaves
+    the trend's level free: at a level of 0 and of 5000 the margins and their covariance agree to
+    rounding and lie within two deviations of the truth. Without a mixture the ridge pulls the
+    level towards 0 and the channels' columns take it up: the level moves the first two margins by
+    more than two deviations, to about three times the truth."""
+    truth = np.array([1.5, 3.0, 0.5])
+    low, high = (fit_margins(*_readme_world(level), None, None, 8) for level in (0.0, 5000.0))
+    np.testing.assert_allclose(high.mean, low.mean, rtol=1e-9, atol=0.0)
+    np.testing.assert_allclose(high.cov, low.cov, rtol=1e-8, atol=0.0)
+    np.testing.assert_allclose(high.retention, low.retention, rtol=1e-9, atol=0.0)
+    sd = np.sqrt(np.diag(high.cov))
+    assert np.all(np.abs(high.mean - truth) < 2.0 * sd)
+    ridge_low, ridge_high = (
+        fit_margins(*_readme_world(level), None, None, 8, noise=None) for level in (0.0, 5000.0)
+    )
+    ridge_sd = np.sqrt(np.diag(ridge_high.cov))
+    assert np.all(ridge_high.mean[:2] - ridge_low.mean[:2] > 2.0 * ridge_sd[:2])
+    assert np.all(ridge_high.mean[:2] > 2.5 * truth[:2])
 
 
 @pytest.mark.skipif(shutil.which("maxima") is None, reason="maxima is not on PATH")

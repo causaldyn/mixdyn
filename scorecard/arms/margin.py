@@ -1,8 +1,9 @@
 """The margin rule as an arm, `margin`: each channel's margin, the KPI a unit of weekly spend
-returns, read off the export's history by regression (`mixdyn.models.margin_mmm`), the margins
-shrunk towards their common level by empirical Bayes, and the plan a linear response makes of the
-shrunk means, every channel at its floor and the rest of the budget to the highest mean, then the
-next (`mixdyn.decisions.margin_plan`). ADR 0086 records the rule and what it was measured at.
+returns, read off the export's history by regression (`mixdyn.models.margin_mmm`) without its
+noise mixture, `noise=None`, as the rule was found, the margins shrunk towards their common level
+by empirical Bayes, and the plan a linear response makes of the shrunk means, every channel at its
+floor and the rest of the budget to the highest mean, then the next
+(`mixdyn.decisions.margin_plan`). ADR 0086 records the rule and what it was measured at.
 
 The arm reads the export alone: the sales, the spend, the controls `promotion` and `price` where
 it holds them, the kernel's length, the status quo, the box and the budget. An export without one
@@ -204,6 +205,7 @@ class Margin:
             observation.controls.get("promotion"),
             observation.controls.get("price"),
             observation.kernel_length,
+            noise=None,
         )
         shrunk = shrink_margins(margins.mean, margins.cov)
         settings = {

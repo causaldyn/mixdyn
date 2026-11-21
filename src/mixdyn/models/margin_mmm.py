@@ -15,13 +15,15 @@ price over the years seen lies below the price's median by more than 0.15 (`prom
 A history without the flag leaves its column out, and one without the price leaves out its column
 and the promoted weeks' dummies, which are read off it; the rest of the design is the same.
 
-The errors are AR(1). `phi` is read off the residuals of the same model fitted with independent
+By default the regression is read under the noise mixture (below). **Without one**, `noise=None`,
+the errors are AR(1). `phi` is read off the residuals of the same model fitted with independent
 errors, their lag-1 coefficient `sum r_t r_(t-1) / sum r_(t-1)^2` clipped to `[0, 0.95]`, and the
 model is fitted again on the data whitened by the Cholesky factor of the AR(1) covariance `S`,
 Prais and Winsten's transform. The coefficients carry a conjugate Gaussian prior of precision
 `1e-3 diag(X' S^-1 X)` over the noise variance, the noise variance a prior `1 / sigma^2`, so the
-posterior mean is all but the generalised least squares'; the coefficients' covariance is read at
-the noise variance's plug-in, the residual sum of squares over `n - p`. Each channel's retention
+posterior mean is all but the generalised least squares' where the sales' level is small against
+the noise, and not where it is large (below); the coefficients' covariance is read at the noise
+variance's plug-in, the residual sum of squares over `n - p`. Each channel's retention
 runs over {0.1, 0.3, 0.5, 0.7, 0.9}, every combination of the channels' fitted so, and each is
 weighted by its evidence under that prior, the data's density with the coefficients and the noise
 variance integrated out:
@@ -71,8 +73,21 @@ mixture's mean and covariance over the combinations of `beta_c G'_cr(s_c)`; each
 for planning (`Curve`) is the evidence-weighted mixture over its retentions of `G_cr / G'_cr(s_c)`,
 whose slope at the status quo is 1.
 
-**The noise mixture** (`NoiseMixture`). Given one, `fit_margins` and `fit_curved_margins` read the
-same mean under another prior and another error model; without one they fit as above, to the bit.
+**Without a mixture the sales' level moves the margins.** The prior covers the trend's basis, which
+sums to 1 and so carries the level, and pulls the level towards 0. A channel's column, its mean the
+spend's, takes up part of it, the more the smoother the column: the evidence leans to the high
+retentions, and the level left over is slow, which the AR(1) coefficient reads as persistence.
+At one retention combination and one AR(1) coefficient, sales `y + c` give the coefficients of `y`
+plus `c (e - (X' S^-1 X + Lambda)^-1 Lambda e)`, `e` the trend's coefficients of the constant: the
+channels' move by the second term, which a prior on the trend makes nonzero. On the README's
+history, its sales 200 noise deviations up, margins of 1.5, 3.0 and 0.5 are read as 4.48, 8.30 and
+0.20 at retentions 0.90, 0.90 and 0.20; the same history at a level of 0 reads 1.41, 2.20 and 0.16,
+and the noise mixture reads 1.44, 2.19 and 0.21 at either level. The readers frozen on this
+regression keep it by `noise=None` (ADR 0097).
+
+**The noise mixture** (`NoiseMixture`), the default. Under it `fit_margins` and
+`fit_curved_margins` read the same mean under another prior and another error model; with
+`noise=None` they fit as above, to the bit.
 
 - The trend's interior knots lie every `knot_every` weeks, 52.
 - The nuisance columns, the trend, the season, the controls and the promoted weeks' dummies, carry
@@ -112,6 +127,11 @@ never moves beside the trend, leave the flat prior improper, and a model whose r
 squares is not positive has no evidence: both raise `DegenerateFitError`. Columns the weeks barely
 tell apart, or a channel that never spent, can still fail a factorisation, a
 `numpy.linalg.LinAlgError`, which is a `ValueError`.
+
+The fits are stacked, every error model's of every combination: under the default grids `124 5^C`
+of them for `C` channels, whose covariances alone take `124 5^C C^2` doubles, 0.52 GiB at six
+channels, 3.5 GiB at seven and 23 GiB at eight. A history of more channels is read under a smaller
+grid, the memory falling with the error models' count, or with `noise=None`.
 
 A channel whose columns the nuisance columns span, a spend that never moves beside the trend, has
 under the flat prior a coefficient its prior alone sets: the data's part of its posterior is the
@@ -226,6 +246,11 @@ class NoiseMixture:
     def models(self) -> list[tuple[float, float, float]]:
         """Every error model's `(rho, omega, h)`, in the order the fits are stacked."""
         return [(rho, omega, h) for rho, omega in self.pairs() for h in self.promoted]
+
+
+MIXTURE = NoiseMixture()
+"""The mixture of error models `fit_margins` and `fit_curved_margins` read under by default:
+the regression's own grids."""
 
 
 @dataclass(frozen=True, slots=True, eq=False)
@@ -376,12 +401,13 @@ def fit_margins(
     price: npt.ArrayLike | None,
     kernel: int,
     *,
-    noise: NoiseMixture | None = None,
+    noise: NoiseMixture | None = MIXTURE,
 ) -> MarginFit:
     """Each channel's margin over the weekly history: `sales` `(weeks,)`, `spend`
     `(weeks, channels)`, the `promotion` flag and the `price` `(weeks,)`, either None where the
     history holds none, and the adstock's `kernel` length in weeks; under the mixture of error
-    models `noise` where one is given. See the module.
+    models `noise`, `MIXTURE` by default, and with None as the research code fitted it, whose
+    margins the sales' level moves. See the module.
 
     Raises:
         ValueError: on arrays of other shapes, a value that is not finite, or a kernel shorter
@@ -415,12 +441,13 @@ def fit_curved_margins(
     planned: int,
     half_saturation: float = HALF_SATURATION,
     *,
-    noise: NoiseMixture | None = None,
+    noise: NoiseMixture | None = MIXTURE,
 ) -> CurvedFit:
     """The curved regression over the weekly history, as `fit_margins` reads it, each channel's
     column saturated at `half_saturation` times its weekly `status_quo` `(channels,)`, infinity
     for the line, and its margin at the status quo over the `planned` weeks; under the mixture of
-    error models `noise` where one is given. See the module.
+    error models `noise`, `MIXTURE` by default, and with None as the research code fitted it. See
+    the module.
 
     Raises:
         ValueError: as `fit_margins` raises, and on a status quo of another shape or not positive
@@ -525,8 +552,8 @@ def project(
     kernel: int,
     retention: tuple[float, ...],
 ) -> Projection:
-    """The regression `fit_margins` runs at the retention combination `retention`, one of
-    `RETENTIONS` a channel, as a linear map; see the module.
+    """The regression `fit_margins` runs without a noise mixture, `noise=None`, at the retention
+    combination `retention`, one of `RETENTIONS` a channel, as a linear map; see the module.
 
     Raises:
         ValueError: as `fit_margins` raises, and on a combination of another length or a

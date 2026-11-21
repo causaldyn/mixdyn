@@ -254,6 +254,7 @@ def test_an_export_without_a_control_fits_without_it_and_names_the_controls_read
         seen.controls["promotion"] if "promotion" in kept else None,
         seen.controls["price"] if "price" in kept else None,
         seen.kernel_length,
+        noise=None,
     )
     for c, channel in enumerate(seen.channels):
         assert record["flags"][f"{channel} margin"] == fit.mean[c]
@@ -463,6 +464,7 @@ def test_the_curved_plan_water_fills_the_curved_margins_inside_the_adstock_range
         seen.kernel_length,
         quo,
         seen.planned,
+        noise=None,
     )
     post = shrink_margins(curved.margins.mean, curved.margins.cov)
     assert post is not None

@@ -24,6 +24,18 @@ changes a public name.
   provenance with GitHub's attestation action, checks the bundle against both files before the
   upload, and attaches it to the GitHub release as `mixdyn-<version>.provenance.sigstore.json`.
 
+### Changed
+
+- **`fit_margins` and `fit_curved_margins` read under the noise mixture by default**,
+  `noise=NoiseMixture()` (ADR 0097). Without it the ridge prior on the trend pulls the sales' level
+  towards 0 and the channels' columns take part of it up: on the README's history, its sales 200
+  noise deviations up, margins of 1.5, 3.0 and 0.5 read 4.48, 8.30 and 0.20; under the mixture
+  they read 1.44, 2.19 and 0.21 at any level. `noise=None` fits as before, to the bit, and the
+  scorecard's arms name what they were measured with, so no arm's plan moves. Every fit that named
+  no `noise` moves. Under the mixture a history whose nuisance columns the weeks do not tell apart,
+  a price that never moves among them, raises `DegenerateFitError`, and one fit takes about 2 GiB
+  at six channels and more than 8 GiB at seven: name a smaller grid or `noise=None` there.
+
 ### Fixed
 
 - **The README said Meridian ran on a capped number of family 10's worlds.** Its cap there equals
