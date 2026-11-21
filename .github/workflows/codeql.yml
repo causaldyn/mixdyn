@@ -1,0 +1,40 @@
+name: codeql
+
+# Static analysis of the Python sources, on every push to main, every pull request and once a week.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, because CodeQL's queries change even when the code does not -- a scheduled run is how a
+    # new query reaches old code. Off-peak on a Monday.
+    - cron: "41 5 * * 1"
+
+# Nothing by default: the job below names exactly the scopes it needs.
+permissions: {}
+
+jobs:
+  analyze:
+    # The same tree also lives in a private repository, where code scanning is not available on
+    # this plan and a run would only spend minutes: the job runs on the public repository alone.
+    if: github.repository == 'causaldyn/mixdyn'
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
+        with:
+          languages: python
+          # `security-extended` over the default suite. The default is tuned for a low false-positive
+          # rate on a large codebase with a review queue; this is a small one with a single reviewer,
+          # where the cost of reading an extra finding is lower than the cost of missing one.
+          queries: security-extended
+      - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
+        with:
+          category: "/language:python"
