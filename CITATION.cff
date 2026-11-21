@@ -8,6 +8,8 @@ authors:
     affiliation: "Independent Researcher"
     orcid: "https://orcid.org/0009-0008-0911-8765"
 repository-code: "https://github.com/causaldyn/mixdyn"
+# the concept DOI, which resolves to the newest release rather than to one version
+doi: "10.5281/zenodo.24425629"
 url: "https://pypi.org/project/mixdyn/"
 license: Apache-2.0
 version: 0.2.0
