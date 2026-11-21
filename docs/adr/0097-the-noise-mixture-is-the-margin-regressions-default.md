@@ -3,7 +3,8 @@
 Status: proposed, 2026-11-21; moves the default of `noise` in
 `mixdyn.models.margin_mmm.fit_margins` and `fit_curved_margins` from None to `NoiseMixture()`
 (`mixdyn.models.margin_mmm.MIXTURE`), and supersedes ADR 0091's decision "Defaults are unchanged";
-`noise=None` fits as before, to the bit, and no arm's plan changes.
+`noise=None` fits as before, to the bit, and no arm's plan changes; bounds the mixture's memory,
+to the same bits, and raises `MemoryError` where the memory left cannot take a fit (Consequences).
 
 ## Context
 
@@ -107,14 +108,30 @@ claim's arm with no lift test, reads under it.
   tell apart raise `DegenerateFitError` where the ridge fitted them (ADR 0091): a price that never
   moves, a price that is a straight line in the week, a promotion flag that is its promoted weeks'
   dummies' sum. Such a history is read without that control, or with `noise=None`.
-- *Memory.* The mixture stacks every error model's fit of every combination: `124 5^C` fits for
-  `C` channels under the default grids, whose covariances alone take `124 5^C C^2` doubles. One
-  fit of 104 weeks, its peak resident memory over the interpreter's: 10 MiB at three channels, 55
-  at four, 372 at five and 1922 at six; at seven the process passed 8 GiB and was stopped, where
-  the regression without a mixture took 209 MiB. A history of seven channels or more is read under
-  a smaller grid, the memory falling with the error models' count, or with `noise=None`. No time
-  was measured here; ADR 0091 put the curved fit at 0.30 to 0.39 CPU-s a world under the mixture
-  and 0.22 to 0.24 without, at three channels.
+- *Memory.* The mixture fits every error model at every combination: `124 5^C` fits for `C`
+  channels under the default grids. Stacked whole, their covariances alone took `124 5^C C^2`
+  doubles, and the fit held three to five copies of them: one fit of 104 weeks peaked over the
+  interpreter at 1.9 GiB at six channels, 2.9 GiB for the curved fit, and passed 8 GiB at seven,
+  where the process was stopped. So each fit now keeps its log evidence, weight, error model,
+  margins and the channels its prior sets, `40 + 17 C` bytes; the regressions are solved a block
+  of combinations at a time; and the fits' second moments, `8 C^2` bytes each, are held only where
+  they take at most 1 GiB, six channels or fewer under the default grids, and the memory left takes
+  them. Otherwise every fit is read again for their sum, a block at a time, each block's sum
+  carried into the next as the held sum carries a fit's. numpy's sum over the fits adds them one
+  after another, so the mixture is the same to the bit either way: held and read again, at two to
+  six channels, straight and curved, every field of the fit is the stacked fit's, and a test reads
+  the fits both ways on every run. The same fit now peaks at 0.8 GiB at six channels and 1.3 GiB
+  at seven, under a cap of 4 GiB, at the cost of the regressions read twice. Eight channels take
+  8.6 GiB by the estimate below, the fits' rows 8 GiB of it, and under the cap the fit raises; the
+  memory falls with the error models' count, or with `noise=None`, where the regression without a
+  mixture took 1.2 GiB at eight.
+- *The memory guard.* Before the fit takes the memory it estimates it; where the estimate is more
+  than the memory left, the system's available memory or what a cgroup v2 limit on the process
+  leaves, it raises `MemoryError` naming the channels, the fits, the memory and the remedies, never
+  leaving the process to the out-of-memory killer. The estimate bounds the arrays numpy traces at
+  0.4 to 0.7 of it from two to six channels. Outside Linux the memory left is not known and the fit
+  is not guarded. No time was measured here; ADR 0091 put the curved fit at 0.30 to 0.39 CPU-s a
+  world under the mixture and 0.22 to 0.24 without, at three channels.
 - *The mixture's limit stays* (ADR 0091): the error model's posterior means describe the mixture
   planned on, not the noise alone. On the README's history, whose noise is white, the posterior
   mean of `rho` is 0.49; over the 20 seeds above it is 0.54 under white errors and 0.67 under an
@@ -136,6 +153,8 @@ claim's arm with no lift test, reads under it.
 - **The sales centred before the regression**: the margins shift-invariant, the ridge still on the
   trend's variation and on the channels' means; another regression no run measured, which moves
   the frozen readers as the first does.
-- **The mixture's moments accumulated one error model at a time**, its memory that of a single
-  model's fits: another order of the arithmetic of `margin held`'s regression, whose plans would
-  move in their last bits; left for a release that reads that arm again.
+- **The mixture's moments accumulated in one pass**, the weights rescaled to the largest log
+  evidence seen as each block arrives: no regression read twice, but another order of the
+  arithmetic of `margin held`'s regression, whose plans would move in their last bits.
+- **A guard alone**, the fits stacked whole: it would refuse seven channels on a machine of 8 GiB
+  free, and a mixture of seven channels fits in 1.3 GiB.

@@ -33,8 +33,14 @@ changes a public name.
   they read 1.44, 2.19 and 0.21 at any level. `noise=None` fits as before, to the bit, and the
   scorecard's arms name what they were measured with, so no arm's plan moves. Every fit that named
   no `noise` moves. Under the mixture a history whose nuisance columns the weeks do not tell apart,
-  a price that never moves among them, raises `DegenerateFitError`, and one fit takes about 2 GiB
-  at six channels and more than 8 GiB at seven: name a smaller grid or `noise=None` there.
+  a price that never moves among them, raises `DegenerateFitError`.
+- **The noise mixture holds its fits' second moments only up to 1 GiB** (ADR 0097). Past that, or
+  where the memory left is short, it reads every fit again for the mixture's second moment, a block
+  at a time, to the same bits. A fit of 104 weeks peaks at 0.8 GiB over the interpreter at six
+  channels and 1.3 GiB at seven, where it took 1.9 GiB and more than 8 GiB; eight channels take
+  8.6 GiB by the fit's estimate. Where the memory left, the system's or a cgroup v2 limit's, cannot
+  take the fit, it raises `MemoryError` before it fits, naming the channels, the memory and the
+  remedies: fewer channels, a `NoiseMixture` of fewer error models, or `noise=None`.
 
 ### Fixed
 

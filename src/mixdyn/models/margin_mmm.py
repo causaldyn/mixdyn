@@ -128,10 +128,22 @@ squares is not positive has no evidence: both raise `DegenerateFitError`. Column
 tell apart, or a channel that never spent, can still fail a factorisation, a
 `numpy.linalg.LinAlgError`, which is a `ValueError`.
 
-The fits are stacked, every error model's of every combination: under the default grids `124 5^C`
-of them for `C` channels, whose covariances alone take `124 5^C C^2` doubles, 0.52 GiB at six
-channels, 3.5 GiB at seven and 23 GiB at eight. A history of more channels is read under a smaller
-grid, the memory falling with the error models' count, or with `noise=None`.
+**The mixture's memory.** Under the default grids there are `124 5^C` fits for `C` channels,
+every error model's of every combination. Each keeps its log evidence, weight, error model,
+margins and the channels its prior sets, `40 + 17 C` bytes, and the regressions are solved a block
+of combinations at a time. Each fit's second moment, its margins' covariance plus their outer
+product, takes `8 C^2` bytes more. The second moments are held at once where they take at most
+1 GiB, six channels or fewer under the default grids, and the memory left takes them. Otherwise
+every fit is read again for their sum, a block at a time, each block's sum carried into the next as
+the held sum carries a fit's: numpy sums over the fits one after another, so the mixture is the
+same to the bit either way. Before the fit takes the memory it estimates it, and where the estimate
+is more than the memory left, the system's available memory or what a cgroup v2 limit on the
+process leaves, it raises `MemoryError`, which names the channels, the fits, the memory and the
+remedies; outside Linux the memory left is not known and the fit is not guarded. One fit of 104
+weeks, its peak resident memory over the interpreter's: 0.8 GiB at six channels and 1.3 GiB at
+seven, where the fits stacked whole took 1.9 GiB and more than 8 GiB; eight take 8.6 GiB by the
+estimate. A history of more channels is read under a smaller grid, the memory falling with the
+error models' count, or with `noise=None`.
 
 A channel whose columns the nuisance columns span, a spend that never moves beside the trend, has
 under the flat prior a coefficient its prior alone sets: the data's part of its posterior is the
@@ -152,7 +164,9 @@ from __future__ import annotations
 
 import itertools
 import math
+from collections.abc import Iterator
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import numpy.typing as npt
@@ -197,6 +211,10 @@ SPANNED = 1e-8
 may lie, over its length: the square root of the rounding unit. Rounding leaves a column in the
 span 1e-16 apart, and a column further apart than this has a coefficient the data set to 1e-8 of
 it or better."""
+_HELD = 2**30
+"""Under a noise mixture, the most bytes the fits' second moments take held at once."""
+_BLOCK = 2**24
+"""Under a noise mixture, the bytes of a block's cross-products, the fits solved at once."""
 
 
 class DegenerateFitError(ValueError):
@@ -413,6 +431,8 @@ def fit_margins(
         ValueError: on arrays of other shapes, a value that is not finite, or a kernel shorter
             than a week; under `noise`, as `numpy.linalg.cholesky` raises too (the module).
         DegenerateFitError: where the data leave the fit degenerate (the module).
+        MemoryError: under `noise`, where the memory left cannot take the fit, before it takes
+            any (the module).
     """
     history = _read(sales, spend, promotion, price, kernel, noise)
     channels = history.spend.shape[1]
@@ -420,8 +440,7 @@ def fit_margins(
     combos = list(itertools.product(RETENTIONS, repeat=channels))
     if noise is not None:
         lines = np.array([[carried[c, a] for a in RETENTIONS] for c in range(channels)])
-        models = _noise_fits(history, lines, lines, 1.0, noise)
-        margins, _ = _noise_mixture(history, combos, models, models.mean, models.cov)
+        margins, _ = _noise_fit(history, combos, lines, lines, 1.0, noise, None)
         return margins
     fits = [
         _combination(history, [carried[c, a] for c, a in enumerate(combo)], combo)
@@ -453,6 +472,7 @@ def fit_curved_margins(
         ValueError: as `fit_margins` raises, and on a status quo of another shape or not positive
             and finite, no planned week, or a half-saturation not positive.
         DegenerateFitError: where the data leave the fit degenerate (the module).
+        MemoryError: as `fit_margins` raises.
     """
     history = _read(sales, spend, promotion, price, kernel, noise)
     channels = history.spend.shape[1]
@@ -469,26 +489,19 @@ def fit_curved_margins(
         for (c, a), series in history.adstocks.items()
     }
     combos = list(itertools.product(RETENTIONS, repeat=channels))
-    fits, models = [], None
+    fits = []
     if noise is None:
         fits = [
             _combination(history, [curved[c, a] for c, a in enumerate(combo)], combo)
             for combo in combos
         ]
-    else:
-        columns = np.array([[curved[c, a] for a in RETENTIONS] for c in range(channels)])
-        lines = np.array(
-            [[history.adstocks[c, a][history.rows] for a in RETENTIONS] for c in range(channels)]
-        )
-        steady = 1.0 if math.isinf(half_saturation) else half_saturation / (1.0 + half_saturation)
-        models = _noise_fits(history, columns, lines, steady**4, noise)
     carry, reach = _quarter(history.spend, kernel, history.before, planned)
     path = carry + s[:, None, None] * reach[None]
     at_quo = np.sum(reach[None] * _saturated_slope(path, half[:, None, None]), axis=-1) / planned
     place = {a: r for r, a in enumerate(RETENTIONS)}
     index = np.array([[place[a] for a in combo] for combo in combos])
     scale = at_quo[np.arange(channels)[None, :], index]
-    if models is None:
+    if noise is None:
         margins, w = _mixture(
             history,
             combos,
@@ -497,16 +510,13 @@ def fit_curved_margins(
             [f.cov * d[:, None] * d[None, :] for f, d in zip(fits, scale, strict=True)],
         )
     else:
-        repeats = models.evidence.size // len(combos)
-        each = np.tile(scale, (repeats, 1))
-        margins, w = _noise_mixture(
-            history,
-            combos,
-            models,
-            models.mean * each,
-            models.cov * each[:, :, None] * each[:, None, :],
+        columns = np.array([[curved[c, a] for a in RETENTIONS] for c in range(channels)])
+        lines = np.array(
+            [[history.adstocks[c, a][history.rows] for a in RETENTIONS] for c in range(channels)]
         )
-        index = np.tile(index, (repeats, 1))
+        steady = 1.0 if math.isinf(half_saturation) else half_saturation / (1.0 + half_saturation)
+        margins, w = _noise_fit(history, combos, columns, lines, steady**4, noise, scale)
+        index = np.tile(index, (len(noise.models()), 1))
     weights = np.zeros((channels, len(RETENTIONS)))
     for c in range(channels):
         np.add.at(weights[c], index[:, c], w)
@@ -718,27 +728,52 @@ def _weigh(logs: _Array, means: _Array, covs: _Array) -> tuple[_Array, _Array, _
     Raises:
         DegenerateFitError: on margins or a covariance that are not all finite.
     """
-    w = np.exp(logs - logs.max())
-    w /= w.sum()
+    w = _weights(logs)
     mean = w @ means
     second = np.einsum("k,kij->ij", w, covs + np.einsum("ki,kj->kij", means, means))
+    return w, mean, _spread(mean, second)
+
+
+def _weights(logs: _Array) -> _Array:
+    """The fits' weights by their log evidence `logs`, summing to 1."""
+    w = np.exp(logs - logs.max())
+    w /= w.sum()
+    return w
+
+
+def _spread(mean: _Array, second: _Array) -> _Array:
+    """The mixture's covariance of its margins, of mean `mean` and second moment `second`.
+
+    Raises:
+        DegenerateFitError: on margins or a covariance that are not all finite.
+    """
     cov = second - np.outer(mean, mean)
     cov = 0.5 * (cov + cov.T)
     if not (np.all(np.isfinite(mean)) and np.all(np.isfinite(cov))):
         msg = f"the margins {mean.tolist()} or their covariance are not all finite"
         raise DegenerateFitError(msg)
-    return w, mean, cov
+    return cov
 
 
-def _noise_fits(
-    history: _History, columns: _Array, lines: _Array, steady: float, noise: NoiseMixture
-) -> _Models:
-    """Under each of `noise`'s error models, the regression at every retention combination: the
-    channels' `columns`, `(channels, retentions, weeks read)`, beside the nuisance ones, each
-    coefficient's prior precision `PRIOR` times `steady` times the whitened sum of squares of its
-    straight column in `lines`. Each error model is whitened once, and every combination's
-    regression is read off the whitened columns' cross-products. A channel whose columns the
-    nuisance columns span has a coefficient of exactly 0 in every fit; see the module.
+def _noise_blocks(
+    history: _History,
+    columns: _Array,
+    lines: _Array,
+    steady: float,
+    noise: NoiseMixture,
+    spanned: npt.NDArray[np.bool_],
+    size: int,
+) -> Iterator[tuple[int, _Array, _Array, _Array, npt.NDArray[np.bool_]]]:
+    """Under each of `noise`'s error models in turn, the regression at every retention
+    combination, `size` combinations at a time in their order: each block's first row among the
+    fits stacked as `_noise_fits` stacks them, and its fits' log evidence, `(block,)`, the
+    channels' coefficients, `(block, channels)`, their covariance, `(block, channels, channels)`,
+    and the channels whose coefficient the prior sets. The channels' `columns`, `(channels,
+    retentions, weeks read)`, stand beside the nuisance ones, each coefficient's prior precision
+    `PRIOR` times `steady` times the whitened sum of squares of its straight column in `lines`.
+    Each error model is whitened once, and every combination's regression is read off the
+    whitened columns' cross-products, each fit by itself, so a block of any size reads the same
+    bits. A channel in `spanned` has a coefficient of exactly 0 in every fit; see the module.
 
     Raises:
         DegenerateFitError: where a fit's residual sum of squares is not positive.
@@ -760,8 +795,7 @@ def _noise_fits(
     week = np.arange(n)
     lag = np.abs(week[:, None] - week[None, :])
     promoted = np.isin(history.rows % YEAR, history.phases)
-    spanned = _apart(history.nuisance, columns) <= SPANNED
-    evidence, mean, cov, dominated = [], [], [], []
+    first = 0
     for rho, omega in noise.pairs():
         factor = cholesky(omega * rho**lag + (1.0 - omega) * np.eye(n), lower=True)
         for h in noise.promoted:
@@ -769,39 +803,62 @@ def _noise_fits(
             logdet = 2.0 * float(np.sum(np.log(np.diag(factor)))) + 2.0 * float(np.sum(np.log(sd)))
             white = solve_triangular(factor, design / sd[:, None], lower=True)
             gram = white.T @ white
-            lam = np.zeros(kept.shape)
-            lam[:, q:] = PRIOR * gram[line, line] * steady
-            a = gram[kept[:, :, None], kept[:, None, :]] + lam[:, :, None] * np.eye(p)[None]
-            chol = np.linalg.cholesky(a)
-            xy = gram[kept, sales]
-            rhs = [xy[:, :, None], np.broadcast_to(unit, (kept.shape[0], p, channels))]
-            solved = np.linalg.solve(a, np.concatenate(rhs, axis=2))
-            b = solved[:, :, 0]
-            rss = gram[sales, sales] - np.einsum("mi,mi->m", xy, b)
-            if not np.all(rss > 0.0):
-                msg = (
-                    f"the whitened fit at the error model {(rho, omega, h)} leaves a residual sum"
-                    f" of squares of {float(rss.min())}"
+            for start in range(0, index.shape[0], size):
+                rows = slice(start, start + size)
+                part = kept[rows]
+                lam = np.zeros(part.shape)
+                lam[:, q:] = PRIOR * gram[line[rows], line[rows]] * steady
+                a = gram[part[:, :, None], part[:, None, :]] + lam[:, :, None] * np.eye(p)[None]
+                chol = np.linalg.cholesky(a)
+                xy = gram[part, sales]
+                rhs = [xy[:, :, None], np.broadcast_to(unit, (part.shape[0], p, channels))]
+                solved = np.linalg.solve(a, np.concatenate(rhs, axis=2))
+                b = solved[:, :, 0]
+                rss = gram[sales, sales] - np.einsum("mi,mi->m", xy, b)
+                if not np.all(rss > 0.0):
+                    msg = (
+                        f"the whitened fit at the error model {(rho, omega, h)} leaves a residual"
+                        f" sum of squares of {float(rss.min())}"
+                    )
+                    raise DegenerateFitError(msg)
+                evidence = (
+                    -0.5 * logdet
+                    + 0.5 * np.sum(np.log(lam[:, q:]), axis=1)
+                    - np.sum(np.log(np.diagonal(chol, axis1=1, axis2=2)), axis=1)
+                    - 0.5 * (n - q) * np.log(rss)
                 )
-                raise DegenerateFitError(msg)
-            evidence.append(
-                -0.5 * logdet
-                + 0.5 * np.sum(np.log(lam[:, q:]), axis=1)
-                - np.sum(np.log(np.diagonal(chol, axis1=1, axis2=2)), axis=1)
-                - 0.5 * (n - q) * np.log(rss)
-            )
-            inverse = solved[:, q:, 1:]
-            spread = (rss / (n - p))[:, None, None] * inverse
-            mean.append(np.where(spanned, 0.0, b[:, q:]))
-            cov.append(0.5 * (spread + np.transpose(spread, (0, 2, 1))))
-            own = np.diagonal(inverse, axis1=1, axis2=2)
-            dominated.append(lam[:, q:] > 1.0 / own - lam[:, q:])
+                inverse = solved[:, q:, 1:]
+                spread = (rss / (n - p))[:, None, None] * inverse
+                own = np.diagonal(inverse, axis1=1, axis2=2)
+                yield (
+                    first + start,
+                    evidence,
+                    np.where(spanned, 0.0, b[:, q:]),
+                    0.5 * (spread + np.transpose(spread, (0, 2, 1))),
+                    lam[:, q:] > 1.0 / own - lam[:, q:],
+                )
+            first += index.shape[0]
+
+
+def _noise_fits(
+    history: _History, columns: _Array, lines: _Array, steady: float, noise: NoiseMixture
+) -> _Models:
+    """Under each of `noise`'s error models, the regression at every retention combination,
+    stacked (`_noise_blocks`).
+
+    Raises:
+        DegenerateFitError: where a fit's residual sum of squares is not positive.
+        numpy.linalg.LinAlgError: where a fit's cross-products are not positive definite.
+    """
+    spanned = _apart(history.nuisance, columns) <= SPANNED
+    combos = columns.shape[1] ** columns.shape[0]
+    blocks = list(_noise_blocks(history, columns, lines, steady, noise, spanned, combos))
     return _Models(
-        np.concatenate(evidence),
-        np.concatenate(mean),
-        np.concatenate(cov),
-        np.concatenate(dominated),
-        np.repeat(np.array(noise.models()), index.shape[0], axis=0),
+        np.concatenate([block[1] for block in blocks]),
+        np.concatenate([block[2] for block in blocks]),
+        np.concatenate([block[3] for block in blocks]),
+        np.concatenate([block[4] for block in blocks]),
+        np.repeat(np.array(noise.models()), combos, axis=0),
         spanned,
     )
 
@@ -819,23 +876,68 @@ def _apart(nuisance: _Array, columns: _Array) -> _Array:
     return apart.max(axis=1)
 
 
-def _noise_mixture(
+def _noise_fit(
     history: _History,
     combos: list[tuple[float, ...]],
-    models: _Models,
-    means: _Array,
-    covs: _Array,
+    columns: _Array,
+    lines: _Array,
+    steady: float,
+    noise: NoiseMixture,
+    scale: _Array | None,
 ) -> tuple[MarginFit, _Array]:
-    """The mixture over `models`' fits of the margins `means` of covariances `covs`, each weighed
-    by its evidence, with the fits' diagnostics; and the weights, `(fits,)`.
+    """The mixture over every error model's fit of every combination in `combos` (`_noise_blocks`),
+    each fit's margins times its combination's row of `scale`, `(combinations, channels)`, where
+    given, weighed by their evidence as `_weigh` weighs them, with the fits' diagnostics; and the
+    weights, `(fits,)`. The fits' second moments are held at once where `_noise_memory` holds them;
+    otherwise they are summed a block at a time over the fits read again, and each block's sum
+    carried into the next as the held sum carries a fit's, to the bit (the module).
 
     Raises:
-        DegenerateFitError: on margins or a covariance that are not all finite.
+        MemoryError: as `_noise_memory` raises, before the fit takes the memory.
+        DegenerateFitError: as `_noise_blocks` raises, and on margins or a covariance that are not
+            all finite.
+        numpy.linalg.LinAlgError: as `_noise_blocks` raises.
     """
-    w, mean, cov = _weigh(models.evidence, means, covs)
+    channels = columns.shape[0]
+    p = history.nuisance.shape[1] + channels
+    size = min(len(combos), max(1, _BLOCK // (8 * p * p)))
+    weeks = history.rows.size
+    held = _noise_memory(len(noise.models()), len(combos), channels, weeks, p, size)
+    spanned = _apart(history.nuisance, columns) <= SPANNED
+
+    def blocks() -> Iterator[tuple[slice, _Array, _Array, _Array, npt.NDArray[np.bool_]]]:
+        for first, evidence, mean, cov, dominated in _noise_blocks(
+            history, columns, lines, steady, noise, spanned, size
+        ):
+            if scale is not None:
+                each = scale[first % len(combos) :][: evidence.size]
+                mean = mean * each
+                cov = cov * each[:, :, None] * each[:, None, :]
+            second = cov + np.einsum("ki,kj->kij", mean, mean)
+            yield slice(first, first + evidence.size), evidence, mean, second, dominated
+
+    fits = len(noise.models()) * len(combos)
+    logs = np.empty(fits)
+    means = np.empty((fits, channels))
+    dominated = np.empty((fits, channels), dtype=bool)
+    seconds = np.empty((fits, channels, channels)) if held else None
+    for rows, evidence, mean, second, prior_set in blocks():
+        logs[rows], means[rows], dominated[rows] = evidence, mean, prior_set
+        if seconds is not None:
+            seconds[rows] = second
+    w = _weights(logs)
+    mean = w @ means
+    if seconds is not None:
+        total = np.einsum("k,kij->ij", w, seconds)
+    else:
+        total = np.zeros((channels, channels))
+        for rows, _, _, second, _ in blocks():
+            carried = np.concatenate([total[None], second])
+            total = np.einsum("k,kij->ij", np.concatenate([[1.0], w[rows]]), carried)
+    cov = _spread(mean, total)
     by_combo = w.reshape(-1, len(combos)).sum(axis=0)
     top = int(np.argmax(by_combo))
-    rho, omega, h = w @ models.errors
+    rho, omega, h = w @ np.repeat(np.array(noise.models()), len(combos), axis=0)
     fit = MarginFit(
         mean=mean,
         cov=cov,
@@ -847,12 +949,104 @@ def _noise_mixture(
         rows=history.rows.size,
         burn_in=history.burn_in,
         columns=history.columns,
-        prior_share=w @ models.dominated.astype(float),
-        spanned=models.spanned,
+        prior_share=w @ dominated.astype(float),
+        spanned=spanned,
         share=float(omega),
         promoted=float(h),
     )
     return fit, w
+
+
+def _noise_memory(models: int, combos: int, channels: int, weeks: int, p: int, size: int) -> bool:
+    """Whether the mixture of `models` error models' fits of `combos` combinations, `channels`
+    margins, `weeks` weeks read and `p` columns each, solved `size` at a time, holds its fits'
+    second moments at once: where they take at most `_HELD` bytes and the memory left takes the
+    fit with them (`_noise_bytes`). Otherwise the fits are read again for their sum. One channel's
+    sum over the fits is a dot product numpy reads in an order of its own, so it is always held,
+    at 8 bytes a fit.
+
+    Raises:
+        MemoryError: where the memory left takes the fit neither way, naming what it would take.
+    """
+    stream, held = _noise_bytes(models, combos, channels, weeks, p, size)
+    free = _available()
+    keep = channels == 1 or (held - stream <= _HELD and (free is None or held <= free))
+    need = held if keep else stream
+    if free is not None and need > free:
+        msg = (
+            f"under the noise mixture {channels} channels take {models * combos} fits, {models}"
+            f" error models of {combos} retention combinations, and about {need / 2**30:.2f} GiB,"
+            f" more than the {max(free, 0) / 2**30:.2f} GiB of memory left: fit fewer channels,"
+            f" each multiplying the combinations by {len(RETENTIONS)}, a NoiseMixture of fewer"
+            " error models, or noise=None"
+        )
+        raise MemoryError(msg)
+    return keep
+
+
+def _noise_bytes(
+    models: int, combos: int, channels: int, weeks: int, p: int, size: int
+) -> tuple[int, int]:
+    """The bytes the mixture of `models` error models' fits of `combos` combinations, `channels`
+    margins, `weeks` weeks read and `p` columns each, solved `size` at a time, takes at most,
+    without its fits' second moments held and with them. A fit keeps its log evidence, weight,
+    error model, margins and the channels the prior sets, `40 + 17 channels` bytes, and its second
+    moment `8 channels^2` more where held; each combination its columns' indices and its
+    retentions; an error model its covariance's factor and its whitened design; and a block of fits
+    its cross-products, their factor and solutions, twice over for the block before it."""
+    fits = models * combos
+    stream = (
+        fits * (40 + 17 * channels)
+        + combos * (48 * p + 128)
+        + 8 * weeks * (6 * weeks + 3 * (p + 2 * len(RETENTIONS) * channels + 1))
+        + 2 * size * 8 * (6 * p * p + 4 * p * (channels + 1) + 8 * channels * channels)
+    )
+    return stream, stream + fits * 8 * channels * channels
+
+
+def _available() -> int | None:
+    """The bytes of memory the process can still take: the system's available memory, and no
+    more than any cgroup v2 limit on the way to the root leaves (`_headroom`); None where the
+    system reports none, outside Linux."""
+    try:
+        meminfo = Path("/proc/meminfo").read_text(encoding="ascii").splitlines()
+        free = next(
+            int(line.split()[1]) * 1024 for line in meminfo if line.startswith("MemAvailable:")
+        )
+    except (OSError, StopIteration, ValueError):
+        return None
+    try:
+        groups = Path("/proc/self/cgroup").read_text(encoding="ascii").splitlines()
+    except OSError:
+        return free
+    group = next((line[3:].strip() for line in groups if line.startswith("0::")), None)
+    if group is None:
+        return free
+    root = Path("/sys/fs/cgroup")
+    path = root / group.lstrip("/")
+    for level in (path, *path.parents):
+        room = _headroom(level)
+        if room is not None:
+            free = min(free, room)
+        if level == root:
+            break
+    return free
+
+
+def _headroom(group: Path) -> int | None:
+    """The bytes the cgroup v2 `group`'s memory limit leaves, its inactive page cache counted as
+    free; None where it sets no limit."""
+    try:
+        limit = (group / "memory.max").read_text(encoding="ascii").strip()
+        if limit == "max":
+            return None
+        room = int(limit) - int((group / "memory.current").read_text(encoding="ascii"))
+        stat = (group / "memory.stat").read_text(encoding="ascii").splitlines()
+    except (OSError, ValueError):
+        return None
+    return room + next(
+        (int(line.split()[1]) for line in stat if line.startswith("inactive_file ")), 0
+    )
 
 
 def adstock(spend: _Array, retention: float, length: int, before: float) -> _Array:

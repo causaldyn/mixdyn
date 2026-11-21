@@ -32,6 +32,7 @@ import itertools
 import math
 import shutil
 import subprocess
+import tracemalloc
 from pathlib import Path
 
 import numpy as np
@@ -791,6 +792,157 @@ def test_under_a_mixture_a_history_too_short_for_the_columns_kept_raises_the_typ
         fit_margins(sales, spend, flag, price, 6, noise=NoiseMixture())
 
 
+def _fields(fit):
+    """Every field of a fit by name, those of the fits and the curve it holds among them."""
+    out = {}
+    for field in dataclasses.fields(fit):
+        value = getattr(fit, field.name)
+        if dataclasses.is_dataclass(value):
+            out |= {f"{field.name}.{key}": part for key, part in _fields(value).items()}
+        else:
+            out[field.name] = value
+    return out
+
+
+def _mixture_fit(channels, curved):
+    """`_noise_world`'s first `channels` channels read under the default mixture, by
+    `fit_curved_margins` at the last 13 weeks' spend where `curved`, by `fit_margins` otherwise."""
+    sales, spend, price = _noise_world()
+    spend = spend[:, :channels]
+    if curved:
+        quo = spend[-13:].mean(axis=0)
+        return fit_curved_margins(sales, spend, None, price, 6, quo, 13, noise=NoiseMixture())
+    return fit_margins(sales, spend, None, price, 6, noise=NoiseMixture())
+
+
+@pytest.mark.parametrize("curved", [False, True], ids=["straight", "curved"])
+@pytest.mark.parametrize("channels", [2, 3])
+def test_under_a_mixture_the_fits_read_again_a_block_at_a_time_give_the_held_fit_to_the_bit(
+    channels, curved, monkeypatch
+):
+    """Past `_HELD` bytes of second moments the mixture reads every fit twice, once for the
+    weights and once for the second moment, here 7 combinations a block, which divides no error
+    model's 25 or 125, and carries each block's sum into the next: every field of the fit is the
+    one it reads with its second moments held, to the bit."""
+    sizes = []
+    blocks = margin_mmm._noise_blocks
+
+    def counted(*args):
+        sizes.append(args[-1])
+        return blocks(*args)
+
+    monkeypatch.setattr(margin_mmm, "_noise_blocks", counted)
+    held = _mixture_fit(channels, curved)
+    assert sizes == [len(RETENTIONS) ** channels]
+    columns = (held.margins if curved else held).columns
+    monkeypatch.setattr(margin_mmm, "_HELD", 0)
+    monkeypatch.setattr(margin_mmm, "_BLOCK", 7 * 8 * columns * columns)
+    streamed = _mixture_fit(channels, curved)
+    assert sizes[1:] == [7, 7]
+    want, got = _fields(held), _fields(streamed)
+    assert got.keys() == want.keys()
+    for key, value in want.items():
+        np.testing.assert_array_equal(got[key], value, err_msg=key)
+
+
+def test_under_a_mixture_the_memory_left_chooses_how_the_fit_is_read_and_never_its_bits(
+    monkeypatch,
+):
+    """`_noise_memory` holds the second moments where they take at most `_HELD` bytes and the
+    memory left takes the fit with them; where it takes the fit without them alone, the fit reads
+    its fits again, to the same bits; at one channel it always holds them. Where the memory
+    left takes neither, it raises `MemoryError` naming the channels, the fits, the memory each
+    would take and the remedies."""
+    plan = margin_mmm._noise_memory
+    stream, held = margin_mmm._noise_bytes(124, 125, 3, 151, 20, 125)
+    assert stream < held == stream + 124 * 125 * 8 * 9
+    for free, keep in ((None, True), (held, True), (held - 1, False), (stream, False)):
+        monkeypatch.setattr(margin_mmm, "_available", lambda free=free: free)
+        assert plan(124, 125, 3, 151, 20, 125) is keep
+    monkeypatch.setattr(margin_mmm, "_HELD", 124 * 125 * 8 * 9 - 1)
+    monkeypatch.setattr(margin_mmm, "_available", lambda: None)
+    assert plan(124, 125, 3, 151, 20, 125) is False
+    assert plan(124, 125, 1, 151, 18, 125) is True
+    monkeypatch.setattr(margin_mmm, "_available", lambda: stream - 1)
+    with pytest.raises(MemoryError, match=r"^under the noise mixture 3 channels take 15500 fits"):
+        plan(124, 125, 3, 151, 20, 125)
+    monkeypatch.undo()
+    want = _mixture_fit(3, curved=True)
+    sizes = []
+    blocks = margin_mmm._noise_blocks
+
+    def counted(*args):
+        sizes.append(args[-1])
+        return blocks(*args)
+
+    columns, weeks = want.margins.columns, want.margins.rows
+    stream, held = margin_mmm._noise_bytes(124, 125, 3, weeks, columns, 125)
+    monkeypatch.setattr(margin_mmm, "_noise_blocks", counted)
+    monkeypatch.setattr(margin_mmm, "_available", lambda: held - 1)
+    got = _mixture_fit(3, curved=True)
+    assert sizes == [125, 125]
+    for key, value in _fields(want).items():
+        np.testing.assert_array_equal(_fields(got)[key], value, err_msg=key)
+
+
+@pytest.mark.parametrize("curved", [False, True], ids=["straight", "curved"])
+def test_a_mixture_the_memory_left_cannot_take_raises_before_any_fit(curved, monkeypatch):
+    """Where the memory left takes the fit neither way, the fit raises `MemoryError` before it
+    fits any regression, never leaving the process to the system's out-of-memory killer."""
+
+    def refuse(*_args):
+        raise AssertionError("a regression was fitted")
+
+    monkeypatch.setattr(margin_mmm, "_noise_blocks", refuse)
+    monkeypatch.setattr(margin_mmm, "_available", lambda: 2**20)
+    match = (
+        r"3 channels take 15500 fits, 124 error models of 125 retention combinations, and about"
+        r" 0\.\d\d GiB, more than the 0\.00 GiB of memory left: fit fewer channels, each"
+        r" multiplying the combinations by 5, a NoiseMixture of fewer error models, or noise=None"
+    )
+    with pytest.raises(MemoryError, match=match):
+        _mixture_fit(3, curved)
+
+
+def test_a_cgroups_headroom_is_its_limit_less_what_it_holds_its_inactive_cache_free(tmp_path):
+    """A cgroup v2 limit leaves its `memory.max` less its `memory.current`, the inactive page
+    cache it could reclaim counted as free; a group of no limit, or none, leaves None."""
+    (tmp_path / "memory.max").write_text("4294967296\n")
+    (tmp_path / "memory.current").write_text("1000000000\n")
+    (tmp_path / "memory.stat").write_text(
+        "anon 900000000\nfile 100000000\nactive_file 40000000\ninactive_file 60000000\n"
+    )
+    assert margin_mmm._headroom(tmp_path) == 4294967296 - 1000000000 + 60000000
+    (tmp_path / "memory.max").write_text("max\n")
+    assert margin_mmm._headroom(tmp_path) is None
+    assert margin_mmm._headroom(tmp_path / "absent") is None
+
+
+@pytest.mark.parametrize("held", [True, False], ids=["held", "read again"])
+def test_a_mixtures_memory_estimate_bounds_what_its_fit_takes(held, monkeypatch):
+    """The memory `_noise_memory` reserves for a fit of four channels, 77 500 fits, bounds what
+    the fit's arrays take at their peak, as `tracemalloc` traces numpy's."""
+    sales, spend, price = _noise_world()
+    spend = np.column_stack([spend, spend[::-1, 0]])
+    history = margin_mmm._read(sales, spend, None, price, 6, NoiseMixture())
+    columns = history.columns
+    size = min(625, margin_mmm._BLOCK // (8 * columns * columns))
+    stream, kept = margin_mmm._noise_bytes(124, 625, 4, history.rows.size, columns, size)
+    if not held:
+        monkeypatch.setattr(margin_mmm, "_HELD", 0)
+    monkeypatch.setattr(margin_mmm, "_available", lambda: None)
+    tracemalloc.start()
+    try:
+        tracemalloc.reset_peak()
+        before = tracemalloc.get_traced_memory()[0]
+        fit_margins(sales, spend, None, price, 6, noise=NoiseMixture())
+        peak = tracemalloc.get_traced_memory()[1] - before
+    finally:
+        tracemalloc.stop()
+    assert peak <= (kept if held else stream)
+    assert peak > 0.25 * (kept if held else stream)
+
+
 @pytest.mark.parametrize("world", [*PARITY, LONG], ids=name)
 def test_without_a_mixture_the_fit_is_assembled_as_before_one_to_the_bit(world, monkeypatch):
     """With `noise=None` no error model is fitted, and the fit is each retention combination's
@@ -799,7 +951,7 @@ def test_without_a_mixture_the_fit_is_assembled_as_before_one_to_the_bit(world, 
     def refuse(*_args):
         raise AssertionError("an error model was fitted")
 
-    monkeypatch.setattr(margin_mmm, "_noise_fits", refuse)
+    monkeypatch.setattr(margin_mmm, "_noise_blocks", refuse)
     sales, spend, promotion, price, kernel = arrays(world)
     fit = fit_margins(sales, spend, promotion, price, kernel, noise=None)
     history = margin_mmm._read(sales, spend, promotion, price, kernel)
