@@ -17,7 +17,11 @@ number the record is `anchored curved`'s to the last bit and the composites play
 that follows it is held at its status quo, the others planned at the budget in their box, or the
 status quo where fewer than two are free, where their box holds no plan, and where the fit's
 readings route the world, which is then not routed; a spend that never moves is not held, and one
-just below the threshold is not."""
+just below the threshold is not. The variant `anchored floored`: where no floor is raised the record
+is `anchored held`'s to the last bit but never routed; where the held plan lies below the raised
+floor the plan lies on it, the water-filling's in the box so raised; a held channel stays at its
+status quo; floors raised past the budget leave the guard's box; and a floor above its ceiling is
+kept, failing as the held variant fails."""
 
 from __future__ import annotations
 
@@ -50,6 +54,7 @@ from scorecard.layout import FAMILIES, Declaration
 RELATIVE = 1e-9
 KEPT = [w for w in WORLDS if not w["research"]["routed"]]
 HELD = "anchored held"
+FLOORED = "anchored floored"
 RAMP = 0.97
 """The correlation with the week's number of a channel the tests have the guard hold."""
 REASONS = ("routed by slope", "routed by kernel")
@@ -100,7 +105,7 @@ def test_the_arm_is_declared_as_anchored_reads_the_tests_and_plans_the_market():
     assert run.ARMS["anchored"] is anchored.Anchored
     arm = anchored.Anchored()
     assert (arm.variants, arm.tests, arm.cells) == (
-        ("anchored", "anchored curved", "anchored held"),
+        ("anchored", "anchored curved", "anchored held", "anchored floored"),
         True,
         False,
     )
@@ -517,7 +522,7 @@ def test_the_claims_reading_assembles_the_composite_as_the_default_above_0(tmp_p
 
 
 def test_the_claims_reading_assembles_the_composite_of_an_arm_beside_the_run(tmp_path):
-    """A run that plans `stacked` and a root beside it that plans `anchored`, both its variants:
+    """A run that plans `stacked` and a root beside it that plans `anchored`, every variant of it:
     the run read with the root beside it holds the composites, the run read alone does not."""
     d = Declaration(
         family=3,
@@ -543,6 +548,7 @@ def test_the_claims_reading_assembles_the_composite_of_an_arm_beside_the_run(tmp
                 "anchored": _arm(0.05 + 0.01 * i, routed=routed),
                 "anchored curved": _arm(0.04 + 0.01 * i, routed=routed),
                 HELD: _arm(0.03 + 0.01 * i, routed=False),
+                FLOORED: _arm(0.02 + 0.01 * i, routed=False),
             }
             side_records.append(_place(planned, seed=s, k=k, index=i))
     _write(tmp_path / "f3", d, run_records)
@@ -1164,3 +1170,135 @@ def test_the_held_composite_plays_stacked_where_the_held_variant_routes_and_keep
     )
     with pytest.raises(ValueError, match="names of their own"):
         run.names(held)
+
+
+def _least(spend):
+    """`SPEND_FLOOR` times each channel's least weekly spend over a history."""
+    return anchored.SPEND_FLOOR * np.asarray(spend, dtype=float).min(axis=0)
+
+
+UNRAISED = [w for w in WORLDS if np.all(_least(w["spend"]) <= np.asarray(w["lower"]))]
+"""The worlds whose every floor lies at or above the floor the floored variant raises it to."""
+
+
+def test_the_worlds_hold_floors_raised_and_not_routed_and_not():
+    raised = [w for w in WORLDS if w not in UNRAISED]
+    assert (len(UNRAISED), len(raised)) == (4, 4)
+    for group in (UNRAISED, raised):
+        assert {w["research"]["routed"] for w in group} == {True, False}
+
+
+@pytest.mark.parametrize("world", UNRAISED, ids=name)
+def test_where_no_floor_is_raised_the_floored_record_is_the_held_ones_but_never_routed(world):
+    """Every channel's floor lies at or above `SPEND_FLOOR` times its least weekly spend: the
+    floored variant's plan, its claim and its interval are the held variant's to the last bit, and
+    so is every flag and setting the two share but the route, false on a routed world too, its
+    reasons kept as the fit read them."""
+    seen = observation(world)
+    made = records(anchored.Anchored(), seen, smoke=False)
+    held, floored = made[HELD], made[FLOORED]
+    assert (held["error"], floored["error"]) == (None, None)
+    for field in ("weekly", "gain", "gain_interval"):
+        assert floored[field] == held[field], field
+    assert held["flags"]["routed"] is world["research"]["routed"]
+    assert floored["flags"] == held["flags"] | {"routed": False, "floor applied": False}
+    assert floored["settings"] == held["settings"] | {"spend_floor": 0.9}
+    json.dumps(floored, allow_nan=False)
+
+
+def test_where_the_held_plan_lies_below_the_floor_the_floored_plan_lies_on_it():
+    """The held variant plans meta at its box's floor, half its status quo, below 0.9 times its
+    least weekly spend. The floored variant plans it at that raised floor to the last bit: the plan
+    is the water-filling's on the same curves in the box so raised, at the budget, and claims that
+    plan's gain, less than the held plan's in its wider box."""
+    seen = observation(KEPT[0])
+    arm = anchored.Anchored()
+    fitted = arm.fit(seen, smoke=False)
+    held, floored = (arm.plan(fitted, v, seen) for v in (HELD, FLOORED))
+    m = seen.channels.index("meta")
+    least, quo = _least(seen.spend), seen.status_quo
+    assert held.weekly[m] == seen.lower[m] < least[m]
+    assert floored.weekly[m] == least[m]
+    curves = anchored._curves(fitted, seen)
+    assert curves is not None
+    assert fitted.shrunk is not None
+    level = fitted.shrunk.mean
+    expected = water_fill_tabulated(
+        [curves.margin(c, float(level[c])) for c in range(quo.size)],
+        np.maximum(seen.lower, np.minimum(least, seen.upper)),
+        seen.upper,
+        float(quo.sum()),
+    )
+    np.testing.assert_array_equal(floored.weekly, expected)
+    assert floored.weekly.sum() == pytest.approx(quo.sum(), rel=1e-12, abs=0.0)
+    gain = seen.planned * float(level @ curves.rise(floored.weekly, level))
+    assert floored.gain == pytest.approx(gain, rel=1e-12, abs=0.0)
+    assert floored.gain is not None
+    assert held.gain is not None
+    assert 0.0 < floored.gain < held.gain
+    assert (floored.flags["floor applied"], floored.flags["routed"]) == (True, False)
+    assert floored.settings["spend_floor"] == 0.9
+
+
+def test_a_held_channel_stays_at_its_status_quo_and_the_free_channels_floors_are_raised():
+    """Television follows the week and its history never spent as little as its status quo: it
+    stays there to the last bit, and the other two channels are planned at the budget in the box
+    whose floors are raised as the variant raises them."""
+    seen = _trended(observation(KEPT[0]), "tv", RAMP)
+    t = seen.channels.index("tv")
+    spend = seen.spend.copy()
+    spend[:, t] *= 2.0 * seen.status_quo[t] / spend[:, t].min()
+    seen = dataclasses.replace(seen, spend=spend)
+    arm = anchored.Anchored()
+    fitted = arm.fit(seen, smoke=False)
+    floored = arm.plan(fitted, FLOORED, seen)
+    least, quo = _least(seen.spend), seen.status_quo
+    assert least[t] > quo[t]
+    assert floored.weekly[t] == quo[t]
+    held = np.arange(quo.size) == t
+    curves = anchored._curves(fitted, seen)
+    assert curves is not None
+    assert fitted.shrunk is not None
+    level = fitted.shrunk.mean
+    expected = water_fill_tabulated(
+        [curves.margin(c, float(level[c])) for c in range(quo.size)],
+        np.where(held, quo, np.maximum(seen.lower, np.minimum(least, seen.upper))),
+        np.where(held, quo, seen.upper),
+        float(quo.sum()),
+    )
+    np.testing.assert_array_equal(floored.weekly, expected)
+    assert (floored.flags["time held"], floored.flags["floor applied"]) == (True, True)
+    assert list(floored.settings["held at the status quo"]) == ["tv"]
+
+
+def test_floors_raised_past_the_budget_leave_the_guards_box():
+    """The history spent two and a half times as much each week: its least weekly spends, so
+    raised, sum past the budget, and the floored record is the held one's but for its route."""
+    seen = observation(KEPT[0])
+    seen = dataclasses.replace(seen, spend=2.5 * seen.spend)
+    raised = np.maximum(seen.lower, np.minimum(_least(seen.spend), seen.upper))
+    assert raised.sum() > seen.status_quo.sum()
+    made = records(anchored.Anchored(), seen, smoke=False)
+    held, floored = made[HELD], made[FLOORED]
+    assert (held["error"], floored["error"]) == (None, None)
+    for field in ("weekly", "gain", "gain_interval"):
+        assert floored[field] == held[field], field
+    assert floored["flags"]["floor applied"] is False
+    assert floored["weekly"] != seen.status_quo.tolist()
+
+
+def test_a_floor_above_its_ceiling_is_kept_and_the_floored_plan_fails_as_the_held_one():
+    """Radio's floor lies above its ceiling, and its least weekly spend below both: the variant
+    never lowers a floor, so the box holds no plan, as in the held variant."""
+    seen = _with_radio(observation(KEPT[0]))
+    quo = seen.status_quo
+    seen = dataclasses.replace(
+        seen,
+        lower=np.array([0.5, 0.5, 0.5, 1.2]) * quo,
+        upper=np.array([2.0, 2.0, 2.0, 0.9]) * quo,
+    )
+    assert _least(seen.spend)[3] < seen.upper[3] < seen.lower[3]
+    made = records(anchored.Anchored(), seen, smoke=False)
+    held, floored = made[HELD], made[FLOORED]
+    assert held["error"].startswith("ValueError: no plan in the box")
+    assert floored["error"] == held["error"]

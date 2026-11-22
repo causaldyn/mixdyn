@@ -5,6 +5,21 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
+## [Unreleased]
+
+### Added
+
+- **M4's pre-registration and the harness it ran on** (`scorecard/`, in the repository, not the
+  wheel). `scorecard/preregistration/m4.md` (SHA-256
+  `ec0df163332e40244ba0747ae1c6c9654664fc7354137a9498ad5d979e9e45b1`), `m4.json` and
+  `m4_sizing.py` are byte for byte as frozen on 2026-11-21, before any confirmatory world was
+  fitted; the bench's signed tag `preregistration-m4` carries their hashes. The harness adds a
+  second confirmatory run, whose worlds are each confirmatory block's seeds past the first run's 300
+  (`Declaration.second_confirmatory`, ADR 0098), and the `anchored` arm's variant
+  `anchored floored`, the tested rung's spend floor, never routed (ADR 0099). Both ADRs were
+  numbered 0096 and 0097 where M4 was frozen, and the pre-registration cites them by those numbers.
+  No other arm's record moves.
+
 ## [0.2.0] — 2026-11-21
 
 The margin regression reads under the noise mixture by default. Without it, its ridge prior pulled

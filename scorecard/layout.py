@@ -181,6 +181,11 @@ class Declaration:
     pooled over the confirmatory runs (`scorecard.claim.against_default`). A run that names none
     is written as one was before the field existed.
 
+    A confirmatory run may be the blocks' second (`second_confirmatory`): it draws each
+    environment's confirmatory worlds past those the first confirmatory run draws from, so that it
+    reads no world of the first's (`causaldyn_bench.scorecard.family.confirmatory`). A run that is
+    not is written as one was before the field existed.
+
     The pre-registration the run runs under is declared with it, `preregistration`: its path and
     the SHA-256 of the file when the run was declared (`stamp`). The runner requires one of a
     scored run (`scorecard.run.declare`); a run declared without one, as every run was before it
@@ -198,7 +203,8 @@ class Declaration:
             above 0, a tool's arm as the default, a margin on fewer than 2 worlds an environment,
             an exploratory run without a margin, a cap on an arm that is not one of the run's tools
             or below 2 worlds, exploratory caps without a cap, a reader that is neither
-            Student's t nor Hall's or one on a run the claim does not read, a default above 0
+            Student's t nor Hall's or one on a run the claim does not read, a second
+            confirmatory run that is not confirmatory, a default above 0
             without the default or that is a tool's arm, a joined root without a default above 0
             or whose suffix is not a hyphen and a name, or a pool on a run the claim does not
             read, of fewer than 2 runs, with a run named twice or a name that is not a
@@ -241,6 +247,7 @@ class Declaration:
     confirmatory: bool = False
     order: tuple[tuple[int, int], ...] = ()
     default_less: tuple[str, ...] = ()
+    second_confirmatory: bool = False
 
     def __post_init__(self) -> None:
         if self.family not in FAMILIES:
@@ -248,6 +255,9 @@ class Declaration:
             raise ValueError(msg)
         if self.pilot and self.confirmatory:
             msg = "a run draws pilots or confirmatory worlds, not both"
+            raise ValueError(msg)
+        if self.second_confirmatory and not self.confirmatory:
+            msg = "a second confirmatory run is a confirmatory run: declare it confirmatory"
             raise ValueError(msg)
         samples = self.samples()
         unknown = [e for e in self.environments if e not in samples]
@@ -464,6 +474,9 @@ class Declaration:
             # holds no confirmatory blocks
             from causaldyn_bench.scorecard.family import confirmatory
 
+            if self.second_confirmatory:
+                return confirmatory(family, second=True)
+            # called as on the bench M3 pinned, whose function takes no `second`
             return confirmatory(family)
         return dict(family.pilots if self.pilot else family.scored)
 
@@ -574,6 +587,7 @@ ADDED = {
     "confirmatory": False,
     "order": (),
     "default_less": (),
+    "second_confirmatory": False,
 }
 """Fields a declaration gained after runs were declared, each with the value that leaves a run as
 it was: a declaration holding that value is written without the field."""

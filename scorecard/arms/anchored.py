@@ -74,6 +74,17 @@ flags add each channel's correlation with the week's number (`time correlation`)
 channel is held (`time held`) and whether a route was withheld (`route withheld`), the route's two
 reasons as the fit read them; its settings add the threshold and, for each channel held, its
 correlation. The composite `gs held` reads its route.
+
+**The floored variant**, `anchored floored` (ADR 0099), `anchored held` with no route and a floor
+under each free channel (`_floored`): a channel the time guard leaves free gets the larger of its
+floor and `SPEND_FLOOR` times the least weekly spend of the export's whole history, at most its
+ceiling; where the floors so raised do not fit the budget, the guard's box stands. Below the
+history's range the export holds no week to read a channel's response from, and a response may
+fall off there. Everything else is `anchored held`'s: where no floor is raised the plan, its claim
+and its interval are that variant's to the last bit, and the plan is the status quo in the guard's
+three cases. No composite reads it: its record's `routed` is false on every world, the route's
+reasons kept as the fit read them. Its flags add whether a raised floor cut the box the plan was
+searched in (`floor applied`); its settings add the constant (`spend_floor`).
 """
 
 from __future__ import annotations
@@ -126,8 +137,14 @@ if TYPE_CHECKING:
 VARIANT = GS.router
 CURVED = GS_CURVED.router
 HELD = GS_HELD.router
+FLOORED = "anchored floored"
+SPEND_FLOOR = 0.9
+"""The share of a free channel's least weekly spend over the export's history that `FLOORED`
+plans it at, at least: the plan stays where the history saw spend, since a channel's response may
+fall off below that range and no week of the history reads it there."""
 LINE_PRIOR = anchors.LINE_PRIOR
-"""The prior's mass on the straight line among a channel's curve columns, in `CURVED` and `HELD`."""
+"""The prior's mass on the straight line among a channel's curve columns, in `CURVED`, `HELD` and
+`FLOORED`."""
 FREE = 2
 """The fewest free channels `HELD` plans: with one, the budget leaves it at its status quo."""
 SLOPE_Z = 1.645
@@ -168,7 +185,7 @@ class Guard:
 class Anchored:
     """The arm; see the module."""
 
-    variants = (VARIANT, CURVED, HELD)
+    variants = (VARIANT, CURVED, HELD, FLOORED)
     tests = True
     cells = False
 
@@ -261,12 +278,13 @@ class Anchored:
         """The corner on the shrunk means, or the status quo where no margin is positive; in
         `CURVED`, the plan water-filled along the curves the tests read, the corner where there is
         none to read; in `HELD`, `CURVED`'s plan in the box the time guard leaves (`_guard`), or
-        the status quo where it leaves none.
+        the status quo where it leaves none; in `FLOORED`, `HELD`'s plan with the free channels'
+        floors raised (`_floored`), never routed.
 
         Raises:
             ValueError: on a budget that is not the quarter's weeks times the status quo's weekly
-                total, as `plan_corner` raises, in `CURVED` and `HELD` as `_curves` and
-                `water_fill_tabulated` raise, and in `HELD` as `time_held` raises.
+                total, as `plan_corner` raises, in `CURVED`, `HELD` and `FLOORED` as `_curves` and
+                `water_fill_tabulated` raise, and in `HELD` and `FLOORED` as `time_held` raises.
         """
         quo = np.asarray(observation.status_quo, dtype=float)
         weekly_budget = float(quo.sum())
@@ -278,14 +296,18 @@ class Anchored:
                 f" {observation.planned} weeks, and the quarter's budget is {observation.budget}"
             )
             raise ValueError(msg)
-        curves = _curves(fit, observation) if variant in (CURVED, HELD) else None
-        guard = _guard(fit, observation, quo, weekly_budget) if variant == HELD else None
+        curves = _curves(fit, observation) if variant in (CURVED, HELD, FLOORED) else None
+        guard = _guard(fit, observation, quo, weekly_budget) if variant in (HELD, FLOORED) else None
         lower, upper = observation.lower, observation.upper
         if guard is not None:
             lower, upper = guard.lower, guard.upper
+        applied = False
         if fit.shrunk is None or (guard is not None and guard.still):
             weekly, gain, interval = quo.copy(), 0.0, (0.0, 0.0)
         else:
+            if variant == FLOORED and guard is not None:
+                lower = _floored(guard, observation.spend, weekly_budget)
+                applied = bool(np.any(lower != guard.lower))
             level = fit.shrunk.mean
             if curves is None:
                 weekly = plan_corner(level, lower, upper, weekly_budget)
@@ -304,7 +326,7 @@ class Anchored:
             interval = (gain - z * spread, gain + z * spread)
         flags, settings = fit.flags, fit.settings
         planner, response = "corner", "the margins are straight lines"
-        if variant in (CURVED, HELD):
+        if variant in (CURVED, HELD, FLOORED):
             weight = np.full(quo.size, NOT_READ) if curves is None else curves.weights[:, -1]
             elasticity = np.full(quo.size, NOT_READ) if curves is None else curves.elasticity()
             flags = flags | {
@@ -344,6 +366,9 @@ class Anchored:
                     if hold
                 },
             }
+        if variant == FLOORED:
+            flags = flags | {ROUTED: False, "floor applied": applied}
+            settings = settings | {"spend_floor": SPEND_FLOOR}
         return Planned(
             weekly=weekly,
             gain=gain,
@@ -379,6 +404,19 @@ def _guard(fit: Fitted, observation: Observation, quo: np.ndarray, weekly_budget
     spends = bool(np.all(lower <= upper)) and bool(lower.sum() <= weekly_budget <= upper.sum())
     still = withheld or free < FREE or not spends
     return Guard(correlation, held, lower, upper, still=still, withheld=withheld)
+
+
+def _floored(guard: Guard, spend: np.ndarray, weekly_budget: float) -> np.ndarray:
+    """`FLOORED`'s floors: each channel the guard leaves free at the larger of its floor and
+    `SPEND_FLOOR` times its least weekly spend over the export's whole history `spend`, at most
+    its ceiling; a held channel at its status quo. Where the floors so raised do not fit
+    `weekly_budget` in the guard's ceilings, the guard's floors. A floor is never lowered: a free
+    channel whose floor lies above its ceiling keeps it, and the box holds no plan, as in `HELD`."""
+    least = SPEND_FLOOR * np.asarray(spend, dtype=float).min(axis=0)
+    lower, upper = guard.lower, guard.upper
+    raised = np.where(guard.held, lower, np.maximum(lower, np.minimum(least, upper)))
+    fits = bool(np.all(raised <= upper)) and bool(raised.sum() <= weekly_budget <= upper.sum())
+    return raised if fits else lower
 
 
 def _curves(fit: Fitted, observation: Observation) -> anchors.Curves | None:

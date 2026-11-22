@@ -1,0 +1,1652 @@
+{
+  "name": "M4: the claim by family and rung on fresh worlds, where M3 left it exploratory",
+  "status": "frozen on 2026-11-21 on the author's confirmation, before any confirmatory world of the run is fitted",
+  "margin": 0.05,
+  "reader": "hall",
+  "scope": {
+    "chosen": "scope 2",
+    "decided": "2026-11-20, after round 8's final read; m4.md, Deviations, item 11",
+    "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+    ],
+    "arms": {
+      "0": "margin held",
+      "tested": "anchored floored, not routed, no composite"
+    },
+    "environments": "M3's scored environments of each family, equal worlds an environment as in M3: family 1 without cpm, family 2 without search-demand",
+    "not taken": {
+      "scope 1": "M3's frozen arms (margin held, gs held) on families 1, 4, 6, 12, 13 and 14, for the case where round 8 froze no rule"
+    },
+    "not run": {
+      "8, 9, 10": "the geo families: M3's verdicts stand",
+      "15": "its worlds are files siMMMulator writes, not draws: no world of it is fresh",
+      "11, 16": "11 withdrawn in M3; 16's files had not come"
+    }
+  },
+  "claim": {
+    "by": "family and rung",
+    "alpha": 0.025,
+    "multiplicity": "a fixed sequence over the verdicts that claim a comparison, each at 0.025 in the declared order; the first that does not hold ends the confirmatory claims, every later verdict read and printed not confirmed",
+    "order rule": "each family and rung that claims a comparison and is not exploratory, by its predictive on the sizing records, every claimed comparison within together, highest first; ties by family, then rung; family 7's tested rung named 1",
+    "claimed if predictive at least": 0.5,
+    "headline": "against each rival at its recommended settings: every family and rung claimed whole, none predicted to fail, every verdict holds at 0.025, an intersection-union test with no adjustment",
+    "comparison reads": "complete cases; an environment where the rival failed on more than half of the worlds is not compared; the status quo standing in for every failed plan printed beside it as a secondary readout",
+    "declaration": {
+      "per_rung": true,
+      "reader": "hall",
+      "confirmatory": true,
+      "second_confirmatory": true,
+      "order": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          12,
+          0
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          17,
+          0
+        ],
+        [
+          17,
+          4
+        ],
+        [
+          18,
+          4
+        ],
+        [
+          20,
+          4
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          19,
+          4
+        ],
+        [
+          13,
+          0
+        ],
+        [
+          20,
+          0
+        ],
+        [
+          19,
+          0
+        ],
+        [
+          14,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          13,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    }
+  },
+  "secondary": {
+    "past bounds": "every stage of every fit, the two-stage arm's first stage included",
+    "narrow margin": 0.01,
+    "gain at k = 0": [
+      "the best plan less the status quo",
+      "meridian less the status quo"
+    ]
+  },
+  "seeds": {
+    "confirmatory": "causaldyn_bench.scorecard.family.confirmatory(family, second=True): each confirmatory block of causaldyn_bench.scorecard.seeds.confirmatory past its first SECOND_RUN = 300 seeds; family f, environment e from 200000 + 20000 f + 1000 (e + 10) + 300, indexed from 0 in its own order",
+    "family 0": {
+      "drawn": [
+        12300,
+        12999
+      ],
+      "reference": [
+        22300,
+        22999
+      ]
+    },
+    "first run": "M3 read at most 240 worlds an environment of each block, from its start; its rehearsal read seeds 270000 and 270001",
+    "outside": "every pilot and scored block, the first run's 300 seeds a block, every seed a committed run drew, and the research ranges 700000-899999 (round 8: 820000-829999); bench tests/test_scorecard_seeds.py"
+  },
+  "sizing records": {
+    "roots": "M3's scored stage: the confirmatory roots of families 0, 2, 3, 5, 7, 12 and 13 joined with their tested rung's roots; e0-f<n> and et-f<n> of families 1, 4, 6 and 14 (M2's scored worlds and rival records); the roots of families 17 to 20",
+    "family 17 orbit": "the re-run of 2026-11-20 with the fixed arm on M3's worlds; the re-run's status quo, equal split, margin held and Meridian equal M3's records there (480 of 480 a rung)",
+    "gs held": "assembled world by world as causaldyn_bench.scorecard.composite.compose does",
+    "split": "none: every complete case",
+    "anchored floored": "round 8's development records: each of M3's worlds at the tested rung planned again with the rule; its anchored held equals M3's stored record on all 3380 worlds of M4's families",
+    "chosen on these records": "the tested rung's arm: round 8 read its candidates on these records beside its fresh tuning worlds, so the tested rung's predictive can be optimistic; round 8's measured optimism (final less development, the rule less the status quo) equals anchored held's within 0.0005 on every family. margin held is M3's, frozen before any of these records was read"
+  },
+  "sizing": {
+    "script": "scorecard/preregistration/m4_sizing.py",
+    "script sha256": "9d0069c8d5790d3628f50a341b598b2a5e5561356cad1bfae7deef22bf68a9e7",
+    "rule": "k = 0, M3's: N = (2.8016 sd / margin)^2 worlds in tens, sd the largest paired SD (ddof 1) of the verdict's comparisons with the recommended rivals, every complete case of the sizing records, the family's environments pooled; a k = 0 rung whose N passes the cap is exploratory and does not size its family",
+    "tested rung": "the larger of round 8's recommendation (520 on families 1 and 13, 360 on family 4, 240 on the rest) and M3's N on anchored floored, at most the cap; every tested rung claimed",
+    "family": "the largest of its claimed rungs' worlds, at least the floor, split evenly over its environments and rounded up",
+    "level": "0.025 a verdict",
+    "power": 0.8,
+    "floor": 240,
+    "cap": 520,
+    "taken": "the rules above, decided on 2026-11-20 with scope 2; not taken: M3's rule at 90 % power, every family at the cap of 520, N at M3's observed mean",
+    "predictive": {
+      "records": "the sizing records, every complete case",
+      "stages": [
+        "worlds drawn with replacement, as many as each environment holds",
+        "the declared worlds an environment drawn from those"
+      ],
+      "failed fit": "drawn and left out of the comparison's complete cases, as the claim reads it",
+      "resamples": 4000,
+      "seed": 20261120
+    }
+  },
+  "families": {
+    "0": {
+      "environments": [
+        "drawn",
+        "reference"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 155,
+      "sizing": {
+        "declared": 310,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 310,
+          "binding": "orbit",
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 300,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 300,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "1": {
+      "environments": [
+        "walk",
+        "trend",
+        "step",
+        "season",
+        "revert",
+        "static"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 87,
+      "sizing": {
+        "declared": 522,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 940,
+          "binding": "orbit",
+          "past the cap": true,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 460,
+          "binding": "equal split",
+          "round 8": 520,
+          "sized": 520,
+          "past the cap": false,
+          "predictive": 0.8935,
+          "predictive with the predicted failures": 0.8935,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "2": {
+      "environments": [
+        "kappa-0.5",
+        "kappa-1",
+        "kappa-2"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 90,
+      "sizing": {
+        "declared": 270,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 270,
+          "binding": "orbit",
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 130,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "3": {
+      "environments": [
+        "r-0.9",
+        "r-0.97",
+        "r-0.99"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 90,
+      "sizing": {
+        "declared": 270,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 270,
+          "binding": "pymc-marketing",
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 120,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "4": {
+      "environments": [
+        "hill-2",
+        "weibull-2",
+        "logistic-4"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 174,
+      "sizing": {
+        "declared": 522,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 530,
+          "binding": "orbit",
+          "past the cap": true,
+          "predictive": 0.9998,
+          "predictive with the predicted failures": 0.0,
+          "predicted to fail": [
+            "pymc-marketing",
+            "orbit"
+          ],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 720,
+          "binding": "equal split",
+          "round 8": 360,
+          "sized": 520,
+          "past the cap": false,
+          "predictive": 0.9607,
+          "predictive with the predicted failures": 0.9607,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "5": {
+      "environments": [
+        "rho-0",
+        "rho-0.3",
+        "rho-0.6"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 80,
+      "sizing": {
+        "declared": 240,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 240,
+          "binding": "pymc-marketing",
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 110,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "6": {
+      "environments": [
+        "cliff",
+        "saturation",
+        "both"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 80,
+      "sizing": {
+        "declared": 240,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 610,
+          "binding": "orbit",
+          "past the cap": true,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 150,
+          "binding": "orbit",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 0.943,
+          "predictive with the predicted failures": 0.943,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "7": {
+      "environments": [
+        "L-52",
+        "L-78",
+        "L-104"
+      ],
+      "rungs": [
+        0,
+        "k_max(L): 1 at L-52, 2 at L-78 and L-104"
+      ],
+      "worlds": 84,
+      "sizing": {
+        "declared": 252,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 250,
+          "binding": "pymc-marketing",
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 130,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "12": {
+      "environments": [
+        "priors"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 460,
+      "sizing": {
+        "declared": 460,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 460,
+          "binding": "orbit",
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 450,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 450,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "13": {
+      "environments": [
+        "priors"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 520,
+      "sizing": {
+        "declared": 520,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 410,
+          "binding": "orbit",
+          "past the cap": false,
+          "predictive": 0.9992,
+          "predictive with the predicted failures": 0.9992,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 190,
+          "binding": "orbit",
+          "round 8": 520,
+          "sized": 520,
+          "past the cap": false,
+          "predictive": 0.901,
+          "predictive with the predicted failures": 0.901,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "14": {
+      "environments": [
+        "genre"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 520,
+      "sizing": {
+        "declared": 520,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 1490,
+          "binding": "orbit",
+          "past the cap": true,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 1880,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 520,
+          "past the cap": false,
+          "predictive": 0.9685,
+          "predictive with the predicted failures": 0.9685,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "17": {
+      "environments": [
+        "curve",
+        "line"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 120,
+      "sizing": {
+        "declared": 240,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 190,
+          "binding": "meridian",
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 60,
+          "binding": "orbit",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "18": {
+      "environments": [
+        "unbuilt",
+        "unread"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 120,
+      "sizing": {
+        "declared": 240,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 140,
+          "binding": "pymc-marketing",
+          "past the cap": false,
+          "predictive": 0.9995,
+          "predictive with the predicted failures": 0.9995,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 90,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    },
+    "19": {
+      "environments": [
+        "flat-meta",
+        "flat-pla",
+        "flat-tv"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 94,
+      "sizing": {
+        "declared": 282,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 280,
+          "binding": "orbit",
+          "past the cap": false,
+          "predictive": 0.997,
+          "predictive with the predicted failures": 0.997,
+          "predicted to fail": [],
+          "not compared": [
+            "meridian"
+          ]
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 100,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 0.9995,
+          "predictive with the predicted failures": 0.9995,
+          "predicted to fail": [],
+          "not compared": [
+            "meridian"
+          ]
+        }
+      }
+    },
+    "20": {
+      "environments": [
+        "independent",
+        "tv-0.5",
+        "tv-0.8"
+      ],
+      "rungs": [
+        0,
+        4
+      ],
+      "worlds": 80,
+      "sizing": {
+        "declared": 240,
+        "0": {
+          "arm": "margin held",
+          "N needed, M3's rule": 190,
+          "binding": "pymc-marketing",
+          "past the cap": false,
+          "predictive": 0.9978,
+          "predictive with the predicted failures": 0.9978,
+          "predicted to fail": [],
+          "not compared": []
+        },
+        "tested": {
+          "arm": "anchored floored",
+          "N needed, M3's rule": 120,
+          "binding": "equal split",
+          "round 8": 240,
+          "sized": 240,
+          "past the cap": false,
+          "predictive": 1.0,
+          "predictive with the predicted failures": 1.0,
+          "predicted to fail": [],
+          "not compared": []
+        }
+      }
+    }
+  },
+  "exploratory": {
+    "past the cap": [
+      [
+        1,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        14,
+        0
+      ]
+    ]
+  },
+  "arms": {
+    "k = 0": "margin held, the margin arm's variant (the noise mixture under the time guard), M3's frozen arm",
+    "tested rung": "anchored floored, a variant of the anchored arm (ADR 0097): round 8's frozen rule floor:sp:0.9, anchored held's plan with each free channel floored at the larger of its box's floor and 0.9 times the least weekly spend in the history, at most its ceiling, the guard's box where the raised floors do not fit the budget; not routed, no composite",
+    "recorded": [
+      "ridge",
+      "chc",
+      "chc cvar 0.1 vs equal",
+      "margin's other variants",
+      "anchored, anchored curved, anchored held"
+    ],
+    "rivals": {
+      "built in": [
+        "status quo",
+        "equal split"
+      ],
+      "meridian": "2.1.0, recommended settings (roi priors, automatic knot selection)",
+      "pymc-marketing": "1.3.0, logistic saturation, static intercept, 4 chains named",
+      "orbit": "KTR 1.1.5.1, log-log, the two-channel fix"
+    },
+    "not run": [
+      "bayes (nothing is routed)",
+      "dlm",
+      "robyn",
+      "robyn tuned",
+      "meridian tuned",
+      "pymc-marketing tuned",
+      "geo-eb",
+      "voi",
+      "decisions",
+      "read-tbr",
+      "read-sc",
+      "read-sdid",
+      "switchback",
+      "geo-dlm"
+    ]
+  },
+  "reuse": null,
+  "predicted": [
+    {
+      "family": 4,
+      "rung": 0,
+      "arm": "margin held",
+      "rival": "pymc-marketing",
+      "mean": 0.1839,
+      "read on": "240 worlds of M3's records",
+      "predictive": 0.0
+    },
+    {
+      "family": 4,
+      "rung": 0,
+      "arm": "margin held",
+      "rival": "orbit",
+      "mean": 0.1707,
+      "read on": "240 worlds of M3's records",
+      "predictive": 0.0
+    }
+  ],
+  "forecasts": {
+    "items": "none beside the verdicts: the verdicts' predictives are M4's forecasts",
+    "expected": 25.23,
+    "verdicts": 26,
+    "note": "the fixed sequence's, as M3's: the sum over the order of the running product of the predictives, the verdicts taken as independent; the tested rung's predictives can be optimistic",
+    "predictives' sum": 25.66
+  },
+  "deviations from M3": [
+    "no dlm beside the claim",
+    "no Robyn, recommended or tuned",
+    "no tuned rival: meridian tuned not run; pymc-marketing tuned not run, as in M3",
+    "PyMC-Marketing's arm names 4 chains on every full fit; M3's stored records reproduced on family 0 drawn seeds 12000-12002 at k = 0",
+    "the Orbit arm plans a world of two channels; three-channel plans bit-identical",
+    "causal-hybrid-control 1.3.1: margin held and anchored held bit-identical to 1.3.0 and to M3's records on 160 worlds (720 of 720 variant records)",
+    "the second confirmatory run's seeds (Declaration.second_confirmatory, ADR 0096)",
+    "families 1, 4, 6 and 14 on fresh worlds, every rival fitted, no record reused",
+    "not run: families 8, 9, 10 and 15, the geo arms, the refresh cell, voi and decisions",
+    "the sizing and the predictive read M3's scored records, every complete case",
+    "the tested rung's claim arm is round 8's frozen rule (anchored floored, ADR 0097), and M4 runs scope 2, decided 2026-11-20 though round 8's declared verdict failed: m4.md, Deviations, item 11",
+    "the parity check before the freeze: anchored floored and anchored held as merged into this branch (causal-hybrid-control 1.3.1, the bench at its pinned commit) planned again round 8's 2140 final-half worlds (seeds 825000-829439) and its 3380 development worlds of M4's families; every regret equals round 8's floor:sp:0.9 and anchored held (T0), largest difference 0, tolerance 1e-9, no failed record: the scored arm departs from round 8's reading nowhere",
+    "the tested rung's sizes: the larger of round 8's recommendation and M3's N on anchored floored, at most the cap, every tested rung claimed"
+  ],
+  "round 8": {
+    "declared": "2026-11-20 18:45 UTC, before any candidate's regret on any world",
+    "development": "M3's scored records at the tested rung",
+    "tuning worlds": [
+      820000,
+      824999
+    ],
+    "final worlds": [
+      825000,
+      829999
+    ],
+    "amendment 1": "2026-11-20 19:04 UTC, before the freeze and before any final world: every figure also through the anchored held bridge",
+    "frozen": "floor:sp:0.9 at 19:40 UTC, before any final world",
+    "declared verdict": "FAIL, on family 14 alone: against PyMC-Marketing +0.068 [-0.062, +0.198], the status quo's own spread; the rule less anchored held there +0.0009",
+    "through the anchored held bridge": "SUCCESS: at most 290 worlds for 80 % power and 360 for 90 % on every family; at most 430 for 80 % with the margin at its one-sided 80 % upper bound",
+    "why scope 2": "M4's verdicts are paired comparisons on fresh pre-registered seeds and rest on neither bridge; the scope decides what M4 can confirm and what it costs"
+  },
+  "beside the claim": {
+    "family 15": "not run; round 8's development reading of its rule on 100 recorded worlds: less Meridian +0.033 (80 % upper +0.037), less Orbit +0.033 (+0.036), less PyMC-Marketing +0.029 (+0.031); anchored held less Meridian +0.008; the rule costs +0.025 against anchored held"
+  },
+  "pins": {
+    "mixdyn": "the commit that marks this file frozen",
+    "causal-hybrid-control": "1.3.1, the lock this branch took with the release branch before the freeze",
+    "bench": "5ddfe0cf05170be034b50e0ef2d6d38daf2f0aa0, on its branch m4 over 1cc6a6ae73de790039c06c51c051bd579dda5bd6",
+    "jax": "0.12.0",
+    "meridian": "2.1.0",
+    "pymc-marketing": "1.3.0, pytensor 3.3.6, numba 0.68.0",
+    "orbit": "1.1.5.1"
+  },
+  "limits": {
+    "rule": "M2's memory cap and timeout of the arm's cost class on the family its cost is read from (families 12, 13 and 17-20 family 0's), the timeout stretched by the arm's cost factor; the class's slots and CPUs a process",
+    "by family": {
+      "0": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "1": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          600,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          1500,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          600,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          720,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "2": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "11G",
+          1560,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          720,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "3": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "9G",
+          1380,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "4": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          600,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          1380,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "5": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "17G",
+          1380,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "6": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "15G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "7": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "chc": [
+          "1G",
+          540,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "10G",
+          1140,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          480,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          720,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "12": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "13": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "14": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          720,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          5160,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          1200,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          240,
+          4,
+          1.0
+        ]
+      },
+      "17": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "18": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "19": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      },
+      "20": {
+        "anchored": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "chc": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          300,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "12G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          840,
+          12,
+          1.5
+        ],
+        "ridge": [
+          "1G",
+          300,
+          4,
+          1.0
+        ]
+      }
+    }
+  },
+  "compute": {
+    "from": "the run kit's cost model (scripts/cost.py, scripts/schedule.py) on the declared worlds, M2's recorded CPU a process, one simulation on one 192-CPU box: a planning figure, not a timing",
+    "prices": {
+      "m6a.48xlarge": {
+        "median": 1.41,
+        "p90": 1.78
+      },
+      "c6a.48xlarge": {
+        "median": 1.22,
+        "p90": 1.34
+      }
+    },
+    "box hours": "makespan x 1.075 (spot stops) + 0.5 to provision + 0.5 to pull",
+    "scenarios": {
+      "scope 2 unrouted (anchored floored), the decision's sizes": {
+        "options": [
+          "scope 2",
+          "tested claim unrouted"
+        ],
+        "worlds": 5128,
+        "c6a": {
+          "core-hours": 1868.2,
+          "makespan h, median": 19.2,
+          "makespan h, p90 walls": 23.0,
+          "box h, median": 21.7,
+          "box h, p90": 25.7,
+          "usd, median": 27.0,
+          "usd, p90": 35.2,
+          "by arm, core-hours": {
+            "ridge": 59.8,
+            "chc": 154.2,
+            "orbit": 301.1,
+            "meridian": 792.0,
+            "pymc-marketing": 562.7
+          },
+          "guard": {
+            "deadline billed h": 27.0,
+            "hard stop billed h": 30.0,
+            "hard stop s": 108000,
+            "MAXPRICE": 1.37,
+            "worst case usd": 51.61
+          }
+        },
+        "m6a": {
+          "core-hours": 1869.2,
+          "makespan h, median": 18.1,
+          "makespan h, p90 walls": 21.4,
+          "box h, median": 20.4,
+          "box h, p90": 24.0,
+          "usd, median": 29.4,
+          "usd, p90": 43.5,
+          "by arm, core-hours": {
+            "ridge": 59.7,
+            "chc": 154.0,
+            "orbit": 300.7,
+            "meridian": 790.4,
+            "pymc-marketing": 563.1
+          },
+          "guard": {
+            "deadline billed h": 25.5,
+            "hard stop billed h": 28.5,
+            "hard stop s": 102600,
+            "MAXPRICE": 1.82,
+            "worst case usd": 62.82
+          }
+        }
+      }
+    },
+    "the box": "c6a.48xlarge, launched in a zone where its highest spot price over the last 7 days is at most $1.37 an hour, else not launched; the m6a.48xlarge row is priced and not taken: its worst case $62.82 is past the budget",
+    "anchored floored": "priced as anchored held: one plan a world each"
+  },
+  "budget": {
+    "usd": 51.61,
+    "approved": "2026-11-21, by the author",
+    "box": "one c6a.48xlarge spot instance",
+    "paid by": "the AWS credits left after M3 (not read at the freeze) first, the author the rest",
+    "MAXPRICE": 1.37,
+    "deadline billed h": 27.0,
+    "hard stop billed h": 30.0,
+    "hard stop s": 108000,
+    "worst case usd": 51.61,
+    "cost model": {
+      "core-hours": 1868.2,
+      "usd, median": 27.0,
+      "usd, p90": 35.2
+    }
+  }
+}

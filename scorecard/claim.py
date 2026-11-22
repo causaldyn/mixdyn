@@ -222,6 +222,7 @@ AGREED = (
     "confirmatory",
     "order",
     "default_less",
+    "second_confirmatory",
 )
 """What the runs of one pool declare alike: the pre-registration they run under, and everything the
 claim and the reading beside it (`recorded`) read but their environments and, where they test apart
@@ -510,6 +511,7 @@ def read_run(root: Path) -> tuple[Declaration, list[WorldRecord]]:
         o.worlds,
         o.pilot,
         o.confirmatory,
+        o.second_confirmatory,
         o.smoke,
         o.bench,
         o.world_directory,
@@ -519,6 +521,7 @@ def read_run(root: Path) -> tuple[Declaration, list[WorldRecord]]:
         d.worlds,
         d.pilot,
         d.confirmatory,
+        d.second_confirmatory,
         d.smoke,
         d.bench,
         d.world_directory,
@@ -570,10 +573,19 @@ def read_beside(
     own = names(d)
     new = [arm for arm in names(o) if arm not in own]
     short = [arm for arm in new if o.worlds < d.worlds and arm not in (o.caps or {})]
-    same = (o.family, o.pilot, o.confirmatory, o.smoke, o.bench, o.world_directory) == (
+    same = (
+        o.family,
+        o.pilot,
+        o.confirmatory,
+        o.second_confirmatory,
+        o.smoke,
+        o.bench,
+        o.world_directory,
+    ) == (
         d.family,
         d.pilot,
         d.confirmatory,
+        d.second_confirmatory,
         d.smoke,
         d.bench,
         d.world_directory,
