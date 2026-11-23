@@ -1,30 +1,24 @@
 {
-  "name": "M5: the k = 0 rung of every national family, and family 15, on a third confirmatory run",
-  "status": "draft, 2026-11-23: not frozen; the k = 0 claim's arm is a slot until it is frozen",
+  "name": "M5: what M4 left open, families 1, 6 and 14 at k = 0 and family 15 at both rungs, on a third confirmatory run",
+  "status": "frozen on 2026-11-23 on the decision the author delegated, before any confirmatory world of the run is fitted",
   "margin": 0.05,
   "reader": "hall",
   "scope": {
-    "chosen": "S1 (the draft's recommendation; the author decides)",
+    "chosen": "S0, only what M4 left open (2026-11-23)",
     "families": [
-      0,
       1,
-      2,
-      3,
-      4,
-      5,
       6,
-      7,
-      12,
-      13,
       14,
-      15,
-      17,
-      18,
-      19,
-      20
+      15
     ],
     "rungs": {
-      "national": [
+      "1": [
+        0
+      ],
+      "6": [
+        0
+      ],
+      "14": [
         0
       ],
       "15": [
@@ -33,32 +27,32 @@
       ]
     },
     "arms": {
-      "0": "{{k0 claim}}",
+      "0": "margin held",
       "tested": "anchored floored, family 15 only, not routed"
     },
-    "environments": "M4's scored environments of each family (M3's), equal worlds an environment; family 15 its one environment, demo",
     "standing": {
-      "the tested rung, families 0-7, 12-14 and 17-20": "M4's 15 verdicts on anchored floored stand: its arm is unchanged",
-      "the geo families 8, 9 and 10": "M3's six verdicts stand"
-    },
-    "not taken": {
-      "S2": "S1 and the tested rung of every national family again: +452 CPU-h, about +$6; it reads 15 verdicts M4 confirmed again at about 0.8 predictive on families 1, 4, 6 and 14",
-      "S3": "S2, the geo families on fresh seeds, Robyn and the tuned rivals claimed at full N: about 43 600 CPU-h, 290 box hours, about $350"
+      "M4": "its 26 verdicts, 11 at k = 0 and 15 at the tested rung, read again nowhere",
+      "M3": "its six verdicts on the geo families 8, 9 and 10"
     },
     "not run": {
+      "4 at k = 0": "M3 and M4 read it: margin held trails PyMC-Marketing and Orbit by about 0.17 a euro, and a search for a k = 0 rule within the margin on family 4 found none",
+      "the other k = 0 rungs and every tested rung of M4": "confirmed by M4",
       "8, 9, 10": "the geo families: M3's verdicts stand",
       "11": "withdrawn: the public endogenous-spend reference instance replaced AMSS as the third-party world",
       "16": "that reference instance's files have not come",
       "21": "a set of answer keys for contribution readings, not a family the scorecard plans"
+    },
+    "not taken": {
+      "S1": "the k = 0 rung of every national family: 11 verdicts M4 confirmed read again, and in a fixed sequence a chance failure among them would end the new verdicts after it; about four times S0's core-hours"
     }
   },
   "claim": {
     "by": "family and rung",
     "alpha": 0.025,
     "multiplicity": "a fixed sequence over the verdicts that claim a comparison, each at 0.025 in the declared order; the first that does not hold ends the confirmatory claims, every later verdict read and printed not confirmed",
-    "order rule": "each family and rung that claims a comparison and is not exploratory, by its predictive on the sizing records, every claimed comparison within together, highest first; ties by family, then rung; family 7's tested rung named 1",
+    "order rule": "each family and rung that claims a comparison and is not exploratory, by its predictive on the sizing records, every claimed comparison within together, highest first; ties by family, then rung",
     "claimed if predictive at least": 0.5,
-    "headline": "against each rival at its recommended settings, over M5's verdicts, M4's tested-rung verdicts and M3's geo verdicts together: every family and rung claimed whole, none predicted to fail, every verdict holds at 0.025, an intersection-union test with no adjustment",
+    "headline": "against each rival at its recommended settings, over M5's five verdicts, M4's 26 and M3's six geo verdicts together: every family and rung claimed whole, none predicted to fail, every verdict holds at 0.025, an intersection-union test with no adjustment; it cannot be said: family 4 at k = 0 is not claimed",
     "comparison reads": "complete cases; an environment where the rival failed on more than half of the worlds is not compared; the status quo standing in for every failed plan printed beside it as a secondary readout",
     "declaration": {
       "per_rung": true,
@@ -67,39 +61,11 @@
       "third_confirmatory": true,
       "order": [
         [
-          0,
-          0
-        ],
-        [
           1,
           0
         ],
         [
-          2,
-          0
-        ],
-        [
-          3,
-          0
-        ],
-        [
-          4,
-          0
-        ],
-        [
-          5,
-          0
-        ],
-        [
           6,
-          0
-        ],
-        [
-          7,
-          0
-        ],
-        [
-          13,
           0
         ],
         [
@@ -111,32 +77,11 @@
           4
         ],
         [
-          17,
-          0
-        ],
-        [
-          18,
-          0
-        ],
-        [
-          20,
-          0
-        ],
-        [
           14,
-          0
-        ],
-        [
-          12,
-          0
-        ],
-        [
-          19,
           0
         ]
       ]
-    },
-    "order note": "the sizing script's order on the stand-in arm; read again at the freeze on the frozen arm"
+    }
   },
   "secondary": {
     "past bounds": "every stage of every fit, the two-stage arm's first stage included",
@@ -147,15 +92,51 @@
     ]
   },
   "seeds": {
-    "confirmatory": "causaldyn_bench.scorecard.family.confirmatory(family, third=True): family f's e-th environment, e counted in the family's order, from 1000000 + 20000 f + 1000 e, a block of its own; the first worlds an environment of it, indexed from 0",
-    "family 0": {
-      "drawn": [
-        1000000,
-        1000999
+    "confirmatory": "causaldyn_bench.scorecard.family.confirmatory(family, third=True): family f's e-th environment, e counted in the bench's order of the family's environments, from 1000000 + 20000 f + 1000 e, a block of its own; the first worlds an environment of it, indexed from 0",
+    "family 1": {
+      "walk": [
+        1020000,
+        1020999
       ],
-      "reference": [
-        1001000,
-        1001999
+      "trend": [
+        1021000,
+        1021999
+      ],
+      "step": [
+        1022000,
+        1022999
+      ],
+      "season": [
+        1023000,
+        1023999
+      ],
+      "revert": [
+        1024000,
+        1024999
+      ],
+      "static": [
+        1025000,
+        1025999
+      ]
+    },
+    "family 6": {
+      "cliff": [
+        1120000,
+        1120999
+      ],
+      "saturation": [
+        1121000,
+        1121999
+      ],
+      "both": [
+        1122000,
+        1122999
+      ]
+    },
+    "family 14": {
+      "genre": [
+        1280000,
+        1280999
       ]
     },
     "family 15": {
@@ -164,30 +145,19 @@
         1300999
       ]
     },
-    "family 17": {
-      "curve": [
-        1340000,
-        1340999
-      ],
-      "line": [
-        1341000,
-        1341999
-      ]
-    },
-    "twins": "each twin a block of its own (ADR 0101): M3 and M4 read both twins from one block, and the claim pooled them as independent worlds",
+    "family 15's files": "siMMMulator 1.1.0 through the bench's scripts/simmmulator_worlds.R for seeds 1300000 to 1300239, written before the freeze; the pinned bench holds each file's SHA-256 and reads no other",
     "outside": "every pilot, scored and confirmatory block, both earlier confirmatory runs, every seed a committed run drew, family 15's recorded files and the development ranges 700000-899999; bench tests/test_scorecard_seeds.py"
   },
   "sizing records": {
-    "roots": "M4's scored stage: f<n> at k = 0 of families 0-7, 12-14 and 17-20 (family 7 f7a and f7b pooled); family 15 M3's e0-f15 and et-f15, M2's 100 recorded worlds with M2's rival records, anchored floored from round 8's rows",
+    "roots": "M4's scored roots f1, f6 and f14 at k = 0 (exploratory in M4, every rival fitted); family 15: M3's e0-f15 and et-f15, M2's 100 recorded worlds with M2's rival records, anchored floored from round 8's rows",
     "split": "none: every complete case",
-    "k = 0 arm": "margin held, M4's records, a stand-in until the arm is frozen",
-    "chosen on these records": "{{at the freeze}}"
+    "chosen on these records": "margin held was frozen before M2; anchored floored was chosen on family 15's records among others (round 8's development set), so its predictive there can be optimistic"
   },
   "sizing": {
     "script": "scorecard/preregistration/m5_sizing.py",
-    "script sha256": "{{at the freeze}}",
-    "rule": "each comparison sized from its own sizing mean m, SD s and pairs n: the fewest N, in tens, at which the calibrated predictive Phi((margin - m - z s / sqrt(N)) / (s sqrt(1/n + 1/N))) reaches the power, z = z(0.975); N = ((z^2 - q^2) / (a z - q sqrt(a^2 + (z^2 - q^2) / n)))^2, a = (margin - m) / s, q = z(power), where a > q / sqrt(n); a comparison with m >= margin is not sized; the rung needs the largest N over its sized comparisons; checked by the claim's reader (below); past the cap, exploratory",
-    "reader's check": "the rung's N, at least the floor, raised by ten worlds while one sized comparison's bootstrap predictive (Hall's reader, as the claim reads) is below the power",
+    "script sha256": "9a3fb74b20cf6d5644ac130472498cd78db3e0a7822dfbe64e7547ad700dadb9",
+    "rule": "each comparison sized from its own sizing mean m, SD s and pairs n: the fewest N, in tens, at which the calibrated predictive Phi((margin - m - z s / sqrt(N)) / (s sqrt(1/n + 1/N))) reaches the power, z = z(0.975); N = ((z^2 - q^2) / (a z - q sqrt(a^2 + (z^2 - q^2) / n)))^2, a = (margin - m) / s, q = z(power), where a > q / sqrt(n); a comparison with m >= margin is not sized; the rung needs the largest N over its sized comparisons, at least the floor; past the cap, exploratory",
+    "reader's check": "the rung's N raised by ten worlds while one sized comparison's bootstrap predictive (Hall's reader, as the claim reads) is below the power",
     "tie rule": "M4's, printed beside it and not taken: N = (2.8016 sd / margin)^2, the largest over the rung's comparisons",
     "family": "the largest of its claimed rungs' worlds, at least the floor, split evenly over its environments and rounded up",
     "level": "0.025 a verdict",
@@ -195,22 +165,10 @@
     "floor": 240,
     "cap": 520,
     "families": [
-      0,
       1,
-      2,
-      3,
-      4,
-      5,
       6,
-      7,
-      12,
-      13,
       14,
-      15,
-      17,
-      18,
-      19,
-      20
+      15
     ],
     "tested rung run": false,
     "predictive": {
@@ -226,33 +184,6 @@
     "checked in Maxima": "the convolution, the root, its limit (the tie rule at m = 0) and P(N) = power at six points"
   },
   "families": {
-    "0": {
-      "environments": [
-        "drawn",
-        "reference"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 120,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 290,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 20,
-          "binding": "meridian",
-          "N needed, M4's tie rule": 290,
-          "tie rule binding": "equal split",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
     "1": {
       "environments": [
         "walk",
@@ -266,134 +197,59 @@
         0
       ],
       "worlds": 40,
+      "declared": 240,
       "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
         "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
+          "arm": "margin held",
+          "N, the rule": 240,
           "N, the normal form": 40,
           "binding": "pymc-marketing",
-          "N needed, M4's tie rule": 780,
+          "N, M4's tie rule": 780,
           "tie rule binding": "orbit",
           "past the cap": false,
           "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "2": {
-      "environments": [
-        "kappa-0.5",
-        "kappa-1",
-        "kappa-2"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 80,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 261,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 30,
-          "binding": "equal split",
-          "N needed, M4's tie rule": 260,
-          "tie rule binding": "pymc-marketing",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "3": {
-      "environments": [
-        "r-0.9",
-        "r-0.97",
-        "r-0.99"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 80,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 30,
-          "binding": "pymc-marketing",
-          "N needed, M4's tie rule": 230,
-          "tie rule binding": "orbit",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "4": {
-      "environments": [
-        "hill-2",
-        "weibull-2",
-        "logistic-4"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 80,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 40,
-          "binding": "meridian",
-          "N needed, M4's tie rule": 570,
-          "tie rule binding": "orbit",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 0.0,
-          "predicted to fail": [
-            "pymc-marketing",
-            "orbit"
-          ],
-          "not compared": []
-        }
-      }
-    },
-    "5": {
-      "environments": [
-        "rho-0",
-        "rho-0.3",
-        "rho-0.6"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 80,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 291,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 30,
-          "binding": "meridian",
-          "N needed, M4's tie rule": 290,
-          "tie rule binding": "orbit",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
+          "comparisons": {
+            "status quo": {
+              "pairs": 522,
+              "mean": -0.1699,
+              "sd": 0.3034,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 290,
+              "predictive": 1.0
+            },
+            "equal split": {
+              "pairs": 522,
+              "mean": -0.136,
+              "sd": 0.3115,
+              "N, the normal form": 30,
+              "N, M4's tie rule": 310,
+              "predictive": 1.0
+            },
+            "meridian": {
+              "pairs": 522,
+              "mean": -0.0967,
+              "sd": 0.2619,
+              "N, the normal form": 30,
+              "N, M4's tie rule": 220,
+              "predictive": 1.0
+            },
+            "pymc-marketing": {
+              "pairs": 522,
+              "mean": -0.17,
+              "sd": 0.4465,
+              "N, the normal form": 40,
+              "N, M4's tie rule": 630,
+              "predictive": 1.0
+            },
+            "orbit": {
+              "pairs": 522,
+              "mean": -0.207,
+              "sd": 0.4978,
+              "N, the normal form": 30,
+              "N, M4's tie rule": 780,
+              "predictive": 1.0
+            }
+          },
           "predicted to fail": [],
           "not compared": []
         }
@@ -409,99 +265,59 @@
         0
       ],
       "worlds": 80,
+      "declared": 240,
       "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
         "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
+          "arm": "margin held",
+          "N, the rule": 240,
           "N, the normal form": 20,
           "binding": "status quo",
-          "N needed, M4's tie rule": 660,
+          "N, M4's tie rule": 660,
           "tie rule binding": "orbit",
           "past the cap": false,
           "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "7": {
-      "environments": [
-        "L-52",
-        "L-78",
-        "L-104"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 80,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 40,
-          "binding": "pymc-marketing",
-          "N needed, M4's tie rule": 230,
-          "tie rule binding": "orbit",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "12": {
-      "environments": [
-        "priors"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 240,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 100,
-          "binding": "meridian",
-          "N needed, M4's tie rule": 1040,
-          "tie rule binding": "orbit",
-          "past the cap": false,
-          "predictive": 0.9925,
-          "predictive with the predicted failures": 0.9925,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "13": {
-      "environments": [
-        "priors"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 240,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 410,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 40,
-          "binding": "equal split",
-          "N needed, M4's tie rule": 410,
-          "tie rule binding": "orbit",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
+          "comparisons": {
+            "status quo": {
+              "pairs": 240,
+              "mean": -0.1084,
+              "sd": 0.189,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 120,
+              "predictive": 1.0
+            },
+            "equal split": {
+              "pairs": 240,
+              "mean": -0.0869,
+              "sd": 0.1541,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 80,
+              "predictive": 1.0
+            },
+            "meridian": {
+              "pairs": 240,
+              "mean": -0.0666,
+              "sd": 0.1771,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 100,
+              "predictive": 1.0
+            },
+            "pymc-marketing": {
+              "pairs": 240,
+              "mean": -0.2938,
+              "sd": 0.4011,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 510,
+              "predictive": 1.0
+            },
+            "orbit": {
+              "pairs": 240,
+              "mean": -0.4037,
+              "sd": 0.4566,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 660,
+              "predictive": 1.0
+            }
+          },
           "predicted to fail": [],
           "not compared": []
         }
@@ -515,19 +331,59 @@
         0
       ],
       "worlds": 240,
+      "declared": 240,
       "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
         "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
+          "arm": "margin held",
+          "N, the rule": 240,
           "N, the normal form": 80,
           "binding": "pymc-marketing",
-          "N needed, M4's tie rule": 1900,
+          "N, M4's tie rule": 1900,
           "tie rule binding": "equal split",
           "past the cap": false,
           "predictive": 0.997,
-          "predictive with the predicted failures": 0.997,
+          "comparisons": {
+            "status quo": {
+              "pairs": 520,
+              "mean": -0.4602,
+              "sd": 0.6832,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 1470,
+              "predictive": 1.0
+            },
+            "equal split": {
+              "pairs": 520,
+              "mean": -0.7397,
+              "sd": 0.7759,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 1900,
+              "predictive": 1.0
+            },
+            "meridian": {
+              "pairs": 520,
+              "mean": -0.1287,
+              "sd": 0.4849,
+              "N, the normal form": 60,
+              "N, M4's tie rule": 740,
+              "predictive": 0.9995
+            },
+            "pymc-marketing": {
+              "pairs": 520,
+              "mean": -0.1159,
+              "sd": 0.5093,
+              "N, the normal form": 80,
+              "N, M4's tie rule": 820,
+              "predictive": 0.9972
+            },
+            "orbit": {
+              "pairs": 520,
+              "mean": -0.3183,
+              "sd": 0.6626,
+              "N, the normal form": 30,
+              "N, M4's tie rule": 1380,
+              "predictive": 1.0
+            }
+          },
           "predicted to fail": [],
           "not compared": []
         }
@@ -542,144 +398,113 @@
         4
       ],
       "worlds": 240,
+      "declared": 240,
       "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
         "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
+          "arm": "margin held",
+          "N, the rule": 240,
           "N, the normal form": 20,
           "binding": "pymc-marketing",
-          "N needed, M4's tie rule": 20,
+          "N, M4's tie rule": 20,
           "tie rule binding": "orbit",
           "past the cap": false,
           "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
+          "comparisons": {
+            "status quo": {
+              "pairs": 100,
+              "mean": -0.017,
+              "sd": 0.0303,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "equal split": {
+              "pairs": 100,
+              "mean": -0.0602,
+              "sd": 0.0303,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "meridian": {
+              "pairs": 100,
+              "mean": -0.0286,
+              "sd": 0.0442,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "pymc-marketing": {
+              "pairs": 96,
+              "mean": 0.019,
+              "sd": 0.0446,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "orbit": {
+              "pairs": 100,
+              "mean": -0.0388,
+              "sd": 0.06,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 20,
+              "predictive": 1.0
+            }
+          },
           "predicted to fail": [],
           "not compared": []
         },
-        "tested": {
+        "4": {
           "arm": "anchored floored",
-          "N needed, the rule": 240,
+          "N, the rule": 240,
           "N, the normal form": 20,
           "binding": "meridian",
-          "N needed, M4's tie rule": 10,
+          "N, M4's tie rule": 10,
           "tie rule binding": "status quo",
           "past the cap": false,
           "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "17": {
-      "environments": [
-        "curve",
-        "line"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 120,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 10,
-          "binding": "status quo",
-          "N needed, M4's tie rule": 170,
-          "tie rule binding": "meridian",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "18": {
-      "environments": [
-        "unread",
-        "unbuilt"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 120,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 290,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 30,
-          "binding": "orbit",
-          "N needed, M4's tie rule": 290,
-          "tie rule binding": "pymc-marketing",
-          "past the cap": false,
-          "predictive": 1.0,
-          "predictive with the predicted failures": 1.0,
-          "predicted to fail": [],
-          "not compared": []
-        }
-      }
-    },
-    "19": {
-      "environments": [
-        "flat-pla",
-        "flat-meta",
-        "flat-tv"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 80,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 270,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 80,
-          "binding": "pymc-marketing",
-          "N needed, M4's tie rule": 270,
-          "tie rule binding": "orbit",
-          "past the cap": false,
-          "predictive": 0.9925,
-          "predictive with the predicted failures": 0.9925,
-          "predicted to fail": [],
-          "not compared": [
-            "meridian"
-          ]
-        }
-      }
-    },
-    "20": {
-      "environments": [
-        "independent",
-        "tv-0.5",
-        "tv-0.8"
-      ],
-      "rungs": [
-        0
-      ],
-      "worlds": 80,
-      "sizing": {
-        "declared": 240,
-        "tie rule: declared": 240,
-        "0": {
-          "arm": "margin held (stand-in for {{k0 claim}})",
-          "N needed, the rule": 240,
-          "N, the normal form": 40,
-          "binding": "equal split",
-          "N needed, M4's tie rule": 230,
-          "tie rule binding": "pymc-marketing",
-          "past the cap": false,
-          "predictive": 0.9995,
-          "predictive with the predicted failures": 0.9995,
+          "comparisons": {
+            "status quo": {
+              "pairs": 100,
+              "mean": -0.0804,
+              "sd": 0.02,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "equal split": {
+              "pairs": 100,
+              "mean": -0.1235,
+              "sd": 0.0199,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "meridian": {
+              "pairs": 100,
+              "mean": 0.0332,
+              "sd": 0.0202,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "pymc-marketing": {
+              "pairs": 96,
+              "mean": 0.0287,
+              "sd": 0.0113,
+              "N, the normal form": 10,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            },
+            "orbit": {
+              "pairs": 100,
+              "mean": 0.0325,
+              "sd": 0.02,
+              "N, the normal form": 20,
+              "N, M4's tie rule": 10,
+              "predictive": 1.0
+            }
+          },
           "predicted to fail": [],
           "not compared": []
         }
@@ -690,11 +515,11 @@
     "past the cap": []
   },
   "arms": {
-    "k = 0": "{{k0 claim}}: the k = 0 claim's arm, a slot until it is frozen",
-    "tested rung": "anchored floored on family 15 alone (ADR 0099)",
+    "k = 0": "margin held, the margin arm's variant, M4's claim arm unchanged",
+    "tested rung": "anchored floored on family 15 alone (ADR 0097), M4's claim arm unchanged",
     "recorded": [
-      "margin held and the margin arm's other variants, read against the k = 0 claim's arm beside the claim (default_less)",
-      "anchored, anchored curved, anchored held on family 15"
+      "margin, margin guarded, margin ranged, margin curved and margin curved noise, from the same process",
+      "anchored, anchored curved and anchored held on family 15, from the same process"
     ],
     "rivals": {
       "built in": [
@@ -721,47 +546,176 @@
     ]
   },
   "reuse": null,
-  "predicted": [
-    {
-      "family": 4,
-      "rung": 0,
-      "rival": "pymc-marketing"
-    },
-    {
-      "family": 4,
-      "rung": 0,
-      "rival": "orbit"
-    }
-  ],
+  "predicted": [],
   "forecasts": {
     "items": "none beside the verdicts",
-    "expected": 16.97,
-    "verdicts": 17,
-    "predictives' sum": 16.98,
-    "note": "on the stand-in arm; read again at the freeze"
+    "expected": 4.997,
+    "verdicts": 5,
+    "predictives' sum": 4.997
   },
   "deviations from M4": [
-    "a third confirmatory run (bench third_confirmatory, mixdyn Declaration.third_confirmatory, ADR 0101): a block an environment, family 17's twins apart",
+    "a third confirmatory run (bench third_confirmatory, mixdyn Declaration.third_confirmatory, ADR 0101): a block an environment",
     "the sizing rule: each comparison from its own mean and SD with the sizing mean's error carried, checked by the claim's reader; M4's tie rule printed beside it",
-    "the sizing records are M4's scored records; M4's worlds are development worlds now",
-    "the k = 0 claim's arm is the frozen candidate in place of margin held, which runs beside it",
+    "the sizing records of families 1, 6 and 14 are M4's scored records",
     "family 15 in the claim at both rungs on fresh siMMMulator files of the third run's block",
-    "the tested rung of the national families is not run: M4's verdicts stand",
+    "only what M4 left open is run: families 1, 6 and 14 at k = 0 and family 15; family 4 at k = 0 is not run",
     "ridge and chc are not run"
   ],
   "pins": {
-    "mixdyn": "the commit that marks this file frozen",
-    "causal-hybrid-control": "1.3.1, the lock's (unchanged since M4)",
-    "bench": "{{at the freeze}}: branch m5-draft over main d92c1ea, with family 15's third-run digests",
+    "mixdyn": "the commit that marks this file frozen; its arms are those of 0.2.1, whose tree planned M4's records again bit for bit",
+    "causal-hybrid-control": "1.3.1, the lock's (as in M4)",
+    "bench": "bc52170ac9c4069d9f843c0d7c45584c6320bcc3, on its branch m5-draft over main d92c1ea, with the third run's seeds and family 15's digests of the third run's files",
     "jax": "0.12.0",
     "meridian": "2.1.0",
     "pymc-marketing": "1.3.0, pytensor 3.3.6, numba 0.68.0",
-    "orbit": "1.1.5.1"
+    "orbit": "1.1.5.1",
+    "siMMMulator": "1.1.0 at da44d9afdbf3012078deba7a98f4d2999dcccf93; R 4.6.2"
   },
   "limits": {
     "rule": "M2's memory cap and timeout of the arm's cost class on the family its cost is read from (families 12, 13 and 17-20 family 0's), the timeout stretched by the arm's cost factor; the class's slots and CPUs a process; family 15's from M2's records of family 15",
-    "by family": "{{at the freeze}}"
+    "by family": {
+      "1": {
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          1500,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          600,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          720,
+          12,
+          1.5
+        ]
+      },
+      "6": {
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "15G",
+          1800,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "1G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          780,
+          12,
+          1.5
+        ]
+      },
+      "14": {
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "13G",
+          5160,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          1200,
+          12,
+          1.5
+        ]
+      },
+      "15": {
+        "anchored": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "margin": [
+          "1G",
+          240,
+          4,
+          1.0
+        ],
+        "meridian": [
+          "10G",
+          4860,
+          12,
+          1.2
+        ],
+        "orbit": [
+          "2G",
+          660,
+          4,
+          1.0
+        ],
+        "pymc-marketing": [
+          "2G",
+          1980,
+          12,
+          1.5
+        ]
+      }
+    }
   },
-  "compute": "{{at the freeze}}",
-  "budget": "{{at the freeze}}"
+  "compute": {
+    "from": "the run kit's cost model (scripts/cost.py, scripts/schedule.py) on the declared worlds, M2's recorded CPU a process, one simulation on one 192-CPU box: a planning figure, not a timing; it put M4 at 1868 core-hours and 19.2 hours for a realised 1502 and 16.0",
+    "box hours": "makespan x 1.075 (spot stops) + 0.5 to provision + 0.5 to pull",
+    "worlds": 1200,
+    "processes": 4800,
+    "c6a.48xlarge": {
+      "core-hours": 355.8,
+      "makespan h, median": 7.6,
+      "makespan h, p90 walls": 8.5,
+      "box h, median": 9.2,
+      "usd, median": 11.5,
+      "usd, p90": 13.8,
+      "by class, core-hours": {
+        "meridian": 182.4,
+        "pymc-marketing": 137.9,
+        "orbit": 34.0,
+        "margin and anchored": 1.0
+      }
+    },
+    "critical path": "family 15's Meridian fits"
+  },
+  "budget": {
+    "usd": 30.3,
+    "set": "2026-11-23, on the decision the author delegated",
+    "box": "one c6a.48xlarge spot instance",
+    "MAXPRICE": 1.37,
+    "deadline billed h": 11.5,
+    "hard stop billed h": 14.5,
+    "hard stop s": 52200,
+    "worst case usd": 30.3,
+    "worst case": "the hard stop plus an hour at the bid with the address, a 200 GiB gp3 volume for 5 days, the image's snapshot for a month and 30 GB out, as in M4"
+  }
 }

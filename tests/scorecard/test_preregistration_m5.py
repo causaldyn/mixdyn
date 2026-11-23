@@ -1,5 +1,5 @@
-"""M5's pre-registration, a draft until its k = 0 arm is frozen: marked so, no slot left but its
-two, the sizing script it names the one beside it, and what it states the code it names: the
+"""M5's pre-registration as frozen on the decision the author delegated: marked so, no slot left,
+the sizing script it names the one beside it, and what it states the code it names: the
 declaration's fields, the order of its verdicts, the third confirmatory run's seeds and the sizing
 rule's arithmetic."""
 
@@ -7,7 +7,6 @@ import dataclasses
 import hashlib
 import json
 import math
-import re
 
 import pytest
 
@@ -23,8 +22,6 @@ from tests.test_self_contained import PRIVATE_POINTER
 HERE = TREE / "scorecard" / "preregistration"
 TEXT = (HERE / "m5.md").read_text(encoding="utf-8")
 DOC = json.loads((HERE / "m5.json").read_text(encoding="utf-8"))
-SLOTS = {"{{k0 claim}}", "{{at the freeze}}"}
-FROZEN = not DOC["status"].startswith("draft")
 
 
 def _private(text: str) -> bool:
@@ -32,16 +29,19 @@ def _private(text: str) -> bool:
     return bool(PRIVATE_POINTER.search(text)) or "chc-scratch" in text
 
 
-def test_the_draft_says_so_and_leaves_only_its_slots():
+def test_the_frozen_file_says_so_and_leaves_no_slot():
+    frozen = (
+        "on 2026-11-23 on the decision the author delegated, before any confirmatory world of the "
+        "run is fitted"
+    )
+    assert f"**Frozen {frozen}.**" in " ".join(TEXT.split())
+    assert DOC["status"] == f"frozen {frozen}"
+    assert "draft" not in TEXT[:400].lower()
+    assert "}}" not in TEXT
     for text in (TEXT, json.dumps(DOC, ensure_ascii=False)):
-        held = set(re.findall(r"\{\{[^}]*\}\}", text))
-        assert held <= (set() if FROZEN else SLOTS)
-        assert "<<" not in text
-        assert ">>" not in text
+        for slot in ("{{", "<<", ">>", "__"):
+            assert slot not in text
         assert not _private(text)
-    if not FROZEN:
-        assert "**Draft, 2026-11-23: not frozen.**" in TEXT
-        assert DOC["status"].startswith("draft, 2026-11-23: not frozen")
 
 
 def test_the_sizing_script_it_names_is_the_one_beside_it():
@@ -49,9 +49,8 @@ def test_the_sizing_script_it_names_is_the_one_beside_it():
     assert script == HERE / "m5_sizing.py"
     assert not _private(script.read_text(encoding="utf-8"))
     held = hashlib.sha256(script.read_bytes()).hexdigest()
-    named = DOC["sizing"]["script sha256"]
-    assert named == held or (not FROZEN and named == "{{at the freeze}}")
-    assert f"`{script.name}` beside this file (SHA-256 `{named}`)" in " ".join(TEXT.split())
+    assert DOC["sizing"]["script sha256"] == held
+    assert f"`{script.name}` beside this file (SHA-256 `{held}`)" in " ".join(TEXT.split())
 
 
 def test_the_declaration_it_names_is_one_the_harness_reads():
@@ -74,6 +73,8 @@ def test_the_order_names_every_verdict_the_claim_reads_once():
     past = {tuple(pair) for pair in DOC["exploratory"]["past the cap"]}
     rungs = {(int(f), k) for f, held in DOC["families"].items() for k in held["rungs"]}
     assert len(order) == len(set(order))
+    chances = [DOC["families"][str(f)]["sizing"][str(k)]["predictive"] for f, k in order]
+    assert chances == sorted(chances, reverse=True)
     assert set(order) == rungs - past
     assert sorted(int(f) for f in DOC["families"]) == DOC["sizing"]["families"]
     assert all(isinstance(held["worlds"], int) for held in DOC["families"].values())
@@ -96,27 +97,31 @@ def test_the_third_run_s_seeds_are_the_bench_s():
         return {e: [r.start, r.stop - 1] for e, r in third.items()}
 
     seeds = DOC["seeds"]
-    assert (
-        named(0)
-        == seeds["family 0"]
-        == {
-            "drawn": [1_000_000, 1_000_999],
-            "reference": [1_001_000, 1_001_999],
-        }
-    )
-    assert named(15) == seeds["family 15"] == {"demo": [1_300_000, 1_300_999]}
-    assert (
-        named(17)
-        == seeds["family 17"]
-        == {
-            "curve": [1_340_000, 1_340_999],
-            "line": [1_341_000, 1_341_999],
-        }
-    )
+    for f, held in DOC["families"].items():
+        bench = named(int(f))
+        assert seeds[f"family {f}"] == {e: bench[e] for e in held["environments"]}
+    assert seeds["family 1"]["walk"] == [1_020_000, 1_020_999]
+    assert seeds["family 1"]["static"] == [1_025_000, 1_025_999]
+    assert seeds["family 6"]["both"] == [1_122_000, 1_122_999]
+    assert seeds["family 14"] == {"genre": [1_280_000, 1_280_999]}
+    assert seeds["family 15"] == {"demo": [1_300_000, 1_300_999]}
     dash = "\N{EN DASH}"
-    for text in ("1 000 000", "1 000 999", "1 300 000", "1 300 999", "1 340 000", "1 341 999"):
-        assert text in TEXT
-    assert f"`line` 1 341 000{dash}1 341 999" in " ".join(TEXT.split())
+    text = " ".join(TEXT.split())
+    for held in (
+        f"`walk` 1 020 000{dash}1 020 999",
+        f"`static` 1 025 000{dash}1 025 999",
+        f"`cliff` 1 120 000{dash}1 120 999",
+        f"`both` 1 122 000{dash}1 122 999",
+        f"`genre` 1 280 000{dash}1 280 999",
+        f"`demo` 1 300 000{dash}1 300 999",
+    ):
+        assert held in text
+
+
+def test_every_declared_world_is_within_its_block():
+    for held in DOC["families"].values():
+        assert held["worlds"] * len(held["environments"]) == held["declared"]
+        assert m5_sizing.FLOOR <= held["declared"] <= 1_000 * len(held["environments"])
 
 
 def test_its_constants_are_the_pre_registration_s():

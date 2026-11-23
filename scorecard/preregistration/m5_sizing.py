@@ -4,7 +4,7 @@ mean and SD, with the sizing mean's own error carried, so that a comparison the 
 far does not set the worlds.
 
     PYTHONPATH=<bench>/src:. python scorecard/preregistration/m5_sizing.py --stage M4_STAGE \\
-        --m3-stage M3_STAGE --floored ROWS.pkl [--k0-rows ROWS.jsonl] [--out FILE.json]
+        --m3-stage M3_STAGE --floored ROWS.pkl [--out FILE.json]
 
 `--stage` is M4's scored stage: its `design.json`, which names each family's scored environments,
 and each root's `scores.jsonl`. `--m3-stage` is M3's scored stage, read for family 15 alone: its
@@ -12,9 +12,7 @@ and each root's `scores.jsonl`. `--m3-stage` is M3's scored stage, read for fami
 `--floored` is round 8's development rows, read for family 15 alone: a pickled list of {family,
 env, seed, index, k, regret}, `regret` holding `anchored floored`'s (`floor:sp:0.9`) and
 `anchored held`'s (`T0`), `T0` equal to M3's stored `anchored held` on every matched world.
-`--k0-rows` is the k = 0 claim's arm planned again on every sizing world, a JSON line a world
-{family, environment, seed, index, k, regret, failure}; without it the k = 0 claim's arm is read
-as `margin held`, M4's, a stand-in until the arm is frozen, and the output says so.
+The k = 0 claim's arm is `margin held` and the tested rung's `anchored floored`, both M4's.
 
 **The sizing records.** Every complete case of M4's scored roots: `f<n>` at k = 0 and at the
 tested rung joined with `f<n>-ts`; family 7 pooled over `f7a` (k = 0 and 1) and `f7b` (k = 0 and
@@ -102,9 +100,9 @@ TIE_Z = 2.8016
 FAMILIES = tuple(int(f) for f in DOC["sizing"]["families"])
 TESTED_RUN = bool(DOC["sizing"]["tested rung run"])
 RIVALS = ("status quo", "equal split", "meridian", "pymc-marketing", "orbit")
-STAND_IN, TESTED, HELD = "margin held", "anchored floored", "anchored held"
+K0, TESTED, HELD = "margin held", "anchored floored", "anchored held"
 RULE, T0 = "floor:sp:0.9", "T0"
-KEEP = {*RIVALS, STAND_IN, TESTED, HELD}
+KEEP = {*RIVALS, K0, TESTED, HELD}
 
 World = tuple[str, int, int, int]
 """(environment, seed, index, k)"""
@@ -170,24 +168,6 @@ class Records:
                         raise ValueError(msg)
         self.notes.append(f"f{family} rung {rung}: {len(merged)} worlds")
         return dict(merged)
-
-
-def with_k0_rows(ws: dict[World, Arms], family: int, rows: list[dict], arm: str) -> int:
-    """The frozen k = 0 arm's regrets added to the family's k = 0 worlds as `arm`.
-
-    Raises:
-        ValueError: where a sizing world has no row.
-    """
-    by_key = {
-        (r["environment"], r["seed"], r["index"], r["k"]): r for r in rows if r["family"] == family
-    }
-    for key, arms in ws.items():
-        row = by_key.get(key)
-        if row is None:
-            msg = f"f{family}: the k = 0 rows hold no row of {key}"
-            raise ValueError(msg)
-        arms[arm] = (row["regret"], row.get("failure"))
-    return len(ws)
 
 
 def with_floored(ws: dict[World, Arms], family: int, rows: list[dict]) -> int:
@@ -396,19 +376,12 @@ def main() -> None:
     parser.add_argument("--stage", type=Path, required=True, help="M4's scored stage")
     parser.add_argument("--m3-stage", type=Path, required=True, help="M3's scored stage (f15)")
     parser.add_argument("--floored", type=Path, required=True, help="round 8's rows (f15)")
-    parser.add_argument("--k0-rows", type=Path, help="the frozen k = 0 arm's rows")
     parser.add_argument("--out", type=Path, help="the sizes, predictives and order, as JSON")
     args = parser.parse_args()
 
     records = Records(args.stage, args.m3_stage)
     with args.floored.open("rb") as held:
         floored_rows = pickle.load(held)
-    k0_rows = None
-    k0_arm = STAND_IN
-    if args.k0_rows:
-        k0_arm = str(DOC["scope"]["arms"]["0"])
-        with args.k0_rows.open(encoding="utf-8") as held:
-            k0_rows = [json.loads(line) for line in held]
     families: dict[str, dict] = {}
     verdicts: dict[tuple[int, int], dict] = {}
     for family in FAMILIES:
@@ -418,11 +391,9 @@ def main() -> None:
             rungs["tested"] = records.worlds(family, "tested")
             if family == 15:
                 with_floored(rungs["tested"], family, floored_rows)
-        if k0_rows is not None:
-            with_k0_rows(rungs["0"], family, k0_rows, k0_arm)
         basis: dict[str, dict] = {}
         for rung, ws in rungs.items():
-            arm = k0_arm if rung == "0" else TESTED
+            arm = K0 if rung == "0" else TESTED
             basis[rung] = {"arm": arm} | rung_size(comparisons(ws, arm))
             if not basis[rung]["past the cap"]:
                 basis[rung] |= checked(ws, arm, basis[rung], e)
@@ -480,9 +451,8 @@ def main() -> None:
     out = {
         "inputs": {
             "floored rows sha256": digest(args.floored),
-            "k0 rows sha256": digest(args.k0_rows) if args.k0_rows else None,
-            "k0 arm": k0_arm,
-            "k0 arm is a stand-in": k0_rows is None,
+            "k0 arm": K0,
+            "tested arm": TESTED,
         },
         "rule": {
             "margin": MARGIN,
@@ -506,8 +476,6 @@ def main() -> None:
         "predictives' sum": sum(chances),
     }
     print("\n".join(records.notes))
-    if k0_rows is None:
-        print(f"k = 0: the claim's arm is read as {STAND_IN}, a stand-in until it is frozen")
     print(
         "| family | E | k = 0: tie rule (binding) | k = 0: rule (binding) | tested: tie rule | "
         "tested: rule | declared | worlds an environment | tie rule: declared |"
