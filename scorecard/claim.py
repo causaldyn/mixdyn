@@ -47,28 +47,31 @@ records at its rung above 0 as the first run's rung, one comparison a rival over
 and the line names each environment's own rung.
 
 **The roots beside a run.** `claim read` is handed every root of a run. A root that declares no
-margin is a run's joined root, read with it, or a root beside a run handed (`read_runs`): a
-directory beside the run's, named by the run's directory name, a hyphen and a name of its own, as
-`<root>-robyn` and `f10-meridian`. It runs under the run's pre-registration and holds the run's
-family, its pilots or scored worlds, its bench and directory of worlds, some of its environments at
-every rung of the run, and the run's worlds or a cap on each arm it adds (`read_beside`). Each arm
-it plans and the run does not is joined to the run's worlds by environment, seed and rung (`join`);
-an arm both plan, as `chc`, is the run's. Each of its tools is read against the default as a tool
-of the run is, on the root's environments and on its cap, exploratory where the root declares its
-caps so: an environment the root does not hold is not compared and holds none of the tool's
-failures. Its own arms, as `bayes-geo`'s, are joined and compared with nothing in the claim. The
-roots beside a pool's runs are read as one root over their environments, each run handed one of
-the same name.
+margin is a run's joined root, read with it (`read_run`), or a root beside a run handed
+(`read_runs`). Every arm the joined root plans and the run does not is joined to the run's worlds at
+the rungs above 0: the default there, and the rest, which only the reading beside the claim reads
+(`recorded`). A root beside a run is a directory beside the run's, named by the run's directory
+name, a hyphen and a name of its own, as `<root>-robyn` and `f10-meridian`. It runs under the run's
+pre-registration and holds the run's family, its pilots or scored worlds, its bench and directory of
+worlds, some of its environments at every rung of the run, and the run's worlds or a cap on each arm
+it adds (`read_beside`). Each arm it plans and the run does not is joined to the run's worlds by
+environment, seed and rung (`join`); an arm both plan, as `chc`, is the run's. Each of its tools is
+read against the default as a tool of the run is, on the root's environments and on its cap,
+exploratory where the root declares its caps so: an environment the root does not hold is not
+compared and holds none of the tool's failures. Its own arms, as `bayes-geo`'s, are joined and
+compared with nothing in the claim. The roots beside a pool's runs are read as one root over their
+environments, each run handed one of the same name.
 
 **Reported regardless** (`recorded`, `claim read --recorded`). After the claim, and outside it and
 Holm's list, `claim read --recorded` prints what the claim does not read. At each rung of each run
-as the claim reads it, each recorded arm, an arm of this engine's, the run's or a root's beside it,
-that is not the rung's default, less every rival: the run's (`rivals`) and the tools of the roots
-beside it. And at each rung above 0 where the run declares its default there, that default less the
-engine's static arm (`STATIC`). Each is read as a comparison is: on the complete cases of the
-environments both arms are read on, on a capped tool's cap, each environment's own rung named where
-a pool's runs test apart. It has no margin and no reader: its mean, its paired 95 % Student-t
-interval, its complete cases and the reading rule's verdict, unadjusted.
+as the claim reads it, each recorded arm, an arm of this engine's, the run's, its joined root's at
+the rungs above 0 or a root's beside it, that is not the rung's default, less every rival: the run's
+(`rivals`) and the tools of the roots beside it. And at each rung above 0 where the run declares its
+default there, that default less the engine's static arm (`STATIC`). Each is read as a comparison
+is: on the complete cases of the environments both arms are read on, on a capped tool's cap, each
+environment's own rung named where a pool's runs test apart. It has no margin and no reader: its
+mean, its paired 95 % Student-t interval, its complete cases and the reading rule's verdict,
+unadjusted.
 
 **The default against a declared variant** (`against_default`). A run may name variants of its
 own arms its default at rung 0 is read against (`Declaration.default_less`), as a check that the
@@ -480,7 +483,9 @@ def read_run(root: Path) -> tuple[Declaration, list[WorldRecord]]:
     """The run under `root`, its records joined with the declared joined root's, and each
     composite of their arms assembled (`scorecard.composite`). The joined root's arm that plans
     the default above 0 is joined, or where that default is a composite, its router and the arm
-    its routed worlds play (`scorecard.composite.parts`).
+    its routed worlds play (`scorecard.composite.parts`); then every other arm of this engine's
+    the joined root plans and the run does not, on the worlds that score it, which the claim does
+    not read and the reading beside it does (`recorded`).
 
     Raises:
         ValueError: on a joined root declared otherwise than the run: under another
@@ -537,6 +542,10 @@ def read_run(root: Path) -> tuple[Declaration, list[WorldRecord]]:
     theirs = [r for r in _records(other) if r.k > 0] if other.scores.exists() else []
     for arm in held:
         records = join(records, theirs, arm)
+    own = names(d)
+    for arm in (a for a in names(o) if a not in held and a not in own and a not in o.external):
+        # read beside the claim only: a world that does not score it leaves it unread there
+        records = join(records, [r for r in theirs if arm in r.arms], arm)
     return d, [compose(r) for r in records]
 
 
@@ -615,14 +624,15 @@ def read_beside(
 class Run:
     """A run as `claim read` reads it: its declaration, a pool's runs one run over every
     environment they hold (`pooled`); its records, with the arms of its joined root and of the
-    roots beside it; the roots `beside` it, each declared over the environments it holds; and,
-    where a pool's runs test at different rungs above 0, each environment's own rung
-    (`tested_rungs`)."""
+    roots beside it; the roots `beside` it, each declared over the environments it holds; where a
+    pool's runs test at different rungs above 0, each environment's own rung (`tested_rungs`); and
+    its `joined` root, declared over the environments it holds, where the run declares one."""
 
     declaration: Declaration
     records: tuple[WorldRecord, ...]
     beside: tuple[Declaration, ...] = ()
     tested: tuple[tuple[str, int], ...] = ()
+    joined: Declaration | None = None
 
     def comparisons(self) -> list[Comparison]:
         """Every comparison of the run (`compare`)."""
@@ -642,11 +652,18 @@ def read_runs(roots: Sequence[Path]) -> list[Run]:
             (`BESIDE`), and as `read_run`, `read_beside` and `pooled` do.
     """
     read, sides = joined_runs(roots)
+    joins = {
+        root: {}
+        if d.joined is None
+        else {d.joined: Layout(root.with_name(root.name + d.joined)).read()}
+        for root, d, _ in read
+    }
     out = []
     for members in _members(read):
         d, records = _pool(members)
         tested = tested_rungs([m[1] for m in members])
-        out.append(Run(d, tuple(records), _pooled_beside(members, sides), tested))
+        joined = _pooled_beside(members, joins)
+        out.append(Run(d, tuple(records), _pooled_beside(members, sides), tested, *joined))
     return out
 
 
@@ -1172,33 +1189,40 @@ class Recorded:
 
 def recorded(run: Run) -> list[Recorded]:
     """What the claim does not read of the run, rung by rung: each recorded arm, an arm of this
-    engine's, the run's or a root's beside it, that is not the rung's default, less every rival,
-    the run's (`rivals`) and the tools of the roots beside it; then, at each rung above 0 where the
-    run declares its default there, that default less the engine's static arm (`STATIC`), where
-    one of those arms is it. Each arm is read on its root's environments and worlds, a capped tool
-    on its cap, as `compare` reads a tool of a root beside the run."""
+    engine's, the run's, its joined root's at the rungs above 0 or a root's beside it, that is not
+    the rung's default, less every rival, the run's (`rivals`) and the tools of the roots beside
+    it; then, at each rung above 0 where the run declares its default there, that default less the
+    engine's static arm (`STATIC`), where one of those arms is it. Each arm is read on its root's
+    environments and worlds, a capped tool on its cap, as `compare` reads a tool of a root beside
+    the run."""
     # the runner reads the claim, so it is read here only once both are loaded
     from scorecard.run import names
 
     d = run.declaration
-    arms: dict[str, Declaration] = {}
+    arms: dict[str, tuple[Declaration, tuple[int, ...]]] = {}
     against: dict[str, Declaration] = dict.fromkeys(rivals(d), d)
     for root in (d, *run.beside):
-        arms |= {a: root for a in names(root) if a not in root.external and a not in arms}
+        arms |= {
+            a: (root, d.rungs) for a in names(root) if a not in root.external and a not in arms
+        }
         against |= {tool: root for tool in root.external if tool not in against}
+    j = run.joined
+    if j is not None:
+        above = tuple(k for k in d.rungs if k > 0)
+        arms |= {a: (j, above) for a in names(j) if a not in j.external and a not in arms}
     out = []
     for k in d.rungs:
         tested = run.tested if k > 0 else ()
         out += [
             _recorded(run, k, (arm, mine), (rival, theirs), tested)
-            for arm, mine in arms.items()
-            if arm != d.default_at(k)
+            for arm, (mine, held) in arms.items()
+            if k in held and arm != d.default_at(k)
             for rival, theirs in against.items()
             if set(mine.environments) & set(theirs.environments)
         ]
     if d.default_above_0 is not None and STATIC in arms:
         out += [
-            _recorded(run, k, (d.default_above_0, d), (STATIC, arms[STATIC]), run.tested)
+            _recorded(run, k, (d.default_above_0, d), (STATIC, arms[STATIC][0]), run.tested)
             for k in d.rungs
             if k > 0
         ]

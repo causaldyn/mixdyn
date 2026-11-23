@@ -630,6 +630,72 @@ def test_the_claims_reading_assembles_the_composite_of_the_joined_roots_two_arms
             claim.read_run(tmp_path / f"only-{one}")
 
 
+def test_the_reading_beside_the_claim_reads_the_joined_root_s_other_variants_above_0(tmp_path):
+    """M4's layout: the run plans `margin` and reads `anchored floored` above 0 from its joined
+    root, which plans every variant of `anchored` at the tested rung alone. Beside the claim, each
+    other variant is read less every rival at the tested rung, unread where a world does not score
+    it, and none is read at k = 0, where the joined root holds no world; the claim is as before."""
+    d = Declaration(
+        family=3,
+        environments=("r-0.9",),
+        worlds=2,
+        pilot=False,
+        bench="316fada",
+        rungs=(0, 4),
+        arms=("margin",),
+        external=("orbit",),
+        default="margin",
+        margin=0.05,
+        default_above_0="anchored floored",
+        joined="-ts",
+    )
+    offsets = {
+        "anchored": 0.05,
+        "anchored curved": 0.04,
+        "anchored held": 0.03,
+        "anchored floored": 0.02,
+    }
+    run_records, joined_records = [], []
+    for i, s in enumerate(d.seeds("r-0.9")):
+        run_records.append(_place({"margin": _arm(0.1), "orbit": _arm(0.2)}, seed=s, k=0, index=i))
+        run_records.append(_place({"orbit": _arm(0.2 + 0.02 * i)}, seed=s, index=i))
+        planned = {
+            v: _arm(regret + 0.01 * i)
+            for v, regret in offsets.items()
+            if (v, i) != ("anchored held", 1)  # a world that does not score it
+        }
+        joined_records.append(_place(planned, seed=s, index=i))
+    _write(tmp_path / "f3", d, run_records)
+    joined = dataclasses.replace(
+        d,
+        rungs=(4,),
+        arms=("anchored",),
+        external=(),
+        default=None,
+        margin=None,
+        default_above_0=None,
+        joined=None,
+    )
+    _write(tmp_path / "f3-ts", joined, joined_records)
+    (run,) = claim.read_runs([tmp_path / "f3", tmp_path / "f3-ts"])
+    assert run.joined == joined
+    read = {(r.k, r.arm, r.rival): r for r in claim.recorded(run)}
+    for variant in ("anchored", "anchored curved"):
+        regret = offsets[variant]
+        mean = float(np.mean([regret - 0.2, regret + 0.01 - 0.22]))
+        assert read[4, variant, "orbit"].mean == pytest.approx(mean, rel=1e-12, abs=0.0)
+        assert read[4, variant, "status quo"].pairs == 2
+    assert read[4, "anchored held", "orbit"].pairs is None
+    assert not [key for key in read if key[1] == "anchored floored"]
+    assert not [key for key in read if key[0] == 0 and key[1].startswith("anchored")]
+    printed = "\n".join(claim.recorded_lines(claim.recorded(run)))
+    assert "family 3, k = 4, anchored curved less orbit" in printed
+    (comparison,) = [c for c in run.comparisons() if (c.k, c.rival) == (4, "orbit")]
+    assert comparison.default == "anchored floored"
+    mean = float(np.mean([0.02 - 0.2, 0.03 - 0.22]))
+    assert comparison.mean == pytest.approx(mean, rel=1e-12, abs=0.0)
+
+
 @pytest.mark.parametrize("world", WORLDS, ids=name)
 def test_the_curved_plan_its_line_weights_and_its_regret_are_the_research_codes(world):
     """The variant's record and M2's recorded `stacked` plan scored on the world's truth: the
