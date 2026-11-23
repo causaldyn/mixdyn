@@ -161,6 +161,25 @@ RECORDED = {
         "fit normal": "35837240149fdcfc",
         "fit tanh": "af7c22b607e4cf7e",
     },
+    # INTEL(R) XEON(R) PLATINUM 8573C on a host that shows AMX, GitHub's ubuntu-26.04 runners,
+    # 2026-11-22
+    Dispatch(
+        numpy="exp=X86_V4 log=X86_V4 tanh=X86_V4 expm1=X86_V4 log1p=X86_V4",
+        openblas="numpy=SkylakeX scipy=SkylakeX",
+        xla=(
+            "emeraldrapids amx-bf16 amx-int8 amx-tile avx avx2 avx512bf16 avx512bitalg avx512bw "
+            "avx512cd avx512dq avx512f avx512fp16 avx512ifma avx512vbmi avx512vbmi2 avx512vl "
+            "avx512vnni avx512vpopcntdq avxvnni f16c fma sse sse2 sse3 sse4.1 sse4.2 ssse3"
+        ),
+        libc="glibc 2.43",
+    ): {
+        "density lognormal": "39fa47895fe7446e",
+        "density normal": "0cf8950637769a9e",
+        "density student": "967797f3df106e39",
+        "density tanh": "5477b9d7d6cbfb36",
+        "fit normal": "35837240149fdcfc",
+        "fit tanh": "af7c22b607e4cf7e",
+    },
 }
 """Each case's digest under each machine's dispatch (`dispatch.key`): the default model's density
 and gradient at Stan's 25 points of each world, and a short seeded fit's draws. A new key's
@@ -174,12 +193,14 @@ correctly rounded value, and it moved both tanh digests there. On the Zen 3, XLA
 SSE4.2 moves all six digests and OpenBLAS held to its Sandy Bridge kernels both fits'; numpy on its
 baseline loops, OpenBLAS held to Zen's and two CPUs move none.
 
-The last five are GitHub's ubuntu-26.04 runners' on 2026-11-21 (EPYC 9V74, EPYC 9V45, Xeon
-6975P-C, Xeon 8370C, Xeon 8573C), read off the tree that made the constant a literal. Each digest is
-one a machine drew before that change (`BEFORE_KEYS`), so they hold the machines' bits: the two AMD
-keys differ in XLA's target and draw the same digests, and the three Xeons differ in XLA's target
-and draw the 2026-10-28 sandbox's lognormal, normal and Student-t densities and its normal fit, and
-the Xeon 8573C's tanh density and fit."""
+The last six are GitHub's ubuntu-26.04 runners' on 2026-11-21 and 11-22 (EPYC 9V74, EPYC 9V45,
+Xeon 6975P-C, Xeon 8370C, Xeon 8573C twice), read off the tree that made the constant a literal.
+Each digest is one a machine drew before that change (`BEFORE_KEYS`), so they hold the machines'
+bits: the two AMD keys differ in XLA's target and draw the same digests, and the four Xeon keys
+differ in XLA's target and draw the 2026-10-28 sandbox's lognormal, normal and Student-t densities
+and its normal fit, and the Xeon 8573C's tanh density and fit. The two Xeon 8573C keys are one CPU
+on two hosts: one host shows its AMX, BF16 and FP16 instructions to XLA, the other does not, and
+both draw the same six digests."""
 
 BEFORE_KEYS = {
     "a cloud sandbox with AVX-512 in Ubuntu 24.04 on 2026-10-28": {
