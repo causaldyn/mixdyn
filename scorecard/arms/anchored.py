@@ -84,7 +84,8 @@ fall off there. Everything else is `anchored held`'s: where no floor is raised t
 and its interval are that variant's to the last bit, and the plan is the status quo in the guard's
 three cases. No composite reads it: its record's `routed` is false on every world, the route's
 reasons kept as the fit read them. Its flags add whether a raised floor cut the box the plan was
-searched in (`floor applied`); its settings add the constant (`spend_floor`).
+searched in (`floor applied`); its settings add the constant (`spend_floor`). ADR 0099 is ADR 0097
+in M4's pre-registration and in the tree M4 ran.
 """
 
 from __future__ import annotations
