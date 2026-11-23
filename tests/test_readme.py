@@ -1,15 +1,17 @@
 """The README states what the engine was and was not validated on, and points to the pages a user
 reads first; its example runs; the scope page states what the engine does not model.
 
-Its record of the run its claim was read on states the conflict of interest, the error bars and the
-engine's place, and its tables of worlds per cell, tuned rivals, versions and compute are the ones
-`scripts/readme_record.py` writes from the run's records (`evidence/results/m3_record.json`): a
-table typed into one of those blocks fails here. The claim's own table is typed; each of its cells
-is checked against the run's reading."""
+Its record of the runs its claim was read on, M4 and M3's geo verdicts, states the conflict of
+interest, the error bars and the engine's place. Its tables of the claim, the worlds per cell, the
+words, the losses, the tuned rivals, the versions and the compute are the ones
+`scripts/readme_record.py` writes from the runs' records (`evidence/results/m4_record.json` and
+`m3_record.json`): a table typed into one of those blocks fails here. Each cell of the claim's table
+is checked against its run's reading apart from the script that writes it, and so is each count,
+interval and level the prose beside the tables states."""
 
 from __future__ import annotations
 
-import json
+import hashlib
 import re
 from collections.abc import Iterator
 from pathlib import Path
@@ -21,7 +23,8 @@ import readme_record
 
 ROOT = Path(__file__).resolve().parent.parent
 README = (ROOT / "README.md").read_text(encoding="utf-8")
-RECORD = json.loads(readme_record.RECORD.read_text(encoding="utf-8"))
+RECORDS = readme_record.records()
+MINUS = "\u2212"
 
 
 def sections(text: str) -> list[str]:
@@ -64,19 +67,33 @@ def section(text: str, heading: str) -> str:
 
 
 def test_the_record_s_tables_are_the_ones_its_script_writes() -> None:
-    """Run `python scripts/readme_record.py` when the record or the script changes."""
-    assert readme_record.blocks(README) == readme_record.render(RECORD)
+    """Run `python scripts/readme_record.py` when a record or the script changes."""
+    assert readme_record.blocks(README) == readme_record.render(RECORDS)
 
 
 def test_each_record_table_sits_in_the_section_that_names_it() -> None:
     placed = {
-        "cells": "What has been measured",
+        "m4-claim": "What has been measured",
+        "m4-cells": "What has been measured",
+        "m4-words": "What has been measured",
+        "m4-losses": "Where it loses",
+        "m4-exploratory": "Where it loses",
         "tuned": "The tuned rivals",
+        "m4-versions": "Versions of every arm",
         "versions": "Versions of every arm",
+        "m4-compute": "Compute",
         "compute": "Compute",
     }
     assert sorted(placed) == sorted(readme_record.RENDERERS)
     assert [b for b, h in placed.items() if f"<!-- record:{b} -->" not in section(README, h)] == []
+
+
+def test_where_it_loses_sits_beside_the_claim_and_folds_nothing() -> None:
+    assert (
+        sections(README).index("Where it loses")
+        == sections(README).index("What has been measured") + 1
+    )
+    assert "<details" not in README
 
 
 def test_the_readme_states_its_conflict_of_interest_its_error_bars_and_its_place() -> None:
@@ -86,6 +103,14 @@ def test_the_readme_states_its_conflict_of_interest_its_error_bars_and_its_place
     assert "The variability" in measured
     assert "**Where it sits.**" in README
     assert "multi-touch attribution (MTA)" in README
+
+
+def test_best_is_said_only_where_a_claim_does_not_say_it() -> None:
+    said = re.findall(r"[^.\n]*\bbest\b[^.\n]*", README, flags=re.IGNORECASE)
+    assert [s.strip() for s in said] == [
+        'Nothing here says "best"',
+        "It does not say that mixdyn is the best MMM, and it does not say",
+    ]
 
 
 def _strings(value: Any) -> Iterator[str]:
@@ -100,18 +125,19 @@ def _strings(value: Any) -> Iterator[str]:
             yield from _strings(held)
 
 
-def test_the_record_names_no_local_path() -> None:
+def test_the_records_name_no_local_path() -> None:
     local = re.compile(r"^[/~]|/home/|\.cache|\.internal")
-    assert [s for s in _strings(RECORD) if local.search(s)] == []
+    assert [s for s in _strings(RECORDS) if local.search(s)] == []
 
 
-def test_the_core_hours_the_text_states_are_the_record_s() -> None:
-    hours = sum(
-        f["core_hours"]["engine"] + f["core_hours"]["rivals"]
-        for f in RECORD["compute"]["families"].values()
-    )
-    stated = f"{round(hours):,}".replace(",", " ")
-    assert f"The run took {stated} CPU-hours" in README
+def test_the_core_hours_the_text_states_are_the_records() -> None:
+    for run, record in RECORDS.items():
+        hours = sum(
+            f["core_hours"]["engine"] + f["core_hours"]["rivals"]
+            for f in record["compute"]["families"].values()
+        )
+        stated = f"{round(hours):,}".replace(",", " ")
+        assert f"{readme_record.RUNS[run].name} took {stated} CPU-hours" in README
 
 
 def test_the_reader_s_lines_are_read_field_by_field() -> None:
@@ -127,6 +153,16 @@ def test_the_reader_s_lines_are_read_field_by_field() -> None:
             "interval Student's",
             "the claim by family and rung, each an intersection-union test:",
             "  family 9, k = 4: holds (level 1e-12; 5 rivals, each within unadjusted)",
+            "  family 4, k = 0: not claimed; not claimed, predicted to fail: status quo, orbit",
+            "no headline: some family or rung is not claimed whole or does not hold",
+            "losses by Holm's step-down at familywise 0.025 over 7 comparisons: family 9 k 4 "
+            "pymc-marketing, family 4 k 0 equal split",
+            "",
+            "secondary readings, reported beside the claim and never read by it:",
+            "  every stage of every fit past the bounds at the status quo: 5 of 5 claimed "
+            "comparisons within; not within: none",
+            "  at the margin 0.01: 4 of 5 claimed comparisons within; not within: family 9 k 4 "
+            "pymc-marketing",
         )
     )
     read = readme_record._reading(reading)
@@ -144,39 +180,202 @@ def test_the_reader_s_lines_are_read_field_by_field() -> None:
         "loses to",
     )
     assert (first["complete"], first["rival_failed"], first["cap"]) == (234, 6, None)
+    assert first["loss level"] == "0.0012"
     assert (second["mean"], second["word"], second["rival_failed"], second["cap"]) == (
         None,
         "not compared",
         180,
         60,
     )
-    assert read["verdicts"] == [{"family": 9, "k": 4, "word": "holds"}]
+    assert second["loss level"] is None
+    assert read["verdicts"] == [
+        {"family": 9, "k": 4, "word": "holds", "level": "1e-12"},
+        {"family": 4, "k": 0, "word": "not claimed", "level": None},
+    ]
+    assert read["headline"].startswith("no headline")
+    assert read["holm"] == {
+        "familywise": "0.025",
+        "over": 7,
+        "losses": [
+            {"family": 9, "k": 4, "rival": "pymc-marketing"},
+            {"family": 4, "k": 0, "rival": "equal split"},
+        ],
+    }
+    assert read["secondary"] == {
+        "every stage of every fit past the bounds at the status quo": {
+            "within": 5,
+            "of": 5,
+            "not within": [],
+        },
+        "at the margin 0.01": {
+            "within": 4,
+            "of": 5,
+            "not within": [{"family": 9, "k": 4, "rival": "pymc-marketing"}],
+        },
+    }
 
 
-def _typed(cell: str) -> tuple[float, float, float]:
-    numbers = re.findall(r"[+\u2212]\d+\.\d+", cell)
-    mean, low, high = (float(n.replace("\u2212", "-")) for n in numbers)
-    return mean, low, high
+def _found(run: str) -> dict[tuple[int, int, str], dict[str, Any]]:
+    return {(c["family"], c["k"], c["rival"]): c for c in RECORDS[run]["reading"]["comparisons"]}
 
 
-def test_the_claim_s_typed_table_reads_as_the_run_s_reading() -> None:
-    """Each cell of the claim's table is the reading's comparison at three digits, and its worlds
-    are the status quo's complete cases and the arm's failures: no cell drifts from the record."""
-    found = {(c["family"], c["k"], c["rival"]): c for c in RECORD["reading"]["comparisons"]}
-    rungs = {"0": 0, "4": 4, "1\u20132": 1}
-    after = section(README, "What has been measured").split("| Family | Rung | Arm | Worlds |", 1)
-    rows = after[1].split("\n\n", 1)[0].splitlines()[2:]
-    off = []
-    for row in rows:
-        cells = [c.strip() for c in row.strip("|").split("|")]
-        family, k = int(cells[0].split()[0]), rungs[cells[1]]
-        quo = found[family, k, "status quo"]
-        if int(cells[3]) != quo["complete"] + quo["default_failed"]:
-            off.append((family, k, "worlds"))
-        for rival, cell in zip(readme_record.RIVALS, cells[4:], strict=True):
-            c = found[family, k, rival]
-            read = (float(c["mean"]), float(c["low"]), float(c["high"]))
-            if any(abs(t - r) > 0.0005 + 1e-12 for t, r in zip(_typed(cell), read, strict=True)):
-                off.append((family, k, rival))
-    assert len(rows) == 17
+def _verdicts(run: str) -> dict[tuple[int, int], dict[str, Any]]:
+    return {(v["family"], v["k"]): v for v in RECORDS[run]["reading"]["verdicts"]}
+
+
+def _holds(run: str, *, geo: bool | None = None) -> list[tuple[int, int]]:
+    found = _found(run)
+    return [
+        fk
+        for fk, v in _verdicts(run).items()
+        if v["word"] == "holds" and geo in (None, found[*fk, "status quo"]["arm"] == "geo eb")
+    ]
+
+
+def _number(text: str) -> float:
+    return float(text.replace(MINUS, "-"))
+
+
+def test_the_claim_s_table_reads_as_the_runs_readings() -> None:
+    """Each row is a verdict that holds in the run it names, M4's or M3's on the geo families; its
+    worlds are the status quo's complete cases and the arm's failures, its level the verdict's,
+    and each cell the reading's comparison as printed, its Holm's loss Holm's: read apart from the
+    script that writes the table."""
+    runs = {s.name: run for run, s in readme_record.RUNS.items()}
+    rows = readme_record.blocks(README)["m4-claim"].splitlines()[2:]
+    seen, off = [], []
+    for line in rows:
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        run, family = runs[cells[3]], int(cells[0].split()[0])
+        rung = {"0": 0, "4": 4, "1\u20132": 1}[cells[1]]
+        found, verdict = _found(run), _verdicts(run)[family, rung]
+        holm = {
+            (h["family"], h["k"], h["rival"]) for h in RECORDS[run]["reading"]["holm"]["losses"]
+        }
+        seen.append((run, family, rung))
+        quo = found[family, rung, "status quo"]
+        if int(cells[4]) != quo["complete"] + quo["default_failed"]:
+            off.append((family, rung, "worlds"))
+        if (verdict["word"], verdict["level"]) != ("holds", cells[5]):
+            off.append((family, rung, "level"))
+        for rival, cell in zip(readme_record.RIVALS, cells[6:], strict=True):
+            c = found[family, rung, rival]
+            if c["mean"] is None:
+                if not cell.startswith("not compared"):
+                    off.append((family, rung, rival))
+                continue
+            typed = re.findall(r"[+\u2212]\d+\.\d+", cell)
+            read = [float(c[k]) for k in ("mean", "low", "high")]
+            if [_number(t) for t in typed] != read or c["arm"] != cells[2].strip("`"):
+                off.append((family, rung, rival))
+            if ("Holm's loss" in cell) != ((family, rung, rival) in holm):
+                off.append((family, rung, rival, "holm"))
     assert off == []
+    m4 = [(f, k) for run, f, k in seen if run == "m4"]
+    m3 = [(f, k) for run, f, k in seen if run == "m3"]
+    assert sorted(m4) == sorted(_holds("m4"))
+    assert sorted(m3) == sorted(_holds("m3", geo=True))
+    assert (len(m4), len(m3)) == (26, 6)
+
+
+def _holm(levels: list[float], familywise: float) -> int:
+    """How many of the smallest `levels` Holm's step-down rejects at `familywise`."""
+    held = sorted(levels)
+    for i, level in enumerate(held):
+        if level > familywise / (len(held) - i):
+            return i
+    return len(held)
+
+
+def test_the_counts_the_text_states_are_the_readings() -> None:
+    m4 = RECORDS["m4"]["reading"]
+    holds4, geo3 = _holds("m4"), _holds("m3", geo=True)
+    assert f"**M4**: {len(holds4)} verdicts on {len({f for f, _ in holds4})} national" in README
+    assert f"All {len(holds4)} held; the" in README
+    assert {v["word"] for v in m4["verdicts"]} == {"holds", "not claimed"}
+    assert f"sequence of {len(_holds('m3'))} verdicts, all of which held" in README
+    assert (len(geo3), sorted({f for f, _ in geo3})) == (6, [8, 9, 10])
+    assert f"on {len(holds4) + len(geo3)} pre-registered\nfamily-rungs" in README
+    prereg = {
+        r: s.preregistration.read_text(encoding="utf-8") for r, s in readme_record.RUNS.items()
+    }
+    assert "expected 25.23" in README
+    assert "25.23 of 26" in prereg["m4"]
+    assert "(16.94 expected)" in README
+    assert "16.94 of 17" in prereg["m3"]
+
+    # A rival that failed on most worlds leaves the claim: family 19's Meridian.
+    claimed = [c for c in m4["comparisons"] if c["claimed"] and c["mean"] is not None]
+    beside = [c for c in m4["comparisons"] if not c["claimed"]]
+    tight = m4["secondary"]["at the margin 0.01"]
+    assert f"over {m4['holm']['over']} comparisons finds five losses" in README
+    assert len(m4["holm"]["losses"]) == 5
+    assert m4["holm"]["over"] == len(claimed) + len(beside) == 148
+    assert f"the {len(claimed)} claimed and these {len(beside)}" in README
+    assert f"{tight['within']} of M4's {tight['of']} claimed comparisons are within" in README
+    assert tight["of"] == len(claimed)
+    # Holm's step-down over the claimed comparisons alone, from the levels the reading prints.
+    levels = [float(c["loss level"]) for c in claimed if c["loss level"] is not None]
+    kept = {(h["family"], h["k"]) for h in m4["holm"]["losses"]} & {
+        (c["family"], c["k"]) for c in claimed
+    }
+    assert _holm(levels, 0.025) == len(kept) == 3
+    assert "the 128\n  claimed comparisons, Holm's losses are the same three" in README
+
+    f4 = _found("m3")
+    assert [f"{float(f4[4, 0, r]['mean']):+.3f}" for r in ("pymc-marketing", "orbit")] == [
+        "+0.184",
+        "+0.171",
+    ]
+    closest = max(_holds("m4"), key=lambda fk: float(_verdicts("m4")[fk]["level"]))
+    assert closest == (6, 4)
+    assert f"at level {_verdicts('m4')[closest]['level']}" in README
+    assert f"(level\n  {_found('m4')[1, 4, 'pymc-marketing']['loss level']}, unadjusted)" in README
+
+
+def test_the_failures_the_text_states_are_the_readings() -> None:
+    m4, m3 = _found("m4"), _found("m3")
+    assert {m4[19, k, "meridian"]["rival_failed"] for k in (0, 4)} == {282}
+    assert "Meridian failed on every world of family 19, 282 at each rung" in README
+    orbit = sum(m4[18, k, "orbit"]["rival_failed"] for k in (0, 4))
+    assert f"Orbit failed on {orbit} world-rungs of family 18" in README
+    geo = sum(m3[f, k, "pymc-marketing"]["rival_failed"] for f, k in _holds("m3", geo=True))
+    assert f"PyMC-Marketing failed\non {geo} world-rungs of the geo families" in README
+    assert all(c["default_failed"] == 0 for c in m4.values())
+    assert "No claim arm failed in\nM4." in README
+
+
+def test_the_run_s_box_and_pins_the_text_states_are_the_record_s() -> None:
+    record = RECORDS["m4"]
+    box = record["compute"]["box"]
+    assert (box["launches"], box["launched"][0]) == (3, "2026-11-21T06:27:48+00:00")
+    assert "launched three times" in README
+    assert "first launched, at 06:27:48 UTC on\n  2026-11-21" in README
+    commits = record["commits"]
+    stated = f"causal-hybrid-control {commits['causal-hybrid-control']} and jax {commits['jax']}"
+    assert f"The run locked {stated}." in README
+    assert commits["bench"] in README
+    assert commits["mixdyn"][:7] in section(README, "Pre-registration and reproduction")
+
+
+def test_the_pre_registrations_the_readme_names_are_the_files_the_runs_declared() -> None:
+    for run, scored in readme_record.RUNS.items():
+        digest = hashlib.sha256(scored.preregistration.read_bytes()).hexdigest()
+        assert RECORDS[run]["commits"]["preregistration"] == digest
+        assert f"`{digest}`" in section(README, "Pre-registration and reproduction")
+
+
+def test_every_interval_typed_beside_the_tables_is_a_reading_s() -> None:
+    """An interval the prose states is a comparison of one of the runs' readings, as printed."""
+    prose = readme_record.BLOCK.sub("", README)
+    typed = re.findall(
+        r"([+\u2212]\d\.\d{4}) \[([+\u2212]\d\.\d{4}), ([+\u2212]\d\.\d{4})\]", prose
+    )
+    printed = {
+        tuple(float(c[k]) for k in ("mean", "low", "high"))
+        for record in RECORDS.values()
+        for c in record["reading"]["comparisons"]
+        if c["mean"] is not None
+    }
+    assert typed
+    assert [t for t in typed if tuple(map(_number, t)) not in printed] == []

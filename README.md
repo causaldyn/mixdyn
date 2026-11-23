@@ -14,9 +14,9 @@ Bayesian models with lift and geo tests in the likelihood, geo hierarchies, test
 plans, computed without a UI. Built on
 [causal-hybrid-control](https://github.com/causaldyn/causal-hybrid-control). Apache-2.0.
 
-What it has been measured to do, and where it loses, is below: one pre-registered run of the
-[causaldyn bench](https://github.com/causaldyn/causaldyn-bench), stated with its losses. Nothing
-here says "best".
+What it has been measured to do, and where it loses, is below: M4, a pre-registered run of the
+[causaldyn bench](https://github.com/causaldyn/causaldyn-bench), with the geo verdicts of the run
+before it, M3, stated with their losses. Nothing here says "best".
 
 **Where it sits.** Marketers' measurement is turning to MMM checked by experiments, more than to
 multi-touch attribution (MTA), which follows each user's path to a sale. In a survey of 196 US
@@ -76,8 +76,8 @@ print("margins", fit.mean.round(2), "+/-", np.sqrt(np.diag(fit.cov)).round(2))
 print("status quo", status_quo.round(1), "plan", plan.round(1))
 ```
 
-This is the linear form of the rule the measured run used with no lift test (ADRs 0086, 0091 and
-0092). The arm that run scored, `margin held`, adds a saturating curve to each channel and fills
+This is the linear form of the rule both measured runs used with no lift test (ADRs 0086, 0091
+and 0092). The arm they scored, `margin held`, adds a saturating curve to each channel and fills
 the budget along the curves; `scorecard/arms/margin.py` assembles it from these functions. These
 functions sit at module paths, which are not public names yet: before 1.0 they can change in any
 minor release (`docs/api/index.md`).
@@ -88,68 +88,101 @@ diagnostics, tests, plan and report.
 ## Conflict of interest
 
 One maintainer built both the engine and the bench that scores it: the bench's worlds, its regret
-axis and the scripts that run each rival. The same maintainer wrote this run's pre-registration and
-ran the run. No one independent of the engine has run it again. What limits the conflict: the
-pre-registration was frozen before any confirmatory world was fitted (with no public time-stamp,
-below); each rival ran in its own pinned environment, at its recommended settings and at the
-setting its own tuning criterion chose; and the bench and the harness are public. What does not
-limit it: the choice of the families, of the axis and of the rivals' scripts.
+axis and the scripts that run each rival. The same maintainer wrote both runs' pre-registrations
+and ran both runs. No one independent of the engine has run either again. What limits the
+conflict: each pre-registration was frozen before any confirmatory world was fitted, M4's with a
+public time-stamp and M3's without one (below); each rival ran in its own pinned environment at its
+recommended settings, and in M3 also at the setting its own tuning criterion chose; and the bench
+and the harness are public. What does not limit it: the choice of the families, of the axis and of
+the rivals' scripts.
 
 ## What has been measured
 
 **The claim.** On the causaldyn bench's simulated worlds, whose truth is known, mixdyn's plans are
 non-inferior to those of Meridian 2.1.0, PyMC-Marketing 1.3.0 and Orbit 1.1.5.1, and to the status
-quo and the equal split, within δ = 0.05 of regret per euro of budget, on 17 pre-registered
-family-rungs. Each of the 17 verdicts was tested at one-sided 0.025 in a fixed sequence, on fresh
-confirmatory seeds that no development step drew. All 17 held; the pre-registration expected
-16.94.
+quo and the equal split, within δ = 0.05 of regret per euro of budget, on 32 pre-registered
+family-rungs. Two scored runs hold them:
+
+- **M4**: 26 verdicts on 15 national families, each tested at one-sided 0.025 in a fixed sequence,
+  on fresh seeds that no development step and no earlier run drew. All 26 held; the
+  pre-registration expected 25.23.
+- **M3**, the run before it: the six verdicts of the geo families 8, 9 and 10, which M4 did not
+  run. M3 tested them in the same way, in its own sequence of 17 verdicts, all of which held
+  (16.94 expected). They stand.
+
+Each row below names the run it comes from.
 
 This is a non-inferiority claim. It does not say that mixdyn is the best MMM, and it does not say
 that mixdyn is within δ of every maintained MMM (see "No headline" below).
 
 - **The axis.** The regret of the quarter's budget split a tool recommends, per euro of budget: the
-  KPI the best split earns and the recommended split does not. Lower is better.
+  KPI the optimal split earns and the recommended split does not. Lower is better.
 - **A comparison** is mixdyn's arm less one rival, paired by world, over the worlds both planned.
   It is within δ where Hall's (1992) skewness-corrected one-look reader shows the mean below 0.05
   at one-sided 0.025. A verdict is one family at one rung: an intersection-union test over its
-  comparisons.
+  comparisons, read at the largest of their levels.
 - **The rungs.** k = 0 reads the history alone. The tested rung reads the history and four go-dark
   lift tests (family 7: one test on 52 weeks of history, two on 78 and 104 weeks).
-- **The arms.** At k = 0, `margin held`: the margin rule above, with its curves and its time guard.
-  At the tested rung, `gs held`: it plays `anchored held`, margins anchored on the lift tests, and
-  routes a world that `anchored held` flags to the Bayesian engine's `stacked` plan (ADRs 0088,
-  0089 and 0093). On the geo families, `geo eb`, a closed-form model over geos fitted by empirical
-  Bayes (ADR 0090).
+- **The arms.** At k = 0, in both runs, `margin held`: the margin rule above, with its curves and
+  its time guard. At M4's tested rung, `anchored floored` (ADR 0099): margins anchored on the lift
+  tests, planned along curves under the same time guard, as `anchored held` plans them (ADRs 0088,
+  0089 and 0093), with no route, and each channel the guard leaves free floored at 0.9 times its
+  least weekly spend in the history. On M3's geo families, `geo eb`, a closed-form model over geos
+  fitted by empirical Bayes (ADR 0090).
+- **The worlds.** M4 read each environment's confirmatory block of seeds past its first 300, which
+  are M3's (ADR 0098): no earlier run and no development step read a world of M4.
 
 Each cell is mixdyn's arm less the rival, in regret per euro: the mean over the worlds both
-planned, with its paired 95 % Student-t interval. A negative cell is a lower regret than the
-rival's.
+planned, with its paired 95 % Student-t interval, as the run's reading prints them. A negative cell
+is a lower regret than the rival's. "Level" is the verdict's level in its run's sequence, which
+tested it at 0.025. "Holm's loss" marks a comparison that Holm's step-down reads as a loss ("Where
+it loses").
 
-| Family | Rung | Arm | Worlds | Status quo | Equal split | Meridian | PyMC-Marketing | Orbit |
-|---|---|---|---|---|---|---|---|---|
-| 0 Track M v2 | 0 | `margin held` | 350 | −0.128 [−0.147, −0.109] | −0.319 [−0.352, −0.287] | −0.051 [−0.072, −0.031] | −0.148 [−0.175, −0.120] | −0.182 [−0.215, −0.149] |
-| 0 Track M v2 | 4 | `gs held` | 350 | −0.242 [−0.257, −0.228] | −0.433 [−0.466, −0.400] | −0.076 [−0.085, −0.068] | +0.001 [−0.005, +0.006] | −0.064 [−0.077, −0.051] |
-| 2 Confounded spend | 0 | `margin held` | 240 | −0.090 [−0.114, −0.066] | −0.086 [−0.112, −0.060] | −0.044 [−0.069, −0.019] | −0.113 [−0.146, −0.079] | −0.100 [−0.136, −0.063] |
-| 2 Confounded spend | 4 | `gs held` | 240 | −0.171 [−0.193, −0.147] | −0.166 [−0.191, −0.141] | −0.068 [−0.082, −0.054] | +0.005 [−0.003, +0.013] | −0.036 [−0.051, −0.021] |
-| 3 Collinear channels | 0 | `margin held` | 270 | −0.059 [−0.080, −0.038] | −0.042 [−0.064, −0.021] | −0.021 [−0.040, −0.002] | −0.100 [−0.135, −0.065] | −0.103 [−0.137, −0.068] |
-| 3 Collinear channels | 4 | `gs held` | 270 | −0.181 [−0.201, −0.161] | −0.165 [−0.188, −0.142] | −0.082 [−0.093, −0.070] | +0.008 [+0.003, +0.013] | −0.065 [−0.081, −0.049] |
-| 5 Budget follows performance | 0 | `margin held` | 240 | −0.077 [−0.100, −0.055] | −0.066 [−0.086, −0.045] | −0.042 [−0.062, −0.022] | −0.109 [−0.143, −0.074] | −0.138 [−0.172, −0.104] |
-| 5 Budget follows performance | 4 | `gs held` | 240 | −0.158 [−0.179, −0.137] | −0.146 [−0.172, −0.121] | −0.069 [−0.083, −0.054] | +0.020 [+0.010, +0.030] | −0.056 [−0.075, −0.036] |
-| 7 Short series | 0 | `margin held` | 240 | −0.075 [−0.099, −0.051] | −0.043 [−0.063, −0.022] | −0.045 [−0.066, −0.024] | −0.108 [−0.144, −0.073] | −0.127 [−0.163, −0.091] |
-| 7 Short series | 1–2 | `gs held` | 240 | −0.153 [−0.177, −0.129] | −0.122 [−0.147, −0.096] | −0.062 [−0.078, −0.046] | −0.007 [−0.020, +0.006] | −0.036 [−0.052, −0.019] |
-| 13 PyMC-Marketing's priors | 4 | `gs held` | 240 | −0.072 [−0.102, −0.043] | +0.000 [−0.029, +0.029] | −0.025 [−0.046, −0.004] | −0.005 [−0.020, +0.011] | −0.134 [−0.165, −0.102] |
-| 8 Geo | 0 | `geo eb` | 240 | −0.077 [−0.082, −0.071] | −0.041 [−0.045, −0.037] | −0.043 [−0.046, −0.039] | −0.008 [−0.010, −0.006] | −0.068 [−0.072, −0.063] |
-| 8 Geo | 4 | `geo eb` | 240 | −0.077 [−0.082, −0.071] | −0.041 [−0.046, −0.037] | −0.044 [−0.048, −0.041] | −0.008 [−0.010, −0.006] | −0.056 [−0.060, −0.051] |
-| 9 Spillover between geos | 0 | `geo eb` | 240 | −0.112 [−0.122, −0.102] | −0.053 [−0.060, −0.046] | −0.048 [−0.054, −0.042] | +0.000 [−0.003, +0.004] | −0.057 [−0.063, −0.050] |
-| 9 Spillover between geos | 4 | `geo eb` | 240 | −0.106 [−0.116, −0.096] | −0.047 [−0.054, −0.040] | −0.044 [−0.051, −0.038] | +0.005 [+0.002, +0.009] | −0.061 [−0.071, −0.052] |
-| 10 Few geos | 0 | `geo eb` | 240 | −0.069 [−0.076, −0.062] | −0.038 [−0.043, −0.033] | −0.031 [−0.035, −0.026], capped | −0.003 [−0.005, −0.000] | −0.043 [−0.049, −0.037] |
-| 10 Few geos | 4 | `geo eb` | 240 | −0.069 [−0.076, −0.062] | −0.038 [−0.043, −0.032] | −0.034 [−0.039, −0.029], capped | −0.002 [−0.004, +0.001] | −0.038 [−0.044, −0.032] |
+<!-- record:m4-claim -->
+| Family | Rung | Arm | Run | Worlds | Level | Status quo | Equal split | Meridian | PyMC-Marketing | Orbit |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 Track M v2 | 0 | `margin held` | M4 | 310 | 1e-12 | −0.1365 [−0.1547, −0.1183] | −0.3261 [−0.3598, −0.2924] | −0.0478 [−0.0647, −0.0309] | −0.1258 [−0.1544, −0.0971] | −0.2062 [−0.2400, −0.1724] |
+| 0 Track M v2 | 4 | `anchored floored` | M4 | 310 | 1e-12 | −0.2428 [−0.2585, −0.2272] | −0.4324 [−0.4678, −0.3971] | −0.0677 [−0.0765, −0.0589] | +0.0096 [+0.0048, +0.0144], Holm's loss | −0.0479 [−0.0610, −0.0349] |
+| 1 Drift | 4 | `anchored floored` | M4 | 522 | 3.86e-05 | −0.2940 [−0.3234, −0.2646] | −0.2601 [−0.2930, −0.2273] | −0.1195 [−0.1366, −0.1024] | +0.0090 [−0.0013, +0.0194] | −0.0489 [−0.0681, −0.0297] |
+| 2 Spend confounded with demand | 0 | `margin held` | M4 | 270 | 1e-12 | −0.0849 [−0.1062, −0.0636] | −0.0610 [−0.0841, −0.0379] | −0.0503 [−0.0719, −0.0287] | −0.1448 [−0.1788, −0.1108] | −0.1274 [−0.1562, −0.0986] |
+| 2 Spend confounded with demand | 4 | `anchored floored` | M4 | 270 | 1e-12 | −0.1726 [−0.1923, −0.1529] | −0.1487 [−0.1698, −0.1277] | −0.0865 [−0.0992, −0.0738] | +0.0017 [−0.0034, +0.0068] | −0.0710 [−0.0866, −0.0554] |
+| 3 Collinear channels | 0 | `margin held` | M4 | 270 | 1e-12 | −0.0636 [−0.0822, −0.0451] | −0.0537 [−0.0723, −0.0351] | −0.0330 [−0.0485, −0.0174] | −0.0978 [−0.1262, −0.0694] | −0.1142 [−0.1461, −0.0823] |
+| 3 Collinear channels | 4 | `anchored floored` | M4 | 270 | 4.82e-07 | −0.1721 [−0.1911, −0.1530] | −0.1621 [−0.1834, −0.1408] | −0.0792 [−0.0910, −0.0674] | +0.0101 [+0.0047, +0.0155], Holm's loss | −0.0608 [−0.0756, −0.0460] |
+| 4 S-curves | 4 | `anchored floored` | M4 | 522 | 8.14e-07 | −0.3730 [−0.4075, −0.3386] | −0.5028 [−0.5484, −0.4573] | −0.0665 [−0.0863, −0.0467] | −0.0067 [−0.0178, +0.0044] | −0.0139 [−0.0410, +0.0133] |
+| 5 Budget follows performance | 0 | `margin held` | M4 | 240 | 1e-12 | −0.0878 [−0.1109, −0.0647] | −0.0689 [−0.0916, −0.0462] | −0.0476 [−0.0677, −0.0275] | −0.1250 [−0.1607, −0.0892] | −0.1429 [−0.1811, −0.1046] |
+| 5 Budget follows performance | 4 | `anchored floored` | M4 | 240 | 1e-12 | −0.1883 [−0.2084, −0.1683] | −0.1694 [−0.1941, −0.1447] | −0.0951 [−0.1081, −0.0821] | +0.0017 [−0.0023, +0.0056] | −0.0789 [−0.0951, −0.0627] |
+| 6 Truth outside the observed range | 4 | `anchored floored` | M4 | 240 | 0.00117 | −0.1203 [−0.1464, −0.0941] | −0.0987 [−0.1236, −0.0739] | −0.0331 [−0.0522, −0.0141] | +0.0295 [+0.0163, +0.0427], Holm's loss | −0.0566 [−0.0805, −0.0328] |
+| 7 Short series | 0 | `margin held` | M4 | 252 | 1e-12 | −0.0607 [−0.0806, −0.0408] | −0.0376 [−0.0580, −0.0173] | −0.0369 [−0.0567, −0.0171] | −0.0725 [−0.1037, −0.0412] | −0.1026 [−0.1357, −0.0696] |
+| 7 Short series | 1–2 | `anchored floored` | M4 | 252 | 1e-12 | −0.1381 [−0.1588, −0.1175] | −0.1150 [−0.1395, −0.0905] | −0.0676 [−0.0826, −0.0526] | −0.0147 [−0.0293, −0.0001] | −0.0471 [−0.0638, −0.0304] |
+| 12 Meridian's home ground | 0 | `margin held` | M4 | 460 | 1e-12 | −0.0451 [−0.0676, −0.0226] | −0.1516 [−0.1931, −0.1101] | −0.0164 [−0.0371, +0.0042] | −0.0834 [−0.1141, −0.0528] | −0.1696 [−0.2222, −0.1169] |
+| 12 Meridian's home ground | 4 | `anchored floored` | M4 | 460 | 1e-12 | −0.1435 [−0.1717, −0.1154] | −0.2500 [−0.2959, −0.2041] | −0.0132 [−0.0198, −0.0067] | −0.0047 [−0.0100, +0.0005] | −0.0160 [−0.0241, −0.0079] |
+| 13 PyMC-Marketing's home ground | 0 | `margin held` | M4 | 520 | 1e-12 | −0.0773 [−0.0935, −0.0612] | −0.0318 [−0.0467, −0.0170] | −0.0240 [−0.0371, −0.0110] | −0.2545 [−0.2814, −0.2275] | −0.3743 [−0.4053, −0.3434] |
+| 13 PyMC-Marketing's home ground | 4 | `anchored floored` | M4 | 520 | 1e-12 | −0.0816 [−0.1008, −0.0624] | −0.0361 [−0.0562, −0.0159] | −0.0276 [−0.0418, −0.0134] | +0.0045 [−0.0041, +0.0132] | −0.1270 [−0.1464, −0.1077] |
+| 14 Robyn's home ground | 4 | `anchored floored` | M4 | 520 | 2.59e-07 | −0.3188 [−0.3785, −0.2591] | −0.5983 [−0.6677, −0.5288] | −0.0815 [−0.1171, −0.0458] | −0.0244 [−0.0506, +0.0018] | −0.1510 [−0.1934, −0.1086] |
+| 17 Twins | 0 | `margin held` | M4 | 240 | 1e-12 | +0.0000 [+0.0000, +0.0000] | −0.1865 [−0.1931, −0.1799] | −0.4604 [−0.4899, −0.4309] | −0.0018 [−0.0040, +0.0005] | −0.1632 [−0.1899, −0.1365] |
+| 17 Twins | 4 | `anchored floored` | M4 | 240 | 1e-12 | +0.0000 [+0.0000, +0.0000] | −0.1865 [−0.1931, −0.1799] | −0.0230 [−0.0281, −0.0178] | −0.0294 [−0.0373, −0.0215] | −0.0639 [−0.0761, −0.0517] |
+| 18 Long term | 0 | `margin held` | M4 | 240 | 1e-12 | −0.1053 [−0.1277, −0.0828] | −0.0813 [−0.1037, −0.0589] | −0.0614 [−0.0817, −0.0410] | −0.1451 [−0.1834, −0.1068] | −0.0929 [−0.1229, −0.0629] |
+| 18 Long term | 4 | `anchored floored` | M4 | 240 | 1e-12 | −0.1997 [−0.2214, −0.1780] | −0.1758 [−0.2001, −0.1514] | −0.0952 [−0.1085, −0.0819] | +0.0036 [−0.0023, +0.0094] | −0.0722 [−0.0881, −0.0562] |
+| 19 Flat | 0 | `margin held` | M4 | 282 | 1.94e-09 | −0.0524 [−0.0672, −0.0376] | −0.0290 [−0.0502, −0.0078] | not compared: the rival failed 282 | −0.0269 [−0.0532, −0.0007] | −0.0680 [−0.1019, −0.0342] |
+| 19 Flat | 4 | `anchored floored` | M4 | 282 | 1e-12 | −0.1504 [−0.1669, −0.1339] | −0.1269 [−0.1474, −0.1064] | not compared: the rival failed 282 | −0.0282 [−0.0475, −0.0089] | −0.0233 [−0.0377, −0.0090] |
+| 20 Promotions | 0 | `margin held` | M4 | 240 | 1e-12 | −0.0787 [−0.1003, −0.0570] | −0.0346 [−0.0578, −0.0115] | −0.0312 [−0.0510, −0.0113] | −0.0778 [−0.1117, −0.0439] | −0.0587 [−0.0889, −0.0285] |
+| 20 Promotions | 4 | `anchored floored` | M4 | 240 | 1e-12 | −0.2104 [−0.2312, −0.1896] | −0.1663 [−0.1867, −0.1460] | −0.1088 [−0.1217, −0.0959] | −0.0047 [−0.0109, +0.0015] | −0.0710 [−0.0874, −0.0546] |
+| 8 Geo | 0 | `geo eb` | M3 | 240 | 1e-12 | −0.0766 [−0.0820, −0.0713] | −0.0412 [−0.0454, −0.0371] | −0.0429 [−0.0463, −0.0394] | −0.0078 [−0.0097, −0.0059] | −0.0675 [−0.0725, −0.0626] |
+| 8 Geo | 4 | `geo eb` | M3 | 240 | 1e-12 | −0.0768 [−0.0821, −0.0715] | −0.0414 [−0.0456, −0.0373] | −0.0443 [−0.0477, −0.0409] | −0.0083 [−0.0102, −0.0065] | −0.0558 [−0.0602, −0.0515] |
+| 9 Spillover between geos | 0 | `geo eb` | M3 | 240 | 1e-12 | −0.1122 [−0.1222, −0.1023] | −0.0532 [−0.0602, −0.0461] | −0.0479 [−0.0543, −0.0416] | +0.0001 [−0.0032, +0.0035] | −0.0567 [−0.0633, −0.0501] |
+| 9 Spillover between geos | 4 | `geo eb` | M3 | 240 | 1e-12 | −0.1061 [−0.1164, −0.0958] | −0.0470 [−0.0541, −0.0399] | −0.0442 [−0.0505, −0.0379] | +0.0051 [+0.0016, +0.0087] | −0.0613 [−0.0707, −0.0519] |
+| 10 Few geos | 0 | `geo eb` | M3 | 240 | 1e-12 | −0.0692 [−0.0765, −0.0619] | −0.0380 [−0.0433, −0.0327] | −0.0307 [−0.0355, −0.0259], exploratory | −0.0027 [−0.0052, −0.0003] | −0.0428 [−0.0486, −0.0369] |
+| 10 Few geos | 4 | `geo eb` | M3 | 240 | 1e-12 | −0.0690 [−0.0763, −0.0618] | −0.0378 [−0.0432, −0.0324] | −0.0339 [−0.0389, −0.0289], exploratory | −0.0015 [−0.0041, +0.0011] | −0.0380 [−0.0437, −0.0322] |
+<!-- /record:m4-claim -->
 
 "Worlds" counts the confirmatory worlds the family declared. A failed fit leaves its world out of
-the comparisons that read it, and is counted: `margin held` failed on 1 world of family 7 at k = 0
-(47 weeks of history cannot identify its 19 nuisance columns), and PyMC-Marketing on 49 worlds of
-families 8, 9, 10 and 15. On family 10, Meridian is declared capped, as in the run before, so its
-comparisons are exploratory: it ran on every world, and it is read beside that verdict, not in it.
+the comparisons that read it, and is counted ("Worlds per cell", below). No claim arm failed in
+M4. Meridian failed on every world of family 19, 282 at each rung: it refuses a channel whose spend
+does not vary across time, which is the family's point, and M4's pre-registration expected it to
+leave that family's claim. Orbit failed on 3 world-rungs of family 18. In M3, PyMC-Marketing failed
+on 41 world-rungs of the geo families. On family 10, M3 declared Meridian capped, as in the run
+before it, so its comparisons there are exploratory: it ran on every world, and it is read beside
+that verdict, not in it.
 
 **The error bars.** Each interval is the paired 95 % Student-t interval of the mean difference over
 a cell's complete cases: `mean ± t(0.975, n − 1) · s / √n`, where `n` is the number of complete
@@ -164,75 +197,170 @@ fitted again with other seeds to separate it. The intervals say nothing about wo
 families.
 
 **Worlds per cell.** The complete cases each cell above is read on: the worlds where both the arm
-and the rival made a plan, from the run's reading (`scripts/readme_record.py` writes the table).
+and the rival made a plan, from each run's reading (`scripts/readme_record.py` writes the table).
 
-<!-- record:cells -->
-| Family | Rung | Arm | Status quo | Equal split | Meridian | PyMC-Marketing | Orbit |
-|---|---|---|---|---|---|---|---|
-| 0 Track M v2 | 0 | `margin held` | 350 | 350 | 350 | 350 | 350 |
-| 0 Track M v2 | 4 | `gs held` | 350 | 350 | 350 | 350 | 350 |
-| 2 Spend confounded with demand | 0 | `margin held` | 240 | 240 | 240 | 240 | 240 |
-| 2 Spend confounded with demand | 4 | `gs held` | 240 | 240 | 240 | 240 | 240 |
-| 3 Collinear channels | 0 | `margin held` | 270 | 270 | 270 | 270 | 270 |
-| 3 Collinear channels | 4 | `gs held` | 270 | 270 | 270 | 270 | 270 |
-| 5 Budget follows performance | 0 | `margin held` | 240 | 240 | 240 | 240 | 240 |
-| 5 Budget follows performance | 4 | `gs held` | 240 | 240 | 240 | 240 | 240 |
-| 7 Short series | 0 | `margin held` | 239 (the arm failed 1) | 239 (the arm failed 1) | 239 (the arm failed 1) | 239 (the arm failed 1) | 239 (the arm failed 1) |
-| 7 Short series | 1–2 | `gs held` | 240 | 240 | 240 | 240 | 240 |
-| 13 PyMC-Marketing's home ground | 4 | `gs held` | 240 | 240 | 240 | 240 | 240 |
-| 8 Geo | 0 | `geo eb` | 240 | 240 | 240 | 235 (the rival failed 5) | 240 |
-| 8 Geo | 4 | `geo eb` | 240 | 240 | 240 | 234 (the rival failed 6) | 240 |
-| 9 Spillover between geos | 0 | `geo eb` | 240 | 240 | 240 | 233 (the rival failed 7) | 240 |
-| 9 Spillover between geos | 4 | `geo eb` | 240 | 240 | 240 | 234 (the rival failed 6) | 240 |
-| 10 Few geos | 0 | `geo eb` | 240 | 240 | 240 (exploratory) | 236 (the rival failed 4) | 240 |
-| 10 Few geos | 4 | `geo eb` | 240 | 240 | 240 (exploratory) | 227 (the rival failed 13) | 240 |
-<!-- /record:cells -->
+<!-- record:m4-cells -->
+| Family | Rung | Arm | Run | Status quo | Equal split | Meridian | PyMC-Marketing | Orbit |
+|---|---|---|---|---|---|---|---|---|
+| 0 Track M v2 | 0 | `margin held` | M4 | 310 | 310 | 310 | 310 | 310 |
+| 0 Track M v2 | 4 | `anchored floored` | M4 | 310 | 310 | 310 | 310 | 310 |
+| 1 Drift | 4 | `anchored floored` | M4 | 522 | 522 | 522 | 522 | 522 |
+| 2 Spend confounded with demand | 0 | `margin held` | M4 | 270 | 270 | 270 | 270 | 270 |
+| 2 Spend confounded with demand | 4 | `anchored floored` | M4 | 270 | 270 | 270 | 270 | 270 |
+| 3 Collinear channels | 0 | `margin held` | M4 | 270 | 270 | 270 | 270 | 270 |
+| 3 Collinear channels | 4 | `anchored floored` | M4 | 270 | 270 | 270 | 270 | 270 |
+| 4 S-curves | 4 | `anchored floored` | M4 | 522 | 522 | 522 | 522 | 522 |
+| 5 Budget follows performance | 0 | `margin held` | M4 | 240 | 240 | 240 | 240 | 240 |
+| 5 Budget follows performance | 4 | `anchored floored` | M4 | 240 | 240 | 240 | 240 | 240 |
+| 6 Truth outside the observed range | 4 | `anchored floored` | M4 | 240 | 240 | 240 | 240 | 240 |
+| 7 Short series | 0 | `margin held` | M4 | 252 | 252 | 252 | 252 | 252 |
+| 7 Short series | 1–2 | `anchored floored` | M4 | 252 | 252 | 252 | 252 | 252 |
+| 12 Meridian's home ground | 0 | `margin held` | M4 | 460 | 460 | 460 | 460 | 460 |
+| 12 Meridian's home ground | 4 | `anchored floored` | M4 | 460 | 460 | 460 | 460 | 460 |
+| 13 PyMC-Marketing's home ground | 0 | `margin held` | M4 | 520 | 520 | 520 | 520 | 520 |
+| 13 PyMC-Marketing's home ground | 4 | `anchored floored` | M4 | 520 | 520 | 520 | 520 | 520 |
+| 14 Robyn's home ground | 4 | `anchored floored` | M4 | 520 | 520 | 520 | 520 | 520 |
+| 17 Twins | 0 | `margin held` | M4 | 240 | 240 | 240 | 240 | 240 |
+| 17 Twins | 4 | `anchored floored` | M4 | 240 | 240 | 240 | 240 | 240 |
+| 18 Long term | 0 | `margin held` | M4 | 240 | 240 | 240 | 240 | 239 (the rival failed 1) |
+| 18 Long term | 4 | `anchored floored` | M4 | 240 | 240 | 240 | 240 | 238 (the rival failed 2) |
+| 19 Flat | 0 | `margin held` | M4 | 282 | 282 | 0 (the rival failed 282) | 282 | 282 |
+| 19 Flat | 4 | `anchored floored` | M4 | 282 | 282 | 0 (the rival failed 282) | 282 | 282 |
+| 20 Promotions | 0 | `margin held` | M4 | 240 | 240 | 240 | 240 | 240 |
+| 20 Promotions | 4 | `anchored floored` | M4 | 240 | 240 | 240 | 240 | 240 |
+| 8 Geo | 0 | `geo eb` | M3 | 240 | 240 | 240 | 235 (the rival failed 5) | 240 |
+| 8 Geo | 4 | `geo eb` | M3 | 240 | 240 | 240 | 234 (the rival failed 6) | 240 |
+| 9 Spillover between geos | 0 | `geo eb` | M3 | 240 | 240 | 240 | 233 (the rival failed 7) | 240 |
+| 9 Spillover between geos | 4 | `geo eb` | M3 | 240 | 240 | 240 | 234 (the rival failed 6) | 240 |
+| 10 Few geos | 0 | `geo eb` | M3 | 240 | 240 | 240 (exploratory) | 236 (the rival failed 4) | 240 |
+| 10 Few geos | 4 | `geo eb` | M3 | 240 | 240 | 240 (exploratory) | 227 (the rival failed 13) | 240 |
+<!-- /record:m4-cells -->
 
-What this measured, rung by rung:
+**Hall's reader's words.** How often the claim's arm `beats` each rival, `ties` it or `loses to`
+it over the claim's verdicts, by Hall's reader's word, unadjusted. A word is not a verdict: a
+verdict reads only whether each comparison is within δ.
 
-- **k = 0.** `margin held` has a lower regret than every rival on every confirmatory national
-  family (0, 2, 3, 5 and 7): Meridian's by 0.02 to 0.05 a euro.
-- **The tested rung.** `gs held` has a lower regret than Meridian, Orbit and the status quo on 6 of
-  6 families, and than the equal split on 5 (it ties on family 13). Against PyMC-Marketing it is
-  level: −0.007 to +0.020, every interval below δ.
-- **The geo families.** `geo eb` has a lower regret than Meridian, Orbit, the status quo and the
-  equal split on families 8, 9 and 10. Against PyMC-Marketing it is level: −0.008 to +0.005.
+<!-- record:m4-words -->
+| Run | Arm | Rung | Verdicts | Status quo | Equal split | Meridian | PyMC-Marketing | Orbit |
+|---|---|---|---|---|---|---|---|---|
+| M4 | `margin held` | 0 | 11 | beats 10, ties 1 | beats 11 | beats 9, ties 1, not compared 1 | beats 10, ties 1 | beats 11 |
+| M4 | `anchored floored` | the tested rung | 15 | beats 14, ties 1 | beats 15 | beats 14, not compared 1 | beats 3, ties 8, loses to 4 | beats 14, ties 1 |
+| M3 | `geo eb` | 0 | 3 | beats 3 | beats 3 | beats 3 | beats 2, ties 1 | beats 3 |
+| M3 | `geo eb` | the tested rung | 3 | beats 3 | beats 3 | beats 3 | beats 1, ties 1, loses to 1 | beats 3 |
+<!-- /record:m4-words -->
+
+- **k = 0.** `margin held` has a lower regret than the equal split and Orbit on all of M4's 11
+  confirmatory families, and than Meridian on all but two: it ties Meridian on family 12, and
+  Meridian is not compared on family 19. On family 17 its time guard plays the status quo, as
+  declared, and it ties PyMC-Marketing there.
+- **The tested rung.** `anchored floored` has a lower regret than the equal split on all 15
+  families, than Meridian wherever Meridian is compared, and than Orbit and the status quo on all
+  but one family each: it ties Orbit on family 4 and plays the status quo on family 17. Against
+  PyMC-Marketing it is level: within δ on all 15 families, it beats it on 3, ties it on 8 and loses
+  to it on 4, every loss inside δ ("Where it loses").
+- **The geo families (M3).** `geo eb` has a lower regret than Meridian, Orbit, the status quo and
+  the equal split on families 8, 9 and 10. Against PyMC-Marketing it is level.
 
 ## Where it loses
 
-These were read in the same run. They are as much a part of the result as the table above.
+These were read in the same runs. They are as much a part of the result as the claim above.
 
-- **S-curves with no lift test (family 4, k = 0): not within δ.** `margin held` loses to
-  PyMC-Marketing by +0.184 [+0.136, +0.232] and to Orbit by +0.171 [+0.118, +0.223] a euro. This is
-  the run's largest loss. At the tested rung, `gs held` has a lower regret than every rival on the
-  same family.
-- **The tested rung on drifting effects (family 1) and on truth outside the history's range
-  (family 6): not within δ.** `gs held` loses to PyMC-Marketing by +0.029 [+0.002, +0.055] and
-  +0.039 [+0.022, +0.055].
-- **Two losses within δ in the claim.** Holm's step-down at familywise 0.025, over 88
-  comparisons (the 83 claimed and family 13's five at k = 0), finds two losses, both to
-  PyMC-Marketing at the tested rung: family 3, +0.008 [+0.003, +0.013], and family 5, +0.020
-  [+0.010, +0.030]. They lie inside δ, so the verdicts hold, but they are losses. On family 9 at
-  the tested rung `geo eb` loses to PyMC-Marketing by +0.005 [+0.002, +0.009], unadjusted. At
-  δ = 0.01, 4 of the 83 claimed comparisons are not within: families 2, 3 and 5 at the tested rung
-  against PyMC-Marketing, and family 13 at the tested rung against the equal split.
-- **Exploratory losses within δ.** On siMMMulator's worlds (family 15), `margin held` loses to
-  PyMC-Marketing at k = 0 by +0.019 [+0.010, +0.028], and `gs held` loses to Meridian,
-  PyMC-Marketing and Orbit at the tested rung by +0.007 to +0.012. On the long-term family (18),
-  `gs held` loses to PyMC-Marketing at the tested rung by +0.008 [+0.000, +0.017].
-- **No headline.** Family 12 (Meridian's priors) at both rungs, and family 13 (PyMC-Marketing's
-  priors) at k = 0, needed more worlds than the run's cap. They were run and read, but they are
-  exploratory, so "within δ of every maintained MMM" is not said. Read there, every comparison
-  with the table's five rivals is within δ; on family 12 at k = 0 `margin held` less Meridian is
-  −0.022 [−0.044, +0.001], an interval that crosses 0 (Hall's reader reads it as `beats`).
-- **Families 1, 4, 6, 14 and 15 are exploratory.** They were read on the worlds of the previous
-  scored run (M2), against the rivals' records from that run, not on fresh worlds.
+Each comparison below is one of the claim's, or of M4's rungs that were not claimed, that Hall's
+reader reads as a loss, that is not within δ, that Holm's step-down reads as a loss, or that the
+secondary reading at δ = 0.01 does not find within; that reading covers the claimed comparisons
+only ("not read").
+
+<!-- record:m4-losses -->
+| Family | Rung | Arm | Run | Rival | Mean [95 % interval] | Hall's word | Within δ = 0.05 | Holm's loss | Within δ = 0.01 |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 Track M v2 | 4 | `anchored floored` | M4 | PyMC-Marketing | +0.0096 [+0.0048, +0.0144] | loses to | yes | yes | no |
+| 1 Drift | 4 | `anchored floored` | M4 | PyMC-Marketing | +0.0090 [−0.0013, +0.0194] | loses to | yes | no | no |
+| 3 Collinear channels | 4 | `anchored floored` | M4 | PyMC-Marketing | +0.0101 [+0.0047, +0.0155] | loses to | yes | yes | no |
+| 4 S-curves | 0 | `margin held` | M4 | PyMC-Marketing | +0.1353 [+0.0997, +0.1708] | loses to | no | yes | not read |
+| 4 S-curves | 0 | `margin held` | M4 | Orbit | +0.1362 [+0.0997, +0.1727] | loses to | no | yes | not read |
+| 4 S-curves | 4 | `anchored floored` | M4 | Orbit | −0.0139 [−0.0410, +0.0133] | ties | yes | no | no |
+| 6 Truth outside the observed range | 4 | `anchored floored` | M4 | PyMC-Marketing | +0.0295 [+0.0163, +0.0427] | loses to | yes | yes | no |
+| 13 PyMC-Marketing's home ground | 4 | `anchored floored` | M4 | PyMC-Marketing | +0.0045 [−0.0041, +0.0132] | ties | yes | no | no |
+| 9 Spillover between geos | 4 | `geo eb` | M3 | PyMC-Marketing | +0.0051 [+0.0016, +0.0087] | loses to | yes | no | yes |
+<!-- /record:m4-losses -->
+
+- **S-curves with no lift test (family 4, k = 0): not within δ, as predicted.** `margin held` loses
+  to PyMC-Marketing by +0.1353 [+0.0997, +0.1708] and to Orbit by +0.1362 [+0.0997, +0.1727] a
+  euro, the largest losses of M4's claim arms. M4's pre-registration predicted both from M3's
+  records, where they read +0.184 and +0.171 on the worlds of the run before M3, and left them out
+  of its claim (its Predicted failures); the rung was past the sizing cap in any case. At the
+  tested rung, `anchored floored` is within δ of every rival on the same family. The curves are
+  what lose: the recorded variants without them, plain `margin` and `margin guarded`, have a lower
+  regret than PyMC-Marketing there and tie Orbit, while `margin curved` loses to both (the
+  reading's recorded arms, unadjusted).
+- **Holm's losses within δ: PyMC-Marketing at the tested rung on families 0, 3 and 6.** Holm's
+  step-down at familywise 0.025 over 148 comparisons finds five losses: family 4's two at k = 0,
+  above, and these three. They lie inside δ, so the verdicts hold, but they are losses. Family 6's,
+  +0.0295 [+0.0163, +0.0427], is in the claim's closest verdict, at level 0.00117. The 148 count the
+  20 comparisons of the k = 0 rungs that were not claimed ("M4's deviations", below); over the 128
+  claimed comparisons, Holm's losses are the same three.
+- **At δ = 0.01**, a secondary reading, 122 of M4's 128 claimed comparisons are within. The six
+  that are not are all at the tested rung: PyMC-Marketing on families 0, 1, 3, 6 and 13, and Orbit
+  on family 4. Family 1's, +0.0090 [−0.0013, +0.0194], is a loss by Hall's reader's word (level
+  0.0228, unadjusted), though its Student interval holds 0, and not one of Holm's. In M3's geo
+  verdicts every comparison is within 0.01; on family 9 at the tested rung `geo eb` loses to
+  PyMC-Marketing by +0.0051 [+0.0016, +0.0087], unadjusted.
+- **M3's losses beyond δ at the tested rung do not recur.** In M3, read on the worlds of the run
+  before it, `gs held` lost to PyMC-Marketing on family 1 by +0.0286 [+0.0019, +0.0553] and on
+  family 6 by +0.0386 [+0.0225, +0.0548]. On M4's fresh worlds `anchored floored` is within δ of it
+  on both (the claim's table).
+- **The k = 0 rungs that were not claimed.** On families 1, 4, 6 and 14 the sizing rule put k = 0
+  past the cap of 520 worlds (M4's pre-registration, Sizing): run and read on the family's worlds,
+  never claimed. On families 1, 6 and 14, `margin held` has a lower regret than every rival there,
+  each comparison within δ; family 4's losses are above.
+
+<!-- record:m4-exploratory -->
+| Family | Rung | Arm | Worlds | Status quo | Equal split | Meridian | PyMC-Marketing | Orbit |
+|---|---|---|---|---|---|---|---|---|
+| 1 Drift | 0 | `margin held` | 522 | −0.1699 [−0.1960, −0.1438], beats | −0.1360 [−0.1628, −0.1092], beats | −0.0967 [−0.1192, −0.0741], beats | −0.1700 [−0.2084, −0.1317], beats | −0.2070 [−0.2498, −0.1642], beats |
+| 4 S-curves | 0 | `margin held` | 522 | −0.2453 [−0.2729, −0.2177], beats | −0.3751 [−0.4100, −0.3403], beats | −0.0929 [−0.1199, −0.0658], beats | +0.1353 [+0.0997, +0.1708], loses to, not within δ, Holm's loss | +0.1362 [+0.0997, +0.1727], loses to, not within δ, Holm's loss |
+| 6 Truth outside the observed range | 0 | `margin held` | 240 | −0.1084 [−0.1325, −0.0844], beats | −0.0869 [−0.1065, −0.0673], beats | −0.0666 [−0.0891, −0.0440], beats | −0.2938 [−0.3448, −0.2428], beats | −0.4037 [−0.4618, −0.3456], beats |
+| 14 Robyn's home ground | 0 | `margin held` | 520 | −0.4602 [−0.5191, −0.4013], beats | −0.7397 [−0.8065, −0.6728], beats | −0.1287 [−0.1704, −0.0869], beats | −0.1159 [−0.1598, −0.0721], beats | −0.3183 [−0.3754, −0.2613], beats |
+<!-- /record:m4-exploratory -->
+
+- **No headline.** "Within δ of every maintained MMM" needs every family and rung claimed whole and
+  every verdict held. M4's pre-registration said in advance that it could not be read: the k = 0
+  rungs of families 1, 4, 6 and 14 were past the cap, and family 4's has two predicted failures.
+- **Not covered by fresh worlds.** Family 15 (siMMMulator) was not run in M4, and the geo verdicts
+  rest on M3's run ("What the runs did not cover", below).
+
+## M4's deviations
+
+What a reader of this record needs from the run's deviations from its pre-registration:
+
+- **The k = 0 rungs past the cap print as "predicted to fail".** The run's roots kept the k = 0
+  rungs of families 1, 4, 6 and 14 out of the fixed sequence by naming every rival there as
+  predicted to fail. So the reading prints `not claimed: predicted to fail` on all 20 of their
+  comparisons, and Holm's list counts them: 148 comparisons, the 128 claimed and these 20. The only
+  predicted failures in the pre-registration are family 4's two at k = 0, against PyMC-Marketing
+  and Orbit; the other 18 are exploratory. Over the 128 claimed comparisons, Holm's losses are the
+  same three within δ. No verdict reads the field.
+- **The reading left out the tested rung's recorded variants.** `claim read --recorded` at the
+  run's commit printed each recorded arm of a run's own root less every rival, but not the
+  variants of its joined root, `anchored`, `anchored curved` and `anchored held`. A later commit of
+  the reader reads them. They are recorded beside the claim and enter no verdict.
+- **Family 17's twins read the same seeds.** The pre-registration's seed formula gives each
+  environment a block of its own, but the bench draws the twins, `curve` and `line`, from the same
+  seeds by design: both read the same 120 seeds, and the reading pools the 240 worlds as if they
+  were independent.
+- **Two spot interruptions.** The box was launched three times, and each launch resumed the stage
+  (Compute, below).
 
 ## The tuned rivals
 
+M4 ran no tuned rival and no Robyn (its pre-registration's Deviations, items 2 and 3). This
+section is M3's, whose arms were `margin held` at k = 0 and, at the tested rung, `gs held`: it
+plays `anchored held` and routes a world that `anchored held` flags to the Bayesian engine's
+`stacked` plan (ADRs 0088, 0089 and 0093); on the geo families, `geo eb`.
+
 Each rival ran at its recommended settings. Beside two of them ran the setting that the tool's own
 criterion chose on the pilot's worlds, before any confirmatory world and never by regret
-(`scorecard/tuned.json`; the pre-registration's Arms): `meridian tuned`, Meridian with
+(`scorecard/tuned.json`; M3's pre-registration's Arms): `meridian tuned`, Meridian with
 `contribution` priors and knots at most 13 weeks apart, chosen by its health card and its
 out-of-sample error; `robyn tuned`, Robyn with `ts_validation` on. PyMC-Marketing's tuning chose
 its recommended setting, so it has no tuned column. No development record holds a tuned setting,
@@ -240,7 +368,7 @@ so neither tuned rival has a predictive: both are read on their roots' worlds, e
 enter no verdict. Robyn ran on 20 worlds an environment of families 9, 12 and 13.
 
 Each cell is the claim's arm less the rival, regret per euro, with its paired 95 % Student-t
-interval and the reader's word, as the run's reading prints them; a Robyn cell names its worlds.
+interval and the reader's word, as M3's reading prints them; a Robyn cell names its worlds.
 The word is Hall's reader's, which corrects for the differences' skew: on a skewed sample it can
 read `beats` where the Student interval crosses 0.
 
@@ -281,74 +409,123 @@ on 2, of 28; against Meridian tuned it beats on 26, is not compared on 2, of 28;
 beats on 4, ties on 2, of 6; against Robyn tuned it beats on 6, of 6.
 <!-- /record:tuned -->
 
-## What the run did not cover
+## What the runs did not cover
 
 - **Bench families not scored.** Family 11 (Google's AMSS simulator) was withdrawn. Family 16, a
-  published third-party instance of endogenous spend chosen in its place, was left out: its files
-  and their licence had not arrived when the run was frozen. Family 21 (mmm-framework's own
-  worlds) was not in the run: its truth states each channel's contribution and return and no
-  response curve, so it scores a model's reading, not a plan's regret. Family 10's 50-geo
-  environment was not run: its only reading is an audit on fresh worlds before the run. Family 1's
-  `cpm` environment and family 2's `search-demand` environment were not in the run's
-  declaration.
-- **Families 17 to 20** (twins one history cannot tell apart, a long-term brand measure, a flat
-  channel, promotions) are exploratory. On family 17 the time guard plays the status quo on every
-  world, by design. Orbit could not be compared on family 17 in the run: the bench's Orbit script
-  planned exactly three channels and those worlds have two, a harness limit, not Orbit's. After the
-  run the bench fixed its script (branch `orbit-two-channels`, commit `174228b`) and Orbit was
-  re-run on those worlds: `margin held` less Orbit read −0.169 [−0.208, −0.131] at k = 0 and
-  `gs held` less Orbit −0.082 [−0.106, −0.057] at the tested rung. That reading is post hoc and
-  enters no verdict.
-- **Robyn 3.12.1** ran on 20 worlds an environment of families 9, 12 and 13 only, exploratory, in
-  no verdict. The tuned rivals (`meridian tuned`, `robyn tuned`) are read beside the claim, never
-  in it ("The tuned rivals", above).
+  published third-party instance of endogenous spend chosen in its place, was in neither run: its
+  files and their licence had not arrived. Family 21 (mmm-framework's own worlds) was in neither
+  run: its truth states each channel's contribution and return and no response curve, so it scores
+  a model's reading, not a plan's regret. Family 10's 50-geo environment was not run: its only
+  reading is an audit on fresh worlds before M3. Family 1's `cpm` environment and family 2's
+  `search-demand` environment were in neither run's declaration.
+- **Family 15 (siMMMulator 1.1.0) was not run in M4.** Its worlds are files siMMMulator writes, not
+  draws, so M4 could not read a world of it that no run had read. M3 read it, exploratory, on the
+  worlds of the run before it. M4's pre-registration reports, beside its claim, a development
+  reading of the tested rung's rule on family 15's 100 recorded worlds (its Reported regardless).
+- **The geo families (8, 9 and 10) were not run in M4.** Their verdicts are M3's, on M3's fresh
+  worlds, and no later run has read them.
+- **Robyn 3.12.1 and the tuned rivals were not run in M4.** M3 read them beside its claim, never in
+  it ("The tuned rivals", above).
 - **PyMC-Marketing ran its static model on every family**: logistic saturation and a static
   intercept, as pre-registered, with no time-varying term. Its results on the drift family (1) are
   that model's.
-- **The claim's arms were designed after the run's pilot**, on the development set (M2's scored
-  worlds) and on audit worlds, as the pre-registration records (its Deviations, items 1 to 3).
-  Their predictive of the verdicts could be optimistic; on the fresh worlds 17 of 17 held, against
-  16.94 expected.
+- **The tested rung's claim arm was chosen after M3's results**, by a research round on M3's
+  records and on worlds drawn for the purpose, as M4's pre-registration records (its Deviations,
+  item 11). M4's worlds are fresh, so that choice could not select its verdicts, but it could make
+  their predictive optimistic. On the fresh worlds 26 of 26 held, against 25.23 expected.
 - **Simulated worlds only.** No claim here is about real data (below).
 
 ## Pre-registration and reproduction
 
-- The run is M3. Its pre-registration is `scorecard/preregistration/m3.md`, with `m3.json` and
-  `m3_sizing.py` beside it. It was frozen on 2026-11-17, before any confirmatory world was fitted,
-  in this project's then-private repository. Its SHA-256 is
-  `d684b25ccae0e3574fe2f962097e399c9f400f0641e52431cf794e131763d924`, which
+- **M4.** Its pre-registration is `scorecard/preregistration/m4.md`, with `m4.json` and
+  `m4_sizing.py` beside it, byte for byte as frozen. It was frozen on 2026-11-21 in UTC+2, late on
+  2026-11-20 in UTC, before any confirmatory world was fitted, in this project's then-private
+  repository. Its SHA-256 is
+  `ec0df163332e40244ba0747ae1c6c9654664fc7354137a9498ad5d979e9e45b1`, which
+  `sha256sum scorecard/preregistration/m4.md` prints. Where it cites ADRs 0096 and 0097, this
+  repository numbers them 0098 and 0099.
+- **M4's public time-stamp.** The public bench's SSH-signed tag
+  [`preregistration-m4`](https://github.com/causaldyn/causaldyn-bench/tree/preregistration-m4),
+  on its commit `5ddfe0c`, names the SHA-256 of `m4.md`, `m4.json` and `m4_sizing.py` and the
+  mixdyn commit the run ran (`git cat-file tag preregistration-m4` in a clone of the bench prints
+  them). The tag is dated 2026-11-20 23:52:29 UTC, and GitHub's record of its signature check is
+  dated 2026-11-20 23:52:55 UTC: before the run's box was first launched, at 06:27:48 UTC on
+  2026-11-21. GitHub could check the tag only once it held it.
+- **M4's code.** The run ran mixdyn `cc83d2a`, a commit of the then-private repository that is not
+  public by that id. Its `src/` tree, `782ca30c324a5720c37c4b4e6856862d4f22a2f5`, is this
+  repository's at v0.1.0, which M3 ran; its `scorecard/` tree is
+  `d9149edd724b4efc8dc326f8715a43ceeb925709`. This repository's commit `b71572e` adds M4's
+  pre-registration and the harness it ran on; its trees, `ac14998` for `src/` and `1a50f05` for
+  `scorecard/`, are main's at `631c51b` too. They differ from the run's in these files only:
+  - `src/mixdyn/inference/sensitivity.py`, `src/mixdyn/models/bayes_mmm.py` and
+    `src/mixdyn/transforms/saturation.py`: the `tanh` curve's constant `atanh(1/2)` is a
+    correctly rounded literal (commit `5cee2ad`, ADR 0096);
+  - `src/mixdyn/models/margin_mmm.py`: the margin regression reads under the noise mixture by
+    default, and the mixture's memory is bounded (commits `65d9586` and `486d83a`, ADR 0097);
+  - `scorecard/arms/margin.py` and `scorecard/arms/anchored.py`: both pass `noise=None` to the
+    margin regression, the regression the run read, and their docstrings say so; `anchored.py`
+    cites `anchored floored`'s ADR as 0099, which the run's tree numbered 0097.
+
+  `git diff v0.1.0 b71572e -- src` prints the first two; `git log b71572e.. -- src scorecard`
+  lists every later change. The run locked causal-hybrid-control 1.3.1 and jax 0.12.0.
+- **M3**, the evidence for the geo verdicts and the tuned rivals. Its pre-registration is
+  `scorecard/preregistration/m3.md`, with `m3.json` and `m3_sizing.py` beside it. It was frozen on
+  2026-11-17, before any confirmatory world was fitted, in the same then-private repository. Its
+  SHA-256 is `d684b25ccae0e3574fe2f962097e399c9f400f0641e52431cf794e131763d924`, which
   `sha256sum scorecard/preregistration/m3.md` prints.
-- **There is no public time-stamp before the run.** The repository was private when the file was
+- **M3 has no public time-stamp before the run.** The repository was private when the file was
   frozen and while the run ran (2026-11-17 to 2026-11-20). Nothing public shows that the file was
   not changed after the results were known; the hash shows only that this file is the one the
   run declared.
 - This repository starts from a fresh history at 0.1.0. The engine and the scorecard's harness in
-  its first commit are the code the run ran: their git tree hashes,
+  its first commit are the code M3 ran: their git tree hashes,
   `782ca30c324a5720c37c4b4e6856862d4f22a2f5` for `src/` and
-  `32c5f8714d670141efc9f9c636fce410975ad2bb` for `scorecard/`, are those of the commit the run
-  declared (`git rev-parse v0.1.0:src v0.1.0:scorecard`). The run locked causal-hybrid-control
-  1.3.0; 0.1.0 locks 1.3.1, whose changes the engine does not call.
-- The bench is public: [causaldyn/causaldyn-bench](https://github.com/causaldyn/causaldyn-bench),
-  commit `67f92b7478b0a1423538d77e62d8198923c52a85` (branch `m3`), each rival's environment pinned
-  by its lock file under `scripts/`.
+  `32c5f8714d670141efc9f9c636fce410975ad2bb` for `scorecard/`, are those of the commit M3
+  declared (`git rev-parse v0.1.0:src v0.1.0:scorecard`). M3 locked causal-hybrid-control 1.3.0;
+  0.1.0 locks 1.3.1, whose changes the engine does not call.
+- The bench is public: [causaldyn/causaldyn-bench](https://github.com/causaldyn/causaldyn-bench).
+  M4 ran its commit `5ddfe0cf05170be034b50e0ef2d6d38daf2f0aa0` (branch `m4`), M3 its commit
+  `67f92b7478b0a1423538d77e62d8198923c52a85` (branch `m3`), each rival's environment pinned by its
+  lock file under `scripts/`.
 - The harness is `scorecard/`. `python -m scorecard.run` declares a run, exports its worlds, runs
   every arm and scores every record (its docstring gives the environment); `python -m
-  scorecard.claim read --recorded <roots>` reads the claim, the verdicts, Holm's losses and every
-  recorded arm less every rival. The run took 5 201 CPU-hours (Compute, below). Its per-world
-  records are not published yet, so the reading cannot be re-run without re-running the worlds.
-- **The tables in the sections on worlds per cell, the tuned rivals, versions and compute are
-  written, not typed.** `scripts/readme_record.py extract` read them from the run's records and
-  its reading into `evidence/results/m3_record.json`, with the SHA-256 of every file they came
-  from; `python scripts/readme_record.py` writes them here from that file, and
-  `tests/test_readme.py` fails where a table differs from what it writes.
+  scorecard.claim read --recorded <roots>` reads the claim, the verdicts, Holm's losses and the
+  recorded arms less every rival. M4 took 1 502 CPU-hours and M3 took 5 201 CPU-hours (Compute,
+  below). Their per-world records are not published yet, so the readings cannot be re-run without
+  re-running the worlds.
+- **The tables of the claim, the worlds per cell, the words, the losses, the tuned rivals, the
+  versions and the compute are written, not typed.** `scripts/readme_record.py extract` read them
+  from each run's records and reading into `evidence/results/m4_record.json` and
+  `evidence/results/m3_record.json`, with the SHA-256 of every file they came from;
+  `python scripts/readme_record.py` writes them here from those files, and `tests/test_readme.py`
+  fails where a table differs from what it writes.
 
 ## Versions of every arm
 
 What each arm's records state: the packages and the Python each record names, the commits of the
 engine and the bench where the record names them, and the settings each record holds. A setting
 marked "by family" took each value on some families: a history's length sets a kernel's or a
-lag's weeks. The rest of each arm's setting is in the pre-registration's Arms table. The rivals'
-records reused from M2 name the same versions.
+lag's weeks. The rest of each arm's setting is in its run's pre-registration's Arms table.
+
+### M4
+
+The records of `anchored floored` carry `anchored held`'s route setting, but the variant plays no
+route (ADR 0099).
+
+<!-- record:m4-versions -->
+| Arm | Role | Version, as each record states it | Run with | How it was configured |
+|---|---|---|---|---|
+| `margin held` | the claim's arm at k = 0; families 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | bench at `5ddfe0c`, mixdyn at `cc83d2a` | Python 3.14.10; causal-hybrid-control 1.3.1, jax 0.12.0, numpy 2.5.4, scipy 1.18.1 | planner water-filling; retentions 0.1, 0.3, 0.5, 0.7, 0.9; kernel weeks 6, 9, 156 or 1 (by family); AR(1) grid 0.3, 0.6, 0.8, 0.9, 0.95, 0.98; time guard 0.8 |
+| `anchored floored` | the claim's arm at the tested rung, not routed; families 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | bench at `5ddfe0c`, mixdyn at `cc83d2a` | Python 3.14.10; causal-hybrid-control 1.3.1, jax 0.12.0, numpy 2.5.4, scipy 1.18.1 | planner water-filling on a table; curves michaelis-menten, logistic; lift rows read 12, 3, 6 or 8 (by family); floor, a share of the least weekly spend 0.9; time guard 0.8 |
+| `chc`, `ridge` | the engine's other arms, recorded beside the claim; families 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | bench at `5ddfe0c`, mixdyn at `cc83d2a` | Python 3.14.10; causal-hybrid-control 1.3.1, jax 0.12.0, numpy 2.5.4, scipy 1.18.1 | each record's own settings |
+| Meridian | rival; families 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 20; 564 failure records, family 19 | Meridian 2.1.0 | Python 3.12.16; arviz 0.19.0, jax 0.11.2, jaxlib 0.11.2, numpy 2.3.5, pandas 2.3.3, tensorflow 2.21.0, tfp-nightly 0.26.0.dev20260130, xarray 2026.9.0 | sampling n_adapt 1000, n_burnin 500, n_chains 10, n_keep 1000; automatic knot selection on; ROI prior at k = 0: loc 0.2; scale 0.9; max lag 5, 8, 155 or 0 (by family); dtype float64 |
+| PyMC-Marketing | rival; families 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | PyMC-Marketing 1.3.0 | Python 3.12.16; arviz 1.3.0, numpy 2.4.6, pandas 3.1.0, pymc 6.3.2, pytensor 3.3.6, scipy 1.18.1 | model static; chains 4; draws 1000; adstock weeks 6, 9, 156 or 1 (by family); yearly harmonics 3 |
+| Orbit | rival; families 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20; 3 failure records, family 18 | Orbit 1.1.5.1 | Python 3.12.16; cmdstanpy 1.3.0, numpy 2.5.4, pandas 3.0.6, pyro-ppl 1.9.2, scipy 1.18.1, torch 2.14.1+cpu | model log-log KTR (Ng, Wang and Dai 2021); samples 400; steps KTR's default; holdout weeks 13; seasonality 52 |
+<!-- /record:m4-versions -->
+
+### M3: the geo verdicts and the tuned rivals
+
+The rivals' records M3 reused from M2 name the same versions.
 
 <!-- record:versions -->
 | Arm | Role | Version, as each record states it | Run with | How it was configured |
@@ -368,15 +545,54 @@ records reused from M2 name the same versions.
 
 ## Compute
 
-Each process the run started is one line of its root's `logs/costs.jsonl`: one arm on one world,
-at the rungs it planned. Its core-hours are its scope's CPU time, its peak memory its scope's
+Each process a run started is one line of its root's `logs/costs.jsonl`: one arm on one world, at
+the rungs it planned. Its core-hours are its scope's CPU time, its peak memory its scope's
 `memory.peak` (the memory charged to the scope, page cache included: not the same measure as a peak
 RSS), and its wall the time from its start to its end. A failed attempt that ended by itself is a
 line too; a process stopped at its timeout or by one of the box's spot interruptions wrote none, so
 its CPU time is not counted here. The CPU model and the threads (`OMP_NUM_THREADS`) are what each
 record's `cost` names; the CPU quota is the CPUs the process was given, its cost class's in the
-stage's plan. The processes shared one m6a.48xlarge (the pre-registration's Compute): the figures
-say what was spent under that load, not how fast a tool is.
+stage's plan. Each run's processes shared one box, M4's a c6a.48xlarge and M3's an m6a.48xlarge
+(each pre-registration's Compute): the figures say what was spent under that load, not how fast a
+tool is.
+
+### M4
+
+<!-- record:m4-compute -->
+One box of 192 CPUs and 370 GiB ran every process, admitting up to 188 CPUs of quota at a time. It
+was launched 3 times: the stage resumed after each of 2 spot interruptions.
+
+| Family | CPU model | Threads | Processes | Peak memory a process, median / most | Wall a process, median / most | Core-hours: engine | rivals | all |
+|---|---|---|---|---|---|---|---|---|
+| 0 Track M v2 | AMD EPYC 7R13 Processor | 1 | 3 100 | 0.73 / 9.49 GiB | 89 s / 380 s | 11.6 | 80.4 | 91.9 |
+| 1 Drift | AMD EPYC 7R13 Processor | 1 | 5 220 | 0.57 / 8.03 GiB | 88 s / 339 s | 19.9 | 135.5 | 155.3 |
+| 2 Spend confounded with demand | AMD EPYC 7R13 Processor | 1 | 2 699 | 0.72 / 10.02 GiB | 91 s / 389 s | 10.5 | 72.1 | 82.5 |
+| 3 Collinear channels | AMD EPYC 7R13 Processor | 1 | 2 700 | 0.66 / 8.32 GiB | 93 s / 337 s | 10.6 | 71.1 | 81.7 |
+| 4 S-curves | AMD EPYC 7R13 Processor | 1 | 5 220 | 0.41 / 10.18 GiB | 78 s / 435 s | 18.1 | 124.2 | 142.3 |
+| 5 Budget follows performance | AMD EPYC 7R13 Processor | 1 | 2 400 | 0.57 / 7.39 GiB | 91 s / 346 s | 9.2 | 62.7 | 72.0 |
+| 6 Truth outside the observed range | AMD EPYC 7R13 Processor | 1 | 2 400 | 0.57 / 10.20 GiB | 93 s / 429 s | 9.4 | 71.6 | 81.0 |
+| 7 Short series | AMD EPYC 7R13 Processor | 1 | 2 519 | 0.42 / 7.06 GiB | 77 s / 285 s | 8.3 | 56.5 | 64.9 |
+| 12 Meridian's home ground | AMD EPYC 7R13 Processor | 1 | 4 600 | 0.58 / 10.39 GiB | 66 s / 443 s | 13.6 | 92.0 | 105.6 |
+| 13 PyMC-Marketing's home ground | AMD EPYC 7R13 Processor | 1 | 5 200 | 0.43 / 7.29 GiB | 65 s / 335 s | 15.1 | 101.5 | 116.6 |
+| 14 Robyn's home ground | AMD EPYC 7R13 Processor | 1 | 5 200 | 0.64 / 12.30 GiB | 70 s / 19 min | 15.6 | 220.2 | 235.8 |
+| 17 Twins | AMD EPYC 7R13 Processor | 1 | 2 399 | 0.45 / 1.42 GiB | 73 s / 194 s | 6.3 | 48.3 | 54.6 |
+| 18 Long term | AMD EPYC 7R13 Processor | 1 | 2 401 | 0.45 / 10.23 GiB | 94 s / 405 s | 9.2 | 72.2 | 81.4 |
+| 19 Flat | AMD EPYC 7R13 Processor | 1 | 2 820 | 0.48 / 0.88 GiB | 49 s / 223 s | 10.6 | 51.2 | 61.9 |
+| 20 Promotions | AMD EPYC 7R13 Processor | 1 | 2 400 | 0.59 / 7.28 GiB | 94 s / 347 s | 9.6 | 64.7 | 74.3 |
+| all | | | 51 278 | | | 177.4 | 1 324.4 | 1 501.8 |
+
+| Arm | Role | CPU quota | Rungs a process | Families | Processes | Peak memory a process, median / most | Wall a process, median / most | Core-hours |
+|---|---|---|---|---|---|---|---|---|
+| `meridian` | rival | 1.2 | 1 | 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | 10 254 | 2.38 / 12.30 GiB | 178 s / 19 min | 648.0 |
+| `pymc-marketing` | rival | 1.5 | 1 | 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | 10 255 | 0.75 / 1.11 GiB | 106 s / 230 s | 456.9 |
+| `orbit` | rival | 1 | 1 | 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | 10 258 | 0.41 / 0.82 GiB | 81 s / 123 s | 219.5 |
+| `chc` | engine | 1 | 2 | 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | 5 128 | 0.88 / 0.94 GiB | 76 s / 154 s | 105.9 |
+| `ridge` | engine | 1 | 2 | 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | 5 128 | 0.25 / 0.26 GiB | 29 s / 95 s | 43.2 |
+| `margin` | engine | 1 | 2 | 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | 5 127 | 0.17 / 0.18 GiB | 11 s / 17 s | 15.0 |
+| `anchored` | engine | 1 | 1 | 0, 1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 17, 18, 19, 20 | 5 128 | 0.17 / 0.18 GiB | 10 s / 15 s | 13.3 |
+<!-- /record:m4-compute -->
+
+### M3
 
 <!-- record:compute -->
 One box of 192 CPUs and 740 GiB ran every process, admitting up to 188 CPUs of quota at a time. It

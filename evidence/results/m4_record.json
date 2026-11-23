@@ -1,0 +1,5101 @@
+{
+ "about": "M4's record as the README prints it, written by `scripts/readme_record.py extract` from the run's records; every file it read is named by the run's root and its SHA-256.",
+ "commits": {
+  "mixdyn": "cc83d2ac7e8b929ffa70665a29f6f667ccc7b459",
+  "bench": "5ddfe0cf05170be034b50e0ef2d6d38daf2f0aa0",
+  "preregistration": "ec0df163332e40244ba0747ae1c6c9654664fc7354137a9498ad5d979e9e45b1",
+  "jax": "0.12.0",
+  "causal-hybrid-control": "1.3.1"
+ },
+ "reading": {
+  "command": "python -m scorecard.claim read --recorded",
+  "roots": [
+   "f0",
+   "f0-ts",
+   "f1",
+   "f1-ts",
+   "f12",
+   "f12-ts",
+   "f13",
+   "f13-ts",
+   "f14",
+   "f14-ts",
+   "f17",
+   "f17-ts",
+   "f18",
+   "f18-ts",
+   "f19",
+   "f19-ts",
+   "f2",
+   "f2-ts",
+   "f20",
+   "f20-ts",
+   "f3",
+   "f3-ts",
+   "f4",
+   "f4-ts",
+   "f5",
+   "f5-ts",
+   "f6",
+   "f6-ts",
+   "f7a",
+   "f7a-ts",
+   "f7b",
+   "f7b-ts"
+  ],
+  "sha256": "6f12c5af2cc81dbf7b00980ececcf4574dde42fe8224df182a221ea23ed6e5bb",
+  "comparisons": [
+   {
+    "family": 0,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.1365",
+    "low": "-0.1547",
+    "high": "-0.1183",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.3261",
+    "low": "-0.3598",
+    "high": "-0.2924",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0478",
+    "low": "-0.0647",
+    "high": "-0.0309",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.1258",
+    "low": "-0.1544",
+    "high": "-0.0971",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.2062",
+    "low": "-0.2400",
+    "high": "-0.1724",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.2428",
+    "low": "-0.2585",
+    "high": "-0.2272",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.4324",
+    "low": "-0.4678",
+    "high": "-0.3971",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0677",
+    "low": "-0.0765",
+    "high": "-0.0589",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 0,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0096",
+    "low": "+0.0048",
+    "high": "+0.0144",
+    "within": true,
+    "word": "loses to",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "9.92e-07"
+   },
+   {
+    "family": 0,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0479",
+    "low": "-0.0610",
+    "high": "-0.0349",
+    "within": true,
+    "word": "beats",
+    "complete": 310,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.1699",
+    "low": "-0.1960",
+    "high": "-0.1438",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.1360",
+    "low": "-0.1628",
+    "high": "-0.1092",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0967",
+    "low": "-0.1192",
+    "high": "-0.0741",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.1700",
+    "low": "-0.2084",
+    "high": "-0.1317",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.2070",
+    "low": "-0.2498",
+    "high": "-0.1642",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.2940",
+    "low": "-0.3234",
+    "high": "-0.2646",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.2601",
+    "low": "-0.2930",
+    "high": "-0.2273",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.1195",
+    "low": "-0.1366",
+    "high": "-0.1024",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 1,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0090",
+    "low": "-0.0013",
+    "high": "+0.0194",
+    "within": true,
+    "word": "loses to",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "0.0228"
+   },
+   {
+    "family": 1,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0489",
+    "low": "-0.0681",
+    "high": "-0.0297",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0849",
+    "low": "-0.1062",
+    "high": "-0.0636",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0610",
+    "low": "-0.0841",
+    "high": "-0.0379",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0503",
+    "low": "-0.0719",
+    "high": "-0.0287",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.1448",
+    "low": "-0.1788",
+    "high": "-0.1108",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.1274",
+    "low": "-0.1562",
+    "high": "-0.0986",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1726",
+    "low": "-0.1923",
+    "high": "-0.1529",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1487",
+    "low": "-0.1698",
+    "high": "-0.1277",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0865",
+    "low": "-0.0992",
+    "high": "-0.0738",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 2,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0017",
+    "low": "-0.0034",
+    "high": "+0.0068",
+    "within": true,
+    "word": "ties",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "0.249"
+   },
+   {
+    "family": 2,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0710",
+    "low": "-0.0866",
+    "high": "-0.0554",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0636",
+    "low": "-0.0822",
+    "high": "-0.0451",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0537",
+    "low": "-0.0723",
+    "high": "-0.0351",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0330",
+    "low": "-0.0485",
+    "high": "-0.0174",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.0978",
+    "low": "-0.1262",
+    "high": "-0.0694",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.1142",
+    "low": "-0.1461",
+    "high": "-0.0823",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1721",
+    "low": "-0.1911",
+    "high": "-0.1530",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1621",
+    "low": "-0.1834",
+    "high": "-0.1408",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0792",
+    "low": "-0.0910",
+    "high": "-0.0674",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 3,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0101",
+    "low": "+0.0047",
+    "high": "+0.0155",
+    "within": true,
+    "word": "loses to",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1.43e-06"
+   },
+   {
+    "family": 3,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0608",
+    "low": "-0.0756",
+    "high": "-0.0460",
+    "within": true,
+    "word": "beats",
+    "complete": 270,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.2453",
+    "low": "-0.2729",
+    "high": "-0.2177",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.3751",
+    "low": "-0.4100",
+    "high": "-0.3403",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0929",
+    "low": "-0.1199",
+    "high": "-0.0658",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "+0.1353",
+    "low": "+0.0997",
+    "high": "+0.1708",
+    "within": false,
+    "word": "loses to",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1e-12"
+   },
+   {
+    "family": 4,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "+0.1362",
+    "low": "+0.0997",
+    "high": "+0.1727",
+    "within": false,
+    "word": "loses to",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1e-12"
+   },
+   {
+    "family": 4,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.3730",
+    "low": "-0.4075",
+    "high": "-0.3386",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.5028",
+    "low": "-0.5484",
+    "high": "-0.4573",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0665",
+    "low": "-0.0863",
+    "high": "-0.0467",
+    "within": true,
+    "word": "beats",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "-0.0067",
+    "low": "-0.0178",
+    "high": "+0.0044",
+    "within": true,
+    "word": "ties",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 4,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0139",
+    "low": "-0.0410",
+    "high": "+0.0133",
+    "within": true,
+    "word": "ties",
+    "complete": 522,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0878",
+    "low": "-0.1109",
+    "high": "-0.0647",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0689",
+    "low": "-0.0916",
+    "high": "-0.0462",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0476",
+    "low": "-0.0677",
+    "high": "-0.0275",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.1250",
+    "low": "-0.1607",
+    "high": "-0.0892",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.1429",
+    "low": "-0.1811",
+    "high": "-0.1046",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1883",
+    "low": "-0.2084",
+    "high": "-0.1683",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1694",
+    "low": "-0.1941",
+    "high": "-0.1447",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0951",
+    "low": "-0.1081",
+    "high": "-0.0821",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 5,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0017",
+    "low": "-0.0023",
+    "high": "+0.0056",
+    "within": true,
+    "word": "ties",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "0.207"
+   },
+   {
+    "family": 5,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0789",
+    "low": "-0.0951",
+    "high": "-0.0627",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.1084",
+    "low": "-0.1325",
+    "high": "-0.0844",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0869",
+    "low": "-0.1065",
+    "high": "-0.0673",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0666",
+    "low": "-0.0891",
+    "high": "-0.0440",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.2938",
+    "low": "-0.3448",
+    "high": "-0.2428",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.4037",
+    "low": "-0.4618",
+    "high": "-0.3456",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1203",
+    "low": "-0.1464",
+    "high": "-0.0941",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.0987",
+    "low": "-0.1236",
+    "high": "-0.0739",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0331",
+    "low": "-0.0522",
+    "high": "-0.0141",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 6,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0295",
+    "low": "+0.0163",
+    "high": "+0.0427",
+    "within": true,
+    "word": "loses to",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "4.35e-06"
+   },
+   {
+    "family": 6,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0566",
+    "low": "-0.0805",
+    "high": "-0.0328",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0451",
+    "low": "-0.0676",
+    "high": "-0.0226",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.1516",
+    "low": "-0.1931",
+    "high": "-0.1101",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0164",
+    "low": "-0.0371",
+    "high": "+0.0042",
+    "within": true,
+    "word": "ties",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.0834",
+    "low": "-0.1141",
+    "high": "-0.0528",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.1696",
+    "low": "-0.2222",
+    "high": "-0.1169",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1435",
+    "low": "-0.1717",
+    "high": "-0.1154",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.2500",
+    "low": "-0.2959",
+    "high": "-0.2041",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0132",
+    "low": "-0.0198",
+    "high": "-0.0067",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "-0.0047",
+    "low": "-0.0100",
+    "high": "+0.0005",
+    "within": true,
+    "word": "ties",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 12,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0160",
+    "low": "-0.0241",
+    "high": "-0.0079",
+    "within": true,
+    "word": "beats",
+    "complete": 460,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0773",
+    "low": "-0.0935",
+    "high": "-0.0612",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0318",
+    "low": "-0.0467",
+    "high": "-0.0170",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0240",
+    "low": "-0.0371",
+    "high": "-0.0110",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.2545",
+    "low": "-0.2814",
+    "high": "-0.2275",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.3743",
+    "low": "-0.4053",
+    "high": "-0.3434",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.0816",
+    "low": "-0.1008",
+    "high": "-0.0624",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.0361",
+    "low": "-0.0562",
+    "high": "-0.0159",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0276",
+    "low": "-0.0418",
+    "high": "-0.0134",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 13,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0045",
+    "low": "-0.0041",
+    "high": "+0.0132",
+    "within": true,
+    "word": "ties",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "0.149"
+   },
+   {
+    "family": 13,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.1270",
+    "low": "-0.1464",
+    "high": "-0.1077",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.4602",
+    "low": "-0.5191",
+    "high": "-0.4013",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.7397",
+    "low": "-0.8065",
+    "high": "-0.6728",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.1287",
+    "low": "-0.1704",
+    "high": "-0.0869",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.1159",
+    "low": "-0.1598",
+    "high": "-0.0721",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.3183",
+    "low": "-0.3754",
+    "high": "-0.2613",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": false,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.3188",
+    "low": "-0.3785",
+    "high": "-0.2591",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.5983",
+    "low": "-0.6677",
+    "high": "-0.5288",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0815",
+    "low": "-0.1171",
+    "high": "-0.0458",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "-0.0244",
+    "low": "-0.0506",
+    "high": "+0.0018",
+    "within": true,
+    "word": "ties",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 14,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.1510",
+    "low": "-0.1934",
+    "high": "-0.1086",
+    "within": true,
+    "word": "beats",
+    "complete": 520,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "+0.0000",
+    "low": "+0.0000",
+    "high": "+0.0000",
+    "within": true,
+    "word": "ties",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.1865",
+    "low": "-0.1931",
+    "high": "-0.1799",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.4604",
+    "low": "-0.4899",
+    "high": "-0.4309",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.0018",
+    "low": "-0.0040",
+    "high": "+0.0005",
+    "within": true,
+    "word": "ties",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.1632",
+    "low": "-0.1899",
+    "high": "-0.1365",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "+0.0000",
+    "low": "+0.0000",
+    "high": "+0.0000",
+    "within": true,
+    "word": "ties",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1865",
+    "low": "-0.1931",
+    "high": "-0.1799",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0230",
+    "low": "-0.0281",
+    "high": "-0.0178",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "-0.0294",
+    "low": "-0.0373",
+    "high": "-0.0215",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 17,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0639",
+    "low": "-0.0761",
+    "high": "-0.0517",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.1053",
+    "low": "-0.1277",
+    "high": "-0.0828",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0813",
+    "low": "-0.1037",
+    "high": "-0.0589",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0614",
+    "low": "-0.0817",
+    "high": "-0.0410",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.1451",
+    "low": "-0.1834",
+    "high": "-0.1068",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.0929",
+    "low": "-0.1229",
+    "high": "-0.0629",
+    "within": true,
+    "word": "beats",
+    "complete": 239,
+    "rival_failed": 1,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1997",
+    "low": "-0.2214",
+    "high": "-0.1780",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1758",
+    "low": "-0.2001",
+    "high": "-0.1514",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0952",
+    "low": "-0.1085",
+    "high": "-0.0819",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 18,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "+0.0036",
+    "low": "-0.0023",
+    "high": "+0.0094",
+    "within": true,
+    "word": "ties",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "0.111"
+   },
+   {
+    "family": 18,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0722",
+    "low": "-0.0881",
+    "high": "-0.0562",
+    "within": true,
+    "word": "beats",
+    "complete": 238,
+    "rival_failed": 2,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0524",
+    "low": "-0.0672",
+    "high": "-0.0376",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0290",
+    "low": "-0.0502",
+    "high": "-0.0078",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": null,
+    "low": null,
+    "high": null,
+    "within": null,
+    "word": "not compared",
+    "complete": 0,
+    "rival_failed": 282,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": null
+   },
+   {
+    "family": 19,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.0269",
+    "low": "-0.0532",
+    "high": "-0.0007",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.0680",
+    "low": "-0.1019",
+    "high": "-0.0342",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1504",
+    "low": "-0.1669",
+    "high": "-0.1339",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1269",
+    "low": "-0.1474",
+    "high": "-0.1064",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": null,
+    "low": null,
+    "high": null,
+    "within": null,
+    "word": "not compared",
+    "complete": 0,
+    "rival_failed": 282,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": null
+   },
+   {
+    "family": 19,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "-0.0282",
+    "low": "-0.0475",
+    "high": "-0.0089",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 19,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0233",
+    "low": "-0.0377",
+    "high": "-0.0090",
+    "within": true,
+    "word": "beats",
+    "complete": 282,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0787",
+    "low": "-0.1003",
+    "high": "-0.0570",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0346",
+    "low": "-0.0578",
+    "high": "-0.0115",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0312",
+    "low": "-0.0510",
+    "high": "-0.0113",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.0778",
+    "low": "-0.1117",
+    "high": "-0.0439",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.0587",
+    "low": "-0.0889",
+    "high": "-0.0285",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.2104",
+    "low": "-0.2312",
+    "high": "-0.1896",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1663",
+    "low": "-0.1867",
+    "high": "-0.1460",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.1088",
+    "low": "-0.1217",
+    "high": "-0.0959",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "-0.0047",
+    "low": "-0.0109",
+    "high": "+0.0015",
+    "within": true,
+    "word": "ties",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 20,
+    "k": 4,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0710",
+    "low": "-0.0874",
+    "high": "-0.0546",
+    "within": true,
+    "word": "beats",
+    "complete": 240,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "status quo",
+    "mean": "-0.0607",
+    "low": "-0.0806",
+    "high": "-0.0408",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "equal split",
+    "mean": "-0.0376",
+    "low": "-0.0580",
+    "high": "-0.0173",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "meridian",
+    "mean": "-0.0369",
+    "low": "-0.0567",
+    "high": "-0.0171",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "pymc-marketing",
+    "mean": "-0.0725",
+    "low": "-0.1037",
+    "high": "-0.0412",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 0,
+    "arm": "margin held",
+    "rival": "orbit",
+    "mean": "-0.1026",
+    "low": "-0.1357",
+    "high": "-0.0696",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": false,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 1,
+    "arm": "anchored floored",
+    "rival": "status quo",
+    "mean": "-0.1381",
+    "low": "-0.1588",
+    "high": "-0.1175",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": true,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 1,
+    "arm": "anchored floored",
+    "rival": "equal split",
+    "mean": "-0.1150",
+    "low": "-0.1395",
+    "high": "-0.0905",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": true,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 1,
+    "arm": "anchored floored",
+    "rival": "meridian",
+    "mean": "-0.0676",
+    "low": "-0.0826",
+    "high": "-0.0526",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": true,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 1,
+    "arm": "anchored floored",
+    "rival": "pymc-marketing",
+    "mean": "-0.0147",
+    "low": "-0.0293",
+    "high": "-0.0001",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": true,
+    "loss level": "1"
+   },
+   {
+    "family": 7,
+    "k": 1,
+    "arm": "anchored floored",
+    "rival": "orbit",
+    "mean": "-0.0471",
+    "low": "-0.0638",
+    "high": "-0.0304",
+    "within": true,
+    "word": "beats",
+    "complete": 252,
+    "rival_failed": 0,
+    "default_failed": 0,
+    "cap": null,
+    "exploratory": false,
+    "claimed": true,
+    "tested": true,
+    "loss level": "1"
+   }
+  ],
+  "verdicts": [
+   {
+    "family": 0,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 0,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 2,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 2,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 3,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 3,
+    "k": 4,
+    "word": "holds",
+    "level": "4.82e-07"
+   },
+   {
+    "family": 5,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 5,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 7,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 7,
+    "k": 1,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 12,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 12,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 17,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 17,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 18,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 20,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 18,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 19,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 13,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 20,
+    "k": 0,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 19,
+    "k": 0,
+    "word": "holds",
+    "level": "1.94e-09"
+   },
+   {
+    "family": 14,
+    "k": 4,
+    "word": "holds",
+    "level": "2.59e-07"
+   },
+   {
+    "family": 4,
+    "k": 4,
+    "word": "holds",
+    "level": "8.14e-07"
+   },
+   {
+    "family": 6,
+    "k": 4,
+    "word": "holds",
+    "level": "0.00117"
+   },
+   {
+    "family": 13,
+    "k": 4,
+    "word": "holds",
+    "level": "1e-12"
+   },
+   {
+    "family": 1,
+    "k": 4,
+    "word": "holds",
+    "level": "3.86e-05"
+   },
+   {
+    "family": 1,
+    "k": 0,
+    "word": "not claimed",
+    "level": null
+   },
+   {
+    "family": 4,
+    "k": 0,
+    "word": "not claimed",
+    "level": null
+   },
+   {
+    "family": 6,
+    "k": 0,
+    "word": "not claimed",
+    "level": null
+   },
+   {
+    "family": 14,
+    "k": 0,
+    "word": "not claimed",
+    "level": null
+   }
+  ],
+  "headline": "no headline: some family or rung is not claimed whole or does not hold",
+  "holm": {
+   "familywise": "0.025",
+   "over": 148,
+   "losses": [
+    {
+     "family": 0,
+     "k": 4,
+     "rival": "pymc-marketing"
+    },
+    {
+     "family": 3,
+     "k": 4,
+     "rival": "pymc-marketing"
+    },
+    {
+     "family": 4,
+     "k": 0,
+     "rival": "orbit"
+    },
+    {
+     "family": 4,
+     "k": 0,
+     "rival": "pymc-marketing"
+    },
+    {
+     "family": 6,
+     "k": 4,
+     "rival": "pymc-marketing"
+    }
+   ]
+  },
+  "secondary": {
+   "every stage of every fit past the bounds at the status quo": {
+    "within": 128,
+    "of": 128,
+    "not within": []
+   },
+   "at the margin 0.01": {
+    "within": 122,
+    "of": 128,
+    "not within": [
+     {
+      "family": 0,
+      "k": 4,
+      "rival": "pymc-marketing"
+     },
+     {
+      "family": 1,
+      "k": 4,
+      "rival": "pymc-marketing"
+     },
+     {
+      "family": 3,
+      "k": 4,
+      "rival": "pymc-marketing"
+     },
+     {
+      "family": 4,
+      "k": 4,
+      "rival": "orbit"
+     },
+     {
+      "family": 6,
+      "k": 4,
+      "rival": "pymc-marketing"
+     },
+     {
+      "family": 13,
+      "k": 4,
+      "rival": "pymc-marketing"
+     }
+    ]
+   }
+  }
+ },
+ "sources": {
+  "COMMITS": "0a6db8ac8350e8ba9860609561968dd94022abc1b99a1c1b76c96e2705af6a57",
+  "plan.json": "d5cb1de72b444cf1039d6e13f04c9bb01d8f06868bc00d2bf7a2d70cb89e3bb6",
+  "reuse.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "launches.log": "f1e78fdc5ec9c4e94e0ebfb3472642147f36b4c8e28aca48669426a83b53db19",
+  "roots": {
+   "f0": {
+    "family": 0,
+    "role": "claim",
+    "scores.jsonl": "8a3692874fee0dfee8d20767df6151c5a9ee65e007caa7544bbffe7025fd51ca",
+    "logs/costs.jsonl": "98d3367dc3896065c9094de9224539bb424385bfbde0241398d552ad145da3d4",
+    "reused from M3": []
+   },
+   "f0-ts": {
+    "family": 0,
+    "role": "beside",
+    "scores.jsonl": "47df8a2485c1d6878819f2dcba7cbbfa53e5e64b462ec5fd10c9bbafd6abc39c",
+    "logs/costs.jsonl": "9eab1f904c9303c22d90db8b215434a438b884eaea1b4fc06c609b30446e6474",
+    "reused from M3": []
+   },
+   "f1": {
+    "family": 1,
+    "role": "claim",
+    "scores.jsonl": "4b7e0c44ecc06fd0e3bba2ad151b28c0fd514a515f82f4b8ea6e57d6429f2552",
+    "logs/costs.jsonl": "da26f6d1e125cd523ba94400ec6adc60b2797717c2aa515c7abdc20d6c140386",
+    "reused from M3": []
+   },
+   "f1-ts": {
+    "family": 1,
+    "role": "beside",
+    "scores.jsonl": "b46c1cf063a66f264e9a0e38dee7945f3ad3217034e5009f7dbcaa4f5258618a",
+    "logs/costs.jsonl": "7f0d2fba05a2bc557abf28732b1175b5d16a97f67cdecdeb7ab1f24a5ba293e0",
+    "reused from M3": []
+   },
+   "f12": {
+    "family": 12,
+    "role": "claim",
+    "scores.jsonl": "ae10ddd90e06b841db6927a83ca56cab1096a290bdc5ddc71dda5240ff1f9cf7",
+    "logs/costs.jsonl": "a8cfa4376776b629a34b0825614c82edeb8db7a1a030ab28ae66406ce2906600",
+    "reused from M3": []
+   },
+   "f12-ts": {
+    "family": 12,
+    "role": "beside",
+    "scores.jsonl": "e96f160b20b53277f0353530410ef9640788b3f68c59e99b8670dfb21606b47e",
+    "logs/costs.jsonl": "e2a3b39612bed9fd0f1cb98bc25b2a5d62c26c1f5f6e0c6b1a94aa9e3a80d59d",
+    "reused from M3": []
+   },
+   "f13": {
+    "family": 13,
+    "role": "claim",
+    "scores.jsonl": "47fc20d1c2ecc82f993e3f98bad2ea8b6dc048502666173fd8382c383d0ae32a",
+    "logs/costs.jsonl": "ea5629c3a5783ba3cbc2b0107fc9d0688e14ea8f95e0aba960c853517a4ade37",
+    "reused from M3": []
+   },
+   "f13-ts": {
+    "family": 13,
+    "role": "beside",
+    "scores.jsonl": "d04e1923713f44282db85e9ffe3b8cd13382bdadc9752b694580ab6b86c8a223",
+    "logs/costs.jsonl": "e0c125aad1f69fa8e36dbe6b0fe7080e12b337e46600082e67bf857297cb52b9",
+    "reused from M3": []
+   },
+   "f14": {
+    "family": 14,
+    "role": "claim",
+    "scores.jsonl": "af775369028dd090e626ef6e963f726b3ac6833c9f3ecdca01b17c6456c0d7fc",
+    "logs/costs.jsonl": "b7ae4f73064527b7cdb54896561c9e75bac8ebb806088ca2b5474d95bef2b4f5",
+    "reused from M3": []
+   },
+   "f14-ts": {
+    "family": 14,
+    "role": "beside",
+    "scores.jsonl": "b30241b301db7b6b11fe7c96e2aaf3ebe361e97ca21a2d8aae28fa95b9518a0d",
+    "logs/costs.jsonl": "8657baa6d702f32eac6b9875cbae210fdee649c3093c6a170ab05a28e7accada",
+    "reused from M3": []
+   },
+   "f17": {
+    "family": 17,
+    "role": "claim",
+    "scores.jsonl": "adea8bdd0ed8d7907d671b787d73ab3c5d2dc60cb442daa2b0c2366c6f087bfc",
+    "logs/costs.jsonl": "3a823c46873f2b20bc725b7c0cb28ffbc7be2e9f764191c1ad3962b0397af4b9",
+    "reused from M3": []
+   },
+   "f17-ts": {
+    "family": 17,
+    "role": "beside",
+    "scores.jsonl": "0e3e7a21ce094057f15d70afccbc5de3d48a7ae1b76733239f792f7cf01c588c",
+    "logs/costs.jsonl": "9a65e49ed7b39cb31f4d0d2b2283e09bba2355b2ce27196a351494441742dcb5",
+    "reused from M3": []
+   },
+   "f18": {
+    "family": 18,
+    "role": "claim",
+    "scores.jsonl": "235b900817b9fd7d73e67eceb5f66b902667e18254f0d3180bc60c37f37be50f",
+    "logs/costs.jsonl": "c7c1585a61331741f38c4ef98af2634cee5ac12d30c9cf33d86ed27c4740b77e",
+    "reused from M3": []
+   },
+   "f18-ts": {
+    "family": 18,
+    "role": "beside",
+    "scores.jsonl": "e3b8aa4542aa8ecd01ade599d0fdba56fd889643f6c0553e9fc9a2cc7eedfa80",
+    "logs/costs.jsonl": "81c7b642f2f6b64151e2eb91413347fcffc206657079b29a204c76e460fe17de",
+    "reused from M3": []
+   },
+   "f19": {
+    "family": 19,
+    "role": "claim",
+    "scores.jsonl": "9749113cf93242a91038463e12f5a3a35371a994333f9d99a4bfd72ee7abb38e",
+    "logs/costs.jsonl": "c67b568dc5e043f95d05e014038f8c5d283af6b31618891007808afc795b64e6",
+    "reused from M3": []
+   },
+   "f19-ts": {
+    "family": 19,
+    "role": "beside",
+    "scores.jsonl": "04c529b442151a948cd233e89d15a3c45576c0998a6bfba6ffae439b0a77da26",
+    "logs/costs.jsonl": "628b12e28acace075e8ca2e1b7321b1c92e1629c9e3a1a6e10da2c6163f3e4a9",
+    "reused from M3": []
+   },
+   "f2": {
+    "family": 2,
+    "role": "claim",
+    "scores.jsonl": "d47466404211ff293082b39d2aaf51a69f7f23f89919f3b0646bdda083453ff4",
+    "logs/costs.jsonl": "298a2e4edf20e0f8e17d4bc5ecf96b3b4a911b795b9aca40eeec8dd7efb82f12",
+    "reused from M3": []
+   },
+   "f2-ts": {
+    "family": 2,
+    "role": "beside",
+    "scores.jsonl": "6d7e98a84c40a901e6768f03760f04c9e1eb56a9da9078a97b1f82fc9efdfe5f",
+    "logs/costs.jsonl": "67ac039e90bf34d688eb81a3afc6eb5b1d533e3fe74f55e7809b5945d862ad2d",
+    "reused from M3": []
+   },
+   "f20": {
+    "family": 20,
+    "role": "claim",
+    "scores.jsonl": "bded5eddcc3f951ea39b674f36e65d31f571174234ad0b048fdaef467c857f83",
+    "logs/costs.jsonl": "0e218367785c5c0d395b0810be6459c5d6e96d9ccb5313d0a2170d4639901f5e",
+    "reused from M3": []
+   },
+   "f20-ts": {
+    "family": 20,
+    "role": "beside",
+    "scores.jsonl": "b360d15081ec12b71643c23f7776db2f7586cda97c34db8710fe054535a0138c",
+    "logs/costs.jsonl": "c6bcaf9542a64520c6409cea36209e6187e9306350cba2179aed01ccbbbd732f",
+    "reused from M3": []
+   },
+   "f3": {
+    "family": 3,
+    "role": "claim",
+    "scores.jsonl": "12be12dac834299b55a39cd95200d7dc7d15b32d0c92df0f01a9f9f228831bb4",
+    "logs/costs.jsonl": "75e0ba2e89bcb83ee8bc7663a8fe1790240826dba8cf457645aa76f66a5bfa05",
+    "reused from M3": []
+   },
+   "f3-ts": {
+    "family": 3,
+    "role": "beside",
+    "scores.jsonl": "438c558102fdd842f9543b57aaa0d6f6e20a8464d0bc2ecae61ba9a1449d3ee7",
+    "logs/costs.jsonl": "7f22d45bc060abaecdd7213fd526e92f08fe6f3309cb44f8112df2c5de40ad41",
+    "reused from M3": []
+   },
+   "f4": {
+    "family": 4,
+    "role": "claim",
+    "scores.jsonl": "ea8c443be40454261d027f5ef7dfa9c70c914fb91ace810222a913e381ed39b8",
+    "logs/costs.jsonl": "11588d8bcf797f28b8aa2427b396b4d2e873831fd36529a8bf8a2febf9b4302b",
+    "reused from M3": []
+   },
+   "f4-ts": {
+    "family": 4,
+    "role": "beside",
+    "scores.jsonl": "c9adcc4558caf62d618135d938daa1d65124b47b1d56a943c092a6b25bcf4247",
+    "logs/costs.jsonl": "6d72f0eb110710e0e5e27675c070f2b851a3f5cc41e72845a61b1dd36649e3d8",
+    "reused from M3": []
+   },
+   "f5": {
+    "family": 5,
+    "role": "claim",
+    "scores.jsonl": "2a06cdaca5572fc1c2eb6a43279529e2879ed7added4111143dbbf38f7811847",
+    "logs/costs.jsonl": "28f53595b5a88fb5c070f3932ed343bf8cb58a487b3a1578198d19a9899ee730",
+    "reused from M3": []
+   },
+   "f5-ts": {
+    "family": 5,
+    "role": "beside",
+    "scores.jsonl": "6c9cf1fe1916981627efb34856b62fd054c049f91919e106f257d14692653437",
+    "logs/costs.jsonl": "cd1bb71ed47a63b872e92ffa24045a2c8f1841906bcd0ae85b02328ee5a81624",
+    "reused from M3": []
+   },
+   "f6": {
+    "family": 6,
+    "role": "claim",
+    "scores.jsonl": "a5f62036aa101d027953828c67c4257aab89ec226f73be75449c6593bc4075b9",
+    "logs/costs.jsonl": "b76555c71ca4c6e5c232e903feaaf7433dca2031533dcf208ac4197e85bb2eba",
+    "reused from M3": []
+   },
+   "f6-ts": {
+    "family": 6,
+    "role": "beside",
+    "scores.jsonl": "8cd5b5406e51dfc597d50c907b0bba160747063d052fcd078bcb09e78cde473c",
+    "logs/costs.jsonl": "a39c5af36693c063e538fe594f5254ac49a6ca29e6cae10f4c455524aba32458",
+    "reused from M3": []
+   },
+   "f7a": {
+    "family": 7,
+    "role": "claim",
+    "scores.jsonl": "10c59ad3be46c19192643cf81436a3ee5c9b6743ca39129ffcc85db8b255660e",
+    "logs/costs.jsonl": "ccd53dd2aa117900ce7604a4cd734573a5c2a755077e2104fedad1d556058e99",
+    "reused from M3": []
+   },
+   "f7a-ts": {
+    "family": 7,
+    "role": "beside",
+    "scores.jsonl": "84578a121448f7a1101e144ffe52cbbcb6ec12fcc015a6332ce7a2afa68eb002",
+    "logs/costs.jsonl": "1458afa9e7b4ca76c1517095ad5f014c6ffc4e0e4b67f5f5633f726ac7e82981",
+    "reused from M3": []
+   },
+   "f7b": {
+    "family": 7,
+    "role": "claim",
+    "scores.jsonl": "ec512de804a39b4d5e678b9f4e9b7889feb4f358a298968ad605b680f914d95f",
+    "logs/costs.jsonl": "5890aa23a41563426f3e43e6b9db059ab31fcf3ce2d44ef54b26ac06b7d6594b",
+    "reused from M3": []
+   },
+   "f7b-ts": {
+    "family": 7,
+    "role": "beside",
+    "scores.jsonl": "1dfb4d454ee19dbd9fc20bbe06dcaeea09cbe761a7ec570ab6fa336c1a53d1a4",
+    "logs/costs.jsonl": "75b178eb754fc1f44b10a038b32c11f1ffe9493ee8dd20675aea657dfdb29913",
+    "reused from M3": []
+   }
+  }
+ },
+ "versions": {
+  "meridian": [
+   {
+    "commits": {},
+    "failed": false,
+    "python": "3.12.16",
+    "versions": {
+     "arviz": "0.19.0",
+     "google-meridian": "2.1.0",
+     "jax": "0.11.2",
+     "jaxlib": "0.11.2",
+     "numpy": "2.3.5",
+     "pandas": "2.3.3",
+     "tensorflow": "2.21.0",
+     "tfp-nightly": "0.26.0.dev20260130",
+     "xarray": "2026.9.0"
+    },
+    "records": 9692,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     20
+    ],
+    "M3": []
+   },
+   {
+    "commits": {},
+    "failed": true,
+    "python": "3.12.16",
+    "versions": {
+     "arviz": "0.19.0",
+     "google-meridian": "2.1.0",
+     "jax": "0.11.2",
+     "jaxlib": "0.11.2",
+     "numpy": "2.3.5",
+     "pandas": "2.3.3",
+     "tensorflow": "2.21.0",
+     "tfp-nightly": "0.26.0.dev20260130",
+     "xarray": "2026.9.0"
+    },
+    "records": 564,
+    "families": [
+     19
+    ],
+    "M3": []
+   }
+  ],
+  "mixdyn": [
+   {
+    "commits": {
+     "bench": {
+      "commit": "5ddfe0cf05170be034b50e0ef2d6d38daf2f0aa0",
+      "dirty": false
+     },
+     "mixdyn": {
+      "commit": "cc83d2ac7e8b929ffa70665a29f6f667ccc7b459",
+      "dirty": false
+     }
+    },
+    "failed": false,
+    "python": "3.14.10",
+    "versions": {
+     "causal-hybrid-control": "1.3.1",
+     "jax": "0.12.0",
+     "mixdyn": "0.1.0",
+     "numpy": "2.5.4",
+     "scipy": "1.18.1"
+    },
+    "records": 112796,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "M3": []
+   },
+   {
+    "commits": {
+     "bench": {
+      "commit": "5ddfe0cf05170be034b50e0ef2d6d38daf2f0aa0",
+      "dirty": false
+     },
+     "mixdyn": {
+      "commit": "cc83d2ac7e8b929ffa70665a29f6f667ccc7b459",
+      "dirty": false
+     }
+    },
+    "failed": true,
+    "python": "3.14.10",
+    "versions": {
+     "causal-hybrid-control": "1.3.1",
+     "jax": "0.12.0",
+     "mixdyn": "0.1.0",
+     "numpy": "2.5.4",
+     "scipy": "1.18.1"
+    },
+    "records": 20,
+    "families": [
+     4,
+     13,
+     14
+    ],
+    "M3": []
+   }
+  ],
+  "orbit": [
+   {
+    "commits": {
+     "bench": {
+      "commit": "5ddfe0cf05170be034b50e0ef2d6d38daf2f0aa0",
+      "dirty": false
+     },
+     "mixdyn": {
+      "commit": "cc83d2ac7e8b929ffa70665a29f6f667ccc7b459",
+      "dirty": false
+     }
+    },
+    "failed": true,
+    "python": null,
+    "versions": null,
+    "records": 2,
+    "families": [
+     18
+    ],
+    "M3": []
+   },
+   {
+    "commits": {},
+    "failed": false,
+    "python": "3.12.16",
+    "versions": {
+     "cmdstanpy": "1.3.0",
+     "numpy": "2.5.4",
+     "orbit-ml": "1.1.5.1",
+     "pandas": "3.0.6",
+     "pyro-ppl": "1.9.2",
+     "scipy": "1.18.1",
+     "torch": "2.14.1+cpu"
+    },
+    "records": 10253,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "M3": []
+   },
+   {
+    "commits": {},
+    "failed": true,
+    "python": "3.12.16",
+    "versions": {
+     "cmdstanpy": "1.3.0",
+     "numpy": "2.5.4",
+     "orbit-ml": "1.1.5.1",
+     "pandas": "3.0.6",
+     "pyro-ppl": "1.9.2",
+     "scipy": "1.18.1",
+     "torch": "2.14.1+cpu"
+    },
+    "records": 1,
+    "families": [
+     18
+    ],
+    "M3": []
+   }
+  ],
+  "pymc-marketing": [
+   {
+    "commits": {},
+    "failed": false,
+    "python": "3.12.16",
+    "versions": {
+     "arviz": "1.3.0",
+     "numpy": "2.4.6",
+     "pandas": "3.1.0",
+     "pymc": "6.3.2",
+     "pymc-marketing": "1.3.0",
+     "pytensor": "3.3.6",
+     "scipy": "1.18.1"
+    },
+    "records": 10256,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "M3": []
+   }
+  ]
+ },
+ "settings": {
+  "anchored floored": {
+   "planner": [
+    {
+     "value": "water-filling on a table",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "curves": [
+    {
+     "value": [
+      "michaelis-menten",
+      "logistic"
+     ],
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "lift rows read": [
+    {
+     "value": 12,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      12,
+      13,
+      14,
+      18,
+      19,
+      20
+     ]
+    },
+    {
+     "value": 3,
+     "families": [
+      7
+     ]
+    },
+    {
+     "value": 6,
+     "families": [
+      7
+     ]
+    },
+    {
+     "value": 8,
+     "families": [
+      17
+     ]
+    }
+   ],
+   "floor, a share of the least weekly spend": [
+    {
+     "value": 0.9,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "time guard": [
+    {
+     "value": 0.8,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ]
+  },
+  "anchored held": {
+   "planner": [
+    {
+     "value": "water-filling on a table",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "curves": [
+    {
+     "value": [
+      "michaelis-menten",
+      "logistic"
+     ],
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "lift rows read": [
+    {
+     "value": 12,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      12,
+      13,
+      14,
+      18,
+      19,
+      20
+     ]
+    },
+    {
+     "value": 3,
+     "families": [
+      7
+     ]
+    },
+    {
+     "value": 6,
+     "families": [
+      7
+     ]
+    },
+    {
+     "value": 8,
+     "families": [
+      17
+     ]
+    }
+   ],
+   "routes a flagged world to": [
+    {
+     "value": "stacked",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "time guard": [
+    {
+     "value": 0.8,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ]
+  },
+  "margin held": {
+   "planner": [
+    {
+     "value": "water-filling",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "retentions": [
+    {
+     "value": [
+      0.1,
+      0.3,
+      0.5,
+      0.7,
+      0.9
+     ],
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "kernel weeks": [
+    {
+     "value": 6,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      13,
+      18,
+      19,
+      20
+     ]
+    },
+    {
+     "value": 9,
+     "families": [
+      12
+     ]
+    },
+    {
+     "value": 156,
+     "families": [
+      14
+     ]
+    },
+    {
+     "value": 1,
+     "families": [
+      17
+     ]
+    }
+   ],
+   "AR(1) grid": [
+    {
+     "value": [
+      0.3,
+      0.6,
+      0.8,
+      0.9,
+      0.95,
+      0.98
+     ],
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "time guard": [
+    {
+     "value": 0.8,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ]
+  },
+  "meridian": {
+   "sampling": [
+    {
+     "value": {
+      "n_adapt": 1000,
+      "n_burnin": 500,
+      "n_chains": 10,
+      "n_keep": 1000
+     },
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      20
+     ]
+    }
+   ],
+   "automatic knot selection": [
+    {
+     "value": true,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      20
+     ]
+    }
+   ],
+   "ROI prior at k = 0: loc": [
+    {
+     "value": [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      18,
+      20
+     ]
+    },
+    {
+     "value": [
+      0.2,
+      0.2
+     ],
+     "families": [
+      17
+     ]
+    }
+   ],
+   "scale": [
+    {
+     "value": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      18,
+      20
+     ]
+    },
+    {
+     "value": [
+      0.9,
+      0.9
+     ],
+     "families": [
+      17
+     ]
+    }
+   ],
+   "max lag": [
+    {
+     "value": 5,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      13,
+      18,
+      20
+     ]
+    },
+    {
+     "value": 8,
+     "families": [
+      12
+     ]
+    },
+    {
+     "value": 155,
+     "families": [
+      14
+     ]
+    },
+    {
+     "value": 0,
+     "families": [
+      17
+     ]
+    }
+   ],
+   "dtype": [
+    {
+     "value": "float64",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      20
+     ]
+    }
+   ]
+  },
+  "orbit": {
+   "model": [
+    {
+     "value": "log-log KTR (Ng, Wang and Dai 2021)",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "samples": [
+    {
+     "value": 400,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "steps": [
+    {
+     "value": "KTR's default",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "holdout weeks": [
+    {
+     "value": 13,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "seasonality": [
+    {
+     "value": 52,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ]
+  },
+  "pymc-marketing": {
+   "model": [
+    {
+     "value": "static",
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "chains": [
+    {
+     "value": 4,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "draws": [
+    {
+     "value": 1000,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ],
+   "adstock weeks": [
+    {
+     "value": 6,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      13,
+      18,
+      19,
+      20
+     ]
+    },
+    {
+     "value": 9,
+     "families": [
+      12
+     ]
+    },
+    {
+     "value": 156,
+     "families": [
+      14
+     ]
+    },
+    {
+     "value": 1,
+     "families": [
+      17
+     ]
+    }
+   ],
+   "yearly harmonics": [
+    {
+     "value": 3,
+     "families": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      12,
+      13,
+      14,
+      17,
+      18,
+      19,
+      20
+     ]
+    }
+   ]
+  }
+ },
+ "compute": {
+  "box": {
+   "cpus": 192,
+   "memory_gib": 370,
+   "launches": 3,
+   "admitted_cpus": 188,
+   "launched": [
+    "2026-11-21T06:27:48+00:00",
+    "2026-11-21T11:54:09+00:00",
+    "2026-11-21T13:48:58+00:00"
+   ]
+  },
+  "families": {
+   "0": {
+    "processes": 3100,
+    "core_hours": {
+     "engine": 11.552549303611112,
+     "rivals": 80.36352034333333,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.7309131622314453,
+     "most": 9.488136291503906
+    },
+    "wall_seconds": {
+     "median": 88.79631400108337,
+     "most": 379.8364899158478
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "1": {
+    "processes": 5220,
+    "core_hours": {
+     "engine": 19.855276350833332,
+     "rivals": 135.48688510305556,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.5701122283935547,
+     "most": 8.032344818115234
+    },
+    "wall_seconds": {
+     "median": 88.0077999830246,
+     "most": 338.9525694847107
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "2": {
+    "processes": 2699,
+    "core_hours": {
+     "engine": 10.45319136,
+     "rivals": 72.0911013063889,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.7153129577636719,
+     "most": 10.016624450683594
+    },
+    "wall_seconds": {
+     "median": 91.48909902572632,
+     "most": 388.8212585449219
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "3": {
+    "processes": 2700,
+    "core_hours": {
+     "engine": 10.618411874166666,
+     "rivals": 71.08919005166666,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.6585903167724609,
+     "most": 8.31964111328125
+    },
+    "wall_seconds": {
+     "median": 93.41787338256836,
+     "most": 337.32822918891907
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "4": {
+    "processes": 5220,
+    "core_hours": {
+     "engine": 18.061025472500003,
+     "rivals": 124.23800711777777,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.4110603332519531,
+     "most": 10.175678253173828
+    },
+    "wall_seconds": {
+     "median": 78.46267485618591,
+     "most": 435.4171299934387
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "5": {
+    "processes": 2400,
+    "core_hours": {
+     "engine": 9.231367292777778,
+     "rivals": 62.73975521166667,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.5699748992919922,
+     "most": 7.390544891357422
+    },
+    "wall_seconds": {
+     "median": 91.474862575531,
+     "most": 346.1565773487091
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "6": {
+    "processes": 2400,
+    "core_hours": {
+     "engine": 9.421785424444444,
+     "rivals": 71.62602969583334,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.5703029632568359,
+     "most": 10.20492172241211
+    },
+    "wall_seconds": {
+     "median": 92.7400484085083,
+     "most": 429.42318868637085
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "7": {
+    "processes": 2519,
+    "core_hours": {
+     "engine": 8.322804744444444,
+     "rivals": 56.545056035,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.4233360290527344,
+     "most": 7.064430236816406
+    },
+    "wall_seconds": {
+     "median": 76.88076186180115,
+     "most": 284.6994140148163
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "12": {
+    "processes": 4600,
+    "core_hours": {
+     "engine": 13.555299861111111,
+     "rivals": 92.03056713194444,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.5767116546630859,
+     "most": 10.388988494873047
+    },
+    "wall_seconds": {
+     "median": 65.9887353181839,
+     "most": 443.2333242893219
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "13": {
+    "processes": 5200,
+    "core_hours": {
+     "engine": 15.0557494525,
+     "rivals": 101.53168608000001,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.43299293518066406,
+     "most": 7.293422698974609
+    },
+    "wall_seconds": {
+     "median": 65.17673921585083,
+     "most": 335.3171694278717
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "14": {
+    "processes": 5200,
+    "core_hours": {
+     "engine": 15.612280309722221,
+     "rivals": 220.202119805,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.6432399749755859,
+     "most": 12.30154800415039
+    },
+    "wall_seconds": {
+     "median": 69.61485004425049,
+     "most": 1148.3613498210907
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "17": {
+    "processes": 2399,
+    "core_hours": {
+     "engine": 6.3077627750000005,
+     "rivals": 48.268128125000004,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.4459953308105469,
+     "most": 1.4167213439941406
+    },
+    "wall_seconds": {
+     "median": 73.32002091407776,
+     "most": 193.74632620811462
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "18": {
+    "processes": 2401,
+    "core_hours": {
+     "engine": 9.160050402222224,
+     "rivals": 72.217771725,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.447265625,
+     "most": 10.22635269165039
+    },
+    "wall_seconds": {
+     "median": 94.31873679161072,
+     "most": 405.2687726020813
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "19": {
+    "processes": 2820,
+    "core_hours": {
+     "engine": 10.622796961944445,
+     "rivals": 51.24589527888889,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.4792060852050781,
+     "most": 0.8844680786132812
+    },
+    "wall_seconds": {
+     "median": 49.13497757911682,
+     "most": 222.64366364479065
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   },
+   "20": {
+    "processes": 2400,
+    "core_hours": {
+     "engine": 9.587888235555555,
+     "rivals": 64.72602784333334,
+     "side": 0.0
+    },
+    "peak_gib": {
+     "median": 0.5913467407226562,
+     "most": 7.277885437011719
+    },
+    "wall_seconds": {
+     "median": 93.6467627286911,
+     "most": 346.6868562698364
+    },
+    "cpu_model": [
+     "AMD EPYC 7R13 Processor"
+    ],
+    "threads": [
+     "1"
+    ],
+    "reused": {
+     "cpu_model": [],
+     "threads": []
+    }
+   }
+  },
+  "arms": {
+   "anchored": {
+    "rival": false,
+    "cpus": [
+     1.0
+    ],
+    "rungs": [
+     1
+    ],
+    "processes": 5128,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "core_hours": 13.331992161666665,
+    "peak_gib": {
+     "median": 0.17282867431640625,
+     "most": 0.17541885375976562
+    },
+    "wall_seconds": {
+     "median": 9.967684507369995,
+     "most": 14.606581211090088
+    }
+   },
+   "chc": {
+    "rival": false,
+    "cpus": [
+     1.0
+    ],
+    "rungs": [
+     2
+    ],
+    "processes": 5128,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "core_hours": 105.89331775666668,
+    "peak_gib": {
+     "median": 0.8808364868164062,
+     "most": 0.9365119934082031
+    },
+    "wall_seconds": {
+     "median": 75.67011177539825,
+     "most": 153.88685488700867
+    }
+   },
+   "margin": {
+    "rival": false,
+    "cpus": [
+     1.0
+    ],
+    "rungs": [
+     2
+    ],
+    "processes": 5127,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "core_hours": 15.001659370277778,
+    "peak_gib": {
+     "median": 0.17249679565429688,
+     "most": 0.180755615234375
+    },
+    "wall_seconds": {
+     "median": 11.200488328933716,
+     "most": 16.794076681137085
+    }
+   },
+   "meridian": {
+    "rival": true,
+    "cpus": [
+     1.2
+    ],
+    "rungs": [
+     1
+    ],
+    "processes": 10254,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "core_hours": 647.9748378263888,
+    "peak_gib": {
+     "median": 2.3797645568847656,
+     "most": 12.30154800415039
+    },
+    "wall_seconds": {
+     "median": 177.93719851970673,
+     "most": 1148.3613498210907
+    }
+   },
+   "orbit": {
+    "rival": true,
+    "cpus": [
+     1.0
+    ],
+    "rungs": [
+     1
+    ],
+    "processes": 10258,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "core_hours": 219.48190764722224,
+    "peak_gib": {
+     "median": 0.40679359436035156,
+     "most": 0.8202095031738281
+    },
+    "wall_seconds": {
+     "median": 81.04114246368408,
+     "most": 122.81670832633972
+    }
+   },
+   "pymc-marketing": {
+    "rival": true,
+    "cpus": [
+     1.5
+    ],
+    "rungs": [
+     1
+    ],
+    "processes": 10255,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "core_hours": 456.94499538027776,
+    "peak_gib": {
+     "median": 0.7472076416015625,
+     "most": 1.1071090698242188
+    },
+    "wall_seconds": {
+     "median": 105.54061579704285,
+     "most": 229.5561559200287
+    }
+   },
+   "ridge": {
+    "rival": false,
+    "cpus": [
+     1.0
+    ],
+    "rungs": [
+     2
+    ],
+    "processes": 5128,
+    "families": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     12,
+     13,
+     14,
+     17,
+     18,
+     19,
+     20
+    ],
+    "core_hours": 43.19127053222222,
+    "peak_gib": {
+     "median": 0.2519855499267578,
+     "most": 0.2639617919921875
+    },
+    "wall_seconds": {
+     "median": 29.46903932094574,
+     "most": 95.27873301506042
+    }
+   }
+  }
+ }
+}

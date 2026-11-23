@@ -1,32 +1,42 @@
-"""Write the README's record of M3, the scored run its claim was read on, from M3's own records.
+"""Write the README's record of the scored runs its claim was read on, M4 and M3, from their own
+records.
 
-The README's tables of versions, compute, worlds per cell and the tuned rivals sit between
-`<!-- record:NAME -->` and `<!-- /record:NAME -->` markers. This script writes each block, and
-`tests/test_readme.py` fails where a block is not what it writes: no number in them is typed.
+The README states M4's claim, and M3's verdicts on the geo families, which M4 did not run and left
+standing. Its tables of the claim, the worlds per cell, the losses, the tuned rivals, the versions
+and the compute sit between `<!-- record:NAME -->` and `<!-- /record:NAME -->` markers. This script
+writes each block, and `tests/test_readme.py` fails where a block is not what it writes: no number
+in them is typed. The blocks named `m4-*` are M4's, with M3's geo rows where they say so; `tuned`,
+`versions` and `compute` are M3's.
 
-The records are not in this repository (25 GB, not published yet), so it runs in two steps:
+The records are not in this repository (M3's 25 GB, M4's 7.8 GB, not published yet), so it runs in
+two steps, the first once for each run:
 
-    uv run --no-project python -I scripts/readme_record.py extract RUN READING
+    uv run --no-project python -I scripts/readme_record.py extract --run m4 STAGE READING
     uv run python scripts/readme_record.py
 
-`extract` reads the run where it lies. RUN is the scored stage's directory: each root's
+`extract` reads one run where it lies. STAGE is the scored stage's directory: each root's
 `run.json`, `scores.jsonl`, `logs/costs.jsonl` and `records/`, and the stage's `COMMITS`,
-`plan.json` and `reuse.json`. READING is the output of `python -m scorecard.claim read --recorded`
-over the run's claim roots, the reading the pre-registration declares. It writes what the README
-prints, with the SHA-256 of every file the numbers come from and no path, to
-`evidence/results/m3_record.json`: a reader with the records runs it again and compares the file.
-The second command writes the README's blocks from that file alone.
+`plan.json`, `reuse.json` and `launches.log`. READING is the output of
+`python -m scorecard.claim read --recorded` over the run's claim roots, the reading the run's
+pre-registration declares. It writes what the
+README prints, with the SHA-256 of every file the numbers come from and no path, to
+`evidence/results/m4_record.json` (`--run m3`: `m3_record.json`): a reader with the records runs it
+again and compares the file. The second command writes the README's blocks from those two files
+alone.
 
 What each block reads:
 
-- **cells**: each verdict's comparisons in the reading, their complete cases and failures;
-- **tuned**: each comparison in the reading of the claim's arm with Meridian and Robyn, at their
+- **m4-claim**, **m4-cells**, **m4-words**: each verdict that holds, its comparisons in the reading,
+  their complete cases, failures and words, and Holm's losses: M4's, then M3's on the geo families;
+- **m4-losses**, **m4-exploratory**: each comparison of those verdicts, and of M4's rungs not
+  claimed, that loses, is not within the margin, is one of Holm's losses or is not within 0.01;
+- **tuned**: each comparison in M3's reading of the claim's arm with Meridian and Robyn, at their
   recommended settings and tuned;
-- **versions**: each record's `versions`, `python` and `provenance` commits, and the `settings`
-  of the arms the claim reads;
-- **compute**: each process's line of `logs/costs.jsonl` (its CPU time, its peak memory and its
-  wall), the CPU quota of its class in `plan.json`, and the `cpu_model` and `threads` its records'
-  `cost` holds.
+- **m4-versions**, **versions**: each record's `versions`, `python` and `provenance` commits, and
+  the `settings` of the arms the claim reads;
+- **m4-compute**, **compute**: each process's line of `logs/costs.jsonl` (its CPU time, its peak
+  memory and its wall), the CPU quota of its class in `plan.json`, and the `cpu_model` and
+  `threads` its records' `cost` holds.
 """
 
 from __future__ import annotations
@@ -39,14 +49,14 @@ import statistics
 import sys
 import textwrap
 from collections import defaultdict
+from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-RECORD = ROOT / "evidence" / "results" / "m3_record.json"
 README = ROOT / "README.md"
-PREREGISTRATION = ROOT / "scorecard" / "preregistration" / "m3.md"
 GIB = 2.0**30
 MINUS = chr(0x2212)  # the README's minus sign
 DASH = chr(0x2013)
@@ -54,6 +64,7 @@ BUILT_IN = ("status quo", "equal split")
 RIVALS = ("status quo", "equal split", "meridian", "pymc-marketing", "orbit")
 TUNED = ("meridian", "meridian tuned", "robyn", "robyn tuned")
 TOOLS = ("meridian", "meridian tuned", "pymc-marketing", "orbit", "robyn", "robyn tuned")
+WORDS = ("beats", "ties", "loses to", "not compared")
 NAMES = {
     "status quo": "Status quo",
     "equal split": "Equal split",
@@ -86,6 +97,14 @@ SETTINGS: dict[str, tuple[Setting, ...]] = {
         ("curves", ("curve families",)),
         ("lift rows read", ("lift_rows_read",)),
         ("routes a flagged world to", ("routes_to",)),
+        ("time guard", ("time_held",)),
+    ),
+    # Its records carry `anchored held`'s `routes_to`, but the variant plays no route (ADR 0099).
+    "anchored floored": (
+        ("planner", ("planner",)),
+        ("curves", ("curve families",)),
+        ("lift rows read", ("lift_rows_read",)),
+        ("floor, a share of the least weekly spend", ("spend_floor",)),
         ("time guard", ("time_held",)),
     ),
     "stacked": (
@@ -147,11 +166,46 @@ SETTINGS: dict[str, tuple[Setting, ...]] = {
         ("ts_validation", ("ts_validation",)),
     ),
 }
-ROLES = {
-    "margin held": "the claim's arm at k = 0",
-    "anchored held": "the claim's arm at the tested rung, `gs held`: its router",
-    "stacked": "`gs held`'s routed plan, the Bayesian engine's",
-    "geo eb": "the claim's arm on the geo families",
+
+
+@dataclass(frozen=True, slots=True)
+class Run:
+    """A scored run: its record file, its pre-registration, the run whose records it could reuse,
+    the arms its claim reads with their roles, and the processes that plan them."""
+
+    name: str
+    record: Path
+    preregistration: Path
+    reused_from: str
+    roles: dict[str, str]
+    claim_processes: frozenset[str]
+
+
+RUNS = {
+    "m3": Run(
+        "M3",
+        ROOT / "evidence" / "results" / "m3_record.json",
+        ROOT / "scorecard" / "preregistration" / "m3.md",
+        "M2",
+        {
+            "margin held": "the claim's arm at k = 0",
+            "anchored held": "the claim's arm at the tested rung, `gs held`: its router",
+            "stacked": "`gs held`'s routed plan, the Bayesian engine's",
+            "geo eb": "the claim's arm on the geo families",
+        },
+        frozenset({"margin", "anchored", "bayes", "geo-eb"}),
+    ),
+    "m4": Run(
+        "M4",
+        ROOT / "evidence" / "results" / "m4_record.json",
+        ROOT / "scorecard" / "preregistration" / "m4.md",
+        "M3",
+        {
+            "margin held": "the claim's arm at k = 0",
+            "anchored floored": "the claim's arm at the tested rung, not routed",
+        },
+        frozenset({"margin", "anchored"}),
+    ),
 }
 LINE = re.compile(
     r"^  family (?P<family>\d+), k = (?P<k>\d+), (?P<arm>.+?) less (?P<rival>.+?)\s{2,}"
@@ -161,15 +215,29 @@ NUMBER = r"[-+]\d+\.\d+"
 READ = re.compile(
     rf"^(?P<mean>{NUMBER}) \[(?P<low>{NUMBER}), (?P<high>{NUMBER})\]; "
     r"(?P<within>within|not within) [\d.]+; (?P<word>beats|ties|loses to), unadjusted"
+    r"(?: \(level (?P<level>[^)]+)\))?"
 )
 CASES = re.compile(
     r"(?P<n>\d+) complete cases, the rival failed (?P<rival_failed>\d+), "
     r"the default (?P<default_failed>\d+)"
 )
 CAP = re.compile(r"on its cap, (?P<cap>\d+) worlds an environment")
-VERDICT = re.compile(r"^  family (?P<family>\d+), k = (?P<k>\d+): (?P<word>holds|not claimed)")
+VERDICT = re.compile(
+    r"^  family (?P<family>\d+), k = (?P<k>\d+): (?P<word>holds|not claimed)"
+    r"(?: \(level (?P<level>[^;)]+))?"
+)
+HOLM = re.compile(
+    r"^losses by Holm's step-down at familywise (?P<familywise>[\d.]+) over (?P<over>\d+) "
+    r"comparisons: (?P<losses>.*)$"
+)
+SECONDARY = re.compile(
+    r"^  (?P<name>every stage of every fit past the bounds at the status quo"
+    r"|at the margin [\d.]+): (?P<within>\d+) of (?P<of>\d+) claimed comparisons within; "
+    r"not within: (?P<off>.*)$"
+)
+NAMED = re.compile(r"^family (?P<family>\d+) k (?P<k>\d+) (?P<rival>.+)$")
 BLOCK = re.compile(
-    r"<!-- record:(?P<name>[a-z-]+) -->\n(?P<body>.*?)<!-- /record:(?P=name) -->", re.DOTALL
+    r"<!-- record:(?P<name>[a-z0-9-]+) -->\n(?P<body>.*?)<!-- /record:(?P=name) -->", re.DOTALL
 )
 
 
@@ -193,8 +261,23 @@ def _role(name: str, declared: dict[str, dict[str, Any]]) -> str:
     return "beside" if any(name.startswith(f"{c}-") for c in claims) else "side"
 
 
+def _named(text: str) -> list[dict[str, Any]]:
+    """The comparisons a reading's list names, `family F k K RIVAL, ...`, or none."""
+    if text == "none":
+        return []
+    found = []
+    for item in text.split(", "):
+        m = NAMED.match(item)
+        if m is None:
+            msg = f"a comparison the reader does not name: {item[:80]}"
+            raise ValueError(msg)
+        found.append({"family": int(m["family"]), "k": int(m["k"]), "rival": m["rival"]})
+    return found
+
+
 def _reading(text: str) -> dict[str, Any]:
-    """The claim's comparisons and verdicts as the reading prints them."""
+    """The claim's comparisons and verdicts, the headline, Holm's losses and the secondary
+    readings of the claimed comparisons, as the reading prints them."""
     comparisons = []
     lines = text.splitlines()
     end = next(i for i, line in enumerate(lines) if line.startswith("the claim by family"))
@@ -226,14 +309,38 @@ def _reading(text: str) -> dict[str, Any]:
                 "exploratory": rest.endswith("; exploratory") or "; exploratory;" in rest,
                 "claimed": "not claimed" not in rest,
                 "tested": "the tested rung: " in rest,
+                "loss level": read["level"] if read else None,
             }
         )
     verdicts = [
-        {"family": int(v["family"]), "k": int(v["k"]), "word": v["word"]}
+        {"family": int(v["family"]), "k": int(v["k"]), "word": v["word"], "level": v["level"]}
         for v in map(VERDICT.match, lines[end:])
         if v is not None
     ]
-    return {"comparisons": comparisons, "verdicts": verdicts}
+    headline = [line for line in lines[end:] if re.match(r"^(no )?headline", line)]
+    holm = [m for m in map(HOLM.match, lines[end:]) if m is not None]
+    secondary = [m for m in map(SECONDARY.match, lines[end:]) if m is not None]
+    if len(headline) != 1 or len(holm) != 1:
+        msg = "a reading without one headline line and one line of Holm's losses"
+        raise ValueError(msg)
+    return {
+        "comparisons": comparisons,
+        "verdicts": verdicts,
+        "headline": headline[0],
+        "holm": {
+            "familywise": holm[0]["familywise"],
+            "over": int(holm[0]["over"]),
+            "losses": _named(holm[0]["losses"]),
+        },
+        "secondary": {
+            s["name"]: {
+                "within": int(s["within"]),
+                "of": int(s["of"]),
+                "not within": _named(s["off"]),
+            }
+            for s in secondary
+        },
+    }
 
 
 def _versions(directory: Path) -> dict[str, Any]:
@@ -281,7 +388,7 @@ def _summary(values: list[float]) -> dict[str, float]:
     return {"median": statistics.median(values), "most": max(values)}
 
 
-def extract(run: Path, reading: Path, workers: int = 4) -> dict[str, Any]:
+def extract(run: Path, reading: Path, scored: Run, workers: int = 4) -> dict[str, Any]:
     roots = sorted(p.parent for p in run.glob("*/run.json"))
     declared = {r.name: json.loads((r / "run.json").read_text(encoding="utf-8")) for r in roots}
     roles = {name: _role(name, declared) for name in declared}
@@ -291,6 +398,7 @@ def extract(run: Path, reading: Path, workers: int = 4) -> dict[str, Any]:
     for line in (run / "COMMITS").read_text(encoding="utf-8").splitlines():
         name, *values = line.split()
         commits[name] = values[-1]
+    earlier = scored.reused_from
 
     processes: dict[tuple[int, str], list[dict[str, float]]] = defaultdict(list)
     side: dict[int, float] = defaultdict(float)
@@ -312,7 +420,7 @@ def extract(run: Path, reading: Path, workers: int = 4) -> dict[str, Any]:
             if (root / "scores.jsonl").exists()
             else None,
             "logs/costs.jsonl": sha256(root / "logs" / "costs.jsonl"),
-            "reused from M2": sorted(reused),
+            f"reused from {earlier}": sorted(reused),
         }
         rival_of[name] = set(run_json.get("external", ()))
         for line in (root / "logs" / "costs.jsonl").read_text(encoding="utf-8").splitlines():
@@ -362,9 +470,11 @@ def extract(run: Path, reading: Path, workers: int = 4) -> dict[str, Any]:
         group = tools.get(found["directory"], "mixdyn")
         reused = group in set(reuse.get(root, {}).get("tools", ()))
         for key, count in found["seen"].items():
-            held = versions[group].setdefault(key, {"records": 0, "families": set(), "M2": set()})
+            held = versions[group].setdefault(
+                key, {"records": 0, "families": set(), earlier: set()}
+            )
             held["records"] += count
-            held["M2" if reused else "families"].add(int(declared[root]["family"]))
+            held[earlier if reused else "families"].add(int(declared[root]["family"]))
 
     families: dict[str, dict[str, Any]] = {}
     for family in sorted({f for f, _ in processes}):
@@ -409,13 +519,14 @@ def extract(run: Path, reading: Path, workers: int = 4) -> dict[str, Any]:
         "memory_gib": int(machine[2]),
         "launches": launches.count("box launch: scored"),
         "admitted_cpus": admitted.pop(),
+        "launched": re.findall(r"^(\S+) box launch: scored", launches, flags=re.MULTILINE),
     }
     text = reading.read_text(encoding="utf-8")
     return {
         "about": (
-            "M3's record as the README prints it, written by `scripts/readme_record.py extract` "
-            "from the run's records; every file it read is named by the run's root and its "
-            "SHA-256."
+            f"{scored.name}'s record as the README prints it, written by "
+            "`scripts/readme_record.py extract` from the run's records; every file it read is "
+            "named by the run's root and its SHA-256."
         ),
         "commits": commits,
         "reading": {
@@ -437,7 +548,7 @@ def extract(run: Path, reading: Path, workers: int = 4) -> dict[str, Any]:
                     **json.loads(key),
                     "records": held["records"],
                     "families": sorted(held["families"]),
-                    "M2": sorted(held["M2"]),
+                    earlier: sorted(held[earlier]),
                 }
                 for key, held in sorted(seen.items())
             ]
@@ -457,7 +568,9 @@ def extract(run: Path, reading: Path, workers: int = 4) -> dict[str, Any]:
     }
 
 
-# --- render: the README's blocks from the record --------------------------------------------------
+# --- render: the README's blocks from the records -------------------------------------------------
+
+Records = dict[str, dict[str, Any]]
 
 
 def _prose(text: str) -> str:
@@ -473,9 +586,9 @@ def _interval(c: dict[str, Any]) -> str:
     return f"{_signed(c['mean'])} [{_signed(c['low'])}, {_signed(c['high'])}]"
 
 
-def family_names() -> dict[int, str]:
-    """Each family's name, as the pre-registration's table of families states it."""
-    text = PREREGISTRATION.read_text(encoding="utf-8")
+def family_names(scored: Run) -> dict[int, str]:
+    """Each family's name, as the run's pre-registration's table of families states it."""
+    text = scored.preregistration.read_text(encoding="utf-8")
     table = text.split("## Families and environments", 1)[1].split("\n\n- ", 1)[0]
     names = {}
     for line in table.splitlines():
@@ -497,33 +610,171 @@ def _verdict_cells(record: dict[str, Any]) -> list[tuple[int, int]]:
     return sorted(held, key=lambda fk: (arm[fk] == "geo eb", fk))
 
 
-def cells(record: dict[str, Any]) -> str:
-    names = family_names()
-    found = {(c["family"], c["k"], c["rival"]): c for c in record["reading"]["comparisons"]}
-    head = ["Family", "Rung", "Arm", *(NAMES[r] for r in RIVALS)]
+@dataclass(frozen=True, slots=True)
+class Row:
+    """One family and rung of the claim: the run it was read in (a key of `RUNS`), its comparisons
+    by rival and its verdict's level."""
+
+    run: str
+    family: int
+    k: int
+    found: dict[str, dict[str, Any]]
+    level: str | None
+
+    @property
+    def first(self) -> dict[str, Any]:
+        return next(iter(self.found.values()))
+
+
+def _rows(records: Records, *, claimed: bool = True) -> list[Row]:
+    """The claim's family-rungs: M4's verdicts that hold, then M3's verdicts on the geo families,
+    which M4 did not run. With `claimed` false, M4's family-rungs not claimed instead."""
+    rows = []
+    for run in ("m4", "m3"):
+        record = records[run]
+        reading = record["reading"]
+        found: dict[tuple[int, int], dict[str, dict[str, Any]]] = defaultdict(dict)
+        for c in reading["comparisons"]:
+            found[c["family"], c["k"]][c["rival"]] = c
+        for v in sorted(reading["verdicts"], key=lambda v: (v["family"], v["k"])):
+            fk = (v["family"], v["k"])
+            geo = found[fk][RIVALS[0]]["arm"] == "geo eb"
+            if run == "m3" and (not geo or not claimed):
+                continue
+            if (v["word"] == "holds") == claimed:
+                held = {r: found[fk][r] for r in RIVALS}
+                rows.append(Row(run, *fk, held, v["level"]))
+    return rows
+
+
+def _holm(records: Records, row: Row) -> set[str]:
+    """The rivals Holm's step-down finds a loss to on `row`'s family and rung."""
+    found = records[row.run]["reading"]["holm"]["losses"]
+    return {h["rival"] for h in found if (h["family"], h["k"]) == (row.family, row.k)}
+
+
+def _family(row: Row) -> str:
+    return f"{row.family} {family_names(RUNS[row.run])[row.family]}"
+
+
+def _compared(c: dict[str, Any], holm: set[str], *, word: bool = False) -> str:
+    if c["mean"] is None:
+        return f"not compared: the rival failed {c['rival_failed']}"
+    notes = [c["word"]] if word else []
+    if c["within"] is False:
+        notes.append("not within δ")
+    if c["exploratory"]:
+        notes.append("exploratory")
+    if c["rival"] in holm:
+        notes.append("Holm's loss")
+    return _interval(c) + "".join(f", {n}" for n in notes)
+
+
+def claim(records: Records) -> str:
+    head = ["Family", "Rung", "Arm", "Run", "Worlds", "Level", *(NAMES[r] for r in RIVALS)]
     lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
-    for family, k in _verdict_cells(record):
-        row = [found[family, k, r] for r in RIVALS]
-        text = []
-        for c in row:
-            notes = []
-            if c["rival_failed"]:
-                notes.append(f"the rival failed {c['rival_failed']}")
-            if c["default_failed"]:
-                notes.append(f"the arm failed {c['default_failed']}")
-            if c["exploratory"]:
-                notes.append("exploratory")
-            text.append(f"{c['complete']}" + (f" ({', '.join(notes)})" if notes else ""))
+    for row in _rows(records):
+        quo = row.found["status quo"]
+        holm = _holm(records, row)
         lines.append(
-            f"| {family} {names[family]} | {_rung(row[0])} | `{row[0]['arm']}` | "
-            + " | ".join(text)
+            f"| {_family(row)} | {_rung(row.first)} | `{row.first['arm']}` | {RUNS[row.run].name} "
+            f"| {quo['complete'] + quo['default_failed']} | {row.level} | "
+            + " | ".join(_compared(row.found[r], holm) for r in RIVALS)
+            + " |"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _cases(c: dict[str, Any]) -> str:
+    notes = []
+    if c["rival_failed"]:
+        notes.append(f"the rival failed {c['rival_failed']}")
+    if c["default_failed"]:
+        notes.append(f"the arm failed {c['default_failed']}")
+    if c["exploratory"]:
+        notes.append("exploratory")
+    return f"{c['complete']}" + (f" ({', '.join(notes)})" if notes else "")
+
+
+def m4_cells(records: Records) -> str:
+    head = ["Family", "Rung", "Arm", "Run", *(NAMES[r] for r in RIVALS)]
+    lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
+    lines += [
+        f"| {_family(row)} | {_rung(row.first)} | `{row.first['arm']}` | {RUNS[row.run].name} "
+        "| " + " | ".join(_cases(row.found[r]) for r in RIVALS) + " |"
+        for row in _rows(records)
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def words(records: Records) -> str:
+    """Hall's reader's words over the claim's verdicts, by run, arm and rung, for each rival."""
+    groups: dict[tuple[str, str, str], list[Row]] = defaultdict(list)
+    for row in _rows(records):
+        groups[RUNS[row.run].name, row.first["arm"], "0" if row.k == 0 else "tested"].append(row)
+    head = ["Run", "Arm", "Rung", "Verdicts", *(NAMES[r] for r in RIVALS)]
+    lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
+    for (run, arm, rung), rows in groups.items():
+        counts = []
+        for rival in RIVALS:
+            said = [r.found[rival]["word"] for r in rows]
+            counts.append(", ".join(f"{w} {said.count(w)}" for w in WORDS if said.count(w)))
+        lines.append(
+            f"| {run} | `{arm}` | {'the tested rung' if rung == 'tested' else rung} "
+            f"| {len(rows)} | " + " | ".join(counts) + " |"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def _yes(value: bool) -> str:
+    return "yes" if value else "no"
+
+
+def losses(records: Records) -> str:
+    """Each comparison of the claim's verdicts, and of M4's rungs not claimed, that Hall's reader
+    reads as a loss, that is not within δ, that is one of Holm's losses, or that is not within
+    0.01 in the secondary reading."""
+    head = ["Family", "Rung", "Arm", "Run", "Rival", "Mean [95 % interval]", "Hall's word"]
+    head += ["Within δ = 0.05", "Holm's loss", "Within δ = 0.01"]
+    lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
+    every = _rows(records) + _rows(records, claimed=False)
+    for row in sorted(every, key=lambda r: (r.run != "m4", r.family, r.k)):
+        tight = records[row.run]["reading"]["secondary"]["at the margin 0.01"]["not within"]
+        holm = _holm(records, row)
+        for rival in RIVALS:
+            c = row.found[rival]
+            off = {"family": row.family, "k": row.k, "rival": rival} in tight
+            if c["mean"] is None or not (
+                c["word"] == "loses to" or not c["within"] or rival in holm or off
+            ):
+                continue
+            close = _yes(not off) if c["claimed"] else "not read"
+            lines.append(
+                f"| {_family(row)} | {_rung(c)} | `{c['arm']}` | {RUNS[row.run].name} "
+                f"| {NAMES[rival]} "
+                f"| {_interval(c)} | {c['word']} | {_yes(c['within'])} | {_yes(rival in holm)} "
+                f"| {close} |"
+            )
+    return "\n".join(lines) + "\n"
+
+
+def exploratory(records: Records) -> str:
+    head = ["Family", "Rung", "Arm", "Worlds", *(NAMES[r] for r in RIVALS)]
+    lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
+    for row in _rows(records, claimed=False):
+        quo = row.found["status quo"]
+        holm = _holm(records, row)
+        lines.append(
+            f"| {_family(row)} | {_rung(row.first)} | `{row.first['arm']}` "
+            f"| {quo['complete'] + quo['default_failed']} | "
+            + " | ".join(_compared(row.found[r], holm, word=True) for r in RIVALS)
             + " |"
         )
     return "\n".join(lines) + "\n"
 
 
 def tuned(record: dict[str, Any]) -> str:
-    names = family_names()
+    names = family_names(RUNS["m3"])
     found = {(c["family"], c["k"], c["rival"]): c for c in record["reading"]["comparisons"]}
     rows = sorted(
         {(f, k) for f, k, r in found if r in ("meridian tuned", "robyn tuned")},
@@ -550,10 +801,10 @@ def tuned(record: dict[str, Any]) -> str:
     counts = []
     for rival in TUNED:
         read = [found[f, k, rival] for f, k in rows if (f, k, rival) in found]
-        words = {w: sum(c["word"] == w for c in read) for w in ("beats", "ties", "loses to")}
-        words["is not compared"] = sum(c["mean"] is None for c in read)
-        said = ", ".join(f"{w} on {n}" for w, n in words.items() if n)
-        counts.append(f"against {NAMES[rival]} it {said}, of {len(read)}")
+        said = {w: sum(c["word"] == w for c in read) for w in ("beats", "ties", "loses to")}
+        said["is not compared"] = sum(c["mean"] is None for c in read)
+        listed = ", ".join(f"{w} on {n}" for w, n in said.items() if n)
+        counts.append(f"against {NAMES[rival]} it {listed}, of {len(read)}")
     lines += ["", _prose("Over these rows the claim's arm reads: " + "; ".join(counts) + ".")]
     return "\n".join(lines) + "\n"
 
@@ -585,17 +836,18 @@ def _families(numbers: list[int]) -> str:
     return ", ".join(map(str, numbers))
 
 
-def _named(numbers: list[int]) -> str:
+def _listed(numbers: list[int]) -> str:
     return f"{'family' if len(numbers) == 1 else 'families'} {_families(numbers)}"
 
 
-def _ran(e: dict[str, Any]) -> str:
-    """The families whose records hold `e`'s versions: run in M3, and reused from M2."""
+def _ran(e: dict[str, Any], earlier: str) -> str:
+    """The families whose records hold `e`'s versions: run in this run, and reused from the
+    earlier one."""
     parts = []
     if e["families"]:
-        parts.append(_named(e["families"]))
-    if e["M2"]:
-        parts.append(f"M2's records reused on {_families(e['M2'])}")
+        parts.append(_listed(e["families"]))
+    if e[earlier]:
+        parts.append(f"{earlier}'s records reused on {_families(e[earlier])}")
     return "; ".join(parts)
 
 
@@ -607,29 +859,30 @@ def _tool_role(record: dict[str, Any], tool: str) -> str:
     return f"{kind}, read beside the claim" if beside else kind
 
 
-def _failures(entries: list[dict[str, Any]]) -> str:
+def _failures(entries: list[dict[str, Any]], earlier: str) -> str:
     failed = [e for e in entries if e["failed"]]
     if not failed:
         return ""
-    families = sorted({f for e in failed for f in (*e["families"], *e["M2"])})
+    families = sorted({f for e in failed for f in (*e["families"], *e[earlier])})
     count = sum(e["records"] for e in failed)
-    return f"; {count} failure records, {_named(families)}"
+    return f"; {count} failure records, {_listed(families)}"
 
 
-def versions(record: dict[str, Any]) -> str:
+def versions(record: dict[str, Any], scored: Run) -> str:
     lines = [
         "| Arm | Role | Version, as each record states it | Run with | How it was configured |",
         "|---|---|---|---|---|",
     ]
     held = record["versions"]
     arms = record["compute"]["arms"]
+    earlier = scored.reused_from
     for e in (e for e in held["mixdyn"] if not e["failed"]):
         built = ", ".join(
             f"{name} at `{c['commit'][:7]}`" + (", dirty" if c["dirty"] else "")
             for name, c in e["commits"].items()
         )
         named = ", ".join(f"{k} {v}" for k, v in e["versions"].items() if k != "mixdyn")
-        for arm, role in ROLES.items():
+        for arm, role in scored.roles.items():
             families = sorted(
                 {
                     f
@@ -639,15 +892,16 @@ def versions(record: dict[str, Any]) -> str:
                 }
             )
             lines.append(
-                f"| `{arm}` | {role}; {_named(families)} | {built} "
+                f"| `{arm}` | {role}; {_listed(families)} | {built} "
                 f"| Python {e['python']}; {named} | {_settings(record, arm)} |"
             )
-        claimed = {"margin", "anchored", "bayes", "geo-eb"}
-        others = sorted(a for a, row in arms.items() if not row["rival"] and a not in claimed)
+        others = sorted(
+            a for a, row in arms.items() if not row["rival"] and a not in scored.claim_processes
+        )
         families = sorted({f for a in others for f in arms[a]["families"]})
         lines.append(
             f"| {', '.join(f'`{a}`' for a in others)} | the engine's other arms, recorded beside "
-            f"the claim; {_named(families)} | {built} | Python {e['python']}; {named} "
+            f"the claim; {_listed(families)} | {built} | Python {e['python']}; {named} "
             "| each record's own settings |"
         )
     for tool in TOOLS:
@@ -670,8 +924,8 @@ def versions(record: dict[str, Any]) -> str:
                     f"{k} {v}" for k, v in found.items() if k != package
                 )
             lines.append(
-                f"| {NAMES[tool]} | {_tool_role(record, tool)}; {_ran(e)}{_failures(entries)} "
-                f"| {version} | {rest} | {_settings(record, tool)} |"
+                f"| {NAMES[tool]} | {_tool_role(record, tool)}; {_ran(e, earlier)}"
+                f"{_failures(entries, earlier)} | {version} | {rest} | {_settings(record, tool)} |"
             )
     return "\n".join(lines) + "\n"
 
@@ -688,8 +942,8 @@ def _wall(seconds: float) -> str:
     return f"{seconds:.0f} s" if seconds < 600 else f"{seconds / 60:.0f} min"
 
 
-def compute(record: dict[str, Any]) -> str:
-    names = family_names()
+def compute(record: dict[str, Any], scored: Run) -> str:
+    names = family_names(scored)
     families, arms, box = (record["compute"][k] for k in ("families", "arms", "box"))
     lines = [
         _prose(
@@ -748,8 +1002,9 @@ def compute(record: dict[str, Any]) -> str:
     if reused:
         models = sorted({m for held in reused.values() for m in held})
         notes.append(
-            f"Families {_families([int(f) for f in reused])} read the rivals' records of M2, "
-            f"whose compute is not counted here; those records name {', '.join(models)}."
+            f"Families {_families([int(f) for f in reused])} read the rivals' records of "
+            f"{scored.reused_from}, whose compute is not counted here; those records name "
+            f"{', '.join(models)}."
         )
     if side:
         notes.append(
@@ -759,12 +1014,28 @@ def compute(record: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n" + ("\n" + _prose(" ".join(notes)) + "\n" if notes else "")
 
 
-RENDERERS = {"cells": cells, "tuned": tuned, "versions": versions, "compute": compute}
+RENDERERS: dict[str, Callable[[Records], str]] = {
+    "m4-claim": claim,
+    "m4-cells": m4_cells,
+    "m4-words": words,
+    "m4-losses": losses,
+    "m4-exploratory": exploratory,
+    "m4-versions": lambda records: versions(records["m4"], RUNS["m4"]),
+    "m4-compute": lambda records: compute(records["m4"], RUNS["m4"]),
+    "tuned": lambda records: tuned(records["m3"]),
+    "versions": lambda records: versions(records["m3"], RUNS["m3"]),
+    "compute": lambda records: compute(records["m3"], RUNS["m3"]),
+}
 
 
-def render(record: dict[str, Any]) -> dict[str, str]:
-    """Each block the README holds, as this script writes it from `record`."""
-    return {name: write(record) for name, write in RENDERERS.items()}
+def records() -> Records:
+    """Each run's record, as `extract` wrote it."""
+    return {run: json.loads(s.record.read_text(encoding="utf-8")) for run, s in RUNS.items()}
+
+
+def render(held: Records) -> dict[str, str]:
+    """Each block the README holds, as this script writes it from the runs' records."""
+    return {name: write(held) for name, write in RENDERERS.items()}
 
 
 def blocks(text: str) -> dict[str, str]:
@@ -783,22 +1054,24 @@ def rewrite(text: str, written: dict[str, str]) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     commands = parser.add_subparsers(dest="command")
-    take = commands.add_parser("extract", help="read the run's records into the record file")
-    take.add_argument("run", type=Path)
+    take = commands.add_parser("extract", help="read one run's records into its record file")
+    take.add_argument("--run", choices=sorted(RUNS), required=True)
+    take.add_argument("run_directory", type=Path, metavar="run")
     take.add_argument("reading", type=Path)
     take.add_argument("--workers", type=int, default=4)
     args = parser.parse_args(argv)
     if args.command == "extract":
-        record = extract(args.run, args.reading, args.workers)
-        RECORD.write_text(json.dumps(record, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        scored = RUNS[args.run]
+        record = extract(args.run_directory, args.reading, scored, args.workers)
+        text = json.dumps(record, indent=1, ensure_ascii=False) + "\n"
+        scored.record.write_text(text, encoding="utf-8")
         return 0
-    record = json.loads(RECORD.read_text(encoding="utf-8"))
     text = README.read_text(encoding="utf-8")
     missing = sorted(set(RENDERERS) - set(blocks(text)))
     if missing:
         print(f"README.md holds no block for {', '.join(missing)}", file=sys.stderr)
         return 1
-    README.write_text(rewrite(text, render(record)), encoding="utf-8")
+    README.write_text(rewrite(text, render(records())), encoding="utf-8")
     return 0
 
 
