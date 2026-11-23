@@ -19,6 +19,29 @@ changes a public name.
   `anchored floored`, the tested rung's spend floor, never routed (ADR 0099). Both ADRs were
   numbered 0096 and 0097 where M4 was frozen, and the pre-registration cites them by those numbers.
   No other arm's record moves.
+- **A run declares its rungs past the sizing cap as exploratory** (`Declaration.exploratory_rungs`,
+  ADR 0100). Such a rung is read and printed exploratory, and left out of the claim, Holm's list
+  and the order of verdicts. Until now a declaration could keep a rung out only by naming every
+  rival there predicted to fail, as M4's roots did for the k = 0 rungs of families 1, 4, 6 and 14:
+  the reading printed "predicted to fail" where no failure was predicted and counted those 20
+  comparisons in Holm's list. A family and rung read only as exploratory now stops the headline,
+  as the pre-registrations state; a tool read on its cap and exploratory still does not. M4's
+  records declare `predicted`, so their reading is unchanged.
+
+### Fixed
+
+- **`claim read --recorded` reads the joined root's other variants.** It joined only the arm that
+  plans the default above 0, so M4's reading left out `anchored`, `anchored curved` and
+  `anchored held` at the tested rung. Every arm of the joined root is now read beside the claim at
+  the rungs above 0, on the worlds that score it. Read again over M4's 32 roots, no line of the
+  reading moves and 225 lines are added.
+
+### Changed
+
+- **The digest tests no longer need a key for every new machine.** A machine whose dispatch key is
+  not recorded passes a case where it draws a digest a recorded key holds for that case; a
+  recorded key still holds its own digest only. XLA names every vector feature a host shows, so
+  one CPU on two hosts gave two keys.
 
 ## [0.2.0] — 2026-11-21
 
