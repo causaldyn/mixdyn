@@ -182,9 +182,16 @@ RECORDED = {
     },
 }
 """Each case's digest under each machine's dispatch (`dispatch.key`): the default model's density
-and gradient at Stan's 25 points of each world, and a short seeded fit's draws. A new key's
-digests go in after checking that the tree before the change under review draws the same ones
-there, so that a record holds the machine's bits and not a change's.
+and gradient at Stan's 25 points of each world, and a short seeded fit's draws. A recorded key
+holds its own digests and no other. A key not recorded passes a case where it draws a digest some
+recorded key holds for that case (`_held`): its kernels then compute that case as a recorded
+machine's do. Only a digest no key holds needs a new key, and it goes in after checking that the
+tree before the change under review draws the same one there, so that a record holds the machine's
+bits and not a change's.
+
+Keys are not required of every machine because XLA's target names every vector feature a host
+shows: one CPU under two hypervisors gives two keys, and GitHub's runners gave four new keys in two
+days, the last with the six digests of a key already recorded.
 
 The first key is an AVX2 Zen 3 machine's with glibc 2.43, natively and in Ubuntu 26.04; the second
 is the same machine's in Ubuntu 24.04, glibc 2.39, which draws the same digests since the tanh
@@ -234,10 +241,13 @@ under glibc 2.39 then."""
 
 
 def _held(case: str, drawn: str) -> None:
-    """Holds `drawn` to the digest `RECORDED` holds for `case` under this machine's dispatch."""
+    """Holds `drawn` to the digest `RECORDED` holds for `case` under this machine's dispatch; under
+    a dispatch with no digest recorded for `case`, to some digest a recorded key holds for it."""
     key = dispatch.key()
     recorded = RECORDED.get(key, {})
     if case not in recorded:
+        if any(held.get(case) == drawn for held in RECORDED.values()):
+            return
         before = [where for where, held in BEFORE_KEYS.items() if held.get(case) == drawn]
         drew = f", the digest {' and '.join(before)} drew" if before else ""
         pytest.fail(
@@ -277,20 +287,26 @@ def test_a_default_fit_draws_what_it_drew_before(name: str) -> None:
 
 
 def test_a_digest_is_held_to_its_own_dispatch_s_record(monkeypatch: pytest.MonkeyPatch) -> None:
-    """A recorded key holds its digest and refuses another machine's; a key with no record fails
+    """A recorded key holds its digest and refuses another machine's, a recorded one too; a key
+    with no record passes a digest some recorded key holds for the case, and fails on any other
     with the key and the digest, naming the machine that drew it before keys."""
     monkeypatch.setattr(dispatch, "key", lambda: ZEN3)
     _held("fit tanh", "36c34a2beb7a71c3")
-    with pytest.raises(AssertionError, match="'fit tanh' under Dispatch"):
-        _held("fit tanh", "ccbcd9530d92475d")
+    for other in ("ccbcd9530d92475d", "dbddb83d18fdc8c5"):
+        with pytest.raises(AssertionError, match="'fit tanh' under Dispatch"):
+            _held("fit tanh", other)
     forged = dataclasses.replace(ZEN3, openblas="numpy=SkylakeX scipy=SkylakeX")
     monkeypatch.setattr(dispatch, "key", lambda: forged)
+    for recorded in ("36c34a2beb7a71c3", "dbddb83d18fdc8c5", "af7c22b607e4cf7e"):
+        _held("fit tanh", recorded)
+    with pytest.raises(pytest.fail.Exception, match="'fit normal' digest"):
+        _held("fit normal", "36c34a2beb7a71c3")  # a digest recorded for another case only
     with pytest.raises(pytest.fail.Exception) as failed:
-        _held("fit tanh", "dbddb83d18fdc8c5")
+        _held("fit tanh", "ccbcd9530d92475d")
     assert str(failed.value) == (
         "no 'fit tanh' digest is recorded under this machine's dispatch: it drew "
-        "'dbddb83d18fdc8c5', the digest an AMD EPYC 9V45 on GitHub's ubuntu-26.04 on 2026-11-21 "
-        f"drew; record it as RECORDED[{forged!r}]['fit tanh']"
+        "'ccbcd9530d92475d', the digest a cloud sandbox with AVX-512 in Ubuntu 24.04 on "
+        f"2026-10-28 drew; record it as RECORDED[{forged!r}]['fit tanh']"
     )
 
 
