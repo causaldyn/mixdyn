@@ -5,7 +5,13 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
-## [Unreleased]
+## [0.2.1] — 2026-11-23
+
+The README states M4's record: its pre-registered claim held, 26 of 26 verdicts within δ = 0.05 on
+fresh seeds, with M3's six geo verdicts beside them and every loss stated. The engine's code is
+0.2.0's: `src/` is unchanged, so no fit or plan moves. The scorecard's reader, in the repository and
+not the wheel, reads the joined root's variants beside the claim and declares rungs past the sizing
+cap as exploratory.
 
 ### Added
 
