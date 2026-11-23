@@ -135,3 +135,60 @@ def test_a_run_s_roots_are_all_a_first_or_all_a_second_confirmatory_run(tmp_path
         layout.declare(dataclasses.replace(d, confirmatory=True, second_confirmatory=second))
     with pytest.raises(ValueError, match=r"does not hold|not a root beside|apart"):
         claim.read_runs(roots)
+
+
+THIRD = dataclasses.replace(CONFIRMATORY, third_confirmatory=True)
+
+
+def test_a_third_confirmatory_run_draws_each_environment_from_a_block_of_its_own():
+    assert THIRD.seeds("kappa-0.5") == range(1_040_000, 1_040_003)
+    assert THIRD.seeds("kappa-1") == range(1_041_000, 1_041_003)
+    assert dataclasses.replace(THIRD, worlds=520).seeds("kappa-1")[-1] == 1_041_519
+    twins = Declaration(
+        family=17,
+        environments=("curve", "line"),
+        worlds=2,
+        pilot=False,
+        rungs=(0,),
+        arms=("ridge",),
+        bench="abc1234",
+        confirmatory=True,
+        third_confirmatory=True,
+    )
+    assert twins.seeds("curve") == range(1_340_000, 1_340_002)
+    assert twins.seeds("line") == range(1_341_000, 1_341_002)
+    second_twins = dataclasses.replace(twins, third_confirmatory=False, second_confirmatory=True)
+    assert second_twins.seeds("curve") == second_twins.seeds("line")
+
+
+def test_a_third_confirmatory_run_is_written_and_read_back_and_the_others_as_before(tmp_path):
+    Layout(tmp_path / "third").declare(THIRD)
+    assert Layout(tmp_path / "third").read() == THIRD
+    assert json.loads((tmp_path / "third" / "run.json").read_text())["third_confirmatory"]
+    Layout(tmp_path / "second").declare(SECOND)
+    assert "third_confirmatory" not in json.loads((tmp_path / "second" / "run.json").read_text())
+
+
+def test_a_third_confirmatory_run_is_a_confirmatory_run_and_not_the_second():
+    with pytest.raises(ValueError, match="third confirmatory run is a confirmatory run"):
+        dataclasses.replace(SCORED, third_confirmatory=True)
+    with pytest.raises(ValueError, match="and not the second"):
+        dataclasses.replace(SECOND, third_confirmatory=True)
+
+
+def test_a_third_confirmatory_world_is_scored_at_its_place_in_its_own_order():
+    scored = score_world(TRACK_M2, "reference", 1_001_002, 0, {})
+    assert (scored.seed, scored.index, scored.pilot) == (1_001_002, 2, False)
+
+
+@pytest.mark.parametrize("flipped", ["f0", "f10-ts", "f10-robyn"])
+def test_a_run_s_roots_are_all_a_first_or_all_a_third_confirmatory_run(tmp_path, flipped):
+    roots = _m2(tmp_path)
+    for root in tmp_path.iterdir():
+        layout = Layout(root)
+        d = layout.read()
+        layout.declaration.unlink()
+        third = root.name == flipped
+        layout.declare(dataclasses.replace(d, confirmatory=True, third_confirmatory=third))
+    with pytest.raises(ValueError, match=r"does not hold|not a root beside|apart"):
+        claim.read_runs(roots)
