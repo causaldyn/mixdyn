@@ -339,11 +339,14 @@ What a reader of this record needs from the run's deviations from its pre-regist
   comparisons, and Holm's list counts them: 148 comparisons, the 128 claimed and these 20. The only
   predicted failures in the pre-registration are family 4's two at k = 0, against PyMC-Marketing
   and Orbit; the other 18 are exploratory. Over the 128 claimed comparisons, Holm's losses are the
-  same three within δ. No verdict reads the field.
+  same three within δ. No verdict reads the field. A run can now declare such rungs exploratory
+  (`Declaration.exploratory_rungs`, ADR 0100); M4's roots declare `predicted`, so its reading is
+  unchanged.
 - **The reading left out the tested rung's recorded variants.** `claim read --recorded` at the
   run's commit printed each recorded arm of a run's own root less every rival, but not the
-  variants of its joined root, `anchored`, `anchored curved` and `anchored held`. A later commit of
-  the reader reads them. They are recorded beside the claim and enter no verdict.
+  variants of its joined root, `anchored`, `anchored curved` and `anchored held`. The reader reads
+  them since commit `4d89ee2`: read again there, no line of M4's reading moves and 225 lines of
+  these variants are added. They are recorded beside the claim and enter no verdict.
 - **Family 17's twins read the same seeds.** The pre-registration's seed formula gives each
   environment a block of its own, but the bench draws the twins, `curve` and `line`, from the same
   seeds by design: both read the same 120 seeds, and the reading pools the 240 worlds as if they

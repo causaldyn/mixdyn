@@ -28,6 +28,12 @@ changes a public name.
   as the pre-registrations state; a tool read on its cap and exploratory still does not. M4's
   records declare `predicted`, so their reading is unchanged.
 
+- **The README states M4's record.** M4's pre-registered claim held: 26 of 26 verdicts within
+  δ = 0.05 on 15 national families, read on fresh seeds (25.23 expected), with M3's six geo
+  verdicts beside them, 32 family-rungs. Its losses, deviations and code differences are stated,
+  and every table is generated from `evidence/results/m4_record.json` and `m3_record.json`
+  (`scripts/readme_record.py`, checked by `tests/test_readme.py`).
+
 ### Fixed
 
 - **`claim read --recorded` reads the joined root's other variants.** It joined only the arm that
