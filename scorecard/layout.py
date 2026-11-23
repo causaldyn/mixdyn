@@ -178,10 +178,10 @@ class Declaration:
 
     A run the claim reads may declare some of its rungs exploratory (`exploratory_rungs`; a rung
     above 0 named as a pool's first run names it): a rung whose family needs more worlds there than
-    the claim affords, past the sizing cap. Each is read and printed as an exploratory run is, and
-    left out of the claim, of Holm's list and of the order of verdicts. A rung kept out of the
-    claim this way is not predicted to fail. A run that declares none is written as one was before
-    the field existed.
+    the claim affords, past the sizing cap (ADR 0100). Each is read and printed as an exploratory
+    run is, and left out of the claim, of Holm's list and of the order of verdicts. A rung kept out
+    of the claim this way is not predicted to fail. A run that declares none is written as one was
+    before the field existed.
 
     A run the claim reads may name variants of its own arms its default at rung 0 is read against
     beside the claim, never in it (`default_less`): the default less each, paired, run by run and
