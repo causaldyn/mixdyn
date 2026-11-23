@@ -92,11 +92,12 @@ beside it as a secondary readout (`Comparison.fallback_mean`, `fallback_interval
 
 **The claim** is an intersection-union test (Berger 1982): it holds only where every comparison of
 every run read, at every rung, is within the margin, so each comparison's one-sided 0.025 is the
-claim's, with no adjustment for how many it needs. A run declared `exploratory` is read and
-printed, and left out of the claim. A tool the run declares capped (`Declaration.caps`) is read on
-its cap's prefix of each environment's worlds, once the run holds the prefix whole, and its
-comparisons are left out of the claim where the run declares its caps exploratory
-(`Declaration.exploratory_caps`).
+claim's, with no adjustment for how many it needs. A run declared `exploratory` is read and printed,
+and left out of the claim, and so is a rung the run declares exploratory
+(`Declaration.exploratory_rungs`): past the sizing cap, not predicted to fail. A tool the run
+declares capped (`Declaration.caps`) is read on its cap's prefix of each environment's worlds, once
+the run holds the prefix whole, and its comparisons are left out of the claim where the run declares
+its caps exploratory (`Declaration.exploratory_caps`).
 
 **The losses.** Each comparison is read the other way too: the rival beats the default where the
 interval of the default less the rival lies above 0. Every comparison's verdict is printed
@@ -226,6 +227,7 @@ AGREED = (
     "order",
     "default_less",
     "second_confirmatory",
+    "exploratory_rungs",
 )
 """What the runs of one pool declare alike: the pre-registration they run under, and everything the
 claim and the reading beside it (`recorded`) read but their environments and, where they test apart
@@ -389,7 +391,7 @@ def _compared(
         d.family,
         k,
         rival,
-        d.exploratory or (root.exploratory_caps and cap is not None),
+        d.exploratory or k in d.exploratory_rungs or (root.exploratory_caps and cap is not None),
         cap=cap,
         default=default,
         reader=d.reader,
@@ -926,8 +928,11 @@ def verdict_lines(
     comparisons: Sequence[Comparison], margin: float, order: Sequence[tuple[int, int]]
 ) -> list[str]:
     """The claim by family and rung: each verdict in the declared order, then those that claim
-    nothing, then the headline, which is said only where every comparison of every family is
-    claimed and every verdict holds at `ALPHA`, an intersection-union test with no adjustment."""
+    nothing, then each family and rung read only as exploratory (an exploratory run's, or a rung
+    the run declares exploratory), then the headline, which is said only where every family and
+    rung read is claimed, none of them exploratory, and every verdict holds at `ALPHA`, an
+    intersection-union test with no adjustment. A tool read on its cap and exploratory is read
+    beside its verdict and does not stop the headline."""
     held = verdicts(comparisons, order)
     out = [
         f"the claim by family and rung, each an intersection-union test over its claimed rivals "
@@ -952,7 +957,15 @@ def verdict_lines(
             f"{head}{word} (level {v.level:.3g}; {len(v.rivals)} rivals, "
             f"{'each within' if v.within else 'not each within'} unadjusted){left}"
         )
-    whole = bool(held) and all(v.holds and not v.predicted for v in held)
+    shown = {(v.family, v.k) for v in held}
+    # a family and rung with no verdict whose comparisons are exploratory: the run or the rung is
+    explored = [
+        key
+        for key in dict.fromkeys((c.family, c.k) for c in comparisons if c.exploratory)
+        if key not in shown
+    ]
+    out += [f"  family {f}, k = {k}: exploratory, read and not claimed" for f, k in explored]
+    whole = bool(held) and not explored and all(v.holds and not v.predicted for v in held)
     out.append(
         "the headline holds: within the margin of every rival on every family and rung"
         if whole

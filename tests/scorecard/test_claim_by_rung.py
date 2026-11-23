@@ -19,7 +19,7 @@ from test_claim import DEFAULT, RIVALS, SCORED, _differences, _records
 from test_claim_roots import _m2, _read
 
 from scorecard import report
-from scorecard.claim import ALPHA, Comparison, compare, verdict_lines, verdicts
+from scorecard.claim import ALPHA, Comparison, compare, lines, losses, verdict_lines, verdicts
 from scorecard.layout import Layout
 
 BY_RUNG = dataclasses.replace(SCORED, reader="hall", per_rung=True, order=((1, 0),))
@@ -192,12 +192,107 @@ def test_a_claim_by_rung_without_a_claim_or_a_malformed_prediction_or_order_is_r
 
 
 EVERY_RIVAL = tuple((0, rival) for rival in RIVALS)
+TWO_RUNGS = dataclasses.replace(BY_RUNG, rungs=(0, 4), order=((1, 4),))
+"""A run that claims its rung 4 alone: its rung 0 is either exploratory or predicted to fail."""
+
+
+def _two_rungs():
+    """Rung 0 with a loss beyond the margin to Orbit, rung 4 plainly within everywhere."""
+    spread = dict.fromkeys(RIVALS, 0.1)
+    at_0 = {"status quo": -0.2, "equal split": -0.1, "meridian": -0.1, "orbit": 0.3}
+    return [
+        *_records(_differences(at_0, spread), k=0),
+        *_records(_differences(dict.fromkeys(RIVALS, -0.2), spread), k=4),
+    ]
+
+
+def test_an_exploratory_rung_is_read_printed_and_left_out_of_the_claim_holm_and_headline():
+    """Rung 0 declared exploratory is read and printed as exploratory, never "predicted to fail",
+    and leaves the verdicts, Holm's list and the headline. Declared by naming every rival predicted
+    to fail, as M4's roots kept their rungs past the cap out, it would enter Holm's list."""
+    d = dataclasses.replace(TWO_RUNGS, exploratory_rungs=(0,))
+    comparisons = compare(_two_rungs(), d)
+    assert {c.k for c in comparisons if c.exploratory} == {0}
+    assert all(c.claimed for c in comparisons)
+    printed = "\n".join(lines(comparisons, 0.05, order=d.order))
+    assert "family 1, k = 0, less orbit" in printed
+    assert "predicted to fail" not in printed
+    assert "  family 1, k = 0: exploratory, read and not claimed" in printed
+    assert "family 1, k = 4: holds" in printed
+    assert printed.endswith("over 4 comparisons: none")
+    assert losses(comparisons) == frozenset()
+    assert "no headline" in printed
+    (v,) = verdicts(comparisons, d.order)
+    assert (v.family, v.k, v.holds) == (1, 4, True)
+
+    predicted = dataclasses.replace(TWO_RUNGS, predicted=EVERY_RIVAL)
+    as_predicted = compare(_two_rungs(), predicted)
+    assert not any(c.exploratory for c in as_predicted)
+    assert (1, 0, "orbit") in losses(as_predicted)
+    assert "not claimed, predicted to fail" in "\n".join(
+        verdict_lines(as_predicted, 0.05, predicted.order)
+    )
+
+
+def test_an_exploratory_run_leaves_no_headline_and_a_capped_exploratory_tool_does_not_stop_it():
+    """A family read only as exploratory, its run declared so, is printed and stops the headline;
+    a tool read on its cap and exploratory is read beside a verdict that holds, as M2's Robyn and
+    Meridian were, and the headline is said."""
+    spread = dict.fromkeys(RIVALS, 0.1)
+    records = _records(_differences(dict.fromkeys(RIVALS, -0.2), spread))
+    capped = dataclasses.replace(BY_RUNG, caps={"orbit": 8}, exploratory_caps=True)
+    printed = verdict_lines(compare(records, capped), 0.05, capped.order)
+    assert printed[-1].startswith("the headline holds")
+    explored = dataclasses.replace(SCORED, exploratory=True)
+    # another family's exploratory run: its comparisons, read as family 2's
+    other = [dataclasses.replace(c, family=2) for c in compare(records, explored)]
+    both = [*compare(records, BY_RUNG), *other]
+    printed = verdict_lines(both, 0.05, BY_RUNG.order)
+    assert "  family 2, k = 0: exploratory, read and not claimed" in printed
+    assert printed[-1] == "no headline: some family or rung is not claimed whole or does not hold"
+
+
+def test_exploratory_rungs_are_written_and_read_back_and_left_out_where_none(tmp_path):
+    d = dataclasses.replace(TWO_RUNGS, exploratory_rungs=(0,))
+    Layout(tmp_path / "a").declare(d)
+    assert Layout(tmp_path / "a").read() == d
+    assert json.loads((tmp_path / "a" / "run.json").read_text())["exploratory_rungs"] == [0]
+    Layout(tmp_path / "b").declare(TWO_RUNGS)
+    assert "exploratory_rungs" not in json.loads((tmp_path / "b" / "run.json").read_text())
+    # a pool's rung above 0, named as its first run names it
+    pooled = dataclasses.replace(
+        d, rungs=(0, 2), pool=("a", "b"), exploratory_rungs=(1,), order=((1, 0),)
+    )
+    assert pooled.reads(0)
+    assert not pooled.reads(1)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"exploratory_rungs": (2,)},
+        {"exploratory_rungs": (0, 0)},
+        {"exploratory_rungs": (True,)},
+        {
+            "exploratory_rungs": (0,),
+            "reader": "student",
+            "default": None,
+            "margin": None,
+            "per_rung": False,
+            "order": (),
+        },
+    ],
+)
+def test_an_exploratory_rung_the_run_does_not_hold_or_cannot_claim_is_refused(change):
+    with pytest.raises(ValueError, match="an exploratory rung"):
+        dataclasses.replace(TWO_RUNGS, **change)
 
 
 @pytest.mark.parametrize(
     "change",
     [
         {"exploratory": True},
+        {"exploratory_rungs": (0,)},
         {"order": ((1, 4),)},
         {"predicted": EVERY_RIVAL},
         {"predicted": EVERY_RIVAL[:-1], "caps": {"orbit": 5}, "exploratory_caps": True},

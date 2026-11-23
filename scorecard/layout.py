@@ -176,6 +176,13 @@ class Declaration:
     it) are read, printed and left out of the verdicts. A run that declares none of these reads as
     before.
 
+    A run the claim reads may declare some of its rungs exploratory (`exploratory_rungs`; a rung
+    above 0 named as a pool's first run names it): a rung whose family needs more worlds there than
+    the claim affords, past the sizing cap. Each is read and printed as an exploratory run is, and
+    left out of the claim, of Holm's list and of the order of verdicts. A rung kept out of the
+    claim this way is not predicted to fail. A run that declares none is written as one was before
+    the field existed.
+
     A run the claim reads may name variants of its own arms its default at rung 0 is read against
     beside the claim, never in it (`default_less`): the default less each, paired, run by run and
     pooled over the confirmatory runs (`scorecard.claim.against_default`). A run that names none
@@ -213,7 +220,8 @@ class Declaration:
             family and rung twice, one the harness does not know or one of this run's the claim
             does not read (`reads`), or a malformed predicted failure; a variant read against the
             default on a run the claim does not read or without rung 0, named twice, or that is
-            the default or a tool's arm.
+            the default or a tool's arm; an exploratory rung on a run the claim does not read,
+            named twice or that the run does not hold.
     """
 
     family: int
@@ -248,6 +256,7 @@ class Declaration:
     order: tuple[tuple[int, int], ...] = ()
     default_less: tuple[str, ...] = ()
     second_confirmatory: bool = False
+    exploratory_rungs: tuple[int, ...] = ()
 
     def __post_init__(self) -> None:
         if self.family not in FAMILIES:
@@ -389,8 +398,21 @@ class Declaration:
         if unread:
             msg = (
                 f"the order of verdicts names family {self.family} at rungs {unread}, which the "
-                "claim does not read of this run: it is exploratory, it does not hold the rung, or "
-                "every rival there is predicted to fail or capped exploratory"
+                "claim does not read of this run: it or the rung is exploratory, it does not hold "
+                "the rung, or every rival there is predicted to fail or capped exploratory"
+            )
+            raise ValueError(msg)
+        rungs = self.exploratory_rungs
+        if rungs and (
+            not claimed
+            or len(set(rungs)) != len(rungs)
+            or any(
+                isinstance(k, bool) or not isinstance(k, int) or not self.holds(k) for k in rungs
+            )
+        ):
+            msg = (
+                "an exploratory rung is a rung the run holds, named once, on a run the claim "
+                f"reads: not {rungs}"
             )
             raise ValueError(msg)
         against = self.default_less
@@ -406,12 +428,17 @@ class Declaration:
             )
             raise ValueError(msg)
 
+    def holds(self, k: int) -> bool:
+        """Whether the run holds rung `k`: a pool's rung above 0 is named as its first run names
+        it, so a run of a pool holds any rung above 0 where it holds one of its own."""
+        return k in self.rungs or (bool(self.pool) and k > 0 and any(r > 0 for r in self.rungs))
+
     def reads(self, k: int) -> bool:
-        """Whether the claim reads a verdict of this run at rung `k`: the run is not exploratory, it
-        holds the rung (a pool's rung above 0 named as its first run names it, so any of its own
-        above 0), and some rival of its own there, a built-in arm or a tool not capped exploratory,
-        is not predicted to fail. A tool of a root beside the run is not one of its own."""
-        held = k in self.rungs or (bool(self.pool) and k > 0 and any(r > 0 for r in self.rungs))
+        """Whether the claim reads a verdict of this run at rung `k`: the run is not exploratory,
+        nor is the rung (`exploratory_rungs`), it holds the rung (`holds`), and some rival of its
+        own there, a built-in arm or a tool not capped exploratory, is not predicted to fail. A tool
+        of a root beside the run is not one of its own."""
+        held = self.holds(k) and k not in self.exploratory_rungs
         capped = set(self.caps or {}) if self.exploratory_caps else set()
         claimed = [
             rival
@@ -588,6 +615,7 @@ ADDED = {
     "order": (),
     "default_less": (),
     "second_confirmatory": False,
+    "exploratory_rungs": (),
 }
 """Fields a declaration gained after runs were declared, each with the value that leaves a run as
 it was: a declaration holding that value is written without the field."""
