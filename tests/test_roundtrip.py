@@ -983,6 +983,40 @@ def test_a_manifest_nested_past_python_s_recursion_fails_to_load(
         load(path)
 
 
+@pytest.mark.parametrize(
+    ("field", "node", "match"),
+    [
+        ("lift", {"$float": {}}, r"obj\.lift: \$float holds \{\}, where the format writes a str"),
+        ("lift", {"$float": "x"}, r"obj\.lift: could not convert string to float: 'x'"),
+        ("end", {"$date": 5}, r"obj\.end: \$date holds 5, where the format writes a str"),
+        ("end", {"$date": "soon"}, r"obj\.end: Invalid isoformat string: 'soon'"),
+        ("geos", {"$tuple": 5}, r"obj\.geos: \$tuple holds 5, where the format writes a list"),
+        ("geos", {"$frozenset": [{"$list": []}]}, r"obj\.geos: .*unhashable type: 'list'"),
+        ("geos", {"$dict": [[1]]}, r"obj\.geos: \$dict holds an item that is not a \[key, value\]"),
+        ("geos", {"$dict": [[{"$list": []}, 1]]}, r"obj\.geos: .*unhashable type: 'list'"),
+        (
+            "geos",
+            {"$enum": "mixdyn.data.panel:Cadence", "member": []},
+            r"obj\.geos: mixdyn\.data\.panel:Cadence has no member \[\]",
+        ),
+        (
+            "geos",
+            {"$type": "mixdyn.decisions.returns:Undefined", "fields": []},
+            r"obj\.geos: fields holds \[\], where the format writes a dict",
+        ),
+    ],
+)
+def test_a_node_that_holds_what_save_never_writes_there_fails_to_load(
+    field: str, node: dict[str, Any], match: str, tmp_path: Path
+) -> None:
+    """A node's payload is the JSON `save` writes there, a set's members and a mapping's keys are
+    values a set holds, and an enum's member is a name: anything else fails to load."""
+    path = _saved(tmp_path)
+    _rewritten(path, lambda manifest: manifest["root"]["fields"].update({field: node}))
+    with pytest.raises(FormatError, match=match):
+        load(path)
+
+
 def test_a_value_of_a_class_the_format_does_not_hold_is_not_saved(tmp_path: Path) -> None:
     with pytest.raises(TypeError, match="is not a class the format saves"):
         save({"a": 1}, tmp_path / "x")

@@ -28,7 +28,7 @@ import io
 import json
 import math
 import zipfile
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from importlib import metadata
 from pathlib import Path
 from types import MappingProxyType
@@ -412,7 +412,11 @@ def _decode(node: Any, archive: zipfile.ZipFile, where: str) -> Any:
     if not isinstance(node, dict) or not node or not next(iter(node)).startswith("$"):
         raise FormatError(f"{where} is not a node of the format: {_short(node)}")
     if "$float" in node:
-        return float(node["$float"])
+        text = _held(node, "$float", str, where)
+        try:
+            return float(text)
+        except ValueError as error:
+            raise FormatError(f"{where}: {error}") from error
     if "$array" in node:
         array = _array(node["$array"], archive, where)
         if node.get("jax"):
@@ -429,31 +433,50 @@ def _decode(node: Any, archive: zipfile.ZipFile, where: str) -> Any:
     if "$scalar" in node:
         return _array(node["$scalar"], archive, where)[()]
     if "$date" in node:
-        return dt.date.fromisoformat(node["$date"])
+        text = _held(node, "$date", str, where)
+        try:
+            return dt.date.fromisoformat(text)
+        except ValueError as error:
+            raise FormatError(f"{where}: {error}") from error
     if "$tuple" in node:
-        return tuple(_decode(v, archive, f"{where}[{i}]") for i, v in enumerate(node["$tuple"]))
+        items = _held(node, "$tuple", list, where)
+        return tuple(_decode(v, archive, f"{where}[{i}]") for i, v in enumerate(items))
     if "$list" in node:
-        return [_decode(v, archive, f"{where}[{i}]") for i, v in enumerate(node["$list"])]
+        items = _held(node, "$list", list, where)
+        return [_decode(v, archive, f"{where}[{i}]") for i, v in enumerate(items)]
     if "$frozenset" in node:
-        return frozenset(_decode(v, archive, f"{where} member") for v in node["$frozenset"])
+        members = [
+            _decode(v, archive, f"{where} member") for v in _held(node, "$frozenset", list, where)
+        ]
+        return _hashed(frozenset, members, where)
     if "$dict" in node:
-        items = {
-            _decode(k, archive, f"{where} key"): _decode(v, archive, f"{where}[{k!r}]")
-            for k, v in node["$dict"]
-        }
+        pairs = _held(node, "$dict", list, where)
+        if not all(isinstance(pair, list) and len(pair) == 2 for pair in pairs):
+            raise FormatError(f"{where}: $dict holds an item that is not a [key, value] pair")
+        items = _hashed(
+            dict,
+            [
+                (_decode(k, archive, f"{where} key"), _decode(v, archive, f"{where}[{k!r}]"))
+                for k, v in pairs
+            ],
+            where,
+        )
         return MappingProxyType(items) if node.get("proxy") else items
     if "$enum" in node:
         cls = _class(node["$enum"], where)
-        if not issubclass(cls, enum.Enum) or node.get("member") not in cls.__members__:
-            raise FormatError(f"{where}: {node['$enum']} has no member {node.get('member')!r}")
-        return cls[node["member"]]
+        member = node.get("member")
+        if not (
+            issubclass(cls, enum.Enum) and isinstance(member, str) and member in cls.__members__
+        ):
+            raise FormatError(f"{where}: {node['$enum']} has no member {_short(member)}")
+        return cls[member]
     if "$type" in node:
         cls = _class(node["$type"], where)
         if not dataclasses.is_dataclass(cls):
             raise FormatError(f"{where}: {node['$type']} is not a dataclass")
         fields = {
             name: _decode(v, archive, f"{where}.{name}")
-            for name, v in node.get("fields", {}).items()
+            for name, v in _held(node, "fields", dict, where, {}).items()
         }
         try:
             return cls(**fields)
@@ -464,6 +487,25 @@ def _decode(node: Any, archive: zipfile.ZipFile, where: str) -> Any:
             msg = f"{where}: {node['$type']} cannot be rebuilt: {type(error).__name__}: {error}"
             raise FormatError(msg) from error
     raise FormatError(f"{where} is not a node of the format: {_short(node)}")
+
+
+def _held(node: dict[str, Any], key: str, kind: type, where: str, missing: Any = None) -> Any:
+    """What `node` holds under `key`, or `missing` where it holds nothing there; refused unless it
+    is a `kind`, the JSON type `save` writes there."""
+    value = node.get(key, missing)
+    if not isinstance(value, kind):
+        msg = f"{where}: {key} holds {_short(value)}, where the format writes a {kind.__name__}"
+        raise FormatError(msg)
+    return value
+
+
+def _hashed[T](build: Callable[[list[Any]], T], items: list[Any], where: str) -> T:
+    """The set or the mapping `build` makes of `items`, refused where a member or a key is a value
+    no set holds: a list, a mapping, an array, or a dataclass that holds one."""
+    try:
+        return build(items)
+    except TypeError as error:
+        raise FormatError(f"{where}: {error}") from error
 
 
 def _class(name: Any, where: str) -> type:
