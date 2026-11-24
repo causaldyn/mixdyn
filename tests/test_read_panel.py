@@ -287,12 +287,25 @@ def test_a_week_off_the_grid_is_an_error_naming_the_weekday() -> None:
         (np.array(["2023-01-07T12:00"] * 16, dtype=object), "time of day"),
         (np.array(["2023-01-07"] * 15 + ["soon"], dtype=object), "not dates: 'soon' at 15"),
         (np.array(["2023-01-07"] * 15 + [None], dtype=object), "has no date at row 15"),
+        # numpy reads "-4" as the year -4, which no Python date holds
+        (["2023-01-07"] * 15 + [-4], "not dates: .*'-4'.* at 15"),
     ],
 )
-def test_dates_that_are_not_calendar_days_are_refused(dates: np.ndarray, match: str) -> None:
+def test_dates_that_are_not_calendar_days_are_refused(dates: Any, match: str) -> None:
     data = long_table()
     data["date"] = dates
     with pytest.raises(PanelError, match=match):
+        read(data)
+
+
+def test_a_day_no_python_date_holds_is_refused_where_an_issue_would_list_it() -> None:
+    """Every issue lists its dates as Python's, years 1 to 9999: a row past them that another
+    issue names, here a missing KPI, is refused as not a date, not listed."""
+    data = long_table()
+    data["date"] = data["date"].copy()
+    data["date"][15] = np.datetime64("10000-01-01")
+    data["sales"][15] = np.nan
+    with pytest.raises(PanelError, match=r"not dates: .*10000-01-01.* at 15"):
         read(data)
 
 
@@ -788,6 +801,13 @@ def test_a_population_that_changes_within_a_geo_is_refused() -> None:
 def test_a_population_given_as_a_series_is_refused() -> None:
     with pytest.raises(PanelError, match="'north' is given as 50 values: a geo's population") as e:
         read(long_table(weeks=50), population={"north": np.full(50, 2e5), "south": 3e5})
+    (issue,) = errors(e)
+    assert issue.code is IssueCode.POPULATION
+
+
+def test_a_geo_whose_population_is_none_has_no_population() -> None:
+    with pytest.raises(PanelError, match="geo 'north' has no population") as e:
+        read(long_table(weeks=50), population={"north": None, "south": 3e5})
     (issue,) = errors(e)
     assert issue.code is IssueCode.POPULATION
 

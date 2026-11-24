@@ -45,6 +45,10 @@ _SPAN_LIMIT = 10
 _POINTS_PER_EFFECT = 15
 """The fewest observed periods per effect, channel or control, a geo is read without a warning."""
 
+_FIRST_DAY = np.datetime64(dt.date.min, "D")
+_LAST_DAY = np.datetime64(dt.date.max, "D")
+"""The days a Python date holds, years 1 to 9999."""
+
 _SPACING = {
     Cadence.DAY: (0, "daily", "days"),
     Cadence.WEEK: (1, "weekly", "weeks"),
@@ -400,6 +404,13 @@ def _read_dates(values: np.ndarray, column: str) -> tuple[npt.NDArray[np.datetim
             except (ValueError, TypeError, OverflowError):
                 unparsed[i] = True
     days = fine.astype("datetime64[D]")
+    # numpy reads years no Python date holds ("-4" is the year -4), and every issue lists its dates
+    # as Python's: such a value is not a date here
+    beyond = ~np.isnat(days) & ((days < _FIRST_DAY) | (days > _LAST_DAY))
+    if beyond.any():
+        unparsed |= beyond
+        fine = np.where(beyond, np.array("NaT", dtype=fine.dtype), fine)
+        days = fine.astype("datetime64[D]")
     found = []
     if unparsed.any():
         found.append(
@@ -895,7 +906,7 @@ def _read_population(
     found += [
         Issue(IssueCode.POPULATION, Severity.ERROR, f"geo {g!r} has no population", geo=g)
         for g in geos
-        if g not in given
+        if given.get(g) is None
     ]
     for g in geos:
         value = given.get(g)
