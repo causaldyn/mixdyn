@@ -1,0 +1,329 @@
+{
+ "about": "M5's claim arms' flags read as classifiers of a plan's regret above the status quo's, and every in-sample R² its records hold read against the plan's regret, family by rung, written by `scripts/flags_record.py` from the run's scores; each file it read is named by the run's root and its SHA-256. Post hoc: no pre-registration names the flags, and the reading changes no verdict.",
+ "post_hoc": true,
+ "outcomes": [
+  "regret"
+ ],
+ "resamples": 2000,
+ "seed": 20261106,
+ "level": 0.95,
+ "code": {
+  "scorecard/flags.py": "bbfec98ac54b89907a56c004c93a95a69969859c48ec7784798c22343b4d3c7f"
+ },
+ "sources": {
+  "roots": {
+   "f1": {
+    "scores.jsonl": "238f3e947bd8b7af707b79b8c88abc68ca0ef20783f1f28630d15a2b8e6ed56e"
+   },
+   "f14": {
+    "scores.jsonl": "7069904445853e0230be8f8ac09a4625eb76ecc76f1bda5f843ed47fb18f471b"
+   },
+   "f15": {
+    "scores.jsonl": "44013c9f3b0a110e4195285ca39c24b2dbdd72bf08229e30d5a47ef2bd4dd995"
+   },
+   "f15-ts": {
+    "scores.jsonl": "276dc3d9c26c64b38a237be2736e55a855596103739c1a4a202304cb885a45c6"
+   },
+   "f6": {
+    "scores.jsonl": "4666a17a5a03f06324fd66344ace11364ca151e700e81652a53033587caf21e6"
+   }
+  }
+ },
+ "reads": [
+  {
+   "family": 1,
+   "k": 0,
+   "arm": "margin held",
+   "roots": [
+    "f1"
+   ],
+   "worlds": 240,
+   "failed": {
+    "margin": 0,
+    "margin curved": 0,
+    "margin curved noise": 0,
+    "margin guarded": 0,
+    "margin held": 0,
+    "margin ranged": 0,
+    "meridian": 0,
+    "orbit": 0,
+    "pymc-marketing": 0
+   },
+   "flags": [
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "<channel> out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 72,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    },
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 72,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    }
+   ],
+   "fits": [
+    {
+     "arm": "meridian",
+     "key": "review r2",
+     "rho": -0.010342193440858346,
+     "low": -0.14148377464469414,
+     "high": 0.11855946681881414,
+     "worlds": 240
+    }
+   ]
+  },
+  {
+   "family": 6,
+   "k": 0,
+   "arm": "margin held",
+   "roots": [
+    "f6"
+   ],
+   "worlds": 240,
+   "failed": {
+    "margin": 0,
+    "margin curved": 0,
+    "margin curved noise": 0,
+    "margin guarded": 0,
+    "margin held": 0,
+    "margin ranged": 0,
+    "meridian": 0,
+    "orbit": 0,
+    "pymc-marketing": 0
+   },
+   "flags": [
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "<channel> out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 79,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    },
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 79,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    }
+   ],
+   "fits": [
+    {
+     "arm": "meridian",
+     "key": "review r2",
+     "rho": 0.07613413427316444,
+     "low": -0.04102904693897244,
+     "high": 0.20373977209304214,
+     "worlds": 240
+    }
+   ]
+  },
+  {
+   "family": 14,
+   "k": 0,
+   "arm": "margin held",
+   "roots": [
+    "f14"
+   ],
+   "worlds": 240,
+   "failed": {
+    "margin": 0,
+    "margin curved": 0,
+    "margin curved noise": 0,
+    "margin guarded": 0,
+    "margin held": 0,
+    "margin ranged": 0,
+    "meridian": 0,
+    "orbit": 0,
+    "pymc-marketing": 0
+   },
+   "flags": [
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "<channel> out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 54,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    },
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 54,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    }
+   ],
+   "fits": [
+    {
+     "arm": "meridian",
+     "key": "review r2",
+     "rho": -0.04245646625809475,
+     "low": -0.16931364220779083,
+     "high": 0.07762039092751631,
+     "worlds": 240
+    }
+   ]
+  },
+  {
+   "family": 15,
+   "k": 0,
+   "arm": "margin held",
+   "roots": [
+    "f15"
+   ],
+   "worlds": 240,
+   "failed": {
+    "margin": 0,
+    "margin curved": 0,
+    "margin curved noise": 0,
+    "margin guarded": 0,
+    "margin held": 0,
+    "margin ranged": 0,
+    "meridian": 0,
+    "orbit": 0,
+    "pymc-marketing": 18
+   },
+   "flags": [
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "<channel> out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 30,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    },
+    {
+     "arm": "margin held",
+     "outcome": "regret",
+     "flag": "out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 30,
+     "above_zero": 0,
+     "largest": 0.0,
+     "unread": [
+      "one value"
+     ]
+    }
+   ],
+   "fits": [
+    {
+     "arm": "meridian",
+     "key": "review r2",
+     "rho": 0.6956492300213544,
+     "low": 0.6063326062027558,
+     "high": 0.7696987330629507,
+     "worlds": 240
+    }
+   ]
+  },
+  {
+   "family": 15,
+   "k": 4,
+   "arm": "anchored floored",
+   "roots": [
+    "f15",
+    "f15-ts"
+   ],
+   "worlds": 240,
+   "failed": {
+    "anchored": 0,
+    "anchored curved": 0,
+    "anchored floored": 0,
+    "anchored held": 0,
+    "margin": 0,
+    "margin curved": 0,
+    "margin curved noise": 0,
+    "margin guarded": 0,
+    "margin held": 0,
+    "margin ranged": 0,
+    "meridian": 0,
+    "orbit": 0,
+    "pymc-marketing": 4
+   },
+   "flags": [
+    {
+     "arm": "anchored floored",
+     "outcome": "regret",
+     "flag": "<channel> out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 0,
+     "above_zero": 240,
+     "largest": 0.11760112551810421,
+     "unread": [
+      "one outcome"
+     ]
+    },
+    {
+     "arm": "anchored floored",
+     "outcome": "regret",
+     "flag": "out of range",
+     "worlds": 240,
+     "units": 240,
+     "with_outcome": 0,
+     "above_zero": 240,
+     "largest": 0.14984104060118159,
+     "unread": [
+      "one outcome"
+     ]
+    }
+   ],
+   "fits": [
+    {
+     "arm": "meridian",
+     "key": "review r2",
+     "rho": 0.2670925410427772,
+     "low": 0.14285697661784416,
+     "high": 0.38375517226072947,
+     "worlds": 240
+    }
+   ]
+  }
+ ]
+}

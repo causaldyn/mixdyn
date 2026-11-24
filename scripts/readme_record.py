@@ -42,7 +42,11 @@ What each block reads:
   `provenance` commits, and the `settings` of the arms the claim reads;
 - **m4-compute**, **m5-compute**, **compute**: each process's line of `logs/costs.jsonl` (its CPU
   time, its peak memory and its wall), the CPU quota of its class in `plan.json`, and the
-  `cpu_model` and `threads` its records' `cost` holds.
+  `cpu_model` and `threads` its records' `cost` holds;
+- **flags**, **fit-regret**: M4's and M5's flags readings, post hoc, which
+  `scripts/flags_record.py` writes beside their records (`evidence/results/m4_flags.json` and
+  `m5_flags.json`): each claim arm's flags against a regret above the status quo's, with the
+  rule's word on each, and every in-sample R² against regret, family by rung.
 """
 
 from __future__ import annotations
@@ -181,7 +185,8 @@ SETTINGS: dict[str, tuple[Setting, ...]] = {
 @dataclass(frozen=True, slots=True)
 class Run:
     """A scored run: its record file, its pre-registration, the run whose records it could reuse,
-    the arms its claim reads with their roles, and the processes that plan them."""
+    the arms its claim reads with their roles, the processes that plan them, and the file of its
+    flags reading where one was written (`scripts/flags_record.py`)."""
 
     name: str
     record: Path
@@ -189,6 +194,7 @@ class Run:
     reused_from: str
     roles: dict[str, str]
     claim_processes: frozenset[str]
+    flags: Path | None = None
 
 
 RUNS = {
@@ -215,6 +221,7 @@ RUNS = {
             "anchored floored": "the claim's arm at the tested rung, not routed",
         },
         frozenset({"margin", "anchored"}),
+        ROOT / "evidence" / "results" / "m4_flags.json",
     ),
     "m5": Run(
         "M5",
@@ -226,6 +233,7 @@ RUNS = {
             "anchored floored": "the claim's arm at the tested rung, not routed",
         },
         frozenset({"margin", "anchored"}),
+        ROOT / "evidence" / "results" / "m5_flags.json",
     ),
 }
 # The runs whose verdicts the claim's tables print, in the order a family's rows are taken.
@@ -1076,6 +1084,185 @@ def compute(record: dict[str, Any], scored: Run) -> str:
     return "\n".join(lines) + "\n" + ("\n" + _prose(" ".join(notes)) + "\n" if notes else "")
 
 
+# --- the flags reading, post hoc: written by scripts/flags_record.py ------------------------------
+
+CHANNEL = "<channel>"  # `scorecard.flags.CHANNEL`: where a channel's flag names its channel
+RESIDUE = 1e-9
+"""The share of a plan's spend out of range below which a flag above 0 is rounding, not a plan
+outside the logged range: `out_of_range` reads with no tolerance."""
+
+
+def _flag_reads(records: Records) -> list[tuple[str, dict[str, Any]]]:
+    """Each run's flags reading by family and rung: every run's reads at k = 0, then at the tested
+    rung, the runs in the order the claim's tables take them."""
+    found = [
+        (run, read)
+        for run in CLAIM_RUNS
+        if RUNS[run].flags is not None
+        for read in records[run]["flags"]["reads"]
+    ]
+    return sorted(
+        found, key=lambda f: (f[1]["k"] > 0, CLAIM_RUNS.index(f[0]), f[1]["family"], f[1]["k"])
+    )
+
+
+def _flag_word(row: dict[str, Any]) -> str:
+    """The rule's word on a flag: dropped below 0.5, staying where its interval lies above 0.5,
+    not shown to tell the outcomes apart where the interval holds 0.5, and not read without an
+    AUROC."""
+    if "unread" in row:
+        return "not read"
+    if row["auroc"] < 0.5:
+        return "dropped"
+    return "stays" if row["low"] > 0.5 else "not shown"
+
+
+def _flag_cell(row: dict[str, Any] | None) -> str:
+    if row is None:
+        return "not recorded"
+    above = f"above 0 on {row['above_zero']}"
+    if row["flag"].endswith("out of range") and 0.0 < row["largest"] < RESIDUE:
+        above += f", by at most {row['largest']:.1e} (a)"
+    if "unread" in row:
+        reasons = [
+            f"one value, {row['largest']:g} on every world" if r == "one value" else r
+            for r in row["unread"]
+        ]
+        shown = f"not read: {'; '.join(reasons)}"
+        return shown if "one value" in row["unread"] else f"{shown}; {above}"
+    return f"{row['auroc']:.3f} [{row['low']:.3f}, {row['high']:.3f}], {_flag_word(row)}; {above}"
+
+
+def flag_table(records: Records) -> str:
+    """Each claim arm's flags read as classifiers of a regret above the status quo's, by run,
+    family and rung, with the rule's word on each and, below, the words counted by arm and flag."""
+    reads = _flag_reads(records)
+    names = sorted(
+        {row["flag"] for _, read in reads for row in read["flags"]},
+        key=lambda n: (n.replace(f"{CHANNEL} ", ""), n.startswith(CHANNEL)),
+    )
+    head = ["Run", "Family", "Rung", "Arm", "Worlds", "Regret above the status quo's"]
+    head += [f"`{n}`" for n in names]
+    lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
+    residue = False
+    for run, read in reads:
+        rows = {row["flag"]: row for row in read["flags"]}
+        counted = {(row["units"], row["with_outcome"]) for row in rows.values()}
+        if len(counted) != 1:
+            msg = f"{run} family {read['family']} k {read['k']}: its flags count apart {counted}"
+            raise ValueError(msg)
+        units, bad = counted.pop()
+        unclaimed = {
+            (v["family"], v["k"])
+            for v in records[run]["reading"]["verdicts"]
+            if v["word"] == "not claimed"
+        }
+        rung = str(read["k"]) + (
+            ", not claimed" if (read["family"], read["k"]) in unclaimed else ""
+        )
+        cells = [_flag_cell(rows.get(n)) for n in names]
+        residue = residue or any(c.endswith("(a)") for c in cells)
+        lines.append(
+            f"| {RUNS[run].name} | {read['family']} {family_names(RUNS[run])[read['family']]} "
+            f"| {rung} | `{read['arm']}` | {read['worlds']} "
+            f"| {bad} of {units} ({100.0 * bad / units:.0f} %) | " + " | ".join(cells) + " |"
+        )
+    said = []
+    for arm in dict.fromkeys(read["arm"] for _, read in reads):
+        counted: dict[tuple[int, ...], list[str]] = defaultdict(list)
+        for name in names:
+            rows = [
+                row
+                for _, read in reads
+                if read["arm"] == arm
+                for row in read["flags"]
+                if row["flag"] == name
+            ]
+            words = [_flag_word(row) for row in rows]
+            below = sum(1 for row in rows if "high" in row and row["high"] < 0.5)
+            counts = (len(rows), len(rows) - words.count("not read"))
+            counts += (
+                words.count("stays"),
+                words.count("dropped"),
+                words.count("not shown"),
+                below,
+            )
+            counted[counts].append(f"`{name}`")
+        for (rows, read, stays, dropped, shown, below), flagged in counted.items():
+            alike = " and ".join(flagged) + (" alike" if len(flagged) > 1 else "")
+            each = "each" if len(flagged) > 1 else "it"
+            said.append(
+                f"`{arm}`, {alike}: read on {read} of {rows} family-rungs; {each} stays on "
+                f"{stays}, is dropped on {dropped} ({below} with the whole interval below 0.5) "
+                f"and is not shown to tell the outcomes apart on {shown}."
+            )
+    lines += ["", _prose(" ".join(said))]
+    if residue:
+        lines += [
+            "",
+            _prose(
+                "(a) Above 0 by no more than the share of the plan's spend shown: rounding, not a "
+                "plan outside the logged range. `out_of_range` reads with no tolerance."
+            ),
+        ]
+    return "\n".join(lines) + "\n"
+
+
+def _rho(value: float) -> str:
+    return _signed(f"{value:+.3f}")
+
+
+def _place(run: str, read: dict[str, Any]) -> str:
+    return f"{RUNS[run].name} family {read['family']}, k = {read['k']}"
+
+
+def fit_table(records: Records) -> str:
+    """Every in-sample R² the runs' records hold, its rank correlation with the plan's regret per
+    euro by run, family and rung, and below, each R²'s intervals counted by where they lie."""
+    reads = _flag_reads(records)
+    fits = sorted(
+        {(f["arm"], f["key"]) for _, read in reads for f in read["fits"]},
+        key=lambda f: (f[0] not in NAMES, f),
+    )
+    named = [f"{NAMES.get(arm, f'`{arm}`')} `{key}`" for arm, key in fits]
+    head = ["Run", "Family", "Rung", "Worlds", *named]
+    lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
+    held: dict[tuple[str, str], list[tuple[str, dict[str, Any]]]] = defaultdict(list)
+    for run, read in reads:
+        found = {(f["arm"], f["key"]): f for f in read["fits"]}
+        cells = []
+        for arm, key in fits:
+            f = found.get((arm, key))
+            if f is not None:
+                held[arm, key].append((_place(run, read), f))
+                worlds = f", {f['worlds']} worlds" if f["worlds"] != read["worlds"] else ""
+                cells.append(f"{_rho(f['rho'])} [{_rho(f['low'])}, {_rho(f['high'])}]{worlds}")
+            elif arm not in read["failed"]:
+                cells.append("not run")
+            elif read["failed"][arm] == read["worlds"]:
+                cells.append("failed on every world")
+            else:
+                cells.append("no R²")
+        lines.append(
+            f"| {RUNS[run].name} | {read['family']} {family_names(RUNS[run])[read['family']]} "
+            f"| {read['k']} | {read['worlds']} | " + " | ".join(cells) + " |"
+        )
+    said = []
+    for (arm, key), name in zip(fits, named, strict=True):
+        found = held[arm, key]
+        below = sum(1 for _, f in found if f["high"] < 0.0)
+        above = sum(1 for _, f in found if f["low"] > 0.0)
+        low = min(found, key=lambda pf: pf[1]["rho"])
+        high = max(found, key=lambda pf: pf[1]["rho"])
+        said.append(
+            f"{name} is read on {len(found)} family-rungs: its interval lies below 0 on {below}, "
+            f"above 0 on {above} and holds 0 on {len(found) - below - above}; its correlation runs "
+            f"from {_rho(low[1]['rho'])} ({low[0]}) to {_rho(high[1]['rho'])} ({high[0]})."
+        )
+    lines += ["", _prose(" ".join(said))]
+    return "\n".join(lines) + "\n"
+
+
 RENDERERS: dict[str, Callable[[Records], str]] = {
     "scoreboard": scoreboard,
     "claim": claim,
@@ -1090,12 +1277,20 @@ RENDERERS: dict[str, Callable[[Records], str]] = {
     "tuned": lambda records: tuned(records["m3"]),
     "versions": lambda records: versions(records["m3"], RUNS["m3"]),
     "compute": lambda records: compute(records["m3"], RUNS["m3"]),
+    "flags": flag_table,
+    "fit-regret": fit_table,
 }
 
 
 def records() -> Records:
-    """Each run's record, as `extract` wrote it."""
-    return {run: json.loads(s.record.read_text(encoding="utf-8")) for run, s in RUNS.items()}
+    """Each run's record, as `extract` wrote it, with its flags reading under `flags` where
+    `scripts/flags_record.py` wrote one."""
+    held = {}
+    for run, s in RUNS.items():
+        held[run] = json.loads(s.record.read_text(encoding="utf-8"))
+        if s.flags is not None:
+            held[run]["flags"] = json.loads(s.flags.read_text(encoding="utf-8"))
+    return held
 
 
 def render(held: Records) -> dict[str, str]:

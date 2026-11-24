@@ -9,11 +9,14 @@ compute, and the README's scoreboard, are the ones `scripts/readme_record.py` wr
 records (`evidence/results/m4_record.json`, `m5_record.json` and `m3_record.json`): a table typed
 into one of those blocks fails here. Each cell of the claim's table and of the scoreboard is checked
 against its run's reading apart from the script that writes it, and so is each count, interval and
-level the prose beside the tables states."""
+level the prose beside the tables states. The page's post hoc reading of the diagnostics is
+written the same way from `m4_flags.json` and `m5_flags.json`, which read the same `scores.jsonl`
+as the runs' records; each flag's word is checked against its interval apart from the script."""
 
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import tomllib
 from collections.abc import Iterator
@@ -106,6 +109,8 @@ def test_each_record_table_sits_in_the_section_that_names_it() -> None:
         "m4-compute": "Compute",
         "m5-compute": "Compute",
         "compute": "Compute",
+        "flags": "What the diagnostics tell (post hoc)",
+        "fit-regret": "What the diagnostics tell (post hoc)",
     }
     assert sorted([*placed, "scoreboard"]) == sorted(readme_record.RENDERERS)
     assert [
@@ -619,3 +624,165 @@ def test_the_pages_show_the_charts_the_script_draws_pinned_to_the_release() -> N
         local = re.findall(r"\]\(assets/([^)#]+)#gh-(light|dark)-mode-only\)", page)
         assert local
         assert [n for n, scheme in local if not n.endswith(f"-{scheme}.svg")] == []
+
+
+DIAGNOSTICS = "What the diagnostics tell (post hoc)"
+FLAG_RUNS = ("m4", "m5")
+
+
+def _flag_reads() -> dict[tuple[str, int, int], dict[str, Any]]:
+    return {
+        (run, read["family"], read["k"]): read
+        for run in FLAG_RUNS
+        for read in RECORDS[run]["flags"]["reads"]
+    }
+
+
+def _flag_rows(arm: str, flag: str) -> list[tuple[tuple[str, int, int], dict[str, Any]]]:
+    return [
+        (place, row)
+        for place, read in _flag_reads().items()
+        if read["arm"] == arm
+        for row in read["flags"]
+        if row["flag"] == flag
+    ]
+
+
+def test_the_diagnostics_are_read_post_hoc_on_the_scores_the_record_reads() -> None:
+    """Each flags reading says it is post hoc, reads the outcome that needs no `tau` alone, and
+    read the very `scores.jsonl` of every root its run's record names: both tables of the page
+    read the same records."""
+    for run in FLAG_RUNS:
+        held, record = RECORDS[run]["flags"], RECORDS[run]
+        assert held["post_hoc"] is True
+        assert held["outcomes"] == ["regret"]
+        assert {row["outcome"] for read in held["reads"] for row in read["flags"]} == {"regret"}
+        named = {
+            root: found["scores.jsonl"]
+            for root, found in record["sources"]["roots"].items()
+            if found["scores.jsonl"] is not None
+        }
+        read = {root: found["scores.jsonl"] for root, found in held["sources"]["roots"].items()}
+        assert read == named
+        assert {root for r in held["reads"] for root in r["roots"]} == set(read)
+    section_text = " ".join(section(BENCHMARK, DIAGNOSTICS).split())
+    assert "This reading is post hoc, and it changes no verdict." in section_text
+    assert "wait for a fixed `tau`" in section_text
+    assert sections(BENCHMARK).index(DIAGNOSTICS) == sections(BENCHMARK).index("Where it loses") + 1
+
+
+def _cells(block: str) -> list[dict[str, str]]:
+    lines = block.split("\n\n", 1)[0].splitlines()
+    head = [c.strip() for c in lines[0].strip("|").split("|")]
+    return [
+        dict(zip(head, (c.strip() for c in line.strip("|").split("|")), strict=True))
+        for line in lines[2:]
+    ]
+
+
+def test_each_flag_s_word_is_its_interval_s() -> None:
+    """Read apart from the script: a flag stays exactly where its interval lies above 0.5, is
+    dropped exactly where its AUROC is below 0.5, is not shown otherwise, and is not read exactly
+    where its reading has no AUROC; each cell's numbers are its reading's, and the regret column
+    is the outcome's count over the units read."""
+    runs = {readme_record.RUNS[run].name: run for run in FLAG_RUNS}
+    reads = _flag_reads()
+    table = _cells(readme_record.blocks(BENCHMARK)["flags"])
+    assert len(table) == len(reads) == 36
+    seen = set()
+    for cells in table:
+        rung = int(cells["Rung"].split(",")[0])
+        place = (runs[cells["Run"]], int(cells["Family"].split()[0]), rung)
+        read = reads[place]
+        seen.add(place)
+        assert cells["Arm"] == f"`{read['arm']}`"
+        assert int(cells["Worlds"]) == read["worlds"]
+        for row in read["flags"]:
+            cell = cells[f"`{row['flag']}`"]
+            bad, units = row["with_outcome"], row["units"]
+            stated = re.fullmatch(
+                r"(\d+) of (\d+) \((\d+) %\)", cells["Regret above the status quo's"]
+            )
+            assert stated is not None
+            assert (int(stated[1]), int(stated[2])) == (bad, units)
+            assert abs(int(stated[3]) - 100.0 * bad / units) <= 0.5
+            if "unread" in row:
+                assert cell.startswith("not read: ")
+                assert ("one outcome" in row["unread"]) == (bad in (0, units))
+                continue
+            typed = re.match(r"(\d\.\d{3}) \[(\d\.\d{3}), (\d\.\d{3})\], ([a-z ]+);", cell)
+            assert typed is not None, cell
+            assert [float(t) for t in typed.groups()[:3]] == [
+                round(row[k], 3) for k in ("auroc", "low", "high")
+            ]
+            word = typed[4]
+            assert (word == "stays") == (row["low"] > 0.5), cell
+            assert (word == "dropped") == (row["auroc"] < 0.5), cell
+            assert word in ("stays", "dropped", "not shown")
+            assert f"above 0 on {row['above_zero']}" in cell
+    assert seen == set(reads)
+
+
+def test_the_flag_readings_the_text_states_are_the_records() -> None:
+    held, floored = _flag_rows("margin held", "out of range"), "anchored floored"
+    # margin held: 0 on every world but on one family-rung, and there only by rounding
+    moved = [(place, row) for place, row in held if row["above_zero"]]
+    assert [place for place, _ in moved] == [("m4", 19, 0)]
+    assert 0.0 < moved[0][1]["largest"] < readme_record.RESIDUE
+    assert all("one value" in row["unread"] for _, row in held if not row["above_zero"])
+    assert "On family 19 it is above 0 only by rounding, note (a)." in FLAT
+    # anchored floored: stays on family 7 at k = 1 alone, both flags
+    for flag in ("out of range", "<channel> out of range"):
+        rows = _flag_rows(floored, flag)
+        assert [place for place, row in rows if "low" in row and row["low"] > 0.5] == [("m4", 7, 1)]
+    assert "the flag stays on one family-rung only, family 7 at k = 1" in FLAT
+    # at one-sided 0.025, one of n intervals above 0.5 by chance in about one run in three
+    read = [row for _, row in _flag_rows(floored, "out of range") if "auroc" in row]
+    assert 0.29 < 1.0 - 0.975 ** len(read) < 0.37
+    # dropped on most, many of them with the whole interval below 0.5
+    dropped = [row for row in read if row["auroc"] < 0.5]
+    assert 2 * len(dropped) > len(read)
+    assert 2 * sum(1 for row in dropped if row["high"] < 0.5) > len(dropped)
+    assert "On most family-rungs it is dropped, many with the whole" in FLAT
+    assert "in about one run in three" in FLAT
+    # <channel> out of range reads apart from out of range on two family-rungs
+    readout = ("units", "with_outcome", "above_zero", "auroc", "low", "high", "unread")
+    apart = [
+        place
+        for place, read in _flag_reads().items()
+        if len({json.dumps([r.get(k) for k in readout]) for r in read["flags"]}) > 1
+    ]
+    assert apart == [("m4", 6, 4), ("m4", 19, 4)]
+    assert "reads the same as `out of range` on all but two family-rungs" in FLAT
+    held = {(RECORDS[r]["flags"]["resamples"], RECORDS[r]["flags"]["level"]) for r in FLAG_RUNS}
+    assert held == {(2000, 0.95)}
+    ((resamples, level),) = held
+    stated = f"{resamples:,}".replace(",", " ")
+    assert f"Its {100 * level:.0f} % interval is the percentile bootstrap over worlds" in FLAT
+    assert f"over worlds, {stated} resamples from one seed" in FLAT
+
+
+def test_the_fit_readings_the_text_states_are_the_records() -> None:
+    def fit(run: str, family: int, k: int, arm: str) -> dict[str, Any]:
+        (found,) = [f for f in _flag_reads()[run, family, k]["fits"] if f["arm"] == arm]
+        return found
+
+    assert fit("m4", 17, 0, "meridian")["low"] > 0.0
+    assert fit("m4", 17, 4, "meridian")["high"] < 0.0
+    assert all(fit("m5", 15, k, "meridian")["low"] > 0.0 for k in (0, 4))
+    assert "On M4's family 17 Meridian's higher R² goes with a worse plan at k = 0" in FLAT
+    assert "on M5's family 15 it goes with a worse plan at both rungs" in FLAT
+    reads = _flag_reads()
+    assert all("ridge" not in read["failed"] for (run, _, _), read in reads.items() if run == "m5")
+    tested = [family for run, family, k in reads if run == "m4" and k == 4]
+    assert len(tested) == 14
+    assert [f for f in tested if fit("m4", f, 4, "ridge") != fit("m4", f, 0, "ridge")] == []
+    for arm, key in (("meridian", "review r2"), ("ridge", "r2")):
+        found = [
+            f for read in reads.values() for f in read["fits"] if (f["arm"], f["key"]) == (arm, key)
+        ]
+        assert 2 * sum(1 for f in found if f["low"] <= 0.0 <= f["high"]) > len(found)
+    assert {(f["arm"], f["key"]) for read in reads.values() for f in read["fits"]} == {
+        ("meridian", "review r2"),
+        ("ridge", "r2"),
+    }

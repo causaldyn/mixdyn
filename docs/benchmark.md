@@ -304,6 +304,165 @@ only ("not read").
 - **Not covered by fresh worlds since M3.** The geo verdicts rest on M3's run, which neither later
   run repeated ("What the runs did not cover", below).
 
+## What the diagnostics tell (post hoc)
+
+**This reading is post hoc, and it changes no verdict.** No pre-registration names the flags,
+their AUROC or `tau`, and the reading was done after M4's and M5's verdicts were read. It asks two
+questions of the same records. Does a diagnostic flag, read alone, tell a plan whose regret is
+above the status quo's from one whose is not? A flag stays only if its AUROC's interval lies above
+0.5. And how far does a fit's in-sample R² go with its plan's regret?
+
+- **A flag** is a number an arm's record gives about its fit or its plan, read in the direction
+  that raises an alarm (`scorecard.flags`, ADR 0060). Its **AUROC** is Mann and Whitney's: the
+  chance that a world whose plan has more regret than the status quo's reads the flag as more
+  alarming than a world whose plan has not, a tie counted half. Its 95 % interval is the
+  percentile bootstrap over worlds, 2 000 resamples from one seed. Each family is read rung by
+  rung, over the worlds every environment holds whole; family 7's tested rung is read at k = 1
+  and k = 2 apart.
+- **The words.** A flag *stays* where its whole interval lies above 0.5. It is *dropped* where its
+  AUROC is below 0.5: it alarms the wrong way round. Its direction is stated in the code and never
+  fitted to a run, so it is not turned round after the fact. It is *not shown* to tell the
+  outcomes apart where its AUROC is 0.5 or more and its interval holds 0.5, and then it does not
+  stay. It is *not read* where it has one value on every world, or where every world has the same
+  outcome.
+- **What the claim arms carry.** `margin held` and `anchored floored` record one flag: the share
+  of the plan's spend outside the range the history logged (`out of range`), and the same share
+  for each channel, read at the channel that alarms most (`<channel> out of range`). They record
+  no draws of the returns and no in-sample R², so their flags are read against regret alone, and
+  they have no column in the R² table.
+- **What is not shown.** The rivals' flags are not read here. The flags read against a wrong
+  return, a channel's ROI error above `tau`, wait for a fixed `tau`: `scorecard.flags.TAU` is a
+  placeholder that no pre-registration has fixed yet.
+
+Each flag cell is the AUROC with its 95 % interval, the rule's word, and the number of worlds on
+which the flag is above 0. "Regret above the status quo's" counts the worlds where the arm's plan
+has more regret than the status quo's, the outcome the AUROC reads.
+
+<!-- record:flags -->
+| Run | Family | Rung | Arm | Worlds | Regret above the status quo's | `out of range` | `<channel> out of range` |
+|---|---|---|---|---|---|---|---|
+| M4 | 0 Track M v2 | 0 | `margin held` | 310 | 66 of 310 (21 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 1 Drift | 0, not claimed | `margin held` | 522 | 153 of 522 (29 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 2 Spend confounded with demand | 0 | `margin held` | 270 | 76 of 270 (28 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 3 Collinear channels | 0 | `margin held` | 270 | 97 of 270 (36 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 4 S-curves | 0, not claimed | `margin held` | 522 | 103 of 522 (20 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 5 Budget follows performance | 0 | `margin held` | 240 | 69 of 240 (29 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 6 Truth outside the observed range | 0, not claimed | `margin held` | 240 | 69 of 240 (29 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 7 Short series | 0 | `margin held` | 252 | 93 of 252 (37 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 12 Meridian's home ground | 0 | `margin held` | 460 | 212 of 460 (46 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 13 PyMC-Marketing's home ground | 0 | `margin held` | 520 | 159 of 520 (31 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 14 Robyn's home ground | 0, not claimed | `margin held` | 520 | 105 of 520 (20 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 17 Twins | 0 | `margin held` | 240 | 0 of 240 (0 %) | not read: one value, 0 on every world; one outcome | not read: one value, 0 on every world; one outcome |
+| M4 | 18 Long term | 0 | `margin held` | 240 | 62 of 240 (26 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 19 Flat | 0 | `margin held` | 282 | 101 of 282 (36 %) | 0.477 [0.407, 0.552], dropped; above 0 on 262, by at most 6.4e-16 (a) | 0.477 [0.407, 0.552], dropped; above 0 on 262, by at most 6.4e-16 (a) |
+| M4 | 20 Promotions | 0 | `margin held` | 240 | 79 of 240 (33 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M5 | 1 Drift | 0 | `margin held` | 240 | 72 of 240 (30 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M5 | 6 Truth outside the observed range | 0 | `margin held` | 240 | 79 of 240 (33 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M5 | 14 Robyn's home ground | 0 | `margin held` | 240 | 54 of 240 (22 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M5 | 15 siMMMulator | 0 | `margin held` | 240 | 30 of 240 (12 %) | not read: one value, 0 on every world | not read: one value, 0 on every world |
+| M4 | 0 Track M v2 | 4 | `anchored floored` | 310 | 19 of 310 (6 %) | 0.300 [0.204, 0.412], dropped; above 0 on 213 | 0.300 [0.204, 0.412], dropped; above 0 on 213 |
+| M4 | 1 Drift | 4 | `anchored floored` | 522 | 83 of 522 (16 %) | 0.411 [0.356, 0.468], dropped; above 0 on 221 | 0.411 [0.356, 0.468], dropped; above 0 on 221 |
+| M4 | 2 Spend confounded with demand | 4 | `anchored floored` | 270 | 36 of 270 (13 %) | 0.510 [0.449, 0.580], not shown; above 0 on 34 | 0.510 [0.449, 0.580], not shown; above 0 on 34 |
+| M4 | 3 Collinear channels | 4 | `anchored floored` | 270 | 37 of 270 (14 %) | 0.469 [0.398, 0.545], dropped; above 0 on 73 | 0.469 [0.398, 0.545], dropped; above 0 on 73 |
+| M4 | 4 S-curves | 4 | `anchored floored` | 522 | 60 of 522 (11 %) | 0.406 [0.326, 0.484], dropped; above 0 on 394 | 0.406 [0.326, 0.484], dropped; above 0 on 394 |
+| M4 | 5 Budget follows performance | 4 | `anchored floored` | 240 | 30 of 240 (12 %) | 0.522 [0.435, 0.619], not shown; above 0 on 75 | 0.522 [0.435, 0.619], not shown; above 0 on 75 |
+| M4 | 6 Truth outside the observed range | 4 | `anchored floored` | 240 | 64 of 240 (27 %) | 0.434 [0.354, 0.520], dropped; above 0 on 204 | 0.423 [0.345, 0.505], dropped; above 0 on 204 |
+| M4 | 7 Short series | 1 | `anchored floored` | 84 | 24 of 84 (29 %) | 0.667 [0.530, 0.795], stays; above 0 on 53 | 0.667 [0.530, 0.795], stays; above 0 on 53 |
+| M4 | 7 Short series | 2 | `anchored floored` | 168 | 25 of 168 (15 %) | 0.375 [0.275, 0.490], dropped; above 0 on 90 | 0.375 [0.275, 0.490], dropped; above 0 on 90 |
+| M4 | 12 Meridian's home ground | 4 | `anchored floored` | 460 | 121 of 460 (26 %) | 0.439 [0.389, 0.493], dropped; above 0 on 194 | 0.439 [0.389, 0.493], dropped; above 0 on 194 |
+| M4 | 13 PyMC-Marketing's home ground | 4 | `anchored floored` | 520 | 171 of 520 (33 %) | 0.435 [0.390, 0.482], dropped; above 0 on 221 | 0.435 [0.390, 0.482], dropped; above 0 on 221 |
+| M4 | 14 Robyn's home ground | 4 | `anchored floored` | 520 | 186 of 520 (36 %) | 0.469 [0.424, 0.513], dropped; above 0 on 196 | 0.469 [0.424, 0.513], dropped; above 0 on 196 |
+| M4 | 17 Twins | 4 | `anchored floored` | 240 | 0 of 240 (0 %) | not read: one value, 0 on every world; one outcome | not read: one value, 0 on every world; one outcome |
+| M4 | 18 Long term | 4 | `anchored floored` | 240 | 25 of 240 (10 %) | 0.502 [0.403, 0.614], not shown; above 0 on 94 | 0.502 [0.403, 0.614], not shown; above 0 on 94 |
+| M4 | 19 Flat | 4 | `anchored floored` | 282 | 31 of 282 (11 %) | 0.356 [0.263, 0.452], dropped; above 0 on 282 | 0.340 [0.248, 0.433], dropped; above 0 on 282 |
+| M4 | 20 Promotions | 4 | `anchored floored` | 240 | 18 of 240 (8 %) | 0.195 [0.124, 0.291], dropped; above 0 on 168 | 0.195 [0.124, 0.291], dropped; above 0 on 168 |
+| M5 | 15 siMMMulator | 4 | `anchored floored` | 240 | 0 of 240 (0 %) | not read: one outcome; above 0 on 240 | not read: one outcome; above 0 on 240 |
+
+`margin held`, `out of range` and `<channel> out of range` alike: read on 1 of 19 family-rungs; each
+stays on 0, is dropped on 1 (0 with the whole interval below 0.5) and is not shown to tell the
+outcomes apart on 0. `anchored floored`, `out of range` and `<channel> out of range` alike: read on
+15 of 17 family-rungs; each stays on 1, is dropped on 11 (8 with the whole interval below 0.5) and
+is not shown to tell the outcomes apart on 3.
+
+(a) Above 0 by no more than the share of the plan's spend shown: rounding, not a plan outside the
+logged range. `out_of_range` reads with no tolerance.
+<!-- /record:flags -->
+
+- **`margin held`: the flag cannot alarm.** `margin held` plans inside a box cut to each channel's
+  logged weekly range (`scorecard/arms/margin.py`), so its plan does not leave the range by
+  construction. The flag is 0 on every world of every family-rung but one, and is not read. On
+  family 19 it is above 0 only by rounding, note (a). It is a record of the box, not a validated
+  diagnostic.
+- **`anchored floored`: the flag does not stay.** At the tested rung, where the lift tests let the
+  plan leave the logged range, the flag stays on one family-rung only, family 7 at k = 1. With
+  this many family-rungs read, chance alone gives at least one interval above 0.5 in about one run
+  in three, so this one is weak evidence. On most family-rungs it is dropped, many with the whole
+  interval below 0.5: there a plan outside the logged range is less often worse than the status
+  quo's, the wrong way round for an alarm. Turned round, that would be a hypothesis for a later
+  pre-registration to state, not a reading of these runs.
+- **`<channel> out of range`** reads the same as `out of range` on all but two family-rungs, and
+  adds nothing for these arms.
+
+**R² against regret.** Spearman's rank correlation between an arm's in-sample R² and its plan's
+regret per euro, over the worlds where its fit holds an R², with the same bootstrap. A negative
+correlation means a better fit goes with a lower regret. The records hold two R²s: Meridian's
+reviewer's (`review r2`, its goodness-of-fit check) and the ridge arm's (`r2`), which M5 did not
+run. The correlation is read against the plan's regret, not against a channel's ROI error, and
+the MAPE Meridian's reviewer keeps beside its R² is not read.
+
+<!-- record:fit-regret -->
+| Run | Family | Rung | Worlds | Meridian `review r2` | `ridge` `r2` |
+|---|---|---|---|---|---|
+| M4 | 0 Track M v2 | 0 | 310 | −0.051 [−0.167, +0.065] | −0.093 [−0.206, +0.023] |
+| M4 | 1 Drift | 0 | 522 | −0.114 [−0.192, −0.030] | −0.092 [−0.176, −0.008] |
+| M4 | 2 Spend confounded with demand | 0 | 270 | −0.122 [−0.239, −0.004] | −0.047 [−0.163, +0.074] |
+| M4 | 3 Collinear channels | 0 | 270 | −0.028 [−0.140, +0.084] | −0.052 [−0.171, +0.070] |
+| M4 | 4 S-curves | 0 | 522 | −0.058 [−0.142, +0.030] | +0.053 [−0.027, +0.142] |
+| M4 | 5 Budget follows performance | 0 | 240 | −0.012 [−0.143, +0.118] | +0.104 [−0.021, +0.229] |
+| M4 | 6 Truth outside the observed range | 0 | 240 | −0.059 [−0.184, +0.069] | −0.145 [−0.270, −0.021] |
+| M4 | 7 Short series | 0 | 252 | +0.040 [−0.089, +0.162], 251 worlds | −0.118 [−0.243, +0.006] |
+| M4 | 12 Meridian's home ground | 0 | 460 | −0.047 [−0.140, +0.044], 459 worlds | −0.016 [−0.106, +0.074] |
+| M4 | 13 PyMC-Marketing's home ground | 0 | 520 | −0.056 [−0.144, +0.029] | −0.157 [−0.241, −0.076] |
+| M4 | 14 Robyn's home ground | 0 | 520 | −0.047 [−0.135, +0.039] | −0.036 [−0.123, +0.050] |
+| M4 | 17 Twins | 0 | 240 | +0.512 [+0.411, +0.604] | −0.052 [−0.182, +0.075] |
+| M4 | 18 Long term | 0 | 240 | −0.105 [−0.223, +0.021] | −0.058 [−0.179, +0.073] |
+| M4 | 19 Flat | 0 | 282 | failed on every world | +0.115 [−0.001, +0.225] |
+| M4 | 20 Promotions | 0 | 240 | −0.057 [−0.181, +0.075] | −0.095 [−0.220, +0.027] |
+| M5 | 1 Drift | 0 | 240 | −0.010 [−0.141, +0.119] | not run |
+| M5 | 6 Truth outside the observed range | 0 | 240 | +0.076 [−0.041, +0.204] | not run |
+| M5 | 14 Robyn's home ground | 0 | 240 | −0.042 [−0.169, +0.078] | not run |
+| M5 | 15 siMMMulator | 0 | 240 | +0.696 [+0.606, +0.770] | not run |
+| M4 | 0 Track M v2 | 4 | 310 | −0.089 [−0.193, +0.018] | −0.093 [−0.206, +0.023] |
+| M4 | 1 Drift | 4 | 522 | −0.129 [−0.212, −0.045] | −0.092 [−0.176, −0.008] |
+| M4 | 2 Spend confounded with demand | 4 | 270 | −0.122 [−0.237, −0.003] | −0.047 [−0.163, +0.074] |
+| M4 | 3 Collinear channels | 4 | 270 | −0.013 [−0.130, +0.102] | −0.052 [−0.171, +0.070] |
+| M4 | 4 S-curves | 4 | 522 | +0.029 [−0.057, +0.116] | +0.053 [−0.027, +0.142] |
+| M4 | 5 Budget follows performance | 4 | 240 | −0.036 [−0.165, +0.090] | +0.104 [−0.021, +0.229] |
+| M4 | 6 Truth outside the observed range | 4 | 240 | −0.112 [−0.235, +0.016] | −0.145 [−0.270, −0.021] |
+| M4 | 7 Short series | 1 | 84 | +0.101 [−0.131, +0.337] | −0.125 [−0.340, +0.106] |
+| M4 | 7 Short series | 2 | 168 | −0.102 [−0.246, +0.052] | −0.155 [−0.302, −0.004] |
+| M4 | 12 Meridian's home ground | 4 | 460 | −0.049 [−0.139, +0.048] | −0.016 [−0.106, +0.074] |
+| M4 | 13 PyMC-Marketing's home ground | 4 | 520 | −0.082 [−0.166, −0.000] | −0.157 [−0.241, −0.076] |
+| M4 | 14 Robyn's home ground | 4 | 520 | −0.086 [−0.175, +0.001] | −0.036 [−0.123, +0.050] |
+| M4 | 17 Twins | 4 | 240 | −0.274 [−0.385, −0.156] | −0.052 [−0.182, +0.075] |
+| M4 | 18 Long term | 4 | 240 | −0.036 [−0.155, +0.090] | −0.058 [−0.179, +0.073] |
+| M4 | 19 Flat | 4 | 282 | failed on every world | +0.115 [−0.001, +0.225] |
+| M4 | 20 Promotions | 4 | 240 | −0.034 [−0.156, +0.091] | −0.095 [−0.220, +0.027] |
+| M5 | 15 siMMMulator | 4 | 240 | +0.267 [+0.143, +0.384] | not run |
+
+Meridian `review r2` is read on 34 family-rungs: its interval lies below 0 on 6, above 0 on 3 and
+holds 0 on 25; its correlation runs from −0.274 (M4 family 17, k = 4) to +0.696 (M5 family 15, k =
+0). `ridge` `r2` is read on 31 family-rungs: its interval lies below 0 on 7, above 0 on 0 and holds
+0 on 24; its correlation runs from −0.157 (M4 family 13, k = 0) to +0.115 (M4 family 19, k = 0).
+<!-- /record:fit-regret -->
+
+- **An in-sample R² tells little about a plan's regret on these families.** Most intervals hold
+  0, and where the correlation is larger its sign is not stable. On M4's family 17 Meridian's
+  higher R² goes with a worse plan at k = 0 and with a better one at k = 4; on M5's family 15 it
+  goes with a worse plan at both rungs.
+- **The ridge arm reads no lift test**, so at the tested rung it plans as at k = 0: its rows there
+  repeat its k = 0 correlation on the same worlds.
+
 ## M4's deviations
 
 What a reader of this record needs from the run's deviations from its pre-registration:
@@ -503,6 +662,10 @@ beats on 4, ties on 2, of 6; against Robyn tuned it beats on 6, of 6.
   `evidence/results/m4_record.json` and `evidence/results/m3_record.json`, with the SHA-256 of every
   file they came from; `python scripts/readme_record.py` writes them here from those files, and
   `tests/test_readme.py` fails where a table differs from what it writes.
+- **The diagnostics' two tables are written the same way.** `scripts/flags_record.py` read them
+  from M4's and M5's scores into `evidence/results/m4_flags.json` and
+  `evidence/results/m5_flags.json`, with the SHA-256 of each `scores.jsonl` it read, the same file
+  the run's record names; `python scripts/readme_record.py` writes them here.
 
 ## Versions of every arm
 

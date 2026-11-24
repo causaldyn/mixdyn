@@ -5,6 +5,31 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
+## [Unreleased]
+
+The benchmark page reads the claim arms' diagnostic flags, post hoc, on M4's and M5's records. The
+reading changes no verdict. The engine's code is 0.2.4's: `src/` is unchanged, so no fit or plan
+moves.
+
+### Added
+
+- **What the diagnostics tell (post hoc)**, a section of `docs/benchmark.md`. Each claim arm's
+  flags, the plan's share of spend outside the logged range and each channel's, are read as
+  classifiers of a regret above the status quo's, family by rung: their AUROC with its bootstrap
+  interval and the rule's word, which keeps a flag only where its interval lies above 0.5. Beside
+  them, every in-sample R² the records hold, Meridian's reviewer's and the ridge arm's, is read
+  against the plan's regret. The flags read against a wrong return are not shown: they need `tau`,
+  which no pre-registration has fixed yet.
+- **`scripts/flags_record.py`** reads a scored run's scores into `evidence/results/m4_flags.json`
+  and `m5_flags.json`, with the SHA-256 of each `scores.jsonl` it read and `"post_hoc": true`;
+  `scripts/readme_record.py` writes the page's `flags` and `fit-regret` blocks from them.
+  `tests/test_readme.py` fails where a block is not what the script writes, where a flag's word is
+  not its interval's, or where a digest is not the one the run's record names.
+- **`scorecard.flags.read`** (`scorecard/`, in the repository, not the wheel): each flag's row as
+  `report --flags` prints it, its counts and its AUROC with its interval or the reason none is
+  read. The report's lines and the record file are formatted from the same rows; the report prints
+  as it did, to the byte.
+
 ## [0.2.4] — 2026-11-24
 
 Defects that a fuzz target of the readers of saved bytes found, and one beside them, each fixed
