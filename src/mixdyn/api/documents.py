@@ -1783,7 +1783,7 @@ def dumps(value: Any, schema: Schema) -> str:
 def loads(text: str, schema: Schema) -> Any:
     try:
         document = json.loads(text)
-    except json.JSONDecodeError as error:
+    except (ValueError, RecursionError) as error:
         msg = f"not JSON: {error}"
         raise SchemaError(msg) from error
     if not isinstance(document, dict) or set(document) != {"schema", "version", "data"}:

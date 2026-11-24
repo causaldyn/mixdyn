@@ -116,6 +116,24 @@ def test_a_document_that_does_not_fit_is_refused_with_its_path(text: str, match:
         loads(text, ISSUES)
 
 
+@pytest.mark.parametrize(
+    ("text", "match"),
+    [
+        ("[" * 100_000 + "]" * 100_000, "not JSON"),
+        (
+            '{"schema": "mixdyn.issues", "version": 1, "data": ' + "1" * 5_000 + "}",
+            "not JSON: Exceeds the limit",
+        ),
+    ],
+    ids=["nested past the parser's depth", "an integer past Python's digits"],
+)
+def test_json_python_s_parser_does_not_read_is_refused_as_not_json(text: str, match: str) -> None:
+    """Python's parser refuses JSON nested past its stack with `RecursionError`, and an integer of
+    more digits than it converts with `ValueError`: neither is `JSONDecodeError`."""
+    with pytest.raises(SchemaError, match=match):
+        loads(text, ISSUES)
+
+
 @dataclass(frozen=True, slots=True)
 class Priced:
     unit: KpiUnit
