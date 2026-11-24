@@ -2057,8 +2057,12 @@ def _decode_array(data: Any, path: str) -> np.ndarray:
     if not isinstance(shape, list) or not all(type(n) is int and n >= 0 for n in shape):
         msg = f"{path}: bad shape {reprlib.repr(shape)}"
         raise SchemaError(msg)
-    if not isinstance(flat, list) or len(flat) != math.prod(shape):
-        msg = f"{path}: shape {shape} needs {math.prod(shape)} values"
+    count = math.prod(shape)
+    if count > np.iinfo(np.intp).max:
+        msg = f"{path}: shape {reprlib.repr(shape)} declares more values than an array holds"
+        raise SchemaError(msg)
+    if not isinstance(flat, list) or len(flat) != count:
+        msg = f"{path}: shape {reprlib.repr(shape)} needs {count} values"
         raise SchemaError(msg)
     fits = {
         "float64": lambda x: x is None or (type(x) in (int, float) and _floats(x)),
