@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="398" viewBox="0 0 1000 398" role="img" aria-labelledby="title desc" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+<title id="title">Plans within δ of theirs on 37 of 38 family-rungs, at a fraction of the compute</title>
+<desc id="desc">The mean CPU time of a process and the largest peak memory of any, for mixdyn's two arms and for Orbit, PyMC-Marketing and Meridian, over the runs M4 and M5 on one machine class.</desc>
+<rect x="0.5" y="0.5" width="999" height="397" rx="10" fill="#1a1a19" stroke="#ffffff" stroke-opacity="0.1"/>
+<text x="24.0" y="40.0" font-size="17" fill="#f0efec" font-weight="600">Plans within δ of theirs on 37 of 38 family-rungs, at a fraction of the compute</text>
+<text x="24.0" y="64.0" font-size="12.5" fill="#c3c2b7">M4 and M5 on one machine class (AMD EPYC 7R13 Processor), one thread a process, each rival at its recommended settings.</text>
+<text x="24.0" y="81.0" font-size="12.5" fill="#c3c2b7">A rival’s process fits and plans one world at one rung; a process of mixdyn’s history-only arm plans a world at up to two rungs.</text>
+<text x="24.0" y="98.0" font-size="12.5" fill="#c3c2b7">Each figure is the process’s own scope’s, spent on a shared box: what each tool cost there, not a speed benchmark.</text>
+<text x="224.0" y="136.0" font-size="13" fill="#f0efec" font-weight="600">CPU time a process, mean</text>
+<text x="680.0" y="136.0" font-size="13" fill="#f0efec" font-weight="600">Peak memory, the largest process</text>
+<line x1="224.0" y1="150.0" x2="224.0" y2="364.0" stroke="#383835" stroke-width="1"/>
+<text x="224.0" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0</text>
+<line x1="347.5" y1="150.0" x2="347.5" y2="364.0" stroke="#2c2c2a" stroke-width="1"/>
+<text x="347.5" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">100 s</text>
+<line x1="471.1" y1="150.0" x2="471.1" y2="364.0" stroke="#2c2c2a" stroke-width="1"/>
+<text x="471.1" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">200 s</text>
+<line x1="594.6" y1="150.0" x2="594.6" y2="364.0" stroke="#2c2c2a" stroke-width="1"/>
+<text x="594.6" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">300 s</text>
+<line x1="680.0" y1="150.0" x2="680.0" y2="364.0" stroke="#383835" stroke-width="1"/>
+<text x="680.0" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0</text>
+<line x1="762.2" y1="150.0" x2="762.2" y2="364.0" stroke="#2c2c2a" stroke-width="1"/>
+<text x="762.2" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">5 GiB</text>
+<line x1="844.4" y1="150.0" x2="844.4" y2="364.0" stroke="#2c2c2a" stroke-width="1"/>
+<text x="844.4" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">10 GiB</text>
+<line x1="926.7" y1="150.0" x2="926.7" y2="364.0" stroke="#2c2c2a" stroke-width="1"/>
+<text x="926.7" y="380.0" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">15 GiB</text>
+<text x="24.0" y="169.0" font-size="13" fill="#f0efec" font-weight="600">mixdyn</text>
+<text x="24.0" y="184.0" font-size="11" fill="#898781">history only, 6 087 processes</text>
+<g><title>mixdyn, history only: 6 087 processes over M4 and M5, 10.3 CPU seconds a process on average, peak memory 0.18 GiB at most</title>
+<path d="M224.0 161.0H232.7Q236.7 161.0 236.7 165.0V175.0Q236.7 179.0 232.7 179.0H224.0Z" fill="#3987e5"/>
+<path d="M680.0 161.0H681.5Q683.0 161.0 683.0 162.5V177.5Q683.0 179.0 681.5 179.0H680.0Z" fill="#3987e5"/>
+</g>
+<text x="242.7" y="174.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">10.3 s</text>
+<text x="689.0" y="174.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">0.18 GiB</text>
+<text x="24.0" y="209.0" font-size="13" fill="#f0efec" font-weight="600">mixdyn</text>
+<text x="24.0" y="224.0" font-size="11" fill="#898781">with lift tests, 5 368 processes</text>
+<g><title>mixdyn, with lift tests: 5 368 processes over M4 and M5, 9.3 CPU seconds a process on average, peak memory 0.18 GiB at most</title>
+<path d="M224.0 201.0H231.5Q235.5 201.0 235.5 205.0V215.0Q235.5 219.0 231.5 219.0H224.0Z" fill="#3987e5"/>
+<path d="M680.0 201.0H681.4Q682.9 201.0 682.9 202.4V217.6Q682.9 219.0 681.4 219.0H680.0Z" fill="#3987e5"/>
+</g>
+<text x="241.5" y="214.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">9.3 s</text>
+<text x="688.9" y="214.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">0.18 GiB</text>
+<text x="24.0" y="263.0" font-size="13" fill="#f0efec" font-weight="600">Orbit</text>
+<text x="24.0" y="278.0" font-size="11" fill="#898781">11 458 processes</text>
+<g><title>Orbit: 11 458 processes over M4 and M5, 75.1 CPU seconds a process on average, peak memory 0.82 GiB at most</title>
+<path d="M224.0 255.0H312.8Q316.8 255.0 316.8 259.0V269.0Q316.8 273.0 312.8 273.0H224.0Z" fill="#898781"/>
+<path d="M680.0 255.0H689.5Q693.5 255.0 693.5 259.0V269.0Q693.5 273.0 689.5 273.0H680.0Z" fill="#898781"/>
+</g>
+<text x="322.8" y="268.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">75.1 s</text>
+<text x="370.8" y="268.0" font-size="12" fill="#c3c2b7">7× mixdyn’s</text>
+<text x="699.5" y="268.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">0.82 GiB</text>
+<text x="24.0" y="303.0" font-size="13" fill="#f0efec" font-weight="600">PyMC-Marketing</text>
+<text x="24.0" y="318.0" font-size="11" fill="#898781">11 447 processes</text>
+<g><title>PyMC-Marketing: 11 447 processes over M4 and M5, 174.0 CPU seconds a process on average, peak memory 1.11 GiB at most</title>
+<path d="M224.0 295.0H434.9Q438.9 295.0 438.9 299.0V309.0Q438.9 313.0 434.9 313.0H224.0Z" fill="#898781"/>
+<path d="M680.0 295.0H694.2Q698.2 295.0 698.2 299.0V309.0Q698.2 313.0 694.2 313.0H680.0Z" fill="#898781"/>
+</g>
+<text x="444.9" y="308.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">174 s</text>
+<text x="485.9" y="308.0" font-size="12" fill="#c3c2b7">17× mixdyn’s</text>
+<text x="704.2" y="308.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">1.11 GiB</text>
+<text x="24.0" y="343.0" font-size="13" fill="#f0efec" font-weight="600">Meridian</text>
+<text x="24.0" y="358.0" font-size="11" fill="#898781">11 454 processes</text>
+<g><title>Meridian: 11 454 processes over M4 and M5, 244.8 CPU seconds a process on average, peak memory 12.30 GiB at most</title>
+<path d="M224.0 335.0H522.4Q526.4 335.0 526.4 339.0V349.0Q526.4 353.0 522.4 353.0H224.0Z" fill="#898781"/>
+<path d="M680.0 335.0H878.3Q882.3 335.0 882.3 339.0V349.0Q882.3 353.0 878.3 353.0H680.0Z" fill="#898781"/>
+</g>
+<text x="532.4" y="348.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">245 s</text>
+<text x="573.4" y="348.0" font-size="12" fill="#c3c2b7">24× mixdyn’s</text>
+<text x="888.3" y="348.0" font-size="12" fill="#f0efec" font-variant-numeric="tabular-nums">12.30 GiB</text>
+</svg>

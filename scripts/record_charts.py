@@ -37,6 +37,7 @@ ASSETS = record.ROOT / "docs" / "assets"
 DELTA = 0.05
 MINUS = record.MINUS
 APOSTROPHE, TYPOGRAPHIC = "'", "\u2019"  # a chart's text sets its apostrophes typographically
+TIMES = "\u00d7"
 FONT = "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
 WORDS = ("beats", "ties", "loses to")
 
@@ -556,6 +557,161 @@ def every_comparison(records: record.Records, theme: Theme) -> str:
     return svg.render()
 
 
+COST_RUNS = ("m4", "m5")
+COST_ARMS = (
+    ("margin", "mixdyn", "history only"),
+    ("anchored", "mixdyn", "with lift tests"),
+    ("orbit", "Orbit", ""),
+    ("pymc-marketing", "PyMC-Marketing", ""),
+    ("meridian", "Meridian", ""),
+)
+
+
+@dataclass(frozen=True, slots=True)
+class Cost:
+    """One arm's processes over M4 and M5: their count, their mean CPU time and the largest peak
+    memory of any of them."""
+
+    name: str
+    rung: str
+    rival: bool
+    processes: int
+    cpu_seconds: float
+    peak_gib: float
+
+
+def costs(records: record.Records) -> list[Cost]:
+    """The national claim's arms and the rivals over M4 and M5, which ran on one machine class: the
+    mean is the runs' CPU time over their processes, exact from the records' sums."""
+    out = []
+    for arm, name, rung in COST_ARMS:
+        rows = [records[run]["compute"]["arms"][arm] for run in COST_RUNS]
+        processes = sum(r["processes"] for r in rows)
+        out.append(
+            Cost(
+                name,
+                rung,
+                rows[0]["rival"],
+                processes,
+                sum(r["core_hours"] for r in rows) * 3600.0 / processes,
+                max(r["peak_gib"]["most"] for r in rows),
+            )
+        )
+    return out
+
+
+def _count(n: int) -> str:
+    return f"{n:,}".replace(",", " ")
+
+
+def _bar(svg: Svg, x0: float, x1: float, y: float, h: float, fill: str) -> None:
+    """A bar from the baseline `x0` to `x1`, square at the baseline, its data end rounded 4 px."""
+    r = min(4.0, (x1 - x0) / 2)
+    top, bottom = y - h / 2, y + h / 2
+    svg.add(
+        f'<path d="M{_n(x0)} {_n(top)}H{_n(x1 - r)}Q{_n(x1)} {_n(top)} {_n(x1)} {_n(top + r)}'
+        f'V{_n(bottom - r)}Q{_n(x1)} {_n(bottom)} {_n(x1 - r)} {_n(bottom)}H{_n(x0)}Z" '
+        f'fill="{fill}"/>'
+    )
+
+
+def cost(records: record.Records, theme: Theme) -> str:
+    """Each arm's mean CPU time a process and largest peak memory, mixdyn's arms against the
+    rivals', over M4 and M5."""
+    rows = costs(records)
+    models = sorted(
+        {
+            m
+            for run in COST_RUNS
+            for f in records[run]["compute"]["families"].values()
+            for m in f["cpu_model"]
+        }
+    )
+    base = max(c.cpu_seconds for c in rows if not c.rival)
+    pad, label_w, cpu_w, gap, mem_w = 24, 200, 420, 36, 296
+    width = pad + label_w + cpu_w + gap + mem_w + pad
+    row, bar, top = 40, 18, 150
+    ys, y = [], top + row / 2
+    for i, c in enumerate(rows):
+        if i and c.rival != rows[i - 1].rival:
+            y += 14
+        ys.append(y)
+        y += row
+    bottom = ys[-1] + row / 2
+    height = int(bottom + 34)
+    t = theme
+    rungs = record.family_rungs(records)
+    held = len(record._rows(records))
+    title = (
+        f"Plans within δ of theirs on {held} of {len(rungs)} family-rungs, at a fraction of the "
+        "compute"
+    )
+    svg = Svg(
+        width,
+        height,
+        t,
+        title,
+        "The mean CPU time of a process and the largest peak memory of any, for mixdyn's two arms "
+        "and for Orbit, PyMC-Marketing and Meridian, over the runs M4 and M5 on one machine class.",
+    )
+    svg.text(pad, 40, title, fill=t.ink, size=17, weight=600)
+    sub = (
+        f"M4 and M5 on one machine class ({', '.join(models)}), one thread a process, each "
+        "rival at its recommended settings.",
+        "A rival's process fits and plans one world at one rung; a process of mixdyn's "
+        "history-only arm plans a world at up to two rungs.",
+        "Each figure is the process's own scope's, spent on a shared box: what each tool cost "
+        "there, not a speed benchmark.",
+    )
+    for i, line in enumerate(sub):
+        svg.text(pad, 64 + 17 * i, line, fill=t.ink2, size=12.5)
+
+    cx = Scale(0.0, 340.0, pad + label_w, pad + label_w + cpu_w)
+    mx = Scale(0.0, 18.0, pad + label_w + cpu_w + gap, width - pad)
+    svg.text(cx.start, top - 14, "CPU time a process, mean", fill=t.ink, size=13, weight=600)
+    svg.text(
+        mx.start, top - 14, "Peak memory, the largest process", fill=t.ink, size=13, weight=600
+    )
+    for scale, ticks, unit in ((cx, (0, 100, 200, 300), " s"), (mx, (0, 5, 10, 15), " GiB")):
+        for v in ticks:
+            svg.line(scale(v), top, scale(v), bottom, stroke=t.axis if v == 0 else t.grid)
+            svg.text(
+                scale(v),
+                bottom + 16,
+                f"{v}{unit if v else ''}",
+                fill=t.muted,
+                size=11,
+                anchor="middle",
+                tabular=True,
+            )
+    for c, y in zip(rows, ys, strict=True):
+        fill = t.ties if c.rival else t.beats
+        svg.text(pad, y - 1, c.name, fill=t.ink, size=13, weight=600)
+        detail = f"{c.rung}, " if c.rung else ""
+        svg.text(pad, y + 14, f"{detail}{_count(c.processes)} processes", fill=t.muted, size=11)
+        seconds = f"{c.cpu_seconds:.1f} s" if c.cpu_seconds < 100 else f"{c.cpu_seconds:.0f} s"
+        with svg.group(
+            f"{c.name}{', ' + c.rung if c.rung else ''}: {_count(c.processes)} processes over M4 "
+            f"and M5, {c.cpu_seconds:.1f} CPU seconds a process on average, peak memory "
+            f"{c.peak_gib:.2f} GiB at most"
+        ):
+            _bar(svg, cx(0), cx(c.cpu_seconds), y, bar, fill)
+            _bar(svg, mx(0), mx(c.peak_gib), y, bar, fill)
+        svg.text(cx(c.cpu_seconds) + 6, y + 4, seconds, fill=t.ink, size=12, tabular=True)
+        if c.rival:
+            svg.text(
+                cx(c.cpu_seconds) + 12 + 7.0 * len(seconds),
+                y + 4,
+                f"{c.cpu_seconds / base:.0f}{TIMES} mixdyn's",
+                fill=t.ink2,
+                size=12,
+            )
+        svg.text(
+            mx(c.peak_gib) + 6, y + 4, f"{c.peak_gib:.2f} GiB", fill=t.ink, size=12, tabular=True
+        )
+    return svg.render()
+
+
 def example() -> dict[str, Any]:
     """The README's first example run as the README holds it, and its names after it."""
     readme = record.README.read_text(encoding="utf-8")
@@ -664,6 +820,7 @@ CHARTS: dict[str, Callable[[record.Records, dict[str, Any], Theme], str]] = {
     "closest-rival": lambda records, _, theme: closest_rival(records, theme),
     "every-comparison": lambda records, _, theme: every_comparison(records, theme),
     "first-plan": lambda _, held, theme: first_plan(held, theme),
+    "cost": lambda records, _, theme: cost(records, theme),
 }
 
 

@@ -20,7 +20,8 @@ unchanged, so no fit or plan moves.
   seed 1 000 000 on, which no earlier run read (ADR 0101).
 - **Charts of the record** (`docs/assets/`, drawn by `scripts/record_charts.py` from the runs'
   records and the README's example, light and dark): each family-rung against its closest rival
-  with its interval, every comparison by rival, and the first plan's margins and plan.
+  with its interval, every comparison by rival, each arm's CPU time and peak memory over M4 and
+  M5, and the first plan's margins and plan.
   `tests/test_readme.py` fails where a committed chart is not what the script draws.
 - **M5's pre-registration and record.** `scorecard/preregistration/m5.md` (SHA-256
   `86e12d7cc1e2b8eae21689db069c5600f0fc8a9d64d797c2a9350ac2ba7970d1`), `m5.json` and

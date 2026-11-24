@@ -576,6 +576,29 @@ def test_each_chart_holds_one_mark_for_each_family_rung_and_comparison() -> None
         ]
         assert len(titles(f"every-comparison-{scheme}.svg")) == compared
         assert len(titles(f"first-plan-{scheme}.svg")) == 6
+        assert len(titles(f"cost-{scheme}.svg")) == len(record_charts.COST_ARMS)
+
+
+def test_the_cost_chart_states_the_runs_compute() -> None:
+    """Each arm's mean is its CPU time over M4 and M5 divided by its processes, and its memory the
+    largest peak of any process, read from the records apart from the script."""
+    drawn = (ASSETS / "cost-light.svg").read_text(encoding="utf-8")
+    for arm in ("margin", "anchored", "orbit", "pymc-marketing", "meridian"):
+        rows = [RECORDS[run]["compute"]["arms"][arm] for run in ("m4", "m5")]
+        processes = sum(r["processes"] for r in rows)
+        seconds = sum(r["core_hours"] for r in rows) * 3600.0 / processes
+        peak = max(r["peak_gib"]["most"] for r in rows)
+        assert (
+            f"processes over M4 and M5, {seconds:.1f} CPU seconds a process on average, peak "
+            f"memory {peak:.2f} GiB at most" in drawn
+        ), arm
+    machines = {
+        m
+        for run in ("m4", "m5")
+        for f in RECORDS[run]["compute"]["families"].values()
+        for m in f["cpu_model"]
+    }
+    assert len(machines) == 1
 
 
 def test_the_pages_show_the_charts_the_script_draws_pinned_to_the_release() -> None:
@@ -589,7 +612,7 @@ def test_the_pages_show_the_charts_the_script_draws_pinned_to_the_release() -> N
     names = [u.removeprefix(raw) for u in shown]
     assert sorted(names) == sorted(
         f"{chart}-{scheme}.svg"
-        for chart in ("closest-rival", "first-plan")
+        for chart in ("closest-rival", "cost", "first-plan")
         for scheme in ("dark", "light")
     )
     for page in (BENCHMARK, INDEX):

@@ -9,6 +9,9 @@
 
 --8<-- "README.md:measured"
 
+![Plans within δ of theirs, at a fraction of the compute](assets/cost-light.svg#gh-light-mode-only)
+![Plans within δ of theirs, at a fraction of the compute](assets/cost-dark.svg#gh-dark-mode-only)
+
 ## Install
 
 --8<-- "README.md:install"

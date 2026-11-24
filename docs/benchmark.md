@@ -574,6 +574,9 @@ stage's plan. Each run's processes shared one box, M5's and M4's a c6a.48xlarge 
 m6a.48xlarge (each pre-registration's Compute): the figures say what was spent under that load, not
 how fast a tool is.
 
+![Plans within δ of theirs, at a fraction of the compute](assets/cost-light.svg#gh-light-mode-only)
+![Plans within δ of theirs, at a fraction of the compute](assets/cost-dark.svg#gh-dark-mode-only)
+
 ### M4
 
 <!-- record:m4-compute -->

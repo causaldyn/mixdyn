@@ -63,6 +63,11 @@ bench that scores it. Every comparison, every loss, the pre-registrations, the v
 compute are on the [benchmark page](https://causaldyn.github.io/mixdyn/benchmark/).
 <!-- --8<-- [end:measured] -->
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/cost-dark.svg">
+  <img alt="Mean CPU time of a process and the largest peak memory of any, over M4 and M5: mixdyn's two arms about 10 CPU seconds and 0.18 GiB, Orbit, PyMC-Marketing and Meridian 75 to 245 seconds and up to 12.3 GiB." src="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/cost-light.svg">
+</picture>
+
 ## Install
 
 <!-- --8<-- [start:install] -->
