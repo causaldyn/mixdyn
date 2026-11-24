@@ -1,17 +1,19 @@
-"""Write the README's record of the scored runs its claim was read on, M4 and M3, from their own
-records.
+"""Write the README's record of the scored runs its claim was read on, M4, M5 and M3, from their
+own records.
 
-The README states M4's claim, and M3's verdicts on the geo families, which M4 did not run and left
-standing. Its tables of the claim, the worlds per cell, the losses, the tuned rivals, the versions
-and the compute sit between `<!-- record:NAME -->` and `<!-- /record:NAME -->` markers. This script
-writes each block, and `tests/test_readme.py` fails where a block is not what it writes: no number
-in them is typed. The blocks named `m4-*` are M4's, with M3's geo rows where they say so; `tuned`,
-`versions` and `compute` are M3's.
+The README states M4's claim, M5's on what M4 left open, and M3's verdicts on the geo families,
+which neither later run ran and which stand. Its tables of the claim, the worlds per cell, the
+losses, the tuned rivals, the versions and the compute sit between `<!-- record:NAME -->` and
+`<!-- /record:NAME -->` markers. This script writes each block, and `tests/test_readme.py` fails
+where a block is not what it writes: no number in them is typed. The blocks `claim`, `cells`,
+`words` and `losses` hold M4's and M5's verdicts and M3's geo rows, each row naming its run;
+`exploratory` is M4's; the blocks named `m4-*` and `m5-*` are that run's; `tuned`, `versions` and
+`compute` are M3's.
 
-The records are not in this repository (M3's 25 GB, M4's 7.8 GB, not published yet), so it runs in
-two steps, the first once for each run:
+The records are not in this repository (M3's 25 GB, M4's 7.8 GB, M5's 0.7 GB, not published yet),
+so it runs in two steps, the first once for each run:
 
-    uv run --no-project python -I scripts/readme_record.py extract --run m4 STAGE READING
+    uv run --no-project python -I scripts/readme_record.py extract --run m5 STAGE READING
     uv run python scripts/readme_record.py
 
 `extract` reads one run where it lies. STAGE is the scored stage's directory: each root's
@@ -20,23 +22,24 @@ two steps, the first once for each run:
 `python -m scorecard.claim read --recorded` over the run's claim roots, the reading the run's
 pre-registration declares. It writes what the
 README prints, with the SHA-256 of every file the numbers come from and no path, to
-`evidence/results/m4_record.json` (`--run m3`: `m3_record.json`): a reader with the records runs it
-again and compares the file. The second command writes the README's blocks from those two files
-alone.
+`evidence/results/m5_record.json` (`--run m4`: `m4_record.json`, `--run m3`: `m3_record.json`): a
+reader with the records runs it again and compares the file. The second command writes the README's
+blocks from those three files alone.
 
 What each block reads:
 
-- **m4-claim**, **m4-cells**, **m4-words**: each verdict that holds, its comparisons in the reading,
-  their complete cases, failures and words, and Holm's losses: M4's, then M3's on the geo families;
-- **m4-losses**, **m4-exploratory**: each comparison of those verdicts, and of M4's rungs not
-  claimed, that loses, is not within the margin, is one of Holm's losses or is not within 0.01;
+- **claim**, **cells**, **words**: each verdict that holds, its comparisons in the reading, their
+  complete cases, failures and words, and Holm's losses: M4's and M5's by family, then M3's on the
+  geo families;
+- **losses**, **exploratory**: each comparison of those verdicts, and of M4's rungs not claimed,
+  that loses, is not within the margin, is one of Holm's losses or is not within 0.01;
 - **tuned**: each comparison in M3's reading of the claim's arm with Meridian and Robyn, at their
   recommended settings and tuned;
-- **m4-versions**, **versions**: each record's `versions`, `python` and `provenance` commits, and
-  the `settings` of the arms the claim reads;
-- **m4-compute**, **compute**: each process's line of `logs/costs.jsonl` (its CPU time, its peak
-  memory and its wall), the CPU quota of its class in `plan.json`, and the `cpu_model` and
-  `threads` its records' `cost` holds.
+- **m4-versions**, **m5-versions**, **versions**: each record's `versions`, `python` and
+  `provenance` commits, and the `settings` of the arms the claim reads;
+- **m4-compute**, **m5-compute**, **compute**: each process's line of `logs/costs.jsonl` (its CPU
+  time, its peak memory and its wall), the CPU quota of its class in `plan.json`, and the
+  `cpu_model` and `threads` its records' `cost` holds.
 """
 
 from __future__ import annotations
@@ -206,7 +209,20 @@ RUNS = {
         },
         frozenset({"margin", "anchored"}),
     ),
+    "m5": Run(
+        "M5",
+        ROOT / "evidence" / "results" / "m5_record.json",
+        ROOT / "scorecard" / "preregistration" / "m5.md",
+        "M4",
+        {
+            "margin held": "the claim's arm at k = 0",
+            "anchored floored": "the claim's arm at the tested rung, not routed",
+        },
+        frozenset({"margin", "anchored"}),
+    ),
 }
+# The runs whose verdicts the claim's tables print, in the order a family's rows are taken.
+CLAIM_RUNS = ("m4", "m5", "m3")
 LINE = re.compile(
     r"^  family (?P<family>\d+), k = (?P<k>\d+), (?P<arm>.+?) less (?P<rival>.+?)\s{2,}"
     r"(?P<rest>.+)$"
@@ -317,7 +333,9 @@ def _reading(text: str) -> dict[str, Any]:
         for v in map(VERDICT.match, lines[end:])
         if v is not None
     ]
-    headline = [line for line in lines[end:] if re.match(r"^(no )?headline", line)]
+    headline = [
+        line for line in lines[end:] if re.match(r"^(no headline|the headline holds)", line)
+    ]
     holm = [m for m in map(HOLM.match, lines[end:]) if m is not None]
     secondary = [m for m in map(SECONDARY.match, lines[end:]) if m is not None]
     if len(headline) != 1 or len(holm) != 1:
@@ -627,10 +645,11 @@ class Row:
 
 
 def _rows(records: Records, *, claimed: bool = True) -> list[Row]:
-    """The claim's family-rungs: M4's verdicts that hold, then M3's verdicts on the geo families,
-    which M4 did not run. With `claimed` false, M4's family-rungs not claimed instead."""
+    """The claim's family-rungs: M4's and M5's verdicts that hold by family and rung, then M3's
+    verdicts on the geo families, which neither later run ran. With `claimed` false, M4's and M5's
+    family-rungs not claimed instead."""
     rows = []
-    for run in ("m4", "m3"):
+    for run in CLAIM_RUNS:
         record = records[run]
         reading = record["reading"]
         found: dict[tuple[int, int], dict[str, dict[str, Any]]] = defaultdict(dict)
@@ -644,7 +663,7 @@ def _rows(records: Records, *, claimed: bool = True) -> list[Row]:
             if (v["word"] == "holds") == claimed:
                 held = {r: found[fk][r] for r in RIVALS}
                 rows.append(Row(run, *fk, held, v["level"]))
-    return rows
+    return sorted(rows, key=lambda r: (r.first["arm"] == "geo eb", r.family, r.k))
 
 
 def _holm(records: Records, row: Row) -> set[str]:
@@ -696,7 +715,7 @@ def _cases(c: dict[str, Any]) -> str:
     return f"{c['complete']}" + (f" ({', '.join(notes)})" if notes else "")
 
 
-def m4_cells(records: Records) -> str:
+def cells(records: Records) -> str:
     head = ["Family", "Rung", "Arm", "Run", *(NAMES[r] for r in RIVALS)]
     lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
     lines += [
@@ -710,7 +729,7 @@ def m4_cells(records: Records) -> str:
 def words(records: Records) -> str:
     """Hall's reader's words over the claim's verdicts, by run, arm and rung, for each rival."""
     groups: dict[tuple[str, str, str], list[Row]] = defaultdict(list)
-    for row in _rows(records):
+    for row in sorted(_rows(records), key=lambda r: CLAIM_RUNS.index(r.run)):
         groups[RUNS[row.run].name, row.first["arm"], "0" if row.k == 0 else "tested"].append(row)
     head = ["Run", "Arm", "Rung", "Verdicts", *(NAMES[r] for r in RIVALS)]
     lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
@@ -738,7 +757,7 @@ def losses(records: Records) -> str:
     head += ["Within δ = 0.05", "Holm's loss", "Within δ = 0.01"]
     lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
     every = _rows(records) + _rows(records, claimed=False)
-    for row in sorted(every, key=lambda r: (r.run != "m4", r.family, r.k)):
+    for row in sorted(every, key=lambda r: (r.first["arm"] == "geo eb", r.family, r.k)):
         tight = records[row.run]["reading"]["secondary"]["at the margin 0.01"]["not within"]
         holm = _holm(records, row)
         for rival in RIVALS:
@@ -898,6 +917,8 @@ def versions(record: dict[str, Any], scored: Run) -> str:
         others = sorted(
             a for a, row in arms.items() if not row["rival"] and a not in scored.claim_processes
         )
+        if not others:
+            continue
         families = sorted({f for a in others for f in arms[a]["families"]})
         lines.append(
             f"| {', '.join(f'`{a}`' for a in others)} | the engine's other arms, recorded beside "
@@ -945,12 +966,16 @@ def _wall(seconds: float) -> str:
 def compute(record: dict[str, Any], scored: Run) -> str:
     names = family_names(scored)
     families, arms, box = (record["compute"][k] for k in ("families", "arms", "box"))
+    launched = (
+        "It was launched once, and no spot interruption stopped it."
+        if box["launches"] == 1
+        else f"It was launched {box['launches']} times: the stage resumed after each of "
+        f"{box['launches'] - 1} spot interruptions."
+    )
     lines = [
         _prose(
             f"One box of {box['cpus']} CPUs and {box['memory_gib']} GiB ran every process, "
-            f"admitting up to {box['admitted_cpus']} CPUs of quota at a time. It was launched "
-            f"{box['launches']} times: the stage resumed after each of {box['launches'] - 1} "
-            "spot interruptions."
+            f"admitting up to {box['admitted_cpus']} CPUs of quota at a time. {launched}"
         ),
         "",
         "| Family | CPU model | Threads | Processes | Peak memory a process, median / most "
@@ -1015,13 +1040,15 @@ def compute(record: dict[str, Any], scored: Run) -> str:
 
 
 RENDERERS: dict[str, Callable[[Records], str]] = {
-    "m4-claim": claim,
-    "m4-cells": m4_cells,
-    "m4-words": words,
-    "m4-losses": losses,
-    "m4-exploratory": exploratory,
+    "claim": claim,
+    "cells": cells,
+    "words": words,
+    "losses": losses,
+    "exploratory": exploratory,
     "m4-versions": lambda records: versions(records["m4"], RUNS["m4"]),
+    "m5-versions": lambda records: versions(records["m5"], RUNS["m5"]),
     "m4-compute": lambda records: compute(records["m4"], RUNS["m4"]),
+    "m5-compute": lambda records: compute(records["m5"], RUNS["m5"]),
     "tuned": lambda records: tuned(records["m3"]),
     "versions": lambda records: versions(records["m3"], RUNS["m3"]),
     "compute": lambda records: compute(records["m3"], RUNS["m3"]),

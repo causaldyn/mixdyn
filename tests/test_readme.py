@@ -1,13 +1,13 @@
 """The README states what the engine was and was not validated on, and points to the pages a user
 reads first; its example runs; the scope page states what the engine does not model.
 
-Its record of the runs its claim was read on, M4 and M3's geo verdicts, states the conflict of
+Its record of the runs its claim was read on, M4, M5 and M3's geo verdicts, states the conflict of
 interest, the error bars and the engine's place. Its tables of the claim, the worlds per cell, the
 words, the losses, the tuned rivals, the versions and the compute are the ones
-`scripts/readme_record.py` writes from the runs' records (`evidence/results/m4_record.json` and
-`m3_record.json`): a table typed into one of those blocks fails here. Each cell of the claim's table
-is checked against its run's reading apart from the script that writes it, and so is each count,
-interval and level the prose beside the tables states."""
+`scripts/readme_record.py` writes from the runs' records (`evidence/results/m4_record.json`,
+`m5_record.json` and `m3_record.json`): a table typed into one of those blocks fails here. Each
+cell of the claim's table is checked against its run's reading apart from the script that writes
+it, and so is each count, interval and level the prose beside the tables states."""
 
 from __future__ import annotations
 
@@ -23,6 +23,9 @@ import readme_record
 
 ROOT = Path(__file__).resolve().parent.parent
 README = (ROOT / "README.md").read_text(encoding="utf-8")
+# The README's text with every run of whitespace one space: a phrase reads the same wherever the
+# prose wraps it.
+FLAT = " ".join(README.split())
 RECORDS = readme_record.records()
 MINUS = "\u2212"
 
@@ -73,15 +76,17 @@ def test_the_record_s_tables_are_the_ones_its_script_writes() -> None:
 
 def test_each_record_table_sits_in_the_section_that_names_it() -> None:
     placed = {
-        "m4-claim": "What has been measured",
-        "m4-cells": "What has been measured",
-        "m4-words": "What has been measured",
-        "m4-losses": "Where it loses",
-        "m4-exploratory": "Where it loses",
+        "claim": "What has been measured",
+        "cells": "What has been measured",
+        "words": "What has been measured",
+        "losses": "Where it loses",
+        "exploratory": "Where it loses",
         "tuned": "The tuned rivals",
         "m4-versions": "Versions of every arm",
+        "m5-versions": "Versions of every arm",
         "versions": "Versions of every arm",
         "m4-compute": "Compute",
+        "m5-compute": "Compute",
         "compute": "Compute",
     }
     assert sorted(placed) == sorted(readme_record.RENDERERS)
@@ -237,12 +242,12 @@ def _number(text: str) -> float:
 
 
 def test_the_claim_s_table_reads_as_the_runs_readings() -> None:
-    """Each row is a verdict that holds in the run it names, M4's or M3's on the geo families; its
-    worlds are the status quo's complete cases and the arm's failures, its level the verdict's,
-    and each cell the reading's comparison as printed, its Holm's loss Holm's: read apart from the
-    script that writes the table."""
+    """Each row is a verdict that holds in the run it names, M4's, M5's or M3's on the geo
+    families; its worlds are the status quo's complete cases and the arm's failures, its level the
+    verdict's, and each cell the reading's comparison as printed, its Holm's loss Holm's: read
+    apart from the script that writes the table."""
     runs = {s.name: run for run, s in readme_record.RUNS.items()}
-    rows = readme_record.blocks(README)["m4-claim"].splitlines()[2:]
+    rows = readme_record.blocks(README)["claim"].splitlines()[2:]
     seen, off = [], []
     for line in rows:
         cells = [c.strip() for c in line.strip("|").split("|")]
@@ -272,10 +277,14 @@ def test_the_claim_s_table_reads_as_the_runs_readings() -> None:
                 off.append((family, rung, rival, "holm"))
     assert off == []
     m4 = [(f, k) for run, f, k in seen if run == "m4"]
+    m5 = [(f, k) for run, f, k in seen if run == "m5"]
     m3 = [(f, k) for run, f, k in seen if run == "m3"]
     assert sorted(m4) == sorted(_holds("m4"))
+    assert sorted(m5) == sorted(_holds("m5"))
     assert sorted(m3) == sorted(_holds("m3", geo=True))
-    assert (len(m4), len(m3)) == (26, 6)
+    assert (len(m4), len(m5), len(m3)) == (26, 5, 6)
+    # No family-rung is claimed twice: M5 claims only what M4 left open.
+    assert len(set(m4) | set(m5)) == len(m4) + len(m5)
 
 
 def _holm(levels: list[float], familywise: float) -> int:
@@ -295,7 +304,8 @@ def test_the_counts_the_text_states_are_the_readings() -> None:
     assert {v["word"] for v in m4["verdicts"]} == {"holds", "not claimed"}
     assert f"sequence of {len(_holds('m3'))} verdicts, all of which held" in README
     assert (len(geo3), sorted({f for f, _ in geo3})) == (6, [8, 9, 10])
-    assert f"on {len(holds4) + len(geo3)} pre-registered\nfamily-rungs" in README
+    holds5 = _holds("m5")
+    assert f"on {len(holds4) + len(holds5) + len(geo3)} pre-registered\nfamily-rungs" in README
     prereg = {
         r: s.preregistration.read_text(encoding="utf-8") for r, s in readme_record.RUNS.items()
     }
@@ -303,6 +313,10 @@ def test_the_counts_the_text_states_are_the_readings() -> None:
     assert "25.23 of 26" in prereg["m4"]
     assert "(16.94 expected)" in README
     assert "16.94 of 17" in prereg["m3"]
+    assert f"**M5**, the run after it: {len(holds5)} verdicts on what M4 left open" in FLAT
+    assert {v["word"] for v in RECORDS["m5"]["reading"]["verdicts"]} == {"holds"}
+    assert f"All {len(holds5)} held; the pre-registration expected 4.997." in FLAT
+    assert "4.997 of 5" in prereg["m5"]
 
     # A rival that failed on most worlds leaves the claim: family 19's Meridian.
     claimed = [c for c in m4["comparisons"] if c["claimed"] and c["mean"] is not None]
@@ -333,6 +347,45 @@ def test_the_counts_the_text_states_are_the_readings() -> None:
     assert f"(level\n  {_found('m4')[1, 4, 'pymc-marketing']['loss level']}, unadjusted)" in README
 
 
+def test_m5_s_losses_the_text_states_are_its_reading() -> None:
+    """M5's Holm's losses are all on family 15 and within δ, and they are the comparisons its
+    secondary reading at 0.01 does not find within."""
+    m5 = RECORDS["m5"]["reading"]
+    claimed = [c for c in m5["comparisons"] if c["claimed"] and c["mean"] is not None]
+    assert m5["holm"]["over"] == len(claimed) == len(m5["comparisons"]) == 25
+    losses = {(h["family"], h["k"], h["rival"]) for h in m5["holm"]["losses"]}
+    assert len(losses) == 4
+    assert {f for f, _, _ in losses} == {15}
+    assert f"over M5's {m5['holm']['over']} comparisons finds four losses" in FLAT
+    levels = [float(c["loss level"]) for c in claimed if c["loss level"] is not None]
+    assert _holm(levels, 0.025) == len(losses)
+    found = _found("m5")
+    assert all(found[fkr]["within"] and found[fkr]["word"] == "loses to" for fkr in losses)
+    tight = m5["secondary"]["at the margin 0.01"]
+    assert {(n["family"], n["k"], n["rival"]) for n in tight["not within"]} == losses
+    assert (tight["of"], tight["of"] - tight["within"]) == (len(claimed), len(losses))
+    assert f"the only ones of M5's {tight['of']} claimed comparisons not within 0.01" in FLAT
+    assert m5["headline"].startswith("the headline holds")
+    assert "prints its headline as holding over its own five verdicts only" in FLAT
+
+
+def test_family_4_at_k_0_is_the_one_national_family_rung_in_no_claim() -> None:
+    """M4 and M5 together read 32 national family-rungs; every one but family 4 at k = 0 is a
+    verdict that holds, and that one is not within δ of PyMC-Marketing or Orbit."""
+    national = {fk for run in ("m4", "m5") for fk in _verdicts(run)}
+    held = set(_holds("m4")) | set(_holds("m5"))
+    assert national - held == {(4, 0)}
+    assert len(national) == 32
+    assert f"Of the {len(national)} national family-rungs, one is in no claim" in FLAT
+    assert (4, 0) not in _verdicts("m5")
+    f4 = _found("m4")
+    assert [f4[4, 0, r]["within"] for r in ("pymc-marketing", "orbit")] == [False, False]
+    search = "PyMC-Marketing by +0.046 and Orbit by +0.054"
+    prereg = readme_record.RUNS["m5"].preregistration.read_text(encoding="utf-8")
+    assert search in " ".join(prereg.split())
+    assert search in " ".join(section(README, "What has been measured").split())
+
+
 def test_the_failures_the_text_states_are_the_readings() -> None:
     m4, m3 = _found("m4"), _found("m3")
     assert {m4[19, k, "meridian"]["rival_failed"] for k in (0, 4)} == {282}
@@ -340,9 +393,17 @@ def test_the_failures_the_text_states_are_the_readings() -> None:
     orbit = sum(m4[18, k, "orbit"]["rival_failed"] for k in (0, 4))
     assert f"Orbit failed on {orbit} world-rungs of family 18" in README
     geo = sum(m3[f, k, "pymc-marketing"]["rival_failed"] for f, k in _holds("m3", geo=True))
-    assert f"PyMC-Marketing failed\non {geo} world-rungs of the geo families" in README
+    assert f"PyMC-Marketing failed on {geo} world-rungs of the geo families" in FLAT
     assert all(c["default_failed"] == 0 for c in m4.values())
-    assert "No claim arm failed in\nM4." in README
+    m5 = _found("m5")
+    pymc = [m5[15, k, "pymc-marketing"]["rival_failed"] for k in (0, 4)]
+    assert sum(c["rival_failed"] for c in m5.values()) == sum(pymc)
+    assert (
+        f"and in M5 on {sum(pymc)} world-rungs of family 15, {pymc[0]} at k = 0 and {pymc[1]} at "
+        "the tested rung" in FLAT
+    )
+    assert all(c["default_failed"] == 0 for c in m5.values())
+    assert "No claim arm failed in M4 or M5." in FLAT
 
 
 def test_the_run_s_box_and_pins_the_text_states_are_the_record_s() -> None:
@@ -356,6 +417,18 @@ def test_the_run_s_box_and_pins_the_text_states_are_the_record_s() -> None:
     assert f"The run locked {stated}." in README
     assert commits["bench"] in README
     assert commits["mixdyn"][:7] in section(README, "Pre-registration and reproduction")
+
+    record = RECORDS["m5"]
+    box = record["compute"]["box"]
+    assert (box["launches"], box["launched"]) == (1, ["2026-11-23T17:05:36+00:00"])
+    assert "was launched, at 17:05:36 UTC the same day" in FLAT
+    commits = record["commits"]
+    code = section(README, "Pre-registration and reproduction").split("**M5's code.**", 1)[1]
+    code = code.split("\n- ", 1)[0]
+    stated = f"causal-hybrid-control {commits['causal-hybrid-control']} and jax {commits['jax']}"
+    assert f"The run locked {stated}." in code
+    assert f"The run ran mixdyn `{commits['mixdyn'][:7]}`" in code
+    assert commits["bench"] in README
 
 
 def test_the_pre_registrations_the_readme_names_are_the_files_the_runs_declared() -> None:
