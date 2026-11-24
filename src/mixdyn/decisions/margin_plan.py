@@ -303,7 +303,9 @@ def water_fill(
         inner = np.where(at_low <= target, low, np.where(at_high >= target, high, 0.5 * (a + b)))
         return np.where(curved, inner, corner)
 
-    top = float(np.max(np.where(m > 0, m * at_low, 0.0))) * 2.0 + 1e-300
+    # above every positive margin's return at its floor, a line's its margin alone, so that at
+    # this price every channel spends its floor
+    top = float(np.max(np.where(m > 0, np.where(curved, m * at_low, m), 0.0))) * 2.0 + 1e-300
     if float(demand(1e-300 * top).sum()) < budget:
         plan = np.where(m > 0, high, low).astype(float)
         rest = m <= 0

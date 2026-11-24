@@ -391,6 +391,22 @@ def test_where_the_positive_channels_ceilings_leave_budget_the_rest_goes_by_the_
     np.testing.assert_array_equal(plan, [12.0, 3.0, 15.0])
 
 
+def test_a_line_is_planned_on_its_margin_whatever_its_slope_reads():
+    """A line's marginal return is its margin: the price's bisection must start where the line
+    drops to its floor, here above 1, not at twice the margins times the slopes at the floors,
+    0.212, where the line still sits at its ceiling and the floors and it spend 25 of 22."""
+    quo = np.array([10.0, 10.0])
+    curve = _michaelis_menten(16.0 * quo, quo)
+
+    def slope(p):
+        return np.array([curve(p)[0], 0.1])
+
+    margins = np.array([0.1, 1.0])
+    lower, upper = np.array([5.0, 5.0]), np.array([20.0, 20.0])
+    plan = margin_plan.water_fill(margins, slope, np.array([True, False]), lower, upper, 22.0)
+    np.testing.assert_array_equal(plan, [5.0, 17.0])
+
+
 @pytest.mark.parametrize("shaped", [False, True])
 @pytest.mark.parametrize("seed", range(10))
 def test_on_lines_water_filling_is_the_corner(seed, shaped):
