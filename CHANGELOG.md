@@ -5,14 +5,18 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
-## [Unreleased]
+## [0.2.4] — 2026-11-24
 
 Defects that a fuzz target of the readers of saved bytes found, and one beside them, each fixed
-where the bad value is made. `serialize.load` refuses what it does not read with `FormatError`, and `loads` with
-`SchemaError`, where each raised another error or read a value that its writer then refused to
-write. A file that `save` wrote and a document that `dumps` wrote read as before.
+where the bad value is made. `serialize.load` refuses what it does not read with `FormatError`,
+and `loads` with `SchemaError`, where each raised another error or read a value that its writer
+then refused to write. A file that `save` wrote and a document that `dumps` wrote read as before.
 
 ### Fixed
+
+- **`read_panel` names the values it cannot read as Python values.** An issue listed a value of a
+  numpy column as numpy's `repr` writes it, `np.str_('soon')`, where the table holds `'soon'`.
+  Dates and durations keep numpy's form, which `item` could turn into integers.
 
 - **`load` refuses a file whose values a class's checks refuse.** A class is rebuilt by its own
   `__init__`, whose checks refuse a value with `ValueError`, and a value of another type than its
@@ -51,6 +55,8 @@ write. A file that `save` wrote and a document that `dumps` wrote read as before
 
 ### Added
 
+- **Python 3.15 among the package's classifiers.** CI has run the suite on it since 0.1.0; the
+  package's metadata now names it beside 3.12 to 3.14.
 - **A fuzz target of the readers of saved bytes**, `fuzz/fuzz_documents.py`. It reads documents
   and files, most of them ones the engine writes, damaged at random. `loads` must refuse each with
   `SchemaError` and `load` with `FormatError`, or return a value that `dumps` or `save` writes

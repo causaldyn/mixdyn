@@ -1,6 +1,6 @@
 [project]
 name = "mixdyn"
-version = "0.2.3"
+version = "0.2.4"
 description = "Media-mix modelling engine: dynamic linear models, geo hierarchies and budget plans."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -15,6 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Topic :: Scientific/Engineering",
     "Typing :: Typed",
 ]
