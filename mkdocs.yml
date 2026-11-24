@@ -7,6 +7,10 @@ repo_url: https://github.com/causaldyn/mixdyn
 theme:
   name: material
   font: false  # system fonts, so a page view sends no request to Google Fonts
+  # A named scheme marks each page with it, and the theme then hides every chart's dark twin
+  # (`#gh-dark-mode-only`, the fragment GitHub reads too) on the light page.
+  palette:
+    scheme: default
   features:
     - content.code.copy
     - navigation.indexes
@@ -14,6 +18,11 @@ theme:
 # Not pages. The ADRs and the release check are records for whoever changes the engine, and they
 # cite the repository's own paths (evidence/, scripts/, tests/), which the site does not hold: the
 # site links them on GitHub, where each path is one click away.
+# The benchmark page's charts are 1000 px wide and its tables wider: the content column grows past
+# the theme's 61rem grid, so a chart's text keeps a readable size.
+extra_css:
+  - stylesheets/extra.css
+
 exclude_docs: |
   adr/
   release-check.md
