@@ -303,18 +303,19 @@ def load(path: str | Path) -> Any:
     """The object `save` wrote to `path`.
 
     Raises:
-        FormatError: on a file that is not the format's archive, a format version other than
-            `FORMAT_VERSION`, a class or a node the format does not hold, a value its class
-            refuses, and a JAX array in double precision where JAX runs in single.
+        FormatError: on a file that is not the format's archive or whose members do not read, a
+            format version other than `FORMAT_VERSION`, a class or a node the format does not
+            hold, a value its class refuses, and a JAX array in double precision where JAX runs
+            in single.
     """
     try:
         archive = zipfile.ZipFile(path)
-    except zipfile.BadZipFile as error:
-        msg = f"{path} is not a {FORMAT} file: it is not a zip archive"
+    except (zipfile.BadZipFile, NotImplementedError) as error:
+        msg = f"{path} is not a {FORMAT} file: it is not a zip archive that Python reads"
         raise FormatError(msg) from error
     with archive:
         try:
-            manifest = json.loads(archive.read(_MANIFEST))
+            manifest = json.loads(_read(archive, _MANIFEST, str(path)))
         except (KeyError, ValueError) as error:
             msg = f"{path} is not a {FORMAT} file: it has no readable {_MANIFEST}"
             raise FormatError(msg) from error
@@ -469,9 +470,30 @@ def _class(name: Any, where: str) -> type:
     return cls
 
 
+def _read(archive: zipfile.ZipFile, name: str, where: str) -> bytes:
+    """The bytes of the archive's member `name`.
+
+    Raises:
+        KeyError: where the archive holds no member `name`.
+        FormatError: where the member does not read: a checksum or a header that is damaged,
+            data that does not decompress, or a compression or an encryption that the zip module
+            does not read.
+    """
+    try:
+        return archive.read(name)
+    except KeyError:
+        raise
+    # A damaged member raises the error of whichever layer finds the damage: zipfile's own
+    # `BadZipFile`, `ValueError`, `RuntimeError` or `NotImplementedError`, or its decompressor's,
+    # `zlib.error`, `OSError` from bz2, `LZMAError`, or `ZstdError` from Python 3.14. They share
+    # no base class short of `Exception`.
+    except Exception as error:
+        raise FormatError(f"{where}: {name} in the archive does not read: {error}") from error
+
+
 def _array(index: Any, archive: zipfile.ZipFile, where: str) -> np.ndarray:
     try:
-        data = archive.read(f"{_ARRAYS}/{index}.npy")
+        data = _read(archive, f"{_ARRAYS}/{index}.npy", where)
     except KeyError as error:
         raise FormatError(f"{where}: the archive has no array {index!r}") from error
     try:

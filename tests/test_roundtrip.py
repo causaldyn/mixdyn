@@ -902,6 +902,16 @@ def test_a_damaged_archive_fails_to_load(tmp_path: Path) -> None:
         load(path)
 
 
+def _replaced(path: Path, name: str, data: bytes) -> None:
+    """`path`'s archive with its member `name` holding `data`, each member stored as it is."""
+    with zipfile.ZipFile(path) as archive:
+        entries = {n: archive.read(n) for n in archive.namelist()}
+    entries[name] = data
+    with zipfile.ZipFile(path, "w") as archive:
+        for n, d in entries.items():
+            archive.writestr(n, d)
+
+
 def test_a_file_whose_values_its_class_refuses_fails_to_load(tmp_path: Path) -> None:
     """A class's checks refuse a value out of its range with `ValueError`, and a value of another
     type than its field's with whatever error their code meets first: either fails to load."""
@@ -913,6 +923,39 @@ def test_a_file_whose_values_its_class_refuses_fails_to_load(tmp_path: Path) -> 
     save(geo_panel(2, 4), path)
     _rewritten(path, lambda manifest: manifest["root"]["fields"].update(hierarchy="g0"))
     with pytest.raises(FormatError, match=r"obj: .*MediaPanel cannot be rebuilt: AttributeError"):
+        load(path)
+
+
+@pytest.mark.parametrize(
+    ("name", "match"),
+    [
+        ("manifest.json", "it has no readable manifest.json"),
+        ("arrays/0.npy", r"obj\.spend: arrays/0\.npy in the archive does not read: Bad CRC-32"),
+    ],
+)
+def test_a_member_whose_bytes_do_not_read_fails_to_load(
+    name: str, match: str, tmp_path: Path
+) -> None:
+    """A member whose bytes no longer match its checksum fails to load, as does any other the
+    zip module or its decompressor does not read."""
+    path = _saved(tmp_path)
+    with zipfile.ZipFile(path) as archive:
+        data = archive.read(name)
+    _replaced(path, name, data)  # stored, so its last byte is a byte of the file
+    damaged = bytearray(path.read_bytes())
+    damaged[damaged.index(data) + len(data) - 1] ^= 1
+    path.write_bytes(bytes(damaged))
+    with pytest.raises(FormatError, match=match):
+        load(path)
+
+
+def test_an_archive_of_a_zip_version_python_does_not_read_fails_to_load(tmp_path: Path) -> None:
+    path = _saved(tmp_path)
+    data = bytearray(path.read_bytes())
+    at = data.index(b"PK\x01\x02") + 6  # the version its first member needs to be read
+    data[at : at + 2] = (99).to_bytes(2, "little")
+    path.write_bytes(bytes(data))
+    with pytest.raises(FormatError, match="not a zip archive that Python reads"):
         load(path)
 
 
