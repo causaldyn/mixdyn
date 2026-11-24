@@ -45,6 +45,9 @@ write. A file that `save` wrote and a document that `dumps` wrote read as before
   converts raised `ValueError`.
 - **`loads` and `load` name a value they refuse cut short.** A value nested deeper than `repr`
   writes, which `json` still reads, raised `RecursionError` as the message was written.
+- **`loads` looks an enum's member up only by a value of a member's type.** The enum's own lookup
+  named a value it does not hold with `repr`, so such a value nested deep enough raised
+  `RecursionError` before the decoder could refuse it.
 
 ### Added
 

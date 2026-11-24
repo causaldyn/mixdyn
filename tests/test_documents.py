@@ -148,6 +148,19 @@ def test_a_value_nested_past_what_repr_writes_is_named_in_short() -> None:
     assert len(str(error.value)) < 300
 
 
+def test_an_enum_s_value_nested_past_what_repr_writes_is_named_in_short() -> None:
+    """An enum's own lookup names a value it does not hold with `repr`, which the decoder never
+    lets it meet. On Python 3.12 and 3.13 the parser stops first, and the text is not JSON."""
+    nested = '{"a": [' * 30_000 + "1" + "]}" * 30_000
+    text = (
+        '{"schema": "mixdyn.issues", "version": 1, "data": [{"code": "duplicate", "severity": '
+        f'{nested}, "message": "", "geo": null, "column": null, "dates": [], "channel": null'
+        "}]}"
+    )
+    with pytest.raises(SchemaError, match=r"data\[0\]\.severity: .* is not a Severity|not JSON"):
+        loads(text, ISSUES)
+
+
 @dataclass(frozen=True, slots=True)
 class Priced:
     unit: KpiUnit

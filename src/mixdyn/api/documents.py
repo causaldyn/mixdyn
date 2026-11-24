@@ -1973,11 +1973,13 @@ def _decode(data: Any, hint: Any, path: str) -> Any:
             raise SchemaError(msg)
         return _decode_fields(data, hint, path)
     if isinstance(hint, type) and issubclass(hint, Enum):
-        try:
-            return hint(data)
-        except ValueError:
-            msg = f"{path}: {reprlib.repr(data)} is not a {hint.__name__}"
-            raise SchemaError(msg) from None
+        # `dumps` writes a member's value; the enum's own lookup would name any other value in its
+        # error with `repr`, which a value nested deep enough overflows
+        for member in hint:
+            if type(member.value) is type(data) and member.value == data:
+                return member
+        msg = f"{path}: {reprlib.repr(data)} is not a {hint.__name__}"
+        raise SchemaError(msg)
     if hint is dt.date:
         try:
             return dt.date.fromisoformat(data)
