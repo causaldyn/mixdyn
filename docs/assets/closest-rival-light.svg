@@ -1,0 +1,336 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1032" height="701" viewBox="0 0 1032 701" role="img" aria-labelledby="title desc" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+<title id="title">mixdyn against its closest rival on every family</title>
+<desc id="desc">For each of the 38 family-rungs of M3, M4 and M5, mixdyn's plan less the plan of the rival whose 95 % interval reaches highest, in regret per euro of budget, lower better. 37 lie within the non-inferiority margin of 0.05; family 4 at k = 0 does not.</desc>
+<rect x="0.5" y="0.5" width="1031" height="700" rx="10" fill="#fcfcfb" stroke="#0b0b0b" stroke-opacity="0.1"/>
+<text x="24.0" y="40.0" font-size="17" fill="#0b0b0b" font-weight="600">mixdyn against its closest rival, family by family</text>
+<text x="24.0" y="64.0" font-size="12.5" fill="#52514e">Regret per euro of budget, mixdyn’s plan less the rival’s: mean and paired 95 % interval over the simulated worlds both planned,</text>
+<text x="24.0" y="81.0" font-size="12.5" fill="#52514e">for the rival whose interval reaches highest. Left of 0, mixdyn’s plan lost less. The claim is non-inferiority: every interval left of δ.</text>
+<circle cx="29.0" cy="114.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="39.0" y="118.0" font-size="12" fill="#52514e">mixdyn beats the rival</text>
+<circle cx="194.0" cy="114.0" r="5.5" fill="#fcfcfb"/><circle cx="194.0" cy="114.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+<text x="204.0" y="118.0" font-size="12" fill="#52514e">ties</text>
+<circle cx="251.0" cy="114.0" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="261.0" y="118.0" font-size="12" fill="#52514e">loses to it</text>
+<rect x="345.0" y="107.0" width="16.0" height="14.0" fill="#eb6834" fill-opacity="0.12"/>
+<line x1="345.0" y1="107.0" x2="345.0" y2="121.0" stroke="#eb6834" stroke-width="1.5"/>
+<text x="365.0" y="118.0" font-size="12" fill="#52514e">past δ = 0.05: no claim</text>
+<text x="260.0" y="166.0" font-size="13" fill="#0b0b0b" font-weight="600">History only (k = 0)</text>
+<text x="508.0" y="166.0" font-size="11" fill="#898781">closest rival</text>
+<rect x="407.9" y="182.5" width="82.1" height="368.0" fill="#eb6834" fill-opacity="0.08"/>
+<line x1="407.9" y1="182.5" x2="407.9" y2="550.5" stroke="#eb6834" stroke-width="1.5"/>
+<line x1="271.0" y1="182.5" x2="271.0" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="325.7" y1="182.5" x2="325.7" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="380.5" y1="182.5" x2="380.5" y2="550.5" stroke="#c3c2b7" stroke-width="1"/>
+<line x1="435.2" y1="182.5" x2="435.2" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="490.0" y1="182.5" x2="490.0" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<rect x="407.9" y="580.5" width="82.1" height="69.0" fill="#eb6834" fill-opacity="0.08"/>
+<line x1="407.9" y1="580.5" x2="407.9" y2="649.5" stroke="#eb6834" stroke-width="1.5"/>
+<line x1="271.0" y1="580.5" x2="271.0" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="271.0" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">−0.2</text>
+<line x1="325.7" y1="580.5" x2="325.7" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="325.7" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">−0.1</text>
+<line x1="380.5" y1="580.5" x2="380.5" y2="649.5" stroke="#c3c2b7" stroke-width="1"/>
+<text x="380.5" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0</text>
+<line x1="435.2" y1="580.5" x2="435.2" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="435.2" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0.1</text>
+<line x1="490.0" y1="580.5" x2="490.0" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="490.0" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0.2</text>
+<text x="411.9" y="178.5" font-size="12" fill="#52514e" font-weight="600">δ</text>
+<text x="646.0" y="166.0" font-size="13" fill="#0b0b0b" font-weight="600">With lift tests (the tested rung)</text>
+<text x="894.0" y="166.0" font-size="11" fill="#898781">closest rival</text>
+<rect x="793.9" y="182.5" width="82.1" height="368.0" fill="#eb6834" fill-opacity="0.08"/>
+<line x1="793.9" y1="182.5" x2="793.9" y2="550.5" stroke="#eb6834" stroke-width="1.5"/>
+<line x1="657.0" y1="182.5" x2="657.0" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="711.7" y1="182.5" x2="711.7" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="766.5" y1="182.5" x2="766.5" y2="550.5" stroke="#c3c2b7" stroke-width="1"/>
+<line x1="821.2" y1="182.5" x2="821.2" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="876.0" y1="182.5" x2="876.0" y2="550.5" stroke="#e1e0d9" stroke-width="1"/>
+<rect x="793.9" y="580.5" width="82.1" height="69.0" fill="#eb6834" fill-opacity="0.08"/>
+<line x1="793.9" y1="580.5" x2="793.9" y2="649.5" stroke="#eb6834" stroke-width="1.5"/>
+<line x1="657.0" y1="580.5" x2="657.0" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="657.0" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">−0.2</text>
+<line x1="711.7" y1="580.5" x2="711.7" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="711.7" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">−0.1</text>
+<line x1="766.5" y1="580.5" x2="766.5" y2="649.5" stroke="#c3c2b7" stroke-width="1"/>
+<text x="766.5" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0</text>
+<line x1="821.2" y1="580.5" x2="821.2" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="821.2" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0.1</text>
+<line x1="876.0" y1="580.5" x2="876.0" y2="649.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="876.0" y="665.5" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0.2</text>
+<text x="797.9" y="178.5" font-size="12" fill="#52514e" font-weight="600">δ</text>
+<text x="24.0" y="178.5" font-size="11" fill="#898781">National families, M4 and M5</text>
+<text x="24.0" y="576.5" font-size="11" fill="#898781">Geo families, M3</text>
+<text x="42.0" y="198.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">0</text>
+<text x="50.0" y="198.0" font-size="12" fill="#0b0b0b">Track M v2</text>
+<g><title>Family 0 Track M v2, k = 0, M4: mixdyn less Meridian −0.048 [−0.065, −0.031] a euro, beats, within δ, 310 worlds</title>
+<rect x="252.0" y="182.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="345.0" y1="194.0" x2="363.6" y2="194.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="354.3" cy="194.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="198.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 0 Track M v2, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.010 [+0.005, +0.014] a euro, loses to, within δ, 310 worlds</title>
+<rect x="638.0" y="182.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="769.1" y1="194.0" x2="774.4" y2="194.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="771.7" cy="194.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="894.0" y="198.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="221.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">1</text>
+<text x="50.0" y="221.0" font-size="12" fill="#0b0b0b">Drift</text>
+<g><title>Family 1 Drift, k = 0, M5: mixdyn less Meridian −0.080 [−0.112, −0.047] a euro, beats, within δ, 240 worlds</title>
+<rect x="252.0" y="205.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="319.0" y1="217.0" x2="354.7" y2="217.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="336.8" cy="217.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="221.0" font-size="11.5" fill="#52514e">Meridian</text>
+<text x="620.0" y="221.0" font-size="10.5" fill="#898781" text-anchor="end">M5</text>
+<g><title>Family 1 Drift, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.009 [−0.001, +0.019] a euro, loses to, within δ, 522 worlds</title>
+<rect x="638.0" y="205.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="765.8" y1="217.0" x2="777.1" y2="217.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="771.4" cy="217.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="894.0" y="221.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="244.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">2</text>
+<text x="50.0" y="244.0" font-size="12" fill="#0b0b0b">Spend confounded with demand</text>
+<g><title>Family 2 Spend confounded with demand, k = 0, M4: mixdyn less Meridian −0.050 [−0.072, −0.029] a euro, beats, within δ, 270 worlds</title>
+<rect x="252.0" y="228.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="341.1" y1="240.0" x2="364.8" y2="240.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="352.9" cy="240.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="244.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 2 Spend confounded with demand, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.002 [−0.003, +0.007] a euro, ties, within δ, 270 worlds</title>
+<rect x="638.0" y="228.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="764.6" y1="240.0" x2="770.2" y2="240.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="767.4" cy="240.0" r="5.5" fill="#fcfcfb"/><circle cx="767.4" cy="240.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="244.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="267.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">3</text>
+<text x="50.0" y="267.0" font-size="12" fill="#0b0b0b">Collinear channels</text>
+<g><title>Family 3 Collinear channels, k = 0, M4: mixdyn less Meridian −0.033 [−0.049, −0.017] a euro, beats, within δ, 270 worlds</title>
+<rect x="252.0" y="251.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="353.9" y1="263.0" x2="370.9" y2="263.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="362.4" cy="263.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="267.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 3 Collinear channels, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.010 [+0.005, +0.015] a euro, loses to, within δ, 270 worlds</title>
+<rect x="638.0" y="251.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="769.0" y1="263.0" x2="775.0" y2="263.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="772.0" cy="263.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="894.0" y="267.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="290.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">4</text>
+<text x="50.0" y="290.0" font-size="12" fill="#0b0b0b">S-curves</text>
+<g><title>Family 4 S-curves, k = 0, M4: mixdyn less Orbit +0.136 [+0.100, +0.173] a euro, loses to, not within δ = 0.05, no claim, 522 worlds</title>
+<rect x="252.0" y="274.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="435.1" y1="286.0" x2="475.0" y2="286.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="455.1" cy="286.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="508.0" y="290.0" font-size="11.5" fill="#0b0b0b" font-weight="600">Orbit</text>
+<g><title>Family 4 S-curves, tested rung (k = 4), M4: mixdyn less Orbit −0.014 [−0.041, +0.013] a euro, ties, within δ, 522 worlds</title>
+<rect x="638.0" y="274.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="744.0" y1="286.0" x2="773.8" y2="286.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="758.9" cy="286.0" r="5.5" fill="#fcfcfb"/><circle cx="758.9" cy="286.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="290.0" font-size="11.5" fill="#52514e">Orbit</text>
+<text x="42.0" y="313.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">5</text>
+<text x="50.0" y="313.0" font-size="12" fill="#0b0b0b">Budget follows performance</text>
+<g><title>Family 5 Budget follows performance, k = 0, M4: mixdyn less Meridian −0.048 [−0.068, −0.028] a euro, beats, within δ, 240 worlds</title>
+<rect x="252.0" y="297.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="343.4" y1="309.0" x2="365.4" y2="309.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="354.4" cy="309.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="313.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 5 Budget follows performance, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.002 [−0.002, +0.006] a euro, ties, within δ, 240 worlds</title>
+<rect x="638.0" y="297.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="765.2" y1="309.0" x2="769.5" y2="309.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="767.4" cy="309.0" r="5.5" fill="#fcfcfb"/><circle cx="767.4" cy="309.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="313.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="336.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">6</text>
+<text x="50.0" y="336.0" font-size="12" fill="#0b0b0b">Truth outside the observed range</text>
+<g><title>Family 6 Truth outside the observed range, k = 0, M5: mixdyn less Meridian −0.080 [−0.106, −0.054] a euro, beats, within δ, 240 worlds</title>
+<rect x="252.0" y="320.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="322.3" y1="332.0" x2="350.8" y2="332.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="336.6" cy="332.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="336.0" font-size="11.5" fill="#52514e">Meridian</text>
+<text x="620.0" y="336.0" font-size="10.5" fill="#898781" text-anchor="end">M5</text>
+<g><title>Family 6 Truth outside the observed range, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.029 [+0.016, +0.043] a euro, loses to, within δ, 240 worlds</title>
+<rect x="638.0" y="320.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="775.4" y1="332.0" x2="789.9" y2="332.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="782.6" cy="332.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="894.0" y="336.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="359.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">7</text>
+<text x="50.0" y="359.0" font-size="12" fill="#0b0b0b">Short series</text>
+<g><title>Family 7 Short series, k = 0, M4: mixdyn less Meridian −0.037 [−0.057, −0.017] a euro, beats, within δ, 252 worlds</title>
+<rect x="252.0" y="343.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="349.4" y1="355.0" x2="371.1" y2="355.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="360.3" cy="355.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="359.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 7 Short series, tested rung (k = 1), M4: mixdyn less PyMC-Marketing −0.015 [−0.029, −0.000] a euro, beats, within δ, 252 worlds</title>
+<rect x="638.0" y="343.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="750.4" y1="355.0" x2="766.4" y2="355.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="758.4" cy="355.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="894.0" y="359.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="382.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">12</text>
+<text x="50.0" y="382.0" font-size="12" fill="#0b0b0b">Meridian’s home ground</text>
+<g><title>Family 12 Meridian's home ground, k = 0, M4: mixdyn less Meridian −0.016 [−0.037, +0.004] a euro, ties, within δ, 460 worlds</title>
+<rect x="252.0" y="366.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="360.2" y1="378.0" x2="382.8" y2="378.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="371.5" cy="378.0" r="5.5" fill="#fcfcfb"/><circle cx="371.5" cy="378.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="508.0" y="382.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 12 Meridian's home ground, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.005 [−0.010, +0.001] a euro, ties, within δ, 460 worlds</title>
+<rect x="638.0" y="366.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="761.0" y1="378.0" x2="766.8" y2="378.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="763.9" cy="378.0" r="5.5" fill="#fcfcfb"/><circle cx="763.9" cy="378.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="382.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="405.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">13</text>
+<text x="50.0" y="405.0" font-size="12" fill="#0b0b0b">PyMC-Marketing’s home ground</text>
+<g><title>Family 13 PyMC-Marketing's home ground, k = 0, M4: mixdyn less Meridian −0.024 [−0.037, −0.011] a euro, beats, within δ, 520 worlds</title>
+<rect x="252.0" y="389.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="360.2" y1="401.0" x2="374.5" y2="401.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="367.3" cy="401.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="405.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 13 PyMC-Marketing's home ground, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.004 [−0.004, +0.013] a euro, ties, within δ, 520 worlds</title>
+<rect x="638.0" y="389.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="764.2" y1="401.0" x2="773.7" y2="401.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="768.9" cy="401.0" r="5.5" fill="#fcfcfb"/><circle cx="768.9" cy="401.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="405.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="428.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">14</text>
+<text x="50.0" y="428.0" font-size="12" fill="#0b0b0b">Robyn’s home ground</text>
+<g><title>Family 14 Robyn's home ground, k = 0, M5: mixdyn less Meridian −0.145 [−0.208, −0.081] a euro, beats, within δ, 240 worlds</title>
+<rect x="252.0" y="412.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="266.6" y1="424.0" x2="336.0" y2="424.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="301.3" cy="424.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="428.0" font-size="11.5" fill="#52514e">Meridian</text>
+<text x="620.0" y="428.0" font-size="10.5" fill="#898781" text-anchor="end">M5</text>
+<g><title>Family 14 Robyn's home ground, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.024 [−0.051, +0.002] a euro, ties, within δ, 520 worlds</title>
+<rect x="638.0" y="412.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="738.8" y1="424.0" x2="767.5" y2="424.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="753.1" cy="424.0" r="5.5" fill="#fcfcfb"/><circle cx="753.1" cy="424.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="428.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="451.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">15</text>
+<text x="50.0" y="451.0" font-size="12" fill="#0b0b0b">siMMMulator</text>
+<g><title>Family 15 siMMMulator, k = 0, M5: mixdyn less PyMC-Marketing +0.024 [+0.019, +0.029] a euro, loses to, within δ, 222 worlds</title>
+<rect x="252.0" y="435.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="390.7" y1="447.0" x2="396.1" y2="447.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="393.4" cy="447.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="508.0" y="451.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="620.0" y="451.0" font-size="10.5" fill="#898781" text-anchor="end">M5</text>
+<g><title>Family 15 siMMMulator, tested rung (k = 4), M5: mixdyn less Meridian +0.033 [+0.030, +0.035] a euro, loses to, within δ, 240 worlds</title>
+<rect x="638.0" y="435.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="782.7" y1="447.0" x2="785.8" y2="447.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="784.3" cy="447.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="894.0" y="451.0" font-size="11.5" fill="#52514e">Meridian</text>
+<text x="1006.0" y="451.0" font-size="10.5" fill="#898781" text-anchor="end">M5</text>
+<text x="42.0" y="474.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">17</text>
+<text x="50.0" y="474.0" font-size="12" fill="#0b0b0b">Twins</text>
+<g><title>Family 17 Twins, k = 0, M4: mixdyn less PyMC-Marketing −0.002 [−0.004, +0.001] a euro, ties, within δ, 240 worlds</title>
+<rect x="252.0" y="458.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="378.3" y1="470.0" x2="380.8" y2="470.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="379.5" cy="470.0" r="5.5" fill="#fcfcfb"/><circle cx="379.5" cy="470.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="508.0" y="474.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<g><title>Family 17 Twins, tested rung (k = 4), M4: mixdyn less Status quo +0.000 [+0.000, +0.000] a euro, ties, within δ, 240 worlds</title>
+<rect x="638.0" y="458.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="766.5" y1="470.0" x2="766.5" y2="470.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="766.5" cy="470.0" r="5.5" fill="#fcfcfb"/><circle cx="766.5" cy="470.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="474.0" font-size="11.5" fill="#52514e">Status quo</text>
+<text x="42.0" y="497.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">18</text>
+<text x="50.0" y="497.0" font-size="12" fill="#0b0b0b">Long term</text>
+<g><title>Family 18 Long term, k = 0, M4: mixdyn less Meridian −0.061 [−0.082, −0.041] a euro, beats, within δ, 240 worlds</title>
+<rect x="252.0" y="481.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="335.7" y1="493.0" x2="358.0" y2="493.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="346.9" cy="493.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="497.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 18 Long term, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.004 [−0.002, +0.009] a euro, ties, within δ, 240 worlds</title>
+<rect x="638.0" y="481.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="765.2" y1="493.0" x2="771.6" y2="493.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="768.4" cy="493.0" r="5.5" fill="#fcfcfb"/><circle cx="768.4" cy="493.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="497.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="520.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">19</text>
+<text x="50.0" y="520.0" font-size="12" fill="#0b0b0b">Flat</text>
+<g><title>Family 19 Flat, k = 0, M4: mixdyn less PyMC-Marketing −0.027 [−0.053, −0.001] a euro, beats, within δ, 282 worlds</title>
+<rect x="252.0" y="504.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="351.3" y1="516.0" x2="380.1" y2="516.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="365.7" cy="516.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="520.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<g><title>Family 19 Flat, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.028 [−0.048, −0.009] a euro, beats, within δ, 282 worlds</title>
+<rect x="638.0" y="504.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="740.5" y1="516.0" x2="761.6" y2="516.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="751.0" cy="516.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="894.0" y="520.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="543.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">20</text>
+<text x="50.0" y="543.0" font-size="12" fill="#0b0b0b">Promotions</text>
+<g><title>Family 20 Promotions, k = 0, M4: mixdyn less Meridian −0.031 [−0.051, −0.011] a euro, beats, within δ, 240 worlds</title>
+<rect x="252.0" y="527.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="352.5" y1="539.0" x2="374.3" y2="539.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="363.4" cy="539.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="543.0" font-size="11.5" fill="#52514e">Meridian</text>
+<g><title>Family 20 Promotions, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.005 [−0.011, +0.002] a euro, ties, within δ, 240 worlds</title>
+<rect x="638.0" y="527.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="760.5" y1="539.0" x2="767.3" y2="539.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="763.9" cy="539.0" r="5.5" fill="#fcfcfb"/><circle cx="763.9" cy="539.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="543.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="596.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">8</text>
+<text x="50.0" y="596.0" font-size="12" fill="#0b0b0b">Geo</text>
+<g><title>Family 8 Geo, k = 0, M3: mixdyn less PyMC-Marketing −0.008 [−0.010, −0.006] a euro, beats, within δ, 235 worlds</title>
+<rect x="252.0" y="580.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="375.2" y1="592.0" x2="377.2" y2="592.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="376.2" cy="592.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="596.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<g><title>Family 8 Geo, tested rung (k = 4), M3: mixdyn less PyMC-Marketing −0.008 [−0.010, −0.006] a euro, beats, within δ, 234 worlds</title>
+<rect x="638.0" y="580.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="760.9" y1="592.0" x2="762.9" y2="592.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="761.9" cy="592.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="894.0" y="596.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="619.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">9</text>
+<text x="50.0" y="619.0" font-size="12" fill="#0b0b0b">Spillover between geos</text>
+<g><title>Family 9 Spillover between geos, k = 0, M3: mixdyn less PyMC-Marketing +0.000 [−0.003, +0.004] a euro, ties, within δ, 233 worlds</title>
+<rect x="252.0" y="603.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="378.7" y1="615.0" x2="382.4" y2="615.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="380.5" cy="615.0" r="5.5" fill="#fcfcfb"/><circle cx="380.5" cy="615.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="508.0" y="619.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<g><title>Family 9 Spillover between geos, tested rung (k = 4), M3: mixdyn less PyMC-Marketing +0.005 [+0.002, +0.009] a euro, loses to, within δ, 234 worlds</title>
+<rect x="638.0" y="603.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="767.4" y1="615.0" x2="771.2" y2="615.0" stroke="#eb6834" stroke-width="2" stroke-linecap="round"/>
+<circle cx="769.3" cy="615.0" r="4.5" fill="#eb6834"/>
+</g>
+<text x="894.0" y="619.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="42.0" y="642.0" font-size="12" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">10</text>
+<text x="50.0" y="642.0" font-size="12" fill="#0b0b0b">Few geos</text>
+<g><title>Family 10 Few geos, k = 0, M3: mixdyn less PyMC-Marketing −0.003 [−0.005, −0.000] a euro, beats, within δ, 236 worlds</title>
+<rect x="252.0" y="626.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="377.6" y1="638.0" x2="380.3" y2="638.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="379.0" cy="638.0" r="4.5" fill="#2a78d6"/>
+</g>
+<text x="508.0" y="642.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<g><title>Family 10 Few geos, tested rung (k = 4), M3: mixdyn less PyMC-Marketing −0.002 [−0.004, +0.001] a euro, ties, within δ, 227 worlds</title>
+<rect x="638.0" y="626.5" width="370.0" height="23.0" fill="#fcfcfb" fill-opacity="0"/>
+<line x1="764.2" y1="638.0" x2="767.1" y2="638.0" stroke="#898781" stroke-width="2" stroke-linecap="round"/>
+<circle cx="765.7" cy="638.0" r="5.5" fill="#fcfcfb"/><circle cx="765.7" cy="638.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<text x="894.0" y="642.0" font-size="11.5" fill="#52514e">PyMC-Marketing</text>
+<text x="375.0" y="683.5" font-size="11" fill="#898781" text-anchor="middle">mixdyn less the rival, regret per euro</text>
+<text x="761.0" y="683.5" font-size="11" fill="#898781" text-anchor="middle">mixdyn less the rival, regret per euro</text>
+</svg>

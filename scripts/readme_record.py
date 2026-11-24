@@ -1,9 +1,10 @@
-"""Write the README's record of the scored runs its claim was read on, M4, M5 and M3, from their
-own records.
+"""Write the record of the scored runs mixdyn's claim was read on, M4, M5 and M3, from their own
+records: the README's scoreboard and the benchmark page's tables.
 
-The README states M4's claim, M5's on what M4 left open, and M3's verdicts on the geo families,
-which neither later run ran and which stand. Its tables of the claim, the worlds per cell, the
-losses, the tuned rivals, the versions and the compute sit between `<!-- record:NAME -->` and
+The benchmark page, `docs/benchmark.md`, states M4's claim, M5's on what M4 left open, and M3's
+verdicts on the geo families, which neither later run ran and which stand; the README counts its
+words by rival. Their tables of the scoreboard, the claim, the worlds per cell, the losses, the
+tuned rivals, the versions and the compute sit between `<!-- record:NAME -->` and
 `<!-- /record:NAME -->` markers. This script writes each block, and `tests/test_readme.py` fails
 where a block is not what it writes: no number in them is typed. The blocks `claim`, `cells`,
 `words` and `losses` hold M4's and M5's verdicts and M3's geo rows, each row naming its run;
@@ -21,13 +22,15 @@ so it runs in two steps, the first once for each run:
 `plan.json`, `reuse.json` and `launches.log`. READING is the output of
 `python -m scorecard.claim read --recorded` over the run's claim roots, the reading the run's
 pre-registration declares. It writes what the
-README prints, with the SHA-256 of every file the numbers come from and no path, to
+pages print, with the SHA-256 of every file the numbers come from and no path, to
 `evidence/results/m5_record.json` (`--run m4`: `m4_record.json`, `--run m3`: `m3_record.json`): a
-reader with the records runs it again and compares the file. The second command writes the README's
+reader with the records runs it again and compares the file. The second command writes the pages'
 blocks from those three files alone.
 
 What each block reads:
 
+- **scoreboard**, in the README: Hall's reader's word on each family-rung of the claim and on
+  family 4 at k = 0, the one national family-rung no run claimed, counted by rival;
 - **claim**, **cells**, **words**: each verdict that holds, its comparisons in the reading, their
   complete cases, failures and words, and Holm's losses: M4's and M5's by family, then M3's on the
   geo families;
@@ -60,11 +63,15 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 README = ROOT / "README.md"
+BENCHMARK = ROOT / "docs" / "benchmark.md"
+PAGES = (README, BENCHMARK)
 GIB = 2.0**30
 MINUS = chr(0x2212)  # the README's minus sign
 DASH = chr(0x2013)
 BUILT_IN = ("status quo", "equal split")
 RIVALS = ("status quo", "equal split", "meridian", "pymc-marketing", "orbit")
+# The rivals as the scoreboard and the charts order them: the maintained MMMs first.
+SCORED = ("meridian", "pymc-marketing", "orbit", "status quo", "equal split")
 TUNED = ("meridian", "meridian tuned", "robyn", "robyn tuned")
 TOOLS = ("meridian", "meridian tuned", "pymc-marketing", "orbit", "robyn", "robyn tuned")
 WORDS = ("beats", "ties", "loses to", "not compared")
@@ -666,6 +673,15 @@ def _rows(records: Records, *, claimed: bool = True) -> list[Row]:
     return sorted(rows, key=lambda r: (r.first["arm"] == "geo eb", r.family, r.k))
 
 
+def family_rungs(records: Records) -> list[Row]:
+    """The record's family-rungs: the claim's, and each of M4's that no run claimed, which is family
+    4 at k = 0 alone (M5 claimed the other k = 0 rungs M4 did not)."""
+    held = _rows(records)
+    claimed = {(r.family, r.k) for r in held}
+    left = [r for r in _rows(records, claimed=False) if (r.family, r.k) not in claimed]
+    return sorted(held + left, key=lambda r: (r.first["arm"] == "geo eb", r.family, r.k))
+
+
 def _holm(records: Records, row: Row) -> set[str]:
     """The rivals Holm's step-down finds a loss to on `row`'s family and rung."""
     found = records[row.run]["reading"]["holm"]["losses"]
@@ -687,6 +703,27 @@ def _compared(c: dict[str, Any], holm: set[str], *, word: bool = False) -> str:
     if c["rival"] in holm:
         notes.append("Holm's loss")
     return _interval(c) + "".join(f", {n}" for n in notes)
+
+
+SAID: dict[str, Callable[[dict[str, Any]], bool]] = {
+    "beats the rival": lambda c: c["word"] == "beats",
+    "ties": lambda c: c["word"] == "ties",
+    "loses to it, within δ": lambda c: c["word"] == "loses to" and c["within"] is True,
+    "loses to it, past δ": lambda c: c["word"] == "loses to" and c["within"] is False,
+    "is not compared: the rival failed": lambda c: c["mean"] is None,
+}
+
+
+def scoreboard(records: Records) -> str:
+    """Hall's reader's word on each of the record's family-rungs, counted by rival, a loss split by
+    whether it lies within δ."""
+    rungs = family_rungs(records)
+    head = [f"Of {len(rungs)} family-rungs, mixdyn", *(NAMES[r] for r in SCORED)]
+    lines = ["| " + " | ".join(head) + " |", "|---|" + "--:|" * len(SCORED)]
+    for said, holds in SAID.items():
+        counts = (sum(holds(r.found[rival]) for r in rungs) for rival in SCORED)
+        lines.append(f"| {said} | " + " | ".join(map(str, counts)) + " |")
+    return "\n".join(lines) + "\n"
 
 
 def claim(records: Records) -> str:
@@ -1040,6 +1077,7 @@ def compute(record: dict[str, Any], scored: Run) -> str:
 
 
 RENDERERS: dict[str, Callable[[Records], str]] = {
+    "scoreboard": scoreboard,
     "claim": claim,
     "cells": cells,
     "words": words,
@@ -1093,12 +1131,14 @@ def main(argv: list[str] | None = None) -> int:
         text = json.dumps(record, indent=1, ensure_ascii=False) + "\n"
         scored.record.write_text(text, encoding="utf-8")
         return 0
-    text = README.read_text(encoding="utf-8")
-    missing = sorted(set(RENDERERS) - set(blocks(text)))
+    held = {page: page.read_text(encoding="utf-8") for page in PAGES}
+    missing = sorted(set(RENDERERS) - {name for text in held.values() for name in blocks(text)})
     if missing:
-        print(f"README.md holds no block for {', '.join(missing)}", file=sys.stderr)
+        print(f"no page holds a block for {', '.join(missing)}", file=sys.stderr)
         return 1
-    README.write_text(rewrite(text, render(records())), encoding="utf-8")
+    written = render(records())
+    for page, text in held.items():
+        page.write_text(rewrite(text, written), encoding="utf-8")
     return 0
 
 

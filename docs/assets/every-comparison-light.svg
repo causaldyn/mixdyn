@@ -1,0 +1,650 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1008" height="847" viewBox="0 0 1008 847" role="img" aria-labelledby="title desc" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+<title id="title">Every comparison of the record, rival by rival</title>
+<desc id="desc">188 comparisons of mixdyn's plans with five rivals' over 38 family-rungs: each dot one family-rung's mean difference in regret per euro, coloured by Hall's reader's word.</desc>
+<rect x="0.5" y="0.5" width="1007" height="846" rx="10" fill="#fcfcfb" stroke="#0b0b0b" stroke-opacity="0.1"/>
+<text x="24.0" y="40.0" font-size="17" fill="#0b0b0b" font-weight="600">Every comparison, rival by rival</text>
+<text x="24.0" y="64.0" font-size="12.5" fill="#52514e">Each dot is one of the 38 family-rungs: mixdyn’s mean regret per euro less the rival’s, over the simulated worlds both planned.</text>
+<text x="24.0" y="81.0" font-size="12.5" fill="#52514e">Its colour is the word of Hall’s reader at one-sided 0.025. Left of 0, mixdyn’s plan lost less; past δ = 0.05, the claim fails.</text>
+<circle cx="29.0" cy="114.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="39.0" y="118.0" font-size="12" fill="#52514e">mixdyn beats the rival</text>
+<circle cx="194.0" cy="114.0" r="5.5" fill="#fcfcfb"/><circle cx="194.0" cy="114.0" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+<text x="204.0" y="118.0" font-size="12" fill="#52514e">ties</text>
+<circle cx="251.0" cy="114.0" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="261.0" y="118.0" font-size="12" fill="#52514e">loses to it</text>
+<rect x="345.0" y="107.0" width="16.0" height="14.0" fill="#eb6834" fill-opacity="0.12"/>
+<line x1="345.0" y1="107.0" x2="345.0" y2="121.0" stroke="#eb6834" stroke-width="1.5"/>
+<text x="365.0" y="118.0" font-size="12" fill="#52514e">past δ = 0.05: no claim</text>
+<rect x="670.8" y="148.0" width="93.2" height="643.7" fill="#eb6834" fill-opacity="0.08"/>
+<line x1="670.8" y1="148.0" x2="670.8" y2="791.7" stroke="#eb6834" stroke-width="1.5"/>
+<text x="675.8" y="160.0" font-size="11" fill="#52514e" font-weight="600">δ = 0.05</text>
+<text x="675.8" y="174.0" font-size="11" fill="#52514e">no claim</text>
+<line x1="267.2" y1="148.0" x2="267.2" y2="791.7" stroke="#e1e0d9" stroke-width="1"/>
+<text x="267.2" y="807.7" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">−0.6</text>
+<line x1="391.4" y1="148.0" x2="391.4" y2="791.7" stroke="#e1e0d9" stroke-width="1"/>
+<text x="391.4" y="807.7" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">−0.4</text>
+<line x1="515.6" y1="148.0" x2="515.6" y2="791.7" stroke="#e1e0d9" stroke-width="1"/>
+<text x="515.6" y="807.7" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">−0.2</text>
+<line x1="639.8" y1="148.0" x2="639.8" y2="791.7" stroke="#c3c2b7" stroke-width="1"/>
+<text x="639.8" y="807.7" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0</text>
+<line x1="764.0" y1="148.0" x2="764.0" y2="791.7" stroke="#e1e0d9" stroke-width="1"/>
+<text x="764.0" y="807.7" font-size="11" fill="#898781" text-anchor="middle" font-variant-numeric="tabular-nums">0.2</text>
+<text x="24.0" y="205.2" font-size="13" fill="#0b0b0b" font-weight="600">Meridian</text>
+<text x="24.0" y="222.2" font-size="11" fill="#898781">36 family-rungs</text>
+<g><title>Family 0 Track M v2, k = 0, M4: mixdyn less Meridian −0.048 [−0.065, −0.031] a euro, beats, within δ, 310 worlds</title>
+<circle cx="610.1" cy="222.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 0 Track M v2, tested rung (k = 4), M4: mixdyn less Meridian −0.068 [−0.076, −0.059] a euro, beats, within δ, 310 worlds</title>
+<circle cx="597.7" cy="197.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, k = 0, M5: mixdyn less Meridian −0.080 [−0.112, −0.047] a euro, beats, within δ, 240 worlds</title>
+<circle cx="590.3" cy="213.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, tested rung (k = 4), M4: mixdyn less Meridian −0.119 [−0.137, −0.102] a euro, beats, within δ, 522 worlds</title>
+<circle cx="565.6" cy="207.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, k = 0, M4: mixdyn less Meridian −0.050 [−0.072, −0.029] a euro, beats, within δ, 270 worlds</title>
+<circle cx="608.6" cy="200.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, tested rung (k = 4), M4: mixdyn less Meridian −0.086 [−0.099, −0.074] a euro, beats, within δ, 270 worlds</title>
+<circle cx="586.1" cy="225.7" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, k = 0, M4: mixdyn less Meridian −0.033 [−0.049, −0.017] a euro, beats, within δ, 270 worlds</title>
+<circle cx="619.3" cy="217.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, tested rung (k = 4), M4: mixdyn less Meridian −0.079 [−0.091, −0.067] a euro, beats, within δ, 270 worlds</title>
+<circle cx="590.6" cy="180.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, k = 0, M4: mixdyn less Meridian −0.093 [−0.120, −0.066] a euro, beats, within δ, 522 worlds</title>
+<circle cx="582.1" cy="197.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, tested rung (k = 4), M4: mixdyn less Meridian −0.067 [−0.086, −0.047] a euro, beats, within δ, 522 worlds</title>
+<circle cx="598.5" cy="186.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, k = 0, M4: mixdyn less Meridian −0.048 [−0.068, −0.028] a euro, beats, within δ, 240 worlds</title>
+<circle cx="610.2" cy="190.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, tested rung (k = 4), M4: mixdyn less Meridian −0.095 [−0.108, −0.082] a euro, beats, within δ, 240 worlds</title>
+<circle cx="580.7" cy="217.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, k = 0, M5: mixdyn less Meridian −0.080 [−0.106, −0.054] a euro, beats, within δ, 240 worlds</title>
+<circle cx="590.0" cy="203.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, tested rung (k = 4), M4: mixdyn less Meridian −0.033 [−0.052, −0.014] a euro, beats, within δ, 240 worlds</title>
+<circle cx="619.2" cy="197.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, k = 0, M4: mixdyn less Meridian −0.037 [−0.057, −0.017] a euro, beats, within δ, 252 worlds</title>
+<circle cx="616.9" cy="171.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, tested rung (k = 1), M4: mixdyn less Meridian −0.068 [−0.083, −0.053] a euro, beats, within δ, 252 worlds</title>
+<circle cx="597.8" cy="220.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, k = 0, M4: mixdyn less Meridian −0.016 [−0.037, +0.004] a euro, ties, within δ, 460 worlds</title>
+<circle cx="629.6" cy="207.2" r="5.5" fill="#fcfcfb"/><circle cx="629.6" cy="207.2" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, tested rung (k = 4), M4: mixdyn less Meridian −0.013 [−0.020, −0.007] a euro, beats, within δ, 460 worlds</title>
+<circle cx="631.6" cy="197.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, k = 0, M4: mixdyn less Meridian −0.024 [−0.037, −0.011] a euro, beats, within δ, 520 worlds</title>
+<circle cx="624.9" cy="178.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, tested rung (k = 4), M4: mixdyn less Meridian −0.028 [−0.042, −0.013] a euro, beats, within δ, 520 worlds</title>
+<circle cx="622.6" cy="236.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, k = 0, M5: mixdyn less Meridian −0.145 [−0.208, −0.081] a euro, beats, within δ, 240 worlds</title>
+<circle cx="550.0" cy="207.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, tested rung (k = 4), M4: mixdyn less Meridian −0.082 [−0.117, −0.046] a euro, beats, within δ, 520 worlds</title>
+<circle cx="589.2" cy="190.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, k = 0, M5: mixdyn less Meridian −0.030 [−0.036, −0.024] a euro, beats, within δ, 240 worlds</title>
+<circle cx="621.4" cy="227.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, tested rung (k = 4), M5: mixdyn less Meridian +0.033 [+0.030, +0.035] a euro, loses to, within δ, 240 worlds</title>
+<circle cx="660.0" cy="207.2" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, k = 0, M4: mixdyn less Meridian −0.460 [−0.490, −0.431] a euro, beats, within δ, 240 worlds</title>
+<circle cx="353.9" cy="207.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, tested rung (k = 4), M4: mixdyn less Meridian −0.023 [−0.028, −0.018] a euro, beats, within δ, 240 worlds</title>
+<circle cx="625.5" cy="166.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, k = 0, M4: mixdyn less Meridian −0.061 [−0.082, −0.041] a euro, beats, within δ, 240 worlds</title>
+<circle cx="601.7" cy="207.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, tested rung (k = 4), M4: mixdyn less Meridian −0.095 [−0.108, −0.082] a euro, beats, within δ, 240 worlds</title>
+<circle cx="580.7" cy="207.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, k = 0, M4: mixdyn less Meridian −0.031 [−0.051, −0.011] a euro, beats, within δ, 240 worlds</title>
+<circle cx="620.4" cy="187.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, tested rung (k = 4), M4: mixdyn less Meridian −0.109 [−0.122, −0.096] a euro, beats, within δ, 240 worlds</title>
+<circle cx="572.2" cy="199.7" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, k = 0, M3: mixdyn less Meridian −0.043 [−0.046, −0.039] a euro, beats, within δ, 240 worlds</title>
+<circle cx="613.1" cy="242.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, tested rung (k = 4), M3: mixdyn less Meridian −0.044 [−0.048, −0.041] a euro, beats, within δ, 240 worlds</title>
+<circle cx="612.3" cy="232.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, k = 0, M3: mixdyn less Meridian −0.048 [−0.054, −0.042] a euro, beats, within δ, 240 worlds</title>
+<circle cx="610.0" cy="212.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, tested rung (k = 4), M3: mixdyn less Meridian −0.044 [−0.051, −0.038] a euro, beats, within δ, 240 worlds</title>
+<circle cx="612.3" cy="180.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, k = 0, M3: mixdyn less Meridian −0.031 [−0.035, −0.026] a euro, beats, within δ, 240 worlds</title>
+<circle cx="620.7" cy="248.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, tested rung (k = 4), M3: mixdyn less Meridian −0.034 [−0.039, −0.029] a euro, beats, within δ, 240 worlds</title>
+<circle cx="618.7" cy="207.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<circle cx="793.0" cy="184.2" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="188.2" font-size="11.5" fill="#52514e">beats</text>
+<text x="984.0" y="188.2" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">34</text>
+<circle cx="793.0" cy="199.2" r="5" fill="#fcfcfb"/><circle cx="793.0" cy="199.2" r="3" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+<text x="804.0" y="203.2" font-size="11.5" fill="#52514e">ties</text>
+<text x="984.0" y="203.2" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">1</text>
+<circle cx="793.0" cy="214.2" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="218.2" font-size="11.5" fill="#52514e">loses to</text>
+<text x="984.0" y="218.2" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">1</text>
+<text x="804.0" y="233.2" font-size="11.5" fill="#898781">not compared</text>
+<text x="984.0" y="233.2" font-size="11.5" fill="#898781" text-anchor="end" font-variant-numeric="tabular-nums">2</text>
+<line x1="24.0" y1="266.4" x2="984.0" y2="266.4" stroke="#e1e0d9" stroke-width="1"/>
+<text x="24.0" y="346.4" font-size="13" fill="#0b0b0b" font-weight="600">PyMC-Marketing</text>
+<text x="24.0" y="363.4" font-size="11" fill="#898781">38 family-rungs</text>
+<g><title>Family 0 Track M v2, k = 0, M4: mixdyn less PyMC-Marketing −0.126 [−0.154, −0.097] a euro, beats, within δ, 310 worlds</title>
+<circle cx="561.7" cy="338.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 0 Track M v2, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.010 [+0.005, +0.014] a euro, loses to, within δ, 310 worlds</title>
+<circle cx="645.8" cy="336.9" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, k = 0, M5: mixdyn less PyMC-Marketing −0.126 [−0.185, −0.068] a euro, beats, within δ, 240 worlds</title>
+<circle cx="561.5" cy="348.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.009 [−0.001, +0.019] a euro, loses to, within δ, 522 worlds</title>
+<circle cx="645.4" cy="354.5" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, k = 0, M4: mixdyn less PyMC-Marketing −0.145 [−0.179, −0.111] a euro, beats, within δ, 270 worlds</title>
+<circle cx="549.9" cy="338.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.002 [−0.003, +0.007] a euro, ties, within δ, 270 worlds</title>
+<circle cx="640.8" cy="345.6" r="5.5" fill="#fcfcfb"/><circle cx="640.8" cy="345.6" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, k = 0, M4: mixdyn less PyMC-Marketing −0.098 [−0.126, −0.069] a euro, beats, within δ, 270 worlds</title>
+<circle cx="579.1" cy="348.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.010 [+0.005, +0.015] a euro, loses to, within δ, 270 worlds</title>
+<circle cx="646.1" cy="364.5" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, k = 0, M4: mixdyn less PyMC-Marketing +0.135 [+0.100, +0.171] a euro, loses to, not within δ = 0.05, no claim, 522 worlds</title>
+<circle cx="723.8" cy="348.4" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<text x="723.8" y="338.4" font-size="10.5" fill="#52514e" text-anchor="middle">S-curves, k = 0</text>
+<g><title>Family 4 S-curves, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.007 [−0.018, +0.004] a euro, ties, within δ, 522 worlds</title>
+<circle cx="635.6" cy="363.4" r="5.5" fill="#fcfcfb"/><circle cx="635.6" cy="363.4" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, k = 0, M4: mixdyn less PyMC-Marketing −0.125 [−0.161, −0.089] a euro, beats, within δ, 240 worlds</title>
+<circle cx="562.2" cy="358.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.002 [−0.002, +0.006] a euro, ties, within δ, 240 worlds</title>
+<circle cx="640.8" cy="295.7" r="5.5" fill="#fcfcfb"/><circle cx="640.8" cy="295.7" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, k = 0, M5: mixdyn less PyMC-Marketing −0.299 [−0.356, −0.241] a euro, beats, within δ, 240 worlds</title>
+<circle cx="454.3" cy="348.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.029 [+0.016, +0.043] a euro, loses to, within δ, 240 worlds</title>
+<circle cx="658.1" cy="339.0" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, k = 0, M4: mixdyn less PyMC-Marketing −0.072 [−0.104, −0.041] a euro, beats, within δ, 252 worlds</title>
+<circle cx="594.8" cy="336.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, tested rung (k = 1), M4: mixdyn less PyMC-Marketing −0.015 [−0.029, −0.000] a euro, beats, within δ, 252 worlds</title>
+<circle cx="630.7" cy="344.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, k = 0, M4: mixdyn less PyMC-Marketing −0.083 [−0.114, −0.053] a euro, beats, within δ, 460 worlds</title>
+<circle cx="588.0" cy="343.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.005 [−0.010, +0.001] a euro, ties, within δ, 460 worlds</title>
+<circle cx="636.9" cy="325.4" r="5.5" fill="#fcfcfb"/><circle cx="636.9" cy="325.4" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, k = 0, M4: mixdyn less PyMC-Marketing −0.255 [−0.281, −0.228] a euro, beats, within δ, 520 worlds</title>
+<circle cx="481.7" cy="348.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.004 [−0.004, +0.013] a euro, ties, within δ, 520 worlds</title>
+<circle cx="642.6" cy="285.9" r="5.5" fill="#fcfcfb"/><circle cx="642.6" cy="285.9" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, k = 0, M5: mixdyn less PyMC-Marketing −0.163 [−0.229, −0.096] a euro, beats, within δ, 240 worlds</title>
+<circle cx="538.7" cy="348.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.024 [−0.051, +0.002] a euro, ties, within δ, 520 worlds</title>
+<circle cx="624.6" cy="328.7" r="5.5" fill="#fcfcfb"/><circle cx="624.6" cy="328.7" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, k = 0, M5: mixdyn less PyMC-Marketing +0.024 [+0.019, +0.029] a euro, loses to, within δ, 222 worlds</title>
+<circle cx="654.4" cy="348.4" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, tested rung (k = 4), M5: mixdyn less PyMC-Marketing +0.032 [+0.029, +0.034] a euro, loses to, within δ, 236 worlds</title>
+<circle cx="659.5" cy="357.0" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, k = 0, M4: mixdyn less PyMC-Marketing −0.002 [−0.004, +0.001] a euro, ties, within δ, 240 worlds</title>
+<circle cx="638.7" cy="383.2" r="5.5" fill="#fcfcfb"/><circle cx="638.7" cy="383.2" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.029 [−0.037, −0.021] a euro, beats, within δ, 240 worlds</title>
+<circle cx="621.5" cy="348.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, k = 0, M4: mixdyn less PyMC-Marketing −0.145 [−0.183, −0.107] a euro, beats, within δ, 240 worlds</title>
+<circle cx="549.7" cy="348.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, tested rung (k = 4), M4: mixdyn less PyMC-Marketing +0.004 [−0.002, +0.009] a euro, ties, within δ, 240 worlds</title>
+<circle cx="642.0" cy="402.8" r="5.5" fill="#fcfcfb"/><circle cx="642.0" cy="402.8" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, k = 0, M4: mixdyn less PyMC-Marketing −0.027 [−0.053, −0.001] a euro, beats, within δ, 282 worlds</title>
+<circle cx="623.1" cy="358.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.028 [−0.048, −0.009] a euro, beats, within δ, 282 worlds</title>
+<circle cx="622.3" cy="338.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, k = 0, M4: mixdyn less PyMC-Marketing −0.078 [−0.112, −0.044] a euro, beats, within δ, 240 worlds</title>
+<circle cx="591.5" cy="353.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, tested rung (k = 4), M4: mixdyn less PyMC-Marketing −0.005 [−0.011, +0.002] a euro, ties, within δ, 240 worlds</title>
+<circle cx="636.9" cy="373.3" r="5.5" fill="#fcfcfb"/><circle cx="636.9" cy="373.3" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, k = 0, M3: mixdyn less PyMC-Marketing −0.008 [−0.010, −0.006] a euro, beats, within δ, 235 worlds</title>
+<circle cx="634.9" cy="335.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, tested rung (k = 4), M3: mixdyn less PyMC-Marketing −0.008 [−0.010, −0.006] a euro, beats, within δ, 234 worlds</title>
+<circle cx="634.6" cy="353.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, k = 0, M3: mixdyn less PyMC-Marketing +0.000 [−0.003, +0.004] a euro, ties, within δ, 233 worlds</title>
+<circle cx="639.9" cy="393.1" r="5.5" fill="#fcfcfb"/><circle cx="639.9" cy="393.1" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, tested rung (k = 4), M3: mixdyn less PyMC-Marketing +0.005 [+0.002, +0.009] a euro, loses to, within δ, 234 worlds</title>
+<circle cx="643.0" cy="412.8" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, k = 0, M3: mixdyn less PyMC-Marketing −0.003 [−0.005, −0.000] a euro, beats, within δ, 236 worlds</title>
+<circle cx="638.1" cy="315.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, tested rung (k = 4), M3: mixdyn less PyMC-Marketing −0.002 [−0.004, +0.001] a euro, ties, within δ, 227 worlds</title>
+<circle cx="638.9" cy="305.5" r="5.5" fill="#fcfcfb"/><circle cx="638.9" cy="305.5" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<circle cx="793.0" cy="332.9" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="336.9" font-size="11.5" fill="#52514e">beats</text>
+<text x="984.0" y="336.9" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">19</text>
+<circle cx="793.0" cy="347.9" r="5" fill="#fcfcfb"/><circle cx="793.0" cy="347.9" r="3" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+<text x="804.0" y="351.9" font-size="11.5" fill="#52514e">ties</text>
+<text x="984.0" y="351.9" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">11</text>
+<circle cx="793.0" cy="362.9" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="366.9" font-size="11.5" fill="#52514e">loses to (1 past δ)</text>
+<text x="984.0" y="366.9" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">8</text>
+<line x1="24.0" y1="430.3" x2="984.0" y2="430.3" stroke="#e1e0d9" stroke-width="1"/>
+<text x="24.0" y="492.9" font-size="13" fill="#0b0b0b" font-weight="600">Orbit</text>
+<text x="24.0" y="509.9" font-size="11" fill="#898781">38 family-rungs</text>
+<g><title>Family 0 Track M v2, k = 0, M4: mixdyn less Orbit −0.206 [−0.240, −0.172] a euro, beats, within δ, 310 worlds</title>
+<circle cx="511.7" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 0 Track M v2, tested rung (k = 4), M4: mixdyn less Orbit −0.048 [−0.061, −0.035] a euro, beats, within δ, 310 worlds</title>
+<circle cx="610.0" cy="516.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, k = 0, M5: mixdyn less Orbit −0.178 [−0.238, −0.118] a euro, beats, within δ, 240 worlds</title>
+<circle cx="529.2" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, tested rung (k = 4), M4: mixdyn less Orbit −0.049 [−0.068, −0.030] a euro, beats, within δ, 522 worlds</title>
+<circle cx="609.4" cy="474.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, k = 0, M4: mixdyn less Orbit −0.127 [−0.156, −0.099] a euro, beats, within δ, 270 worlds</title>
+<circle cx="560.7" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, tested rung (k = 4), M4: mixdyn less Orbit −0.071 [−0.087, −0.055] a euro, beats, within δ, 270 worlds</title>
+<circle cx="595.7" cy="503.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, k = 0, M4: mixdyn less Orbit −0.114 [−0.146, −0.082] a euro, beats, within δ, 270 worlds</title>
+<circle cx="568.9" cy="500.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, tested rung (k = 4), M4: mixdyn less Orbit −0.061 [−0.076, −0.046] a euro, beats, within δ, 270 worlds</title>
+<circle cx="602.0" cy="532.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, k = 0, M4: mixdyn less Orbit +0.136 [+0.100, +0.173] a euro, loses to, not within δ = 0.05, no claim, 522 worlds</title>
+<circle cx="724.4" cy="494.9" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<text x="724.4" y="484.9" font-size="10.5" fill="#52514e" text-anchor="middle">S-curves, k = 0</text>
+<g><title>Family 4 S-curves, tested rung (k = 4), M4: mixdyn less Orbit −0.014 [−0.041, +0.013] a euro, ties, within δ, 522 worlds</title>
+<circle cx="631.2" cy="512.5" r="5.5" fill="#fcfcfb"/><circle cx="631.2" cy="512.5" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, k = 0, M4: mixdyn less Orbit −0.143 [−0.181, −0.105] a euro, beats, within δ, 240 worlds</title>
+<circle cx="551.0" cy="500.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, tested rung (k = 4), M4: mixdyn less Orbit −0.079 [−0.095, −0.063] a euro, beats, within δ, 240 worlds</title>
+<circle cx="590.8" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, k = 0, M5: mixdyn less Orbit −0.396 [−0.458, −0.334] a euro, beats, within δ, 240 worlds</title>
+<circle cx="393.7" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, tested rung (k = 4), M4: mixdyn less Orbit −0.057 [−0.081, −0.033] a euro, beats, within δ, 240 worlds</title>
+<circle cx="604.6" cy="483.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, k = 0, M4: mixdyn less Orbit −0.103 [−0.136, −0.070] a euro, beats, within δ, 252 worlds</title>
+<circle cx="576.1" cy="493.7" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, tested rung (k = 1), M4: mixdyn less Orbit −0.047 [−0.064, −0.030] a euro, beats, within δ, 252 worlds</title>
+<circle cx="610.5" cy="499.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, k = 0, M4: mixdyn less Orbit −0.170 [−0.222, −0.117] a euro, beats, within δ, 460 worlds</title>
+<circle cx="534.5" cy="486.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, tested rung (k = 4), M4: mixdyn less Orbit −0.016 [−0.024, −0.008] a euro, beats, within δ, 460 worlds</title>
+<circle cx="629.9" cy="502.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, k = 0, M4: mixdyn less Orbit −0.374 [−0.405, −0.343] a euro, beats, within δ, 520 worlds</title>
+<circle cx="407.3" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, tested rung (k = 4), M4: mixdyn less Orbit −0.127 [−0.146, −0.108] a euro, beats, within δ, 520 worlds</title>
+<circle cx="560.9" cy="484.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, k = 0, M5: mixdyn less Orbit −0.330 [−0.409, −0.251] a euro, beats, within δ, 240 worlds</title>
+<circle cx="435.0" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, tested rung (k = 4), M4: mixdyn less Orbit −0.151 [−0.193, −0.109] a euro, beats, within δ, 520 worlds</title>
+<circle cx="546.0" cy="492.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, k = 0, M5: mixdyn less Orbit −0.026 [−0.033, −0.019] a euro, beats, within δ, 240 worlds</title>
+<circle cx="623.5" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, tested rung (k = 4), M5: mixdyn less Orbit +0.032 [+0.029, +0.034] a euro, loses to, within δ, 240 worlds</title>
+<circle cx="659.5" cy="494.9" r="4.5" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, k = 0, M4: mixdyn less Orbit −0.163 [−0.190, −0.137] a euro, beats, within δ, 240 worlds</title>
+<circle cx="538.4" cy="498.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, tested rung (k = 4), M4: mixdyn less Orbit −0.064 [−0.076, −0.052] a euro, beats, within δ, 240 worlds</title>
+<circle cx="600.1" cy="466.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, k = 0, M4: mixdyn less Orbit −0.093 [−0.123, −0.063] a euro, beats, within δ, 239 worlds</title>
+<circle cx="582.1" cy="501.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, tested rung (k = 4), M4: mixdyn less Orbit −0.072 [−0.088, −0.056] a euro, beats, within δ, 238 worlds</title>
+<circle cx="594.9" cy="485.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, k = 0, M4: mixdyn less Orbit −0.068 [−0.102, −0.034] a euro, beats, within δ, 282 worlds</title>
+<circle cx="597.6" cy="476.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, tested rung (k = 4), M4: mixdyn less Orbit −0.023 [−0.038, −0.009] a euro, beats, within δ, 282 worlds</title>
+<circle cx="625.3" cy="485.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, k = 0, M4: mixdyn less Orbit −0.059 [−0.089, −0.029] a euro, beats, within δ, 240 worlds</title>
+<circle cx="603.3" cy="457.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, tested rung (k = 4), M4: mixdyn less Orbit −0.071 [−0.087, −0.055] a euro, beats, within δ, 240 worlds</title>
+<circle cx="595.7" cy="513.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, k = 0, M3: mixdyn less Orbit −0.068 [−0.072, −0.063] a euro, beats, within δ, 240 worlds</title>
+<circle cx="597.9" cy="523.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, tested rung (k = 4), M3: mixdyn less Orbit −0.056 [−0.060, −0.051] a euro, beats, within δ, 240 worlds</title>
+<circle cx="605.1" cy="542.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, k = 0, M3: mixdyn less Orbit −0.057 [−0.063, −0.050] a euro, beats, within δ, 240 worlds</title>
+<circle cx="604.6" cy="508.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, tested rung (k = 4), M3: mixdyn less Orbit −0.061 [−0.071, −0.052] a euro, beats, within δ, 240 worlds</title>
+<circle cx="601.7" cy="494.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, k = 0, M3: mixdyn less Orbit −0.043 [−0.049, −0.037] a euro, beats, within δ, 240 worlds</title>
+<circle cx="613.2" cy="490.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, tested rung (k = 4), M3: mixdyn less Orbit −0.038 [−0.044, −0.032] a euro, beats, within δ, 240 worlds</title>
+<circle cx="616.2" cy="507.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<circle cx="793.0" cy="479.4" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="483.4" font-size="11.5" fill="#52514e">beats</text>
+<text x="984.0" y="483.4" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">35</text>
+<circle cx="793.0" cy="494.4" r="5" fill="#fcfcfb"/><circle cx="793.0" cy="494.4" r="3" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+<text x="804.0" y="498.4" font-size="11.5" fill="#52514e">ties</text>
+<text x="984.0" y="498.4" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">1</text>
+<circle cx="793.0" cy="509.4" r="4" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="513.4" font-size="11.5" fill="#52514e">loses to (1 past δ)</text>
+<text x="984.0" y="513.4" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">2</text>
+<line x1="24.0" y1="559.5" x2="984.0" y2="559.5" stroke="#e1e0d9" stroke-width="1"/>
+<text x="24.0" y="613.9" font-size="13" fill="#0b0b0b" font-weight="600">Status quo</text>
+<text x="24.0" y="630.9" font-size="11" fill="#898781">38 family-rungs</text>
+<g><title>Family 0 Track M v2, k = 0, M4: mixdyn less Status quo −0.137 [−0.155, −0.118] a euro, beats, within δ, 310 worlds</title>
+<circle cx="555.0" cy="633.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 0 Track M v2, tested rung (k = 4), M4: mixdyn less Status quo −0.243 [−0.259, −0.227] a euro, beats, within δ, 310 worlds</title>
+<circle cx="489.0" cy="606.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, k = 0, M5: mixdyn less Status quo −0.146 [−0.184, −0.108] a euro, beats, within δ, 240 worlds</title>
+<circle cx="549.1" cy="606.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, tested rung (k = 4), M4: mixdyn less Status quo −0.294 [−0.323, −0.265] a euro, beats, within δ, 522 worlds</title>
+<circle cx="457.2" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, k = 0, M4: mixdyn less Status quo −0.085 [−0.106, −0.064] a euro, beats, within δ, 270 worlds</title>
+<circle cx="587.1" cy="606.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, tested rung (k = 4), M4: mixdyn less Status quo −0.173 [−0.192, −0.153] a euro, beats, within δ, 270 worlds</title>
+<circle cx="532.6" cy="613.7" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, k = 0, M4: mixdyn less Status quo −0.064 [−0.082, −0.045] a euro, beats, within δ, 270 worlds</title>
+<circle cx="600.3" cy="606.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, tested rung (k = 4), M4: mixdyn less Status quo −0.172 [−0.191, −0.153] a euro, beats, within δ, 270 worlds</title>
+<circle cx="532.9" cy="623.7" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, k = 0, M4: mixdyn less Status quo −0.245 [−0.273, −0.218] a euro, beats, within δ, 522 worlds</title>
+<circle cx="487.4" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, tested rung (k = 4), M4: mixdyn less Status quo −0.373 [−0.407, −0.339] a euro, beats, within δ, 522 worlds</title>
+<circle cx="408.1" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, k = 0, M4: mixdyn less Status quo −0.088 [−0.111, −0.065] a euro, beats, within δ, 240 worlds</title>
+<circle cx="585.3" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, tested rung (k = 4), M4: mixdyn less Status quo −0.188 [−0.208, −0.168] a euro, beats, within δ, 240 worlds</title>
+<circle cx="522.8" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, k = 0, M5: mixdyn less Status quo −0.107 [−0.136, −0.078] a euro, beats, within δ, 240 worlds</title>
+<circle cx="573.3" cy="621.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, tested rung (k = 4), M4: mixdyn less Status quo −0.120 [−0.146, −0.094] a euro, beats, within δ, 240 worlds</title>
+<circle cx="565.1" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, k = 0, M4: mixdyn less Status quo −0.061 [−0.081, −0.041] a euro, beats, within δ, 252 worlds</title>
+<circle cx="602.1" cy="624.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, tested rung (k = 1), M4: mixdyn less Status quo −0.138 [−0.159, −0.117] a euro, beats, within δ, 252 worlds</title>
+<circle cx="554.0" cy="597.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, k = 0, M4: mixdyn less Status quo −0.045 [−0.068, −0.023] a euro, beats, within δ, 460 worlds</title>
+<circle cx="611.8" cy="606.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, tested rung (k = 4), M4: mixdyn less Status quo −0.143 [−0.172, −0.115] a euro, beats, within δ, 460 worlds</title>
+<circle cx="550.7" cy="624.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, k = 0, M4: mixdyn less Status quo −0.077 [−0.093, −0.061] a euro, beats, within δ, 520 worlds</title>
+<circle cx="591.8" cy="644.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, tested rung (k = 4), M4: mixdyn less Status quo −0.082 [−0.101, −0.062] a euro, beats, within δ, 520 worlds</title>
+<circle cx="589.1" cy="625.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, k = 0, M5: mixdyn less Status quo −0.365 [−0.433, −0.297] a euro, beats, within δ, 240 worlds</title>
+<circle cx="413.2" cy="607.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, tested rung (k = 4), M4: mixdyn less Status quo −0.319 [−0.379, −0.259] a euro, beats, within δ, 520 worlds</title>
+<circle cx="441.8" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, k = 0, M5: mixdyn less Status quo −0.020 [−0.023, −0.017] a euro, beats, within δ, 240 worlds</title>
+<circle cx="627.3" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, tested rung (k = 4), M5: mixdyn less Status quo −0.081 [−0.084, −0.078] a euro, beats, within δ, 240 worlds</title>
+<circle cx="589.5" cy="635.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, k = 0, M4: mixdyn less Status quo +0.000 [+0.000, +0.000] a euro, ties, within δ, 240 worlds</title>
+<circle cx="639.8" cy="615.9" r="5.5" fill="#fcfcfb"/><circle cx="639.8" cy="615.9" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, tested rung (k = 4), M4: mixdyn less Status quo +0.000 [+0.000, +0.000] a euro, ties, within δ, 240 worlds</title>
+<circle cx="639.8" cy="605.9" r="5.5" fill="#fcfcfb"/><circle cx="639.8" cy="605.9" r="3.5" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, k = 0, M4: mixdyn less Status quo −0.105 [−0.128, −0.083] a euro, beats, within δ, 240 worlds</title>
+<circle cx="574.4" cy="598.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, tested rung (k = 4), M4: mixdyn less Status quo −0.200 [−0.221, −0.178] a euro, beats, within δ, 240 worlds</title>
+<circle cx="515.8" cy="608.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, k = 0, M4: mixdyn less Status quo −0.052 [−0.067, −0.038] a euro, beats, within δ, 282 worlds</title>
+<circle cx="607.2" cy="615.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, tested rung (k = 4), M4: mixdyn less Status quo −0.150 [−0.167, −0.134] a euro, beats, within δ, 282 worlds</title>
+<circle cx="546.4" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, k = 0, M4: mixdyn less Status quo −0.079 [−0.100, −0.057] a euro, beats, within δ, 240 worlds</title>
+<circle cx="590.9" cy="596.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, tested rung (k = 4), M4: mixdyn less Status quo −0.210 [−0.231, −0.190] a euro, beats, within δ, 240 worlds</title>
+<circle cx="509.1" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, k = 0, M3: mixdyn less Status quo −0.077 [−0.082, −0.071] a euro, beats, within δ, 240 worlds</title>
+<circle cx="592.2" cy="654.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, tested rung (k = 4), M3: mixdyn less Status quo −0.077 [−0.082, −0.071] a euro, beats, within δ, 240 worlds</title>
+<circle cx="592.1" cy="586.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, k = 0, M3: mixdyn less Status quo −0.112 [−0.122, −0.102] a euro, beats, within δ, 240 worlds</title>
+<circle cx="570.1" cy="607.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, tested rung (k = 4), M3: mixdyn less Status quo −0.106 [−0.116, −0.096] a euro, beats, within δ, 240 worlds</title>
+<circle cx="573.9" cy="631.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, k = 0, M3: mixdyn less Status quo −0.069 [−0.076, −0.062] a euro, beats, within δ, 240 worlds</title>
+<circle cx="596.8" cy="615.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, tested rung (k = 4), M3: mixdyn less Status quo −0.069 [−0.076, −0.062] a euro, beats, within δ, 240 worlds</title>
+<circle cx="596.9" cy="578.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<circle cx="793.0" cy="607.9" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="611.9" font-size="11.5" fill="#52514e">beats</text>
+<text x="984.0" y="611.9" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">36</text>
+<circle cx="793.0" cy="622.9" r="5" fill="#fcfcfb"/><circle cx="793.0" cy="622.9" r="3" fill="#fcfcfb" stroke="#898781" stroke-width="2"/>
+<text x="804.0" y="626.9" font-size="11.5" fill="#52514e">ties</text>
+<text x="984.0" y="626.9" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">2</text>
+<line x1="24.0" y1="672.3" x2="984.0" y2="672.3" stroke="#e1e0d9" stroke-width="1"/>
+<text x="24.0" y="730.0" font-size="13" fill="#0b0b0b" font-weight="600">Equal split</text>
+<text x="24.0" y="747.0" font-size="11" fill="#898781">38 family-rungs</text>
+<g><title>Family 0 Track M v2, k = 0, M4: mixdyn less Equal split −0.326 [−0.360, −0.292] a euro, beats, within δ, 310 worlds</title>
+<circle cx="437.3" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 0 Track M v2, tested rung (k = 4), M4: mixdyn less Equal split −0.432 [−0.468, −0.397] a euro, beats, within δ, 310 worlds</title>
+<circle cx="371.2" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, k = 0, M5: mixdyn less Equal split −0.145 [−0.184, −0.105] a euro, beats, within δ, 240 worlds</title>
+<circle cx="549.7" cy="741.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 1 Drift, tested rung (k = 4), M4: mixdyn less Equal split −0.260 [−0.293, −0.227] a euro, beats, within δ, 522 worlds</title>
+<circle cx="478.3" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, k = 0, M4: mixdyn less Equal split −0.061 [−0.084, −0.038] a euro, beats, within δ, 270 worlds</title>
+<circle cx="601.9" cy="744.9" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 2 Spend confounded with demand, tested rung (k = 4), M4: mixdyn less Equal split −0.149 [−0.170, −0.128] a euro, beats, within δ, 270 worlds</title>
+<circle cx="547.4" cy="722.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, k = 0, M4: mixdyn less Equal split −0.054 [−0.072, −0.035] a euro, beats, within δ, 270 worlds</title>
+<circle cx="606.4" cy="722.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 3 Collinear channels, tested rung (k = 4), M4: mixdyn less Equal split −0.162 [−0.183, −0.141] a euro, beats, within δ, 270 worlds</title>
+<circle cx="539.1" cy="744.7" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, k = 0, M4: mixdyn less Equal split −0.375 [−0.410, −0.340] a euro, beats, within δ, 522 worlds</title>
+<circle cx="406.8" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 4 S-curves, tested rung (k = 4), M4: mixdyn less Equal split −0.503 [−0.548, −0.457] a euro, beats, within δ, 522 worlds</title>
+<circle cx="327.5" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, k = 0, M4: mixdyn less Equal split −0.069 [−0.092, −0.046] a euro, beats, within δ, 240 worlds</title>
+<circle cx="597.0" cy="725.6" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 5 Budget follows performance, tested rung (k = 4), M4: mixdyn less Equal split −0.169 [−0.194, −0.145] a euro, beats, within δ, 240 worlds</title>
+<circle cx="534.6" cy="730.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, k = 0, M5: mixdyn less Equal split −0.100 [−0.124, −0.076] a euro, beats, within δ, 240 worlds</title>
+<circle cx="577.6" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 6 Truth outside the observed range, tested rung (k = 4), M4: mixdyn less Equal split −0.099 [−0.124, −0.074] a euro, beats, within δ, 240 worlds</title>
+<circle cx="578.5" cy="722.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, k = 0, M4: mixdyn less Equal split −0.038 [−0.058, −0.017] a euro, beats, within δ, 252 worlds</title>
+<circle cx="616.4" cy="761.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 7 Short series, tested rung (k = 1), M4: mixdyn less Equal split −0.115 [−0.140, −0.090] a euro, beats, within δ, 252 worlds</title>
+<circle cx="568.4" cy="738.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, k = 0, M4: mixdyn less Equal split −0.152 [−0.193, −0.110] a euro, beats, within δ, 460 worlds</title>
+<circle cx="545.6" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 12 Meridian's home ground, tested rung (k = 4), M4: mixdyn less Equal split −0.250 [−0.296, −0.204] a euro, beats, within δ, 460 worlds</title>
+<circle cx="484.5" cy="724.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, k = 0, M4: mixdyn less Equal split −0.032 [−0.047, −0.017] a euro, beats, within δ, 520 worlds</title>
+<circle cx="620.0" cy="689.8" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 13 PyMC-Marketing's home ground, tested rung (k = 4), M4: mixdyn less Equal split −0.036 [−0.056, −0.016] a euro, beats, within δ, 520 worlds</title>
+<circle cx="617.4" cy="699.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, k = 0, M5: mixdyn less Equal split −0.651 [−0.732, −0.570] a euro, beats, within δ, 240 worlds</title>
+<circle cx="235.4" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 14 Robyn's home ground, tested rung (k = 4), M4: mixdyn less Equal split −0.598 [−0.668, −0.529] a euro, beats, within δ, 520 worlds</title>
+<circle cx="268.2" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, k = 0, M5: mixdyn less Equal split −0.063 [−0.066, −0.060] a euro, beats, within δ, 240 worlds</title>
+<circle cx="600.5" cy="735.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 15 siMMMulator, tested rung (k = 4), M5: mixdyn less Equal split −0.124 [−0.127, −0.122] a euro, beats, within δ, 240 worlds</title>
+<circle cx="562.7" cy="722.2" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, k = 0, M4: mixdyn less Equal split −0.186 [−0.193, −0.180] a euro, beats, within δ, 240 worlds</title>
+<circle cx="524.0" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 17 Twins, tested rung (k = 4), M4: mixdyn less Equal split −0.186 [−0.193, −0.180] a euro, beats, within δ, 240 worlds</title>
+<circle cx="524.0" cy="722.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, k = 0, M4: mixdyn less Equal split −0.081 [−0.104, −0.059] a euro, beats, within δ, 240 worlds</title>
+<circle cx="589.3" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 18 Long term, tested rung (k = 4), M4: mixdyn less Equal split −0.176 [−0.200, −0.151] a euro, beats, within δ, 240 worlds</title>
+<circle cx="530.6" cy="739.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, k = 0, M4: mixdyn less Equal split −0.029 [−0.050, −0.008] a euro, beats, within δ, 282 worlds</title>
+<circle cx="621.8" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 19 Flat, tested rung (k = 4), M4: mixdyn less Equal split −0.127 [−0.147, −0.106] a euro, beats, within δ, 282 worlds</title>
+<circle cx="561.0" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, k = 0, M4: mixdyn less Equal split −0.035 [−0.058, −0.011] a euro, beats, within δ, 240 worlds</title>
+<circle cx="618.3" cy="771.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 20 Promotions, tested rung (k = 4), M4: mixdyn less Equal split −0.166 [−0.187, −0.146] a euro, beats, within δ, 240 worlds</title>
+<circle cx="536.5" cy="720.5" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, k = 0, M3: mixdyn less Equal split −0.041 [−0.045, −0.037] a euro, beats, within δ, 240 worlds</title>
+<circle cx="614.2" cy="751.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 8 Geo, tested rung (k = 4), M3: mixdyn less Equal split −0.041 [−0.046, −0.037] a euro, beats, within δ, 240 worlds</title>
+<circle cx="614.1" cy="741.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, k = 0, M3: mixdyn less Equal split −0.053 [−0.060, −0.046] a euro, beats, within δ, 240 worlds</title>
+<circle cx="606.7" cy="712.3" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 9 Spillover between geos, tested rung (k = 4), M3: mixdyn less Equal split −0.047 [−0.054, −0.040] a euro, beats, within δ, 240 worlds</title>
+<circle cx="610.6" cy="732.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, k = 0, M3: mixdyn less Equal split −0.038 [−0.043, −0.033] a euro, beats, within δ, 240 worlds</title>
+<circle cx="616.2" cy="720.1" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<g><title>Family 10 Few geos, tested rung (k = 4), M3: mixdyn less Equal split −0.038 [−0.043, −0.032] a euro, beats, within δ, 240 worlds</title>
+<circle cx="616.3" cy="709.4" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+</g>
+<circle cx="793.0" cy="731.5" r="4" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="804.0" y="735.5" font-size="11.5" fill="#52514e">beats</text>
+<text x="984.0" y="735.5" font-size="11.5" fill="#0b0b0b" text-anchor="end" font-variant-numeric="tabular-nums">38</text>
+<text x="469.0" y="827.7" font-size="11" fill="#898781" text-anchor="middle">mixdyn less the rival, mean regret per euro</text>
+</svg>

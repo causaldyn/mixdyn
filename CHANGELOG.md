@@ -7,10 +7,10 @@ changes a public name.
 
 ## [0.2.2] — 2026-11-24
 
-The README states M5's record beside M4's: M5's pre-registered claim held, 5 of 5 verdicts within
-δ = 0.05 on what M4 left open, read on a third block of fresh seeds. With M4's 26 verdicts and
-M3's six geo verdicts, the record holds 37 family-rungs; family 4 at k = 0 is the one national
-family-rung in no claim, and its losses are stated. The engine's code is 0.2.1's: `src/` is
+M5's record joins M4's: M5's pre-registered claim held, 5 of 5 verdicts within δ = 0.05 on what
+M4 left open, read on a third block of fresh seeds. With M4's 26 verdicts and M3's six geo
+verdicts, the record holds 37 family-rungs; family 4 at k = 0 is the one national family-rung in no
+claim, and its losses are stated. The engine's code is 0.2.1's: `src/` is
 unchanged, so no fit or plan moves.
 
 ### Added
@@ -18,18 +18,27 @@ unchanged, so no fit or plan moves.
 - **A third confirmatory run** (`scorecard/`, in the repository, not the wheel). A declaration's
   `third_confirmatory` draws each environment's worlds from a block of 1 000 seeds of its own, from
   seed 1 000 000 on, which no earlier run read (ADR 0101).
+- **Charts of the record** (`docs/assets/`, drawn by `scripts/record_charts.py` from the runs'
+  records and the README's example, light and dark): each family-rung against its closest rival
+  with its interval, every comparison by rival, and the first plan's margins and plan.
+  `tests/test_readme.py` fails where a committed chart is not what the script draws.
 - **M5's pre-registration and record.** `scorecard/preregistration/m5.md` (SHA-256
   `86e12d7cc1e2b8eae21689db069c5600f0fc8a9d64d797c2a9350ac2ba7970d1`), `m5.json` and
   `m5_sizing.py` are byte for byte as frozen on 2026-11-23, before any confirmatory world was
   fitted; the bench's signed tag `preregistration-m5` carries their hashes. M5 claimed the k = 0
   rungs of families 1, 6 and 14 and both rungs of family 15 (siMMMulator); all 5 verdicts held
-  (4.997 expected). `evidence/results/m5_record.json` is its record as the README prints it,
-  written by `scripts/readme_record.py extract --run m5` with the SHA-256 of every file it read.
+  (4.997 expected). `evidence/results/m5_record.json` is its record as the benchmark page prints
+  it, written by `scripts/readme_record.py extract --run m5` with the SHA-256 of every file it
+  read.
 
 ### Changed
 
-- **The README states the record of M4, M5 and M3 together**: 37 family-rungs, each row naming
-  its run, with M5's Holm's losses within δ on family 15, its versions and its compute. The
+- **The README is short**: what the engine is, the chart of its record, a scoreboard of Hall's
+  reader's words by rival over the 38 family-rungs, installation and a first plan. The full record
+  moved to the documentation's benchmark page, `docs/benchmark.md`; where the engine sits moved to
+  the documentation's home page.
+- **The benchmark page states the record of M4, M5 and M3 together**: 37 family-rungs, each row
+  naming its run, with M5's Holm's losses within δ on family 15, its versions and its compute. The
   combined tables' blocks are named `claim`, `cells`, `words`, `losses` and `exploratory`, and
   M5's own `m5-versions` and `m5-compute`; `tests/test_readme.py` checks M5's blocks and the
   prose beside them against its reading as it checks M4's.

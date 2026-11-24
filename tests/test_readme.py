@@ -1,18 +1,21 @@
-"""The README states what the engine was and was not validated on, and points to the pages a user
-reads first; its example runs; the scope page states what the engine does not model.
+"""The README says what the engine is, how it measures up and how to start: its example runs, and
+its charts are the ones `scripts/record_charts.py` draws, pinned to the release that ships them;
+the scope page states what the engine does not model.
 
-Its record of the runs its claim was read on, M4, M5 and M3's geo verdicts, states the conflict of
-interest, the error bars and the engine's place. Its tables of the claim, the worlds per cell, the
-words, the losses, the tuned rivals, the versions and the compute are the ones
-`scripts/readme_record.py` writes from the runs' records (`evidence/results/m4_record.json`,
-`m5_record.json` and `m3_record.json`): a table typed into one of those blocks fails here. Each
-cell of the claim's table is checked against its run's reading apart from the script that writes
-it, and so is each count, interval and level the prose beside the tables states."""
+The benchmark page, `docs/benchmark.md`, holds the record of the runs the claim was read on, M4, M5
+and M3's geo verdicts: it states the conflict of interest, the error bars and the losses. Its tables
+of the claim, the worlds per cell, the words, the losses, the tuned rivals, the versions and the
+compute, and the README's scoreboard, are the ones `scripts/readme_record.py` writes from the runs'
+records (`evidence/results/m4_record.json`, `m5_record.json` and `m3_record.json`): a table typed
+into one of those blocks fails here. Each cell of the claim's table and of the scoreboard is checked
+against its run's reading apart from the script that writes it, and so is each count, interval and
+level the prose beside the tables states."""
 
 from __future__ import annotations
 
 import hashlib
 import re
+import tomllib
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -20,12 +23,17 @@ from typing import Any
 import numpy as np
 
 import readme_record
+import record_charts
 
 ROOT = Path(__file__).resolve().parent.parent
 README = (ROOT / "README.md").read_text(encoding="utf-8")
-# The README's text with every run of whitespace one space: a phrase reads the same wherever the
-# prose wraps it.
-FLAT = " ".join(README.split())
+BENCHMARK = (ROOT / "docs" / "benchmark.md").read_text(encoding="utf-8")
+INDEX = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+ASSETS = ROOT / "docs" / "assets"
+# A page's text with every run of whitespace one space: a phrase reads the same wherever the prose
+# wraps it.
+FLAT = " ".join(BENCHMARK.split())
+README_FLAT = " ".join(README.split())
 RECORDS = readme_record.records()
 MINUS = "\u2212"
 
@@ -34,16 +42,24 @@ def sections(text: str) -> list[str]:
     return re.findall(r"^## (.+)$", text, flags=re.MULTILINE)
 
 
-def test_the_readme_says_there_is_no_real_data_validation_and_names_the_protocol() -> None:
-    assert "Real-data validation: none, and why" in sections(README)
-    assert "`scripts/real_data_protocol.py`" in README
+def test_the_benchmark_says_there_is_no_real_data_validation_and_names_the_protocol() -> None:
+    assert "Real-data validation: none, and why" in sections(BENCHMARK)
+    assert "`scripts/real_data_protocol.py`" in BENCHMARK
     assert (ROOT / "scripts" / "real_data_protocol.py").is_file()
+    assert "no real data has scored it yet" in README_FLAT
 
 
 def test_every_page_the_readme_points_to_exists() -> None:
-    pages = ("SKILL.md", "docs/api/index.md", "docs/scope.md", "evidence/")
+    pages = ("SKILL.md", "docs/benchmark.md", "docs/adr/", "evidence/", "scorecard/arms/margin.py")
     assert [p for p in pages if f"`{p}`" not in README] == []
     assert [p for p in pages if not (ROOT / p).exists()] == []
+
+
+def test_the_readme_is_short_and_the_record_is_the_benchmark_s() -> None:
+    assert len(README.splitlines()) <= 150
+    assert set(readme_record.blocks(README)) == {"scoreboard"}
+    assert "https://causaldyn.github.io/mixdyn/benchmark/" in README
+    assert "Benchmark: benchmark.md" in (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
 
 
 def test_reach_and_frequency_are_stated_out_of_scope() -> None:
@@ -71,7 +87,9 @@ def section(text: str, heading: str) -> str:
 
 def test_the_record_s_tables_are_the_ones_its_script_writes() -> None:
     """Run `python scripts/readme_record.py` when a record or the script changes."""
-    assert readme_record.blocks(README) == readme_record.render(RECORDS)
+    readme, benchmark = readme_record.blocks(README), readme_record.blocks(BENCHMARK)
+    assert set(readme) & set(benchmark) == set()
+    assert readme | benchmark == readme_record.render(RECORDS)
 
 
 def test_each_record_table_sits_in_the_section_that_names_it() -> None:
@@ -89,32 +107,44 @@ def test_each_record_table_sits_in_the_section_that_names_it() -> None:
         "m5-compute": "Compute",
         "compute": "Compute",
     }
-    assert sorted(placed) == sorted(readme_record.RENDERERS)
-    assert [b for b, h in placed.items() if f"<!-- record:{b} -->" not in section(README, h)] == []
+    assert sorted([*placed, "scoreboard"]) == sorted(readme_record.RENDERERS)
+    assert [
+        b for b, h in placed.items() if f"<!-- record:{b} -->" not in section(BENCHMARK, h)
+    ] == []
+    assert "<!-- record:scoreboard -->" in section(README, "How it measures up")
 
 
 def test_where_it_loses_sits_beside_the_claim_and_folds_nothing() -> None:
     assert (
-        sections(README).index("Where it loses")
-        == sections(README).index("What has been measured") + 1
+        sections(BENCHMARK).index("Where it loses")
+        == sections(BENCHMARK).index("What has been measured") + 1
     )
-    assert "<details" not in README
+    assert "<details" not in README + BENCHMARK
 
 
-def test_the_readme_states_its_conflict_of_interest_its_error_bars_and_its_place() -> None:
-    assert "the bench that scores it" in section(README, "Conflict of interest")
-    measured = section(README, "What has been measured")
+def test_the_pages_state_the_conflict_of_interest_the_error_bars_and_the_place() -> None:
+    assert "the bench that scores it" in section(BENCHMARK, "Conflict of interest")
+    assert "One maintainer built both the engine and the bench that scores it." in README_FLAT
+    measured = section(BENCHMARK, "What has been measured")
     assert "**The error bars.**" in measured
     assert "The variability" in measured
-    assert "**Where it sits.**" in README
-    assert "multi-touch attribution (MTA)" in README
+    assert "Where it sits" in sections(INDEX)
+    assert "multi-touch attribution (MTA)" in README_FLAT
+    assert "multi-touch attribution (MTA)" in " ".join(INDEX.split())
 
 
 def test_best_is_said_only_where_a_claim_does_not_say_it() -> None:
-    said = re.findall(r"[^.\n]*\bbest\b[^.\n]*", README, flags=re.IGNORECASE)
-    assert [s.strip() for s in said] == [
-        'Nothing here says "best"',
-        "It does not say that mixdyn is the best MMM, and it does not say",
+    def said(text: str) -> list[str]:
+        found = re.findall(r"[^.]*\bbest\b[^.]*", " ".join(text.split()), flags=re.IGNORECASE)
+        return [s.strip() for s in found]
+
+    assert said(README) == [
+        "This is a non-inferiority result on simulated worlds: it does not say that mixdyn is the "
+        "best MMM, and no real data has scored it yet"
+    ]
+    assert said(BENCHMARK) == [
+        "It does not say that mixdyn is the best MMM, and it does not say that mixdyn is within δ "
+        'of every maintained MMM (see "No headline" below)'
     ]
 
 
@@ -142,7 +172,7 @@ def test_the_core_hours_the_text_states_are_the_records() -> None:
             for f in record["compute"]["families"].values()
         )
         stated = f"{round(hours):,}".replace(",", " ")
-        assert f"{readme_record.RUNS[run].name} took {stated} CPU-hours" in README
+        assert f"{readme_record.RUNS[run].name} took {stated} CPU-hours" in BENCHMARK
 
 
 def test_the_reader_s_lines_are_read_field_by_field() -> None:
@@ -247,7 +277,7 @@ def test_the_claim_s_table_reads_as_the_runs_readings() -> None:
     verdict's, and each cell the reading's comparison as printed, its Holm's loss Holm's: read
     apart from the script that writes the table."""
     runs = {s.name: run for run, s in readme_record.RUNS.items()}
-    rows = readme_record.blocks(README)["claim"].splitlines()[2:]
+    rows = readme_record.blocks(BENCHMARK)["claim"].splitlines()[2:]
     seen, off = [], []
     for line in rows:
         cells = [c.strip() for c in line.strip("|").split("|")]
@@ -299,19 +329,19 @@ def _holm(levels: list[float], familywise: float) -> int:
 def test_the_counts_the_text_states_are_the_readings() -> None:
     m4 = RECORDS["m4"]["reading"]
     holds4, geo3 = _holds("m4"), _holds("m3", geo=True)
-    assert f"**M4**: {len(holds4)} verdicts on {len({f for f, _ in holds4})} national" in README
-    assert f"All {len(holds4)} held; the" in README
+    assert f"**M4**: {len(holds4)} verdicts on {len({f for f, _ in holds4})} national" in BENCHMARK
+    assert f"All {len(holds4)} held; the" in BENCHMARK
     assert {v["word"] for v in m4["verdicts"]} == {"holds", "not claimed"}
-    assert f"sequence of {len(_holds('m3'))} verdicts, all of which held" in README
+    assert f"sequence of {len(_holds('m3'))} verdicts, all of which held" in BENCHMARK
     assert (len(geo3), sorted({f for f, _ in geo3})) == (6, [8, 9, 10])
     holds5 = _holds("m5")
-    assert f"on {len(holds4) + len(holds5) + len(geo3)} pre-registered\nfamily-rungs" in README
+    assert f"on {len(holds4) + len(holds5) + len(geo3)} pre-registered\nfamily-rungs" in BENCHMARK
     prereg = {
         r: s.preregistration.read_text(encoding="utf-8") for r, s in readme_record.RUNS.items()
     }
-    assert "expected 25.23" in README
+    assert "expected 25.23" in BENCHMARK
     assert "25.23 of 26" in prereg["m4"]
-    assert "(16.94 expected)" in README
+    assert "(16.94 expected)" in BENCHMARK
     assert "16.94 of 17" in prereg["m3"]
     assert f"**M5**, the run after it: {len(holds5)} verdicts on what M4 left open" in FLAT
     assert {v["word"] for v in RECORDS["m5"]["reading"]["verdicts"]} == {"holds"}
@@ -322,11 +352,11 @@ def test_the_counts_the_text_states_are_the_readings() -> None:
     claimed = [c for c in m4["comparisons"] if c["claimed"] and c["mean"] is not None]
     beside = [c for c in m4["comparisons"] if not c["claimed"]]
     tight = m4["secondary"]["at the margin 0.01"]
-    assert f"over {m4['holm']['over']} comparisons finds five losses" in README
+    assert f"over {m4['holm']['over']} comparisons finds five losses" in BENCHMARK
     assert len(m4["holm"]["losses"]) == 5
     assert m4["holm"]["over"] == len(claimed) + len(beside) == 148
-    assert f"the {len(claimed)} claimed and these {len(beside)}" in README
-    assert f"{tight['within']} of M4's {tight['of']} claimed comparisons are within" in README
+    assert f"the {len(claimed)} claimed and these {len(beside)}" in BENCHMARK
+    assert f"{tight['within']} of M4's {tight['of']} claimed comparisons are within" in BENCHMARK
     assert tight["of"] == len(claimed)
     # Holm's step-down over the claimed comparisons alone, from the levels the reading prints.
     levels = [float(c["loss level"]) for c in claimed if c["loss level"] is not None]
@@ -334,7 +364,7 @@ def test_the_counts_the_text_states_are_the_readings() -> None:
         (c["family"], c["k"]) for c in claimed
     }
     assert _holm(levels, 0.025) == len(kept) == 3
-    assert "the 128\n  claimed comparisons, Holm's losses are the same three" in README
+    assert "the 128\n  claimed comparisons, Holm's losses are the same three" in BENCHMARK
 
     f4 = _found("m3")
     assert [f"{float(f4[4, 0, r]['mean']):+.3f}" for r in ("pymc-marketing", "orbit")] == [
@@ -343,8 +373,10 @@ def test_the_counts_the_text_states_are_the_readings() -> None:
     ]
     closest = max(_holds("m4"), key=lambda fk: float(_verdicts("m4")[fk]["level"]))
     assert closest == (6, 4)
-    assert f"at level {_verdicts('m4')[closest]['level']}" in README
-    assert f"(level\n  {_found('m4')[1, 4, 'pymc-marketing']['loss level']}, unadjusted)" in README
+    assert f"at level {_verdicts('m4')[closest]['level']}" in BENCHMARK
+    assert (
+        f"(level\n  {_found('m4')[1, 4, 'pymc-marketing']['loss level']}, unadjusted)" in BENCHMARK
+    )
 
 
 def test_m5_s_losses_the_text_states_are_its_reading() -> None:
@@ -383,15 +415,15 @@ def test_family_4_at_k_0_is_the_one_national_family_rung_in_no_claim() -> None:
     search = "PyMC-Marketing by +0.046 and Orbit by +0.054"
     prereg = readme_record.RUNS["m5"].preregistration.read_text(encoding="utf-8")
     assert search in " ".join(prereg.split())
-    assert search in " ".join(section(README, "What has been measured").split())
+    assert search in " ".join(section(BENCHMARK, "What has been measured").split())
 
 
 def test_the_failures_the_text_states_are_the_readings() -> None:
     m4, m3 = _found("m4"), _found("m3")
     assert {m4[19, k, "meridian"]["rival_failed"] for k in (0, 4)} == {282}
-    assert "Meridian failed on every world of family 19, 282 at each rung" in README
+    assert "Meridian failed on every world of family 19, 282 at each rung" in BENCHMARK
     orbit = sum(m4[18, k, "orbit"]["rival_failed"] for k in (0, 4))
-    assert f"Orbit failed on {orbit} world-rungs of family 18" in README
+    assert f"Orbit failed on {orbit} world-rungs of family 18" in BENCHMARK
     geo = sum(m3[f, k, "pymc-marketing"]["rival_failed"] for f, k in _holds("m3", geo=True))
     assert f"PyMC-Marketing failed on {geo} world-rungs of the geo families" in FLAT
     assert all(c["default_failed"] == 0 for c in m4.values())
@@ -410,37 +442,37 @@ def test_the_run_s_box_and_pins_the_text_states_are_the_record_s() -> None:
     record = RECORDS["m4"]
     box = record["compute"]["box"]
     assert (box["launches"], box["launched"][0]) == (3, "2026-11-21T06:27:48+00:00")
-    assert "launched three times" in README
-    assert "first launched, at 06:27:48 UTC on\n  2026-11-21" in README
+    assert "launched three times" in BENCHMARK
+    assert "first launched, at 06:27:48 UTC on\n  2026-11-21" in BENCHMARK
     commits = record["commits"]
     stated = f"causal-hybrid-control {commits['causal-hybrid-control']} and jax {commits['jax']}"
-    assert f"The run locked {stated}." in README
-    assert commits["bench"] in README
-    assert commits["mixdyn"][:7] in section(README, "Pre-registration and reproduction")
+    assert f"The run locked {stated}." in BENCHMARK
+    assert commits["bench"] in BENCHMARK
+    assert commits["mixdyn"][:7] in section(BENCHMARK, "Pre-registration and reproduction")
 
     record = RECORDS["m5"]
     box = record["compute"]["box"]
     assert (box["launches"], box["launched"]) == (1, ["2026-11-23T17:05:36+00:00"])
     assert "was launched, at 17:05:36 UTC the same day" in FLAT
     commits = record["commits"]
-    code = section(README, "Pre-registration and reproduction").split("**M5's code.**", 1)[1]
+    code = section(BENCHMARK, "Pre-registration and reproduction").split("**M5's code.**", 1)[1]
     code = code.split("\n- ", 1)[0]
     stated = f"causal-hybrid-control {commits['causal-hybrid-control']} and jax {commits['jax']}"
     assert f"The run locked {stated}." in code
     assert f"The run ran mixdyn `{commits['mixdyn'][:7]}`" in code
-    assert commits["bench"] in README
+    assert commits["bench"] in BENCHMARK
 
 
 def test_the_pre_registrations_the_readme_names_are_the_files_the_runs_declared() -> None:
     for run, scored in readme_record.RUNS.items():
         digest = hashlib.sha256(scored.preregistration.read_bytes()).hexdigest()
         assert RECORDS[run]["commits"]["preregistration"] == digest
-        assert f"`{digest}`" in section(README, "Pre-registration and reproduction")
+        assert f"`{digest}`" in section(BENCHMARK, "Pre-registration and reproduction")
 
 
 def test_every_interval_typed_beside_the_tables_is_a_reading_s() -> None:
     """An interval the prose states is a comparison of one of the runs' readings, as printed."""
-    prose = readme_record.BLOCK.sub("", README)
+    prose = readme_record.BLOCK.sub("", BENCHMARK)
     typed = re.findall(
         r"([+\u2212]\d\.\d{4}) \[([+\u2212]\d\.\d{4}), ([+\u2212]\d\.\d{4})\]", prose
     )
@@ -452,3 +484,115 @@ def test_every_interval_typed_beside_the_tables_is_a_reading_s() -> None:
     }
     assert typed
     assert [t for t in typed if tuple(map(_number, t)) not in printed] == []
+
+
+def _record_rungs() -> list[tuple[str, int, int]]:
+    """The record's family-rungs, read apart from the script: the verdicts that hold in M4 and M5,
+    M3's that hold on the geo families, and family 4 at k = 0, which M4 read and no run claimed."""
+    return [
+        *(("m4", *fk) for fk in _holds("m4")),
+        *(("m5", *fk) for fk in _holds("m5")),
+        *(("m3", *fk) for fk in _holds("m3", geo=True)),
+        ("m4", 4, 0),
+    ]
+
+
+def test_the_scoreboard_counts_each_family_rung_once_for_each_rival() -> None:
+    rungs = _record_rungs()
+    assert len(set(rungs)) == len(rungs) == 38
+    assert _verdicts("m4")[4, 0]["word"] == "not claimed"
+    lines = readme_record.blocks(README)["scoreboard"].splitlines()
+    head = [c.strip() for c in lines[0].strip("|").split("|")]
+    assert head[0] == f"Of {len(rungs)} family-rungs, mixdyn"
+    words = {
+        "beats the rival": ("beats", True),
+        "ties": ("ties", True),
+        "loses to it, within δ": ("loses to", True),
+        "loses to it, past δ": ("loses to", False),
+        "is not compared: the rival failed": ("not compared", None),
+    }
+    rivals = {readme_record.NAMES[r]: r for r in readme_record.SCORED}
+    table = {}
+    for line in lines[2:]:
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        table[cells[0]] = dict(zip(head[1:], map(int, cells[1:]), strict=True))
+    assert list(table) == list(words)
+    for name, rival in rivals.items():
+        said = [_found(run)[f, k, rival] for run, f, k in rungs]
+        for label, (word, within) in words.items():
+            counted = sum(
+                c["word"] == word and (within is None or c["within"] is within) for c in said
+            )
+            assert table[label][name] == counted, (label, name)
+        assert sum(table[label][name] for label in words) == len(rungs)
+
+
+def test_the_numbers_the_readme_states_are_the_records() -> None:
+    rungs = _record_rungs()
+    assert f"on {len(rungs) - 1} of {len(rungs)} pre-registered family-rungs" in README_FLAT
+    found = _found("m4")
+    orbit, pymc = (float(found[4, 0, r]["mean"]) for r in ("orbit", "pymc-marketing"))
+    assert not found[4, 0, "orbit"]["within"]
+    assert not found[4, 0, "pymc-marketing"]["within"]
+    assert (
+        f"loses to Orbit's by {orbit:+.3f} and to PyMC-Marketing's by {pymc:+.3f} a euro"
+        in README_FLAT
+    )
+    stated = re.search(
+        r"those of (Meridian \S+), (PyMC-Marketing \S+) and (Orbit \S+), and", README_FLAT
+    )
+    assert stated is not None
+    assert stated.group(0) in FLAT
+    held = readme_record.blocks(BENCHMARK)
+    for tool in stated.groups():
+        assert f"| {tool} |" in held["m4-versions"] + held["m5-versions"]
+
+
+def test_the_charts_are_the_ones_their_script_draws() -> None:
+    """Run `python scripts/record_charts.py` when a record, the README's example or the script
+    changes."""
+    drawn = record_charts.render(RECORDS, record_charts.example())
+    held = {p.name: p.read_text(encoding="utf-8") for p in ASSETS.glob("*.svg")}
+    assert held == drawn
+
+
+def test_each_chart_holds_one_mark_for_each_family_rung_and_comparison() -> None:
+    def titles(name: str) -> list[str]:
+        return re.findall(r"<g><title>([^<]*)</title>", (ASSETS / name).read_text(encoding="utf-8"))
+
+    rungs = _record_rungs()
+    compared = sum(
+        _found(run)[f, k, r]["mean"] is not None
+        for run, f, k in rungs
+        for r in readme_record.SCORED
+    )
+    for scheme in ("light", "dark"):
+        closest = titles(f"closest-rival-{scheme}.svg")
+        assert len(closest) == len(rungs)
+        assert [t for t in closest if "not within" in t] == [
+            "Family 4 S-curves, k = 0, M4: mixdyn less Orbit +0.136 [+0.100, +0.173] a euro, "
+            f"loses to, not within δ = 0.05, no claim, {_found('m4')[4, 0, 'orbit']['complete']} "
+            "worlds"
+        ]
+        assert len(titles(f"every-comparison-{scheme}.svg")) == compared
+        assert len(titles(f"first-plan-{scheme}.svg")) == 6
+
+
+def test_the_pages_show_the_charts_the_script_draws_pinned_to_the_release() -> None:
+    version = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"][
+        "version"
+    ]
+    raw = f"https://raw.githubusercontent.com/causaldyn/mixdyn/v{version}/docs/assets/"
+    shown = re.findall(r'(?:src|srcset)="([^"]+)"', README)
+    assert shown
+    assert [u for u in shown if not u.startswith(raw)] == []
+    names = [u.removeprefix(raw) for u in shown]
+    assert sorted(names) == sorted(
+        f"{chart}-{scheme}.svg"
+        for chart in ("closest-rival", "first-plan")
+        for scheme in ("dark", "light")
+    )
+    for page in (BENCHMARK, INDEX):
+        local = re.findall(r"\]\(assets/([^)#]+)#gh-(light|dark)-mode-only\)", page)
+        assert local
+        assert [n for n, scheme in local if not n.endswith(f"-{scheme}.svg")] == []
