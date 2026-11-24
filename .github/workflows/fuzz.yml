@@ -1,9 +1,9 @@
 name: fuzz
 
-# Coverage-guided fuzzing, atheris over libFuzzer, of the two places whose contracts can be stated
-# for every input: reading a long table into a panel, and planning a budget in a box. Five minutes a
-# target on every change, half an hour a week; a crash fails the job and uploads the input that
-# caused it.
+# Coverage-guided fuzzing, atheris over libFuzzer, of the three places whose contracts can be stated
+# for every input: reading a long table into a panel, planning a budget in a box, and reading a
+# saved document or file. Five minutes a target on every change, half an hour a week; a crash fails
+# the job and uploads the input that caused it.
 on:
   push:
     branches: [main]
@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [plan, read]
+        target: [documents, plan, read]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:

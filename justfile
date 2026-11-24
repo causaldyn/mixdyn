@@ -29,8 +29,8 @@ deps:
 test:
     uv run pytest
 
-# One fuzz target, `plan` or `read`, for `seconds`, as fuzz.yml runs it; its corpus stays in .fuzz/,
-# and a crash writes the input that caused it there.
+# One fuzz target, `documents`, `plan` or `read`, for `seconds`, as fuzz.yml runs it; its corpus
+# stays in .fuzz/, and a crash writes the input that caused it there.
 fuzz target="read" seconds="60":
     mkdir -p .fuzz/{{target}}
     uv run --with-requirements fuzz/requirements.txt python fuzz/fuzz_{{target}}.py .fuzz/{{target}} -max_total_time={{seconds}} -max_len=1024 -len_control=0 -artifact_prefix=.fuzz/
