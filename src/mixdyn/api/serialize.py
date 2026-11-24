@@ -76,6 +76,11 @@ FORMAT_VERSION = 1
 """The version of the format this mixdyn writes, and the one version it reads."""
 _MANIFEST = "manifest.json"
 _ARRAYS = "arrays"
+_JAX_DTYPES = frozenset(
+    map(np.dtype, ["bool", "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32"])
+) | frozenset(map(np.dtype, ["uint64", "float16", "float32", "float64", "complex64", "complex128"]))
+"""The dtypes of a JAX array as `save` writes it, each in the machine's byte order: JAX holds no
+other NumPy dtype."""
 
 _CLASSES: tuple[type, ...] = (
     # the panel and the tests it is read with
@@ -304,9 +309,9 @@ def load(path: str | Path) -> Any:
 
     Raises:
         FormatError: on a file that is not the format's archive or whose members do not read, a
-            format version other than `FORMAT_VERSION`, a class or a node the format does not
-            hold, a value its class refuses, an object nested past Python's recursion limit, and
-            a JAX array in double precision where JAX runs in single.
+            format version other than `FORMAT_VERSION`, a class, a node or an array the format
+            does not hold, a value its class refuses, an object nested past Python's recursion
+            limit, and a JAX array in double precision where JAX runs in single.
     """
     try:
         archive = zipfile.ZipFile(path)
@@ -420,6 +425,10 @@ def _decode(node: Any, archive: zipfile.ZipFile, where: str) -> Any:
     if "$array" in node:
         array = _array(node["$array"], archive, where)
         if node.get("jax"):
+            if array.dtype not in _JAX_DTYPES:
+                raise FormatError(
+                    f"{where} is a JAX array of {array.dtype}, which JAX does not hold"
+                )
             if array.dtype.itemsize == 8 and not jax.config.read("jax_enable_x64"):
                 msg = (
                     f"{where} is a JAX array of {array.dtype}, which JAX in single precision would "
@@ -543,9 +552,39 @@ def _array(index: Any, archive: zipfile.ZipFile, where: str) -> np.ndarray:
     except KeyError as error:
         raise FormatError(f"{where}: the archive has no array {index!r}") from error
     try:
-        return np.load(io.BytesIO(data), allow_pickle=False)
+        return _npy(data)
     except ValueError as error:
         raise FormatError(f"{where}: array {index!r} is damaged: {error}") from error
+
+
+def _npy(data: bytes) -> np.ndarray:
+    """The array of `.npy` bytes as `np.save` writes them: never an `.npz` archive or a pickle,
+    which `np.load` would read as well.
+
+    NumPy's reader allocates the shape a header declares before it reads any data, so a damaged
+    header could claim terabytes in a member of a few bytes: the shape is checked first against
+    the bytes that follow the header.
+
+    Raises:
+        ValueError: on bytes that are not such a file, and a header that declares more data than
+            follows it.
+    """
+    stream = io.BytesIO(data)
+    version = np.lib.format.read_magic(stream)
+    # version 3.0 writes 2.0's header in UTF-8 rather than Latin-1: a field's name reads otherwise,
+    # its size the same
+    read_header = (
+        np.lib.format.read_array_header_1_0
+        if version == (1, 0)
+        else np.lib.format.read_array_header_2_0
+    )
+    shape, _, dtype = read_header(stream)
+    count, follow = math.prod(shape), len(data) - stream.tell()
+    if count > np.iinfo(np.intp).max or count * dtype.itemsize > follow:
+        msg = f"its header declares {shape} of {dtype}, where {follow} bytes follow it"
+        raise ValueError(msg)
+    stream.seek(0)
+    return np.lib.format.read_array(stream, allow_pickle=False)
 
 
 def _short(node: Any) -> str:

@@ -14,6 +14,7 @@ import dataclasses
 import datetime as dt
 import enum
 import inspect
+import io
 import json
 import math
 import zipfile
@@ -1014,6 +1015,63 @@ def test_a_node_that_holds_what_save_never_writes_there_fails_to_load(
     path = _saved(tmp_path)
     _rewritten(path, lambda manifest: manifest["root"]["fields"].update({field: node}))
     with pytest.raises(FormatError, match=match):
+        load(path)
+
+
+def _npy_bytes(array: np.ndarray) -> bytes:
+    buffer = io.BytesIO()
+    np.save(buffer, array, allow_pickle=False)
+    return buffer.getvalue()
+
+
+def _npz_bytes() -> bytes:
+    buffer = io.BytesIO()
+    np.savez(buffer, spend=np.zeros(4))
+    return buffer.getvalue()
+
+
+def _header_of(shape: tuple[int, ...]) -> bytes:
+    """A `.npy` file of float64 whose header declares `shape`, and no data."""
+    buffer = io.BytesIO()
+    np.lib.format.write_array_header_1_0(
+        buffer, {"descr": "<f8", "fortran_order": False, "shape": shape}
+    )
+    return buffer.getvalue()
+
+
+@pytest.mark.parametrize(
+    ("data", "match"),
+    [
+        (b"", "array 0 is damaged: EOF"),
+        (_npz_bytes(), "array 0 is damaged: the magic string is not correct"),
+        (_header_of((2**40,)), r"array 0 is damaged: its header declares \(1099511627776,\) of"),
+        (_header_of((10**30,)), r"array 0 is damaged: its header declares \(10{30},\) of"),
+    ],
+    ids=["empty", "an npz archive", "8 TiB declared", "past int64"],
+)
+def test_an_array_member_that_np_save_never_writes_fails_to_load(
+    data: bytes, match: str, tmp_path: Path
+) -> None:
+    """An array's member is an `.npy` file whose header declares no more data than follows it:
+    not empty, not an `.npz` archive, and not a header that would allocate terabytes."""
+    path = _saved(tmp_path)
+    _replaced(path, "arrays/0.npy", data)
+    with pytest.raises(FormatError, match=rf"obj\.spend: {match}"):
+        load(path)
+
+
+@pytest.mark.parametrize(
+    "array", [np.array(["abc"]), np.array([1.0, 2.0], dtype=">f8")], ids=["text", "big-endian"]
+)
+def test_a_jax_array_of_a_dtype_jax_does_not_hold_fails_to_load(
+    array: np.ndarray, tmp_path: Path
+) -> None:
+    path = tmp_path / "held.mixdyn"
+    save(Returns(jnp.arange(3.0), 0.0, 0.0, 0.0, 0.0, 0.0), path)  # ty: ignore[invalid-argument-type]
+    _replaced(path, "arrays/0.npy", _npy_bytes(array))
+    with pytest.raises(
+        FormatError, match=rf"obj\.spend is a JAX array of {array.dtype}, which JAX"
+    ):
         load(path)
 
 
