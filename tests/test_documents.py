@@ -201,6 +201,7 @@ def test_values_without_a_json_form_are_refused_on_writing(value: np.ndarray, ma
         ({"dtype": "int64", "shape": [1], "data": [2**63]}, "9223372036854775808 is not a int64"),
         ({"dtype": "float64", "shape": [1], "data": [10**400]}, "is not a float64 value"),
         ({"dtype": "float64", "shape": [1], "data": [math.inf]}, "inf is not a float64 value"),
+        ({"dtype": ["float64"], "shape": [1], "data": [1.0]}, r"unknown array dtype \['float64'\]"),
     ],
 )
 def test_array_data_that_does_not_fit_its_dtype_is_refused(data: dict, match: str) -> None:

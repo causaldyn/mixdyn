@@ -2050,7 +2050,7 @@ def _decode_array(data: Any, path: str) -> np.ndarray:
         msg = f"{path}: expected an array object with dtype, shape and data"
         raise SchemaError(msg)
     dtype, shape, flat = data["dtype"], data["shape"], data["data"]
-    if dtype not in _ARRAY_DTYPES:
+    if type(dtype) is not str or dtype not in _ARRAY_DTYPES:
         msg = f"{path}: unknown array dtype {dtype!r}"
         raise SchemaError(msg)
     if not isinstance(shape, list) or not all(type(n) is int and n >= 0 for n in shape):
