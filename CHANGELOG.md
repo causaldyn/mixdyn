@@ -5,6 +5,41 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
+## [0.2.3] — 2026-11-24
+
+Three defects that the new fuzz targets found, each fixed where the bad value is made. The
+scorecard's arms plan either on curves alone or on lines alone, so none of their plans moves.
+
+### Fixed
+
+- **`read_panel` refuses a day that no Python date holds instead of crashing.** numpy reads `-4`
+  in a column of date strings as the year −4, and a `datetime64` can hold the year 10 000. Every
+  issue lists its dates as Python dates, years 1 to 9999, so an issue that named such a row raised
+  `AttributeError` or `TypeError` rather than `PanelError`. Such a value is now one of the
+  column's values that are not dates.
+- **`read_panel` reports a geo whose population is `None` as having no population.** It raised
+  `TypeError`: the check for a missing population read only the geos that the mapping leaves out.
+- **`water_fill` spends the budget where a line's slope does not read 1.** The price's
+  bisection started at twice the highest margin times its slope at the floor, lines included,
+  while the plan reads a line by its margin alone. Where a line's margin was above that start, the
+  bisection never moved, and the plan spent more than the budget with no error. It now starts above
+  every line's margin.
+
+### Added
+
+- **Fuzz targets** (`fuzz/`, in the repository, not the wheel or the sdist). atheris runs them,
+  coverage-guided over libFuzzer, on branch coverage alone: in atheris 3.1.0 its comparison
+  tracing keeps every numpy array that a traced comparison returns.
+  - `fuzz_read.py` reads long tables of any content. `read_panel` must refuse each with
+    `PanelError` or return a panel that keeps `MediaPanel`'s promises.
+  - `fuzz_plan.py` plans boxes and budgets of any kind. `plan_corner` and `water_fill` must
+    refuse each with `ValueError` or plan inside the box and on the budget, where no move of spend
+    gains more than rounding.
+
+  `fuzz.yml` runs each target for five minutes on every change and for half an hour a week, and
+  `just fuzz` runs one locally. atheris is hash-pinned in `fuzz/requirements.txt` and kept out of
+  the lock.
+
 ## [0.2.2] — 2026-11-24
 
 M5's record joins M4's: M5's pre-registered claim held, 5 of 5 verdicts within δ = 0.05 on what

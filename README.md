@@ -32,8 +32,8 @@ attribution (MTA): it reads no user-level path.
 ## How it measures up
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/closest-rival-dark.svg">
-  <img alt="For each family and rung of three pre-registered runs, mixdyn's regret per euro less its closest rival's, with 95 % intervals: every interval but one, family 4's with no lift test, lies left of the margin δ = 0.05." src="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/closest-rival-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.3/docs/assets/closest-rival-dark.svg">
+  <img alt="For each family and rung of three pre-registered runs, mixdyn's regret per euro less its closest rival's, with 95 % intervals: every interval but one, family 4's with no lift test, lies left of the margin δ = 0.05." src="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.3/docs/assets/closest-rival-light.svg">
 </picture>
 
 <!-- --8<-- [start:measured] -->
@@ -64,8 +64,8 @@ compute are on the [benchmark page](https://causaldyn.github.io/mixdyn/benchmark
 <!-- --8<-- [end:measured] -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/cost-dark.svg">
-  <img alt="Mean CPU time of a process and the largest peak memory of any, over M4 and M5: mixdyn's two arms about 10 CPU seconds and 0.18 GiB, Orbit, PyMC-Marketing and Meridian 75 to 245 seconds and up to 12.3 GiB." src="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/cost-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.3/docs/assets/cost-dark.svg">
+  <img alt="Mean CPU time of a process and the largest peak memory of any, over M4 and M5: mixdyn's two arms about 10 CPU seconds and 0.18 GiB, Orbit, PyMC-Marketing and Meridian 75 to 245 seconds and up to 12.3 GiB." src="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.3/docs/assets/cost-light.svg">
 </picture>
 
 ## Install
@@ -112,8 +112,8 @@ print("status quo", status_quo.round(1), "plan", plan.round(1))
 <!-- --8<-- [end:example] -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/first-plan-dark.svg">
-  <img alt="The example's three fitted margins with 95 % intervals beside the true ones, and its plan beside the status quo, inside half to twice each channel's status quo." src="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.2/docs/assets/first-plan-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.3/docs/assets/first-plan-dark.svg">
+  <img alt="The example's three fitted margins with 95 % intervals beside the true ones, and its plan beside the status quo, inside half to twice each channel's status quo." src="https://raw.githubusercontent.com/causaldyn/mixdyn/v0.2.3/docs/assets/first-plan-light.svg">
 </picture>
 
 <!-- --8<-- [start:example-notes] -->
