@@ -116,22 +116,34 @@ def test_a_document_that_does_not_fit_is_refused_with_its_path(text: str, match:
         loads(text, ISSUES)
 
 
-@pytest.mark.parametrize(
-    ("text", "match"),
-    [
-        ("[" * 100_000 + "]" * 100_000, "not JSON"),
-        (
-            '{"schema": "mixdyn.issues", "version": 1, "data": ' + "1" * 5_000 + "}",
-            "not JSON: Exceeds the limit",
-        ),
-    ],
-    ids=["nested past the parser's depth", "an integer past Python's digits"],
-)
-def test_json_python_s_parser_does_not_read_is_refused_as_not_json(text: str, match: str) -> None:
-    """Python's parser refuses JSON nested past its stack with `RecursionError`, and an integer of
-    more digits than it converts with `ValueError`: neither is `JSONDecodeError`."""
-    with pytest.raises(SchemaError, match=match):
+def test_an_integer_python_s_parser_does_not_convert_is_refused_as_not_json() -> None:
+    """Python's parser refuses an integer of more digits than it converts with `ValueError`, which
+    is not `JSONDecodeError`."""
+    text = '{"schema": "mixdyn.issues", "version": 1, "data": ' + "1" * 5_000 + "}"
+    with pytest.raises(SchemaError, match="not JSON: Exceeds the limit"):
         loads(text, ISSUES)
+
+
+def test_json_nested_past_the_parser_s_stack_is_refused_as_not_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The parser refuses JSON nested past its stack with `RecursionError`. From CPython 3.14 on,
+    how deep that is depends on the C stack, so the refusal is made here; the test below reads a
+    real one wherever the stack runs out first."""
+
+    def parse(_: str) -> object:
+        raise RecursionError("maximum recursion depth exceeded while decoding a JSON array")
+
+    monkeypatch.setattr(json, "loads", parse)
+    with pytest.raises(SchemaError, match="not JSON: maximum recursion depth"):
+        loads("[]", ISSUES)
+
+
+def test_json_nested_a_hundred_thousand_deep_is_refused() -> None:
+    """Where the stack runs out the parser refuses it, and where it does not the document is a
+    list, not an object: either way a `SchemaError`, never the parser's `RecursionError`."""
+    with pytest.raises(SchemaError, match=r"not JSON|not a document"):
+        loads("[" * 100_000 + "]" * 100_000, ISSUES)
 
 
 def test_a_value_nested_past_what_repr_writes_is_named_in_short() -> None:

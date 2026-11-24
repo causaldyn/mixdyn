@@ -963,7 +963,9 @@ def test_an_archive_of_a_zip_version_python_does_not_read_fails_to_load(tmp_path
 @pytest.mark.parametrize(
     ("depth", "match"),
     [
-        (100_000, "it has no readable manifest.json"),
+        # from CPython 3.14 on, the parser's depth is the C stack's, so it may read this one and
+        # leave it to the decoder
+        (100_000, "it has no readable manifest.json|nests its object deeper"),
         (600, "nests its object deeper than Python's recursion limit"),
     ],
 )
@@ -981,6 +983,21 @@ def test_a_manifest_nested_past_python_s_recursion_fails_to_load(
         path, "manifest.json", json.dumps(manifest).replace('"root"}', f"{nested}}}").encode()
     )
     with pytest.raises(FormatError, match=match):
+        load(path)
+
+
+def test_a_manifest_the_parser_refuses_for_its_depth_fails_to_load(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The parser refuses a manifest nested past its stack with `RecursionError`, at a depth the C
+    stack sets from CPython 3.14 on: the refusal is made here."""
+    path = _saved(tmp_path)
+
+    def parse(_: bytes) -> object:
+        raise RecursionError("maximum recursion depth exceeded while decoding a JSON object")
+
+    monkeypatch.setattr(json, "loads", parse)
+    with pytest.raises(FormatError, match=r"it has no readable manifest\.json"):
         load(path)
 
 
