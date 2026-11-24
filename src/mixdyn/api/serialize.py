@@ -27,6 +27,7 @@ import enum
 import io
 import json
 import math
+import reprlib
 import zipfile
 from collections.abc import Callable, Mapping
 from importlib import metadata
@@ -330,15 +331,15 @@ def load(path: str | Path) -> Any:
         version = manifest.get("format_version")
         if isinstance(version, bool) or not isinstance(version, int):
             msg = (
-                f"{path} has no valid format version, {version!r}: the file is damaged or was "
-                f"not written by mixdyn's `save`"
+                f"{path} has no valid format version, {_short(version)}: the file is damaged or "
+                f"was not written by mixdyn's `save`"
             )
             raise FormatError(msg)
         if version != FORMAT_VERSION:
             later = "a later" if version > FORMAT_VERSION else "an earlier"
             msg = (
                 f"{path} is format version {version}, written by mixdyn "
-                f"{manifest.get('mixdyn', '(unknown)')}; this mixdyn, "
+                f"{_short(manifest.get('mixdyn', '(unknown)'))}; this mixdyn, "
                 f"{metadata.version('mixdyn')}, reads format version {FORMAT_VERSION} only. "
                 f"Load it with {later} mixdyn"
             )
@@ -465,7 +466,7 @@ def _decode(node: Any, archive: zipfile.ZipFile, where: str) -> Any:
         items = _hashed(
             dict,
             [
-                (_decode(k, archive, f"{where} key"), _decode(v, archive, f"{where}[{k!r}]"))
+                (_decode(k, archive, f"{where} key"), _decode(v, archive, f"{where}[{_short(k)}]"))
                 for k, v in pairs
             ],
             where,
@@ -520,7 +521,7 @@ def _hashed[T](build: Callable[[list[Any]], T], items: list[Any], where: str) ->
 def _class(name: Any, where: str) -> type:
     cls = REGISTRY.get(name) if isinstance(name, str) else None
     if cls is None:
-        msg = f"{where} names a class the format does not hold, {name!r}; see REGISTRY"
+        msg = f"{where} names a class the format does not hold, {_short(name)}; see REGISTRY"
         raise FormatError(msg)
     return cls
 
@@ -550,11 +551,11 @@ def _array(index: Any, archive: zipfile.ZipFile, where: str) -> np.ndarray:
     try:
         data = _read(archive, f"{_ARRAYS}/{index}.npy", where)
     except KeyError as error:
-        raise FormatError(f"{where}: the archive has no array {index!r}") from error
+        raise FormatError(f"{where}: the archive has no array {_short(index)}") from error
     try:
         return _npy(data)
     except ValueError as error:
-        raise FormatError(f"{where}: array {index!r} is damaged: {error}") from error
+        raise FormatError(f"{where}: array {_short(index)} is damaged: {error}") from error
 
 
 def _npy(data: bytes) -> np.ndarray:
@@ -588,5 +589,5 @@ def _npy(data: bytes) -> np.ndarray:
 
 
 def _short(node: Any) -> str:
-    text = repr(node)
+    text = reprlib.repr(node)  # a node nested deeper than `repr` writes still names
     return text if len(text) <= 80 else f"{text[:77]}..."

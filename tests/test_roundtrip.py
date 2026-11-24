@@ -984,6 +984,20 @@ def test_a_manifest_nested_past_python_s_recursion_fails_to_load(
         load(path)
 
 
+def test_a_version_nested_past_what_repr_writes_is_named_in_short(tmp_path: Path) -> None:
+    """`json` reads a value nested deeper than `repr` writes; the refusal names it cut short. On
+    Python 3.12 and 3.13 the parser stops first, and the manifest does not read."""
+    path = _saved(tmp_path)
+    with zipfile.ZipFile(path) as archive:
+        manifest = json.loads(archive.read("manifest.json"))
+    manifest["format_version"] = "version"
+    nested = '{"a": [' * 30_000 + "1" + "]}" * 30_000
+    _replaced(path, "manifest.json", json.dumps(manifest).replace('"version"', nested).encode())
+    with pytest.raises(FormatError, match=r"no valid format version|no readable") as error:
+        load(path)
+    assert len(str(error.value)) < 400
+
+
 @pytest.mark.parametrize(
     ("field", "node", "match"),
     [

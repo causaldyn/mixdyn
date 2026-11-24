@@ -35,6 +35,7 @@ import dataclasses
 import datetime as dt
 import json
 import math
+import reprlib
 import types
 from collections.abc import Collection, Mapping
 from dataclasses import dataclass
@@ -1790,12 +1791,12 @@ def loads(text: str, schema: Schema) -> Any:
         msg = "not a document: expected exactly the keys schema, version and data"
         raise SchemaError(msg)
     if document["schema"] != schema.name:
-        msg = f"the document is a {document['schema']!r}, not a {schema.name!r}"
+        msg = f"the document is a {reprlib.repr(document['schema'])}, not a {schema.name!r}"
         raise SchemaError(msg)
     if document["version"] != schema.version:
         msg = (
-            f"the document is {schema.name} version {document['version']!r}; this engine reads "
-            f"version {schema.version}"
+            f"the document is {schema.name} version {reprlib.repr(document['version'])}; this "
+            f"engine reads version {schema.version}"
         )
         raise SchemaError(msg)
     return _decode(document["data"], schema.data, "data")
@@ -1964,43 +1965,43 @@ def _decode(data: Any, hint: Any, path: str) -> Any:
             if dataclasses.is_dataclass(option) and option.__name__ == kind:
                 return _decode_fields({k: v for k, v in data.items() if k != "kind"}, option, path)
         names = [getattr(a, "__name__", repr(a)) for a in options]
-        msg = f"{path}: kind {kind!r} is none of {names}"
+        msg = f"{path}: kind {reprlib.repr(kind)} is none of {names}"
         raise SchemaError(msg)
     if dataclasses.is_dataclass(hint):
         if not isinstance(data, dict):
-            msg = f"{path}: expected an object for {hint.__name__}, got {data!r}"
+            msg = f"{path}: expected an object for {hint.__name__}, got {reprlib.repr(data)}"
             raise SchemaError(msg)
         return _decode_fields(data, hint, path)
     if isinstance(hint, type) and issubclass(hint, Enum):
         try:
             return hint(data)
         except ValueError:
-            msg = f"{path}: {data!r} is not a {hint.__name__}"
+            msg = f"{path}: {reprlib.repr(data)} is not a {hint.__name__}"
             raise SchemaError(msg) from None
     if hint is dt.date:
         try:
             return dt.date.fromisoformat(data)
         except (TypeError, ValueError):
-            msg = f"{path}: expected an ISO date, got {data!r}"
+            msg = f"{path}: expected an ISO date, got {reprlib.repr(data)}"
             raise SchemaError(msg) from None
     if hint is float:
         if data is None:
             return math.nan
         if type(data) not in (int, float):
-            msg = f"{path}: expected a number, got {data!r}"
+            msg = f"{path}: expected a number, got {reprlib.repr(data)}"
             raise SchemaError(msg)
         if not _floats(data):
-            msg = f"{path}: {data!r} is past a float's finite range"
+            msg = f"{path}: {reprlib.repr(data)} is past a float's finite range"
             raise SchemaError(msg)
         return float(data)
     if hint in (bool, int, str):
         if type(data) is not hint:
-            msg = f"{path}: expected {hint.__name__}, got {data!r}"
+            msg = f"{path}: expected {hint.__name__}, got {reprlib.repr(data)}"
             raise SchemaError(msg)
         return data
     if get_origin(hint) is tuple:
         if not isinstance(data, list):
-            msg = f"{path}: expected a list, got {data!r}"
+            msg = f"{path}: expected a list, got {reprlib.repr(data)}"
             raise SchemaError(msg)
         item, rest = _tuple_items(hint, path)
         if rest is not None and len(data) != len(rest):
@@ -2012,7 +2013,7 @@ def _decode(data: Any, hint: Any, path: str) -> Any:
         )
     if get_origin(hint) in (dict, Mapping):
         if not isinstance(data, dict):
-            msg = f"{path}: expected an object, got {data!r}"
+            msg = f"{path}: expected an object, got {reprlib.repr(data)}"
             raise SchemaError(msg)
         _, value_hint = get_args(hint)
         return {k: _decode(v, value_hint, f"{path}[{k!r}]") for k, v in data.items()}
@@ -2051,10 +2052,10 @@ def _decode_array(data: Any, path: str) -> np.ndarray:
         raise SchemaError(msg)
     dtype, shape, flat = data["dtype"], data["shape"], data["data"]
     if type(dtype) is not str or dtype not in _ARRAY_DTYPES:
-        msg = f"{path}: unknown array dtype {dtype!r}"
+        msg = f"{path}: unknown array dtype {reprlib.repr(dtype)}"
         raise SchemaError(msg)
     if not isinstance(shape, list) or not all(type(n) is int and n >= 0 for n in shape):
-        msg = f"{path}: bad shape {shape!r}"
+        msg = f"{path}: bad shape {reprlib.repr(shape)}"
         raise SchemaError(msg)
     if not isinstance(flat, list) or len(flat) != math.prod(shape):
         msg = f"{path}: shape {shape} needs {math.prod(shape)} values"
@@ -2067,7 +2068,7 @@ def _decode_array(data: Any, path: str) -> np.ndarray:
     }[dtype]
     misfits = [x for x in flat if not fits(x)]
     if misfits:
-        msg = f"{path}: {misfits[0]!r} is not a {dtype} value"
+        msg = f"{path}: {reprlib.repr(misfits[0])} is not a {dtype} value"
         raise SchemaError(msg)
     if dtype == "float64":
         values = [math.nan if x is None else x for x in flat]
