@@ -902,6 +902,20 @@ def test_a_damaged_archive_fails_to_load(tmp_path: Path) -> None:
         load(path)
 
 
+def test_a_file_whose_values_its_class_refuses_fails_to_load(tmp_path: Path) -> None:
+    """A class's checks refuse a value out of its range with `ValueError`, and a value of another
+    type than its field's with whatever error their code meets first: either fails to load."""
+    path = _saved(tmp_path)
+    _rewritten(path, lambda manifest: manifest["root"]["fields"].update(se=-1.0))
+    with pytest.raises(FormatError, match=r"obj: .*LiftEstimate cannot be rebuilt: ValueError"):
+        load(path)
+    path = tmp_path / "panel.mixdyn"
+    save(geo_panel(2, 4), path)
+    _rewritten(path, lambda manifest: manifest["root"]["fields"].update(hierarchy="g0"))
+    with pytest.raises(FormatError, match=r"obj: .*MediaPanel cannot be rebuilt: AttributeError"):
+        load(path)
+
+
 def test_a_value_of_a_class_the_format_does_not_hold_is_not_saved(tmp_path: Path) -> None:
     with pytest.raises(TypeError, match="is not a class the format saves"):
         save({"a": 1}, tmp_path / "x")

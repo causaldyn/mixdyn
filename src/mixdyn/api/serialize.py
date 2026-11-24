@@ -304,8 +304,8 @@ def load(path: str | Path) -> Any:
 
     Raises:
         FormatError: on a file that is not the format's archive, a format version other than
-            `FORMAT_VERSION`, a class or a node the format does not hold, and a JAX array in
-            double precision where JAX runs in single.
+            `FORMAT_VERSION`, a class or a node the format does not hold, a value its class
+            refuses, and a JAX array in double precision where JAX runs in single.
     """
     try:
         archive = zipfile.ZipFile(path)
@@ -452,8 +452,12 @@ def _decode(node: Any, archive: zipfile.ZipFile, where: str) -> Any:
         }
         try:
             return cls(**fields)
-        except TypeError as error:
-            raise FormatError(f"{where}: {node['$type']} cannot be rebuilt: {error}") from error
+        # The class's checks are the format's: they refuse a value with `ValueError`, and a value
+        # of a type other than its field's, which no check reads first, with whatever error their
+        # code meets first.
+        except Exception as error:
+            msg = f"{where}: {node['$type']} cannot be rebuilt: {type(error).__name__}: {error}"
+            raise FormatError(msg) from error
     raise FormatError(f"{where} is not a node of the format: {_short(node)}")
 
 
