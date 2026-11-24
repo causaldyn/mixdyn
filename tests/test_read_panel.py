@@ -288,7 +288,8 @@ def test_a_week_off_the_grid_is_an_error_naming_the_weekday() -> None:
         (np.array(["2023-01-07"] * 15 + ["soon"], dtype=object), "not dates: 'soon' at 15"),
         (np.array(["2023-01-07"] * 15 + [None], dtype=object), "has no date at row 15"),
         # numpy reads "-4" as the year -4, which no Python date holds
-        (["2023-01-07"] * 15 + [-4], "not dates: .*'-4'.* at 15"),
+        (["2023-01-07"] * 15 + [-4], "not dates: '-4' at 15"),
+        (np.array(["2023-01-07"] * 15 + ["soon"]), "not dates: 'soon' at 15"),
     ],
 )
 def test_dates_that_are_not_calendar_days_are_refused(dates: Any, match: str) -> None:

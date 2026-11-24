@@ -999,9 +999,17 @@ def _positions(mask: npt.NDArray[np.bool_], values: np.ndarray | None = None) ->
     if values is None:
         shown = ", ".join(str(r) for r in rows[:_SHOWN])
     else:
-        shown = ", ".join(f"{values[r]!r} at {r}" for r in rows[:_SHOWN])
+        shown = ", ".join(f"{_plain(values[r])!r} at {r}" for r in rows[:_SHOWN])
     more = "" if rows.size <= _SHOWN else f" and {rows.size - _SHOWN} more"
     return f"at row {shown}{more}" if values is None else f"{shown}{more}"
+
+
+def _plain(value: Any) -> Any:
+    """A numpy scalar as the Python value it holds, so a message shows `'soon'`, not
+    `np.str_('soon')`. Dates and durations stay numpy's: `item` can turn them into integers."""
+    if isinstance(value, np.generic) and value.dtype.kind not in "Mm":
+        return value.item()
+    return value
 
 
 def _sample(values: np.ndarray) -> str:
