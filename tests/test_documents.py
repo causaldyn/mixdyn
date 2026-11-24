@@ -198,12 +198,30 @@ def test_values_without_a_json_form_are_refused_on_writing(value: np.ndarray, ma
         ({"dtype": "bool", "shape": [1], "data": [None]}, "None is not a bool value"),
         ({"dtype": "float64", "shape": [3], "data": [1.0]}, r"shape \[3\] needs 3 values"),
         ({"dtype": "float64", "shape": [1], "data": ["1"]}, "'1' is not a float64 value"),
+        ({"dtype": "int64", "shape": [1], "data": [2**63]}, "9223372036854775808 is not a int64"),
+        ({"dtype": "float64", "shape": [1], "data": [10**400]}, "is not a float64 value"),
+        ({"dtype": "float64", "shape": [1], "data": [math.inf]}, "inf is not a float64 value"),
     ],
 )
 def test_array_data_that_does_not_fit_its_dtype_is_refused(data: dict, match: str) -> None:
     text = json.dumps({"schema": "test.array", "version": 1, "data": data})
     with pytest.raises(SchemaError, match=match):
         loads(text, Schema("test.array", 1, np.ndarray))
+
+
+@pytest.mark.parametrize(
+    "value",
+    [math.inf, -math.inf, 10**400],
+    ids=["Infinity", "-Infinity", "an integer past a float's range"],
+)
+def test_a_number_no_float_holds_short_of_an_infinity_is_refused(value: float) -> None:
+    """A float is written as a finite number or as null for NaN. `Infinity`, which is not JSON but
+    which Python's parser reads, and an integer past a float's range are refused, not read as an
+    infinity that `dumps` refuses to write."""
+    document = json.loads(dumps((Priced(Revenue(), 1.0, np.array([1.0])),), PRICED))
+    document["data"][0]["value"] = value
+    with pytest.raises(SchemaError, match=r"data\[0\]\.value: .* is past a float's finite range"):
+        loads(json.dumps(document), PRICED)
 
 
 PANEL = Schema("test.panel", 1, MediaPanel)

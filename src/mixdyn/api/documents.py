@@ -1989,6 +1989,9 @@ def _decode(data: Any, hint: Any, path: str) -> Any:
         if type(data) not in (int, float):
             msg = f"{path}: expected a number, got {data!r}"
             raise SchemaError(msg)
+        if not _floats(data):
+            msg = f"{path}: {data!r} is past a float's finite range"
+            raise SchemaError(msg)
         return float(data)
     if hint in (bool, int, str):
         if type(data) is not hint:
@@ -2033,6 +2036,15 @@ def _decode_fields(data: dict[str, Any], cls: type[DataclassInstance], path: str
         raise SchemaError(msg) from error
 
 
+def _floats(number: float) -> bool:
+    """Whether `number` reads as a float that is not infinite: a document has no form for an
+    infinity, and no float holds an integer past a float's range. NaN reads, as null does."""
+    try:
+        return not math.isinf(number)
+    except OverflowError:
+        return False
+
+
 def _decode_array(data: Any, path: str) -> np.ndarray:
     if not isinstance(data, dict) or set(data) != {"dtype", "shape", "data"}:
         msg = f"{path}: expected an array object with dtype, shape and data"
@@ -2048,8 +2060,8 @@ def _decode_array(data: Any, path: str) -> np.ndarray:
         msg = f"{path}: shape {shape} needs {math.prod(shape)} values"
         raise SchemaError(msg)
     fits = {
-        "float64": lambda x: x is None or (type(x) in (int, float)),
-        "int64": lambda x: type(x) is int,
+        "float64": lambda x: x is None or (type(x) in (int, float) and _floats(x)),
+        "int64": lambda x: type(x) is int and -(2**63) <= x < 2**63,
         "bool": lambda x: type(x) is bool,
         "datetime64[D]": lambda x: x is None or type(x) is str,
     }[dtype]
