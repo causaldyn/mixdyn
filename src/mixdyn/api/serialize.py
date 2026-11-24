@@ -305,8 +305,8 @@ def load(path: str | Path) -> Any:
     Raises:
         FormatError: on a file that is not the format's archive or whose members do not read, a
             format version other than `FORMAT_VERSION`, a class or a node the format does not
-            hold, a value its class refuses, and a JAX array in double precision where JAX runs
-            in single.
+            hold, a value its class refuses, an object nested past Python's recursion limit, and
+            a JAX array in double precision where JAX runs in single.
     """
     try:
         archive = zipfile.ZipFile(path)
@@ -316,7 +316,7 @@ def load(path: str | Path) -> Any:
     with archive:
         try:
             manifest = json.loads(_read(archive, _MANIFEST, str(path)))
-        except (KeyError, ValueError) as error:
+        except (KeyError, ValueError, RecursionError) as error:
             msg = f"{path} is not a {FORMAT} file: it has no readable {_MANIFEST}"
             raise FormatError(msg) from error
         if not isinstance(manifest, dict) or manifest.get("format") != FORMAT:
@@ -341,7 +341,11 @@ def load(path: str | Path) -> Any:
         if "root" not in manifest:
             msg = f"{path} is not a {FORMAT} file: its manifest holds no object"
             raise FormatError(msg)
-        return _decode(manifest["root"], archive, "obj")
+        try:
+            return _decode(manifest["root"], archive, "obj")
+        except RecursionError as error:
+            msg = f"{path} nests its object deeper than Python's recursion limit"
+            raise FormatError(msg) from error
 
 
 def _encode(value: Any, arrays: list[np.ndarray], where: str) -> Any:

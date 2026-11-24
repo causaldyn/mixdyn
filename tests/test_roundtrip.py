@@ -959,6 +959,30 @@ def test_an_archive_of_a_zip_version_python_does_not_read_fails_to_load(tmp_path
         load(path)
 
 
+@pytest.mark.parametrize(
+    ("depth", "match"),
+    [
+        (100_000, "it has no readable manifest.json"),
+        (600, "nests its object deeper than Python's recursion limit"),
+    ],
+)
+def test_a_manifest_nested_past_python_s_recursion_fails_to_load(
+    depth: int, match: str, tmp_path: Path
+) -> None:
+    """An object nested deeper than `json` reads fails to load, as does one `json` reads but the
+    decoder would recurse through past Python's limit."""
+    path = _saved(tmp_path)
+    with zipfile.ZipFile(path) as archive:
+        manifest = json.loads(archive.read("manifest.json"))
+    manifest["root"] = "root"
+    nested = '{"$tuple": [' * depth + "1" + "]}" * depth
+    _replaced(
+        path, "manifest.json", json.dumps(manifest).replace('"root"}', f"{nested}}}").encode()
+    )
+    with pytest.raises(FormatError, match=match):
+        load(path)
+
+
 def test_a_value_of_a_class_the_format_does_not_hold_is_not_saved(tmp_path: Path) -> None:
     with pytest.raises(TypeError, match="is not a class the format saves"):
         save({"a": 1}, tmp_path / "x")
