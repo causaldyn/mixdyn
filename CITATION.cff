@@ -17,8 +17,9 @@ date-released: "2026-11-24"
 abstract: >-
   A media-mix modelling (MMM) engine in Python and JAX: regressions, discount dynamic linear models,
   Bayesian models with lift and geo tests in the likelihood, geo hierarchies, test readers and budget
-  plans, computed without a UI, built on causal-hybrid-control. Its one pre-registered run of the
-  causaldyn bench is a non-inferiority result stated with its losses, not a claim to be best.
+  plans, computed without a UI, built on causal-hybrid-control. Its pre-registered runs of the
+  causaldyn bench (M3, M4 and M5) state a non-inferiority result with its losses, not a claim to be
+  best.
 keywords:
   - marketing mix modeling
   - media mix modeling
