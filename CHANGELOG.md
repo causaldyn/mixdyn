@@ -5,6 +5,54 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
+## [Unreleased]
+
+Defects that a fuzz target of the readers of saved bytes found, and one beside them, each fixed
+where the bad value is made. `serialize.load` refuses what it does not read with `FormatError`, and `loads` with
+`SchemaError`, where each raised another error or read a value that its writer then refused to
+write. A file that `save` wrote and a document that `dumps` wrote read as before.
+
+### Fixed
+
+- **`load` refuses a file whose values a class's checks refuse.** A class is rebuilt by its own
+  `__init__`, whose checks refuse a value with `ValueError`, and a value of another type than its
+  field's with whatever error their code meets first. Only `TypeError` was read as the file's
+  fault, so a `ValueError` or an `AttributeError` escaped `load` as it was.
+- **`load` refuses an archive that Python's zip module does not read.** A member whose checksum,
+  header or compressed data is damaged, or whose compression or encryption the module does not
+  read, raised the module's or the decompressor's own error: `BadZipFile`, `zlib.error`,
+  `LZMAError` and others. A zip version the module does not read raised `NotImplementedError`.
+- **`load` refuses a manifest nested past Python's recursion limit.** `json` raised
+  `RecursionError` on one nested past its stack, and the decoder on one it recursed through past
+  the limit.
+- **`load` refuses a node that holds what `save` never writes there.** A `$float` or a `$date`
+  that is not text, a `$tuple`, `$list`, `$frozenset` or `$dict` that is not a list, a set's
+  member or a mapping's key that no set holds, an enum's member that is not a name, and fields
+  that are not an object each raised `TypeError`, `ValueError` or `AttributeError`.
+- **`load` reads an array only as the `.npy` file that `np.save` writes, its header checked before
+  it allocates.** `np.load` read an `.npz` archive as well, raised `EOFError` on an empty member,
+  and allocated the shape a damaged header declared: 8 TiB from a member of a few bytes raised
+  `MemoryError`. A JAX array of a dtype JAX does not hold raised JAX's `TypeError`.
+- **`loads` refuses as not JSON what Python's parser does not read:** JSON nested past its stack,
+  which raised `RecursionError`, and an integer of more digits than Python converts, which raised
+  `ValueError`.
+- **`loads` refuses a number that no float64 or int64 holds.** `Infinity`, which Python's parser
+  reads although JSON has no such number, and a float past a float's range read as an infinity
+  that `dumps` then refused to write. An integer past either range raised `OverflowError`.
+- **`loads` refuses an array whose dtype is not text** with `SchemaError`, not `TypeError`.
+- **`loads` refuses an array whose shape declares more values than an array holds.** The message
+  that refused its data named the shape's product, and a product of more digits than Python
+  converts raised `ValueError`.
+- **`loads` and `load` name a value they refuse cut short.** A value nested deeper than `repr`
+  writes, which `json` still reads, raised `RecursionError` as the message was written.
+
+### Added
+
+- **A fuzz target of the readers of saved bytes**, `fuzz/fuzz_documents.py`. It reads documents
+  and files, most of them ones the engine writes, damaged at random. `loads` must refuse each with
+  `SchemaError` and `load` with `FormatError`, or return a value that `dumps` or `save` writes
+  again and that reads back the same. `fuzz.yml` runs it with the other two.
+
 ## [0.2.3] — 2026-11-24
 
 Three defects that the new fuzz targets found, each fixed where the bad value is made. The
