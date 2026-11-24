@@ -58,6 +58,8 @@ PYTHONPATH=<bench>/src uv run --no-sync python evidence/bench/<script>.py ...
 | `bench/results/refresh_pilot_dlm.json` | the same cell's DLM arm on the four swing worlds, every fit in: its mixture's mean return left the fit before's 80 % in 4 of 72 pairs of refits, and moved by up to 19 a euro | ADR 0079 | mixdyn `d5a879f`, the bench `95a61f9`; CHC 1.2.0, which the record does not name |
 | `plan_exactness.py`, `results/plan_exactness.jsonl` | the envelope's plan against the best split on the drift family's pilot | ADR 0034 | the record names no commit; it read a scorecard pilot's run directory, which is not kept |
 | `results/m3_record.json` | M3's versions, compute, worlds per cell and tuned rivals' readings, which the benchmark page prints, with the SHA-256 of every file of the run they were read from | `docs/benchmark.md`, `tests/test_readme.py` | `scripts/readme_record.py extract` over the scored run's records and its reading, at mixdyn `183ca75` and the bench `67f92b7` |
+| `results/m4_record.json` | M4's versions, settings, compute and reading, which the benchmark page prints, with the SHA-256 of every file of the run they were read from | `docs/benchmark.md`, `tests/test_readme.py` | `scripts/readme_record.py extract` over the scored run's records and its reading, at mixdyn `cc83d2a` and the bench `5ddfe0c` |
+| `results/m5_record.json` | M5's versions, settings, compute and reading, the same for M5's run | `docs/benchmark.md`, `tests/test_readme.py` | `scripts/readme_record.py extract` over the scored run's records and its reading, at mixdyn `b864f6d` and the bench `bc52170` |
 
 Five records were written by an earlier revision of their script than the one kept here:
 
