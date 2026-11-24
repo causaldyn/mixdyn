@@ -4,6 +4,7 @@ its interval, a random one near 0.5, an inverted one below 0.5 and dropped with 
 channel's flag read against that channel's error; a reviewer's statuses and numbers read as
 flags; and the R² against regret."""
 
+import json
 import math
 
 import numpy as np
@@ -231,3 +232,57 @@ def test_the_auroc_is_mann_whitney_s_with_weights_as_copies() -> None:
     copied = f.auroc(np.repeat(value, weight), np.repeat(outcome, weight))
     assert f.auroc(value, outcome, weight) == pytest.approx(copied, rel=1e-14, abs=0.0)
     assert math.isnan(f.auroc(value, np.ones(50, dtype=bool)))
+
+
+def test_the_report_prints_the_rows_read_gives() -> None:
+    """`read`'s rows are the report's: each row with an AUROC a line of `lines` with its numbers,
+    each without one counted as not read with its reason, and every number the one `units` and
+    `scored` give apart from it. No world's return is wrong, so every flag against a wrong return
+    reads one outcome; `nrmse` is one value on every world."""
+    worlds = [
+        _world(
+            i,
+            2.0 if i % 3 == 0 else 0.5,
+            {
+                "max rhat": 1.2 if i % 3 == 0 else 1.0,
+                "min ess bulk": 50.0 if i % 3 else 900.0,
+                "decomp_rssd": float(i % 5),
+                "nrmse": 0.3,
+            },
+        )
+        for i in range(30)
+    ]
+    rows = f.read(worlds, "ours")
+    assert json.loads(json.dumps(rows, allow_nan=False)) == rows
+    unread = {(r["outcome"], r["flag"]): r["unread"] for r in rows if "unread" in r}
+    assert unread == {
+        ("return", "decomp_rssd"): ["one outcome"],
+        ("return", "max rhat"): ["one outcome"],
+        ("return", "min ess bulk"): ["one outcome"],
+        ("return", "nrmse"): ["one value", "one outcome"],
+        ("regret", "nrmse"): ["one value"],
+    }
+    drawn = f.resamples(len(worlds))
+    shown = f.lines(worlds)
+    printed = [line for line in shown if line.startswith("    ours '") and " against " in line]
+    assert len(printed) == len(rows) - len(unread) == 3
+    assert f"  {len(unread)} flag readings not read" in "\n".join(shown)
+    for row in rows:
+        u = f.units(worlds, "ours", row["outcome"])[row["flag"]]
+        assert (row["units"], row["with_outcome"], row["worlds"]) == (30, int(u.outcome.sum()), 30)
+        assert row["above_zero"] == int((u.value > 0).sum())
+        assert row["largest"] == u.value.max()
+        found = f.scored(u, drawn)
+        if found is None:
+            assert "auroc" not in row
+            continue
+        assert (row["auroc"], row["low"], row["high"]) == (found.value, found.low, found.high)
+        line = (
+            f"    ours {row['flag']!r} against regret: {found.value:.3f} [{found.low:.3f}, "
+            f"{found.high:.3f}], {found.with_outcome} of {found.units} with it over "
+            f"{found.worlds} worlds"
+        )
+        assert [p for p in printed if p.startswith(line)] != []
+    assert f.read(worlds, "ours", outcomes=("regret",)) == [
+        r for r in rows if r["outcome"] == "regret"
+    ]

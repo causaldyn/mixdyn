@@ -53,6 +53,7 @@ if TYPE_CHECKING:
 
 type Outcome = Literal["return", "regret"]
 
+OUTCOMES: tuple[Outcome, ...] = ("return", "regret")
 TAU = 0.5
 """The relative error of a channel's ROI above which its return counts as wrong. A placeholder:
 the value a scored run reads is the one its pre-registration freezes."""
@@ -354,8 +355,54 @@ def fit_against_regret(
     return out
 
 
+def _unread(u: Units) -> list[str]:
+    """Why `scored` reads no AUROC of `u`: one value, one outcome, or both."""
+    reasons = []
+    if np.ptp(u.value) == 0.0:
+        reasons.append("one value")
+    if u.outcome.all() or not u.outcome.any():
+        reasons.append("one outcome")
+    return reasons
+
+
+def read(
+    records: Sequence[WorldRecord],
+    arm: str,
+    tau: float = TAU,
+    *,
+    drawn: np.ndarray | None = None,
+    outcomes: Sequence[Outcome] = OUTCOMES,
+) -> list[dict[str, Any]]:
+    """Each flag of `arm`'s records read against each of `outcomes`, a row a flag and outcome, in
+    the order the report prints them: the flag's name as `units` keys it, the worlds, the units and
+    the units with the outcome it reads, the units whose alarm reads above 0 and the largest alarm;
+    and its AUROC with its interval over the resamples `drawn` (`resamples` over every world of
+    `records` where None), or, where `scored` reads none, why (`unread`)."""
+    drawn = resamples(len(records)) if drawn is None else drawn
+    rows: list[dict[str, Any]] = []
+    for outcome in outcomes:
+        for name, u in sorted(units(records, arm, outcome, tau).items()):
+            row: dict[str, Any] = {
+                "arm": arm,
+                "outcome": outcome,
+                "flag": name,
+                "worlds": int(np.unique(u.world).size),
+                "units": int(u.value.size),
+                "with_outcome": int(u.outcome.sum()),
+                "above_zero": int(np.count_nonzero(u.value > 0.0)),
+                "largest": float(u.value.max()),
+            }
+            found = scored(u, drawn)
+            if found is None:
+                row["unread"] = _unread(u)
+            else:
+                row |= {"auroc": found.value, "low": found.low, "high": found.high}
+            rows.append(row)
+    return rows
+
+
 def lines(records: Sequence[WorldRecord], tau: float = TAU) -> list[str]:
-    """The report's lines: every arm's flags read against each outcome, those below 0.5
+    """The report's lines: every arm's flags read against each outcome (`read`), those below 0.5
     dropped with the reason, and the R² against regret."""
     if not records:
         return []
@@ -366,27 +413,25 @@ def lines(records: Sequence[WorldRecord], tau: float = TAU) -> list[str]:
     fits: list[str] = []
     arms = [a for a in records[0].arms if a not in BUILT_IN]
     for arm in arms:
-        for outcome in ("return", "regret"):
-            for name, u in sorted(units(records, arm, outcome, tau).items()):
-                read = scored(u, drawn)
-                if read is None:
-                    unread += 1
-                    continue
-                shown = (
-                    f"{arm} {name!r} against {outcome}: {read.value:.3f} "
-                    f"[{read.low:.3f}, {read.high:.3f}], {read.with_outcome} of {read.units}"
-                    f" with it over {read.worlds} worlds"
-                )
-                if read.value < 0.5:
-                    dropped.append(f"    {shown}: below 0.5, the flag alarms the wrong way")
-                elif read.low > 0.5:
-                    kept.append(f"    {shown}; tells them apart")
-                else:
-                    kept.append(f"    {shown}")
-        for key, read in sorted(fit_against_regret(records, arm, drawn).items()):
+        for row in read(records, arm, tau, drawn=drawn):
+            if "unread" in row:
+                unread += 1
+                continue
+            shown = (
+                f"{arm} {row['flag']!r} against {row['outcome']}: {row['auroc']:.3f} "
+                f"[{row['low']:.3f}, {row['high']:.3f}], {row['with_outcome']} of {row['units']}"
+                f" with it over {row['worlds']} worlds"
+            )
+            if row["auroc"] < 0.5:
+                dropped.append(f"    {shown}: below 0.5, the flag alarms the wrong way")
+            elif row["low"] > 0.5:
+                kept.append(f"    {shown}; tells them apart")
+            else:
+                kept.append(f"    {shown}")
+        for key, fit in sorted(fit_against_regret(records, arm, drawn).items()):
             fits.append(
-                f"    {arm} {key!r}: {read.value:+.3f} [{read.low:+.3f}, {read.high:+.3f}]"
-                f" over {read.worlds} worlds"
+                f"    {arm} {key!r}: {fit.value:+.3f} [{fit.low:+.3f}, {fit.high:+.3f}]"
+                f" over {fit.worlds} worlds"
             )
     out = [
         f"  flags as classifiers of a channel's ROI error above {tau:g} (return) and of regret"
