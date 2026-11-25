@@ -42,8 +42,14 @@ with the surface now. A line that is not there unchanged is of one of four kinds
 | Left | The name is gone. | Where that release held the name leaving, from the release it named; from 1.0, in a major release only. |
 | Extended | A function or a method gains parameters with defaults, keyword-only or after its positional ones; a parameter or a field gains a default. | In any release. |
 | Revalued | Only a value moves: a parameter's or a field's default, a constant's or a class attribute's value. | From the next minor release: the version's major or minor is past the release's. |
-| Changed | Anything else: a parameter removed, renamed, reordered, retyped or made required; a return type; a field's type; a member gone; a decorator, a base, an alias's value. | In a major release from 1.0 only: the release compared with is 1.0 or later, and the version's major is past its. |
+| Changed | Anything else: a parameter removed, renamed, reordered, retyped or made required; a return type; a field's type; a member gone; a decorator, a base, an alias's value; a field that a class's generated `__init__` requires, or that moves the fields it takes by position. | In a major release from 1.0 only: the release compared with is 1.0 or later, and the version's major is past its. |
 
+- **A class that writes its `__init__` from its fields**, a dataclass, an attrs class or a
+  `NamedTuple`, is read for that `__init__` too: a parameter for each field it takes, in order,
+  keyword-only where the class or the field says so. A field added without a default, or one
+  added or moved among the fields a caller passes by position, breaks a caller who builds the
+  class, though it drops no line. It is a change of the last kind. A field added with a default
+  after the others, keyword-only, or not taken by `__init__` is an extension.
 - **Before 1.0, a public name changes only by extension or by a moved value.** A name whose
   signature must change takes a new name, and the old name leaves by the removal rule. So 1.0.0
   holds what 0.3.0 shipped, less the two names that leave in 1.0.0.
@@ -79,9 +85,10 @@ documented yet is gone: a public name without documentation fails `tests/test_pu
   runs the test on every push and pull request. A shallow clone, which `actions/checkout` makes by
   default, skips it.
 - The check reads text. A parameter type that widens, `float` to `float | None`, breaks no caller
-  but reads as changed. A dataclass field added without a default breaks a caller who builds the
-  class, but adds a line and drops none, so it passes: the snapshot holds the fields, not the
-  `__init__` that a dataclass writes from them.
+  but reads as changed. A dataclass's `KW_ONLY` marker is private, so the snapshot does not hold
+  it: a field without a default after one with a default is read as past such a marker, the only
+  place a dataclass allows it, and a field added between the marker and the first such field is
+  read as positional.
 
 ## Alternatives considered
 

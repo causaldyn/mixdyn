@@ -14,8 +14,10 @@
   tag below the checkout is still in the surface, or it changes as the rules allow: a name leaves
   as the removal rule says, a function or a method may gain parameters with defaults and a field a
   default, a default or a value moves only in a minor release, and anything else changes only in a
-  major release from 1.0. Read with git; skipped where no release tag is reachable, as in a shallow
-  clone.
+  major release from 1.0. A dataclass, an attrs class or a `NamedTuple` is read for the `__init__`
+  it writes from its fields too: a field without a default, or one that moves the fields passed by
+  position, is a change of that kind. Read with git; skipped where no release tag is reachable, as
+  in a shallow clone.
 - **No public name shadows a submodule** of its package, but those `SHADOWING` lists.
 - **No public callable or class takes, returns or holds a class of the engine that no `__all__`
   lists**, so a caller never reaches past the public names to build an argument or to name a
@@ -357,6 +359,82 @@ def _signed(line: str, found: re.Match[str]) -> ast.FunctionDef:
     return node
 
 
+_BUILDERS = frozenset({"dataclass", "define", "frozen", "mutable", "s"})
+"""The decorators that write a class's `__init__` from its fields: `dataclass`, and attrs'
+`define`, `frozen`, `mutable` and `attr.s`."""
+_FIELDS = frozenset({"field", "ib", "attrib"})
+_DEFAULTS = frozenset({"default", "default_factory", "factory"})
+
+
+def _last(node: ast.expr) -> str:
+    """The last name of `node`, a name or a dotted one; empty for anything else."""
+    return (
+        node.id
+        if isinstance(node, ast.Name)
+        else node.attr
+        if isinstance(node, ast.Attribute)
+        else ""
+    )
+
+
+def _keyword(call: ast.Call | None, name: str) -> object:
+    """The constant `call` passes as `name`; None where it passes none."""
+    for k in call.keywords if call else ():
+        if k.arg == name and isinstance(k.value, ast.Constant):
+            return k.value.value
+    return None
+
+
+def _init(lines: dict[str, str]) -> ast.FunctionDef | None:
+    """The `__init__` that a dataclass, an attrs class or a `NamedTuple` writes from the fields of
+    the snapshot's entry `lines`, a parameter for each field it takes, in order, each with whether
+    it has a default, its annotation and its value left out; None for a class that writes none."""
+    head = next(iter(lines.values()))
+    decorated, written, bases = head.split(" ", 1)[-1].rpartition("class(")
+    if not written or ".__init__" in lines:
+        return None
+    decorators = [f"@{d}" for d in decorated.strip().removeprefix("@").split(" @") if d]
+    node = ast.parse("\n".join([*decorators, f"class _({bases}: ..."])).body[0]
+    assert isinstance(node, ast.ClassDef)
+    builds, keyword = any(_last(base) == "NamedTuple" for base in node.bases), False
+    for decorator in node.decorator_list:
+        call = decorator if isinstance(decorator, ast.Call) else None
+        if _last(call.func if call else decorator) in _BUILDERS:
+            if _keyword(call, "init") is False:
+                return None
+            builds, keyword = True, _keyword(call, "kw_only") is True
+    if not builds:
+        return None
+    positional: list[str] = []
+    named: list[str] = []
+    for key, line in lines.items():
+        if not (key.startswith(".") and line.split()[0].endswith(":")):
+            continue
+        field = ast.parse(line.strip().removeprefix(".")).body[0]
+        assert isinstance(field, ast.AnnAssign)
+        assert isinstance(field.target, ast.Name)
+        kind = field.annotation
+        if _last(kind.value if isinstance(kind, ast.Subscript) else kind) == "ClassVar":
+            continue
+        value = field.value
+        call = value if isinstance(value, ast.Call) and _last(value.func) in _FIELDS else None
+        if _keyword(call, "init") is False:
+            continue
+        if call is None:
+            given = value is not None
+        else:
+            given = bool(call.args) or any(k.arg in _DEFAULTS for k in call.keywords)
+        # A field without a default can follow one with a default only past a `KW_ONLY` marker,
+        # which is private and so not in the snapshot: it and every field after it are keywords.
+        keyword = keyword or (not given and any(p.endswith("=...") for p in positional))
+        kept = named if keyword or _keyword(call, "kw_only") is True else positional
+        kept.append(f"{field.target.id}=..." if given else field.target.id)
+    built = ast.parse(f"def _({', '.join([*positional, *(['*', *named] if named else [])])}): ...")
+    function = built.body[0]
+    assert isinstance(function, ast.FunctionDef)
+    return function
+
+
 def _change(old: str, new: str) -> str:
     """How the snapshot's line `new` changes `old`, the line of the same entry and key it holds
     now: as `_extends` says for a function or a method; "revalued" where only a default or a value
@@ -400,6 +478,7 @@ def breaks(
             continue
         if leaving or _LEAVING.fullmatch(new[head][head]):
             continue
+        reported = len(found)
         for key, line in lines.items():
             held = new[head].get(key)
             if held == line:
@@ -407,6 +486,16 @@ def breaks(
             change = "changed" if held is None else _change(line, held)
             if not (change == "extended" or (change == "revalued" and minor) or major):
                 found.append(f"{line.strip()} -> {held}: {change}")
+        was_init, now_init = _init(lines), _init(new[head])
+        if (
+            len(found) == reported
+            and was_init
+            and now_init
+            and not major
+            and _extends(was_init, now_init) == "changed"
+        ):
+            built = f"__init__({ast.unparse(was_init.args)}) -> ({ast.unparse(now_init.args)})"
+            found.append(f"{head} {built}: changed")
     return found
 
 
@@ -511,6 +600,75 @@ def test_a_released_line_changes_only_in_the_release_its_change_allows(
     assert [f.rsplit(": ", 1)[1] for f in found] == ([change] if change else [])
     if first:
         assert breaks(RELEASED, (1, 2, 0), current, _release(first)) == []
+
+
+D = [
+    "m:D @dataclass(frozen=True) class()",
+    "  .x: float",
+    "  .y: float = 0.5",
+    "  .z def(self) -> float",
+]
+"""A dataclass a release 1.2.0 held, its `__init__` `(x, y=0.5)`."""
+WIDE = [*D[:3], "  .w: int = 0", D[3]]
+KW = [D[0].replace("frozen=True", "kw_only=True"), *D[1:]]
+MARKED = ["m:M @dataclass() class()", "  .x: float = 0.0", "  .y: float"]
+"""A dataclass whose `y` follows a private `KW_ONLY` marker, which the snapshot does not hold."""
+NO_INIT = [D[0].replace("frozen=True", "init=False"), *D[1:]]
+TUPLE = ["m:T class(NamedTuple)", "  .a: int"]
+ATTRS = ["m:A @attrs.frozen class()", "  .a: int"]
+PLAIN = ["m:P class()", "  .a: int"]
+
+
+def _with(lines: list[str], at: int, *added: str) -> list[str]:
+    return [*lines[:at], *added, *lines[at:]]
+
+
+@pytest.mark.parametrize(
+    ("released", "current", "change"),
+    [
+        pytest.param(D, _with(D, 3, "  .w: int = 0"), "", id="default-last"),
+        pytest.param(
+            D, _with(D, 3, "  .w: list[int] = field(default_factory=list)"), "", id="factory"
+        ),
+        pytest.param(D, _with(D, 3, "  .w: int = field(init=False)"), "", id="not-in-init"),
+        pytest.param(D, _with(D, 3, "  .W: ClassVar[int]"), "", id="class-var"),
+        pytest.param(D, _with(D, 3, "  .w: int"), "changed", id="required"),
+        pytest.param(D, _with(D, 3, "  .w: int = field()"), "changed", id="required-field"),
+        pytest.param(D, _with(D, 2, "  .w: int = 0"), "changed", id="default-between"),
+        pytest.param(WIDE, [*WIDE[:2], WIDE[3], WIDE[2], WIDE[4]], "changed", id="reordered"),
+        pytest.param(
+            D, _with(D, 3, "  .w: int = field(kw_only=True)"), "changed", id="field-keyword"
+        ),
+        pytest.param(
+            D,
+            _with(D, 3, "  .w: int = field(default=0, kw_only=True)"),
+            "",
+            id="field-keyword-default",
+        ),
+        pytest.param(KW, _with(KW, 2, "  .w: int = 0"), "", id="keyword-between"),
+        pytest.param(KW, _with(KW, 3, "  .w: int"), "changed", id="keyword-required"),
+        pytest.param(NO_INIT, _with(NO_INIT, 3, "  .w: int"), "", id="no-init"),
+        pytest.param(MARKED, [*MARKED, "  .w: int"], "changed", id="marked-required"),
+        pytest.param(MARKED, _with(MARKED, 2, "  .w: int = 0"), "", id="marked-default"),
+        pytest.param(TUPLE, [*TUPLE, "  .b: int = 0"], "", id="tuple-default"),
+        pytest.param(TUPLE, [*TUPLE, "  .b: int"], "changed", id="tuple-required"),
+        pytest.param(ATTRS, [*ATTRS, "  .b: int = attrs.field(default=0)"], "", id="attrs-default"),
+        pytest.param(ATTRS, [*ATTRS, "  .b: int"], "changed", id="attrs-required"),
+        pytest.param(ATTRS, [*ATTRS, "  .b: int = attrs.field()"], "changed", id="attrs-field"),
+        pytest.param(PLAIN, [*PLAIN, "  .b: int"], "", id="plain-class"),
+    ],
+)
+def test_a_class_built_from_its_fields_changes_them_only_as_its_init_allows(
+    released: list[str], current: list[str], change: str
+) -> None:
+    """A dataclass, an attrs class or a `NamedTuple` writes its `__init__` from its fields, so a
+    field that comes without a default, or that moves the fields a caller passes by position,
+    breaks a caller who builds it: it comes only in a major release from 1.0. A field with a
+    default after the others, a keyword-only one, one the `__init__` does not take, and a class
+    that writes no `__init__`, break none."""
+    found = breaks(released, (1, 2, 0), current, (1, 9, 0))
+    assert [f.rsplit(": ", 1)[1] for f in found] == ([change] if change else [])
+    assert breaks(released, (1, 2, 0), current, (2, 0, 0)) == []
 
 
 def test_a_released_name_leaves_only_as_the_removal_rule_says() -> None:

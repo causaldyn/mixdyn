@@ -22,8 +22,10 @@ changes a public name.
   its lines that is gone or changed past what its kind of change allows: a name leaves only as the
   removal rule says; a function or a method may gain parameters with defaults in any release; a
   default or a value moves only in a minor release; any other change to a public name comes only
-  in a major release from 1.0, and before 1.0 the name is renamed instead. It reads git, and skips
-  where no release tag is reachable, as in a shallow clone.
+  in a major release from 1.0, and before 1.0 the name is renamed instead. A dataclass, an attrs
+  class or a `NamedTuple` is read for the `__init__` it writes from its fields, so a field added
+  without a default, or among those passed by position, counts as such a change. It reads git, and
+  skips where no release tag is reachable, as in a shallow clone; CI's test jobs fetch the tags.
 
 ### Changed
 
