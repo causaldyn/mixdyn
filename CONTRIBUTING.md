@@ -36,6 +36,8 @@ The full suite samples several posteriors and takes a while; CI splits it into g
   statistics framework) are used as oracles in a scratch environment, never in the lock.
 - **Every numerical routine has an independent oracle**: a closed form, another implementation,
   coverage over seeds, or simulation-based calibration. Say which in the test's docstring.
+- **New behaviour comes with its tests.** A pull request that adds or changes behaviour adds the
+  tests that show it, in the same pull request; a bug fix adds a test that fails without the fix.
 - **Tests are two-sided.** A test that only shows the good case passing does not show that the bad
   case fails; prefer one that fails when the implementation is reverted.
 - **No number in a docstring, the README or the changelog that a test or a script does not
