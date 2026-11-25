@@ -8,8 +8,8 @@ changes a public name.
 ## [Unreleased]
 
 The benchmark page reads the claim arms' diagnostic flags, post hoc, on M4's and M5's records. The
-reading changes no verdict. The engine's code is 0.2.4's: `src/` is unchanged, so no fit or plan
-moves.
+reading changes no verdict. The margin planners set a channel they fill to its ceiling exactly,
+which moves a plan by at most a unit in the last place.
 
 ### Added
 
@@ -29,6 +29,18 @@ moves.
   `report --flags` prints it, its counts and its AUROC with its interval or the reason none is
   read. The report's lines and the record file are formatted from the same rows; the report prints
   as it did, to the byte.
+
+### Fixed
+
+- **The margin planners plan a channel they fill at its ceiling, to the last bit.**
+  `plan_corner` and `water_fill` (`mixdyn.decisions.margin_plan`) raised a channel to its ceiling
+  as its spend plus the room left above it, `plan + (high - plan)`, which in floating point can
+  miss `high` by a unit in the last place, either way: `0.7 + (2.9 - 0.7)` is
+  `2.9000000000000004`. So a plan could lie past its box by that bit. A channel raised to its
+  ceiling is now set to it. A plan moves by at most a unit in the last place, and only on a
+  channel planned at its ceiling; every other channel's spend is as before, and a claim read off a
+  plan moves with it in its last bits. Scored records are not read again: a run is read with the
+  tree that ran it.
 
 ## [0.2.4] — 2026-11-24
 

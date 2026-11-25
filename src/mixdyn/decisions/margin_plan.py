@@ -175,9 +175,7 @@ def plan_corner(
     plan = low.copy()
     left = budget - plan.sum()
     for c in np.argsort(-g, kind="stable"):
-        add = min(high[c] - plan[c], left)
-        plan[c] += add
-        left -= add
+        left = _fill(plan, c, high[c], left)
     return plan
 
 
@@ -327,15 +325,11 @@ def water_fill(
             break
         # a line whose margin is the price, to rounding, takes what is left first
         if not curved[c] and m[c] >= price * (1 - 1e-9):
-            add = min(high[c] - plan[c], short)
-            plan[c] += add
-            short -= add
+            short = _fill(plan, c, high[c], short)
     for c in order:
         if short <= 0:
             break
-        add = min(high[c] - plan[c], short)
-        plan[c] += add
-        short -= add
+        short = _fill(plan, c, high[c], short)
     return plan
 
 
@@ -380,6 +374,18 @@ def water_fill_tabulated(
     if gap > 0 and room.sum() > 0:
         plan = plan + gap * room / room.sum()
     return plan
+
+
+def _fill(plan: _Array, c: int, high: float, left: float) -> float:
+    """Raise `plan[c]` towards `high` by at most `left`, in place; what is left of `left`. A channel
+    raised to its ceiling is set to it: `plan + (high - plan)` can miss `high` by a unit in the
+    last place, above it as well as below."""
+    room = high - plan[c]
+    if room <= left:
+        plan[c] = high
+        return left - room
+    plan[c] += left
+    return 0.0
 
 
 def _box(

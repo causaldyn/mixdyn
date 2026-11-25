@@ -3,19 +3,21 @@ research code's and the corner is its plan exactly; the posterior's covariance a
 law of total variance over the common level (the identity checked in Maxima, exactly at rational
 points and symbolically for two channels); no positive margin shrinks to nothing; the corner
 spends the budget inside the box, fills the highest margin first and breaks ties by the channels'
-order; and the observed range cuts each box to the spend its history logged, raising the typed
-error where the cut box holds no plan on the budget. The time guard names a channel whose
+order, and plans a channel it fills at its ceiling to the last bit; and the observed range cuts
+each box to the spend its history logged, raising the typed error where the cut box holds no plan
+on the budget. The time guard names a channel whose
 weekly spend correlates with the week's number above 0.8 either way, by the definition's
 correlation; a step and a ramp are named where their closed forms say (checked in Maxima); a
 spend that never moves, or moves in its last bits alone, reads 0 and is not named; and a history
 it does not read is refused. Water-filling meets its KKT conditions on
 random Michaelis-Menten curves, at the closed form (checked in Maxima), and on random mixtures of
 them; the box binds a channel whose margin outruns or trails the price; a margin at most 0 stays
-at its floor; the positive channels' ceilings hand the rest to the corner; and on lines it is the
-corner. The adstock range cuts the observed range further, and falls back to it where the cut box
-holds no plan on the budget. Water-filling on a table spends the budget inside the box within its
-table's steps of the exact plan, on Michaelis-Menten curves and on mixtures with logistic ones; on
-margins that never fall it is the corner, and a margin at most 0 stays at its floor."""
+at its floor; the positive channels' ceilings hand the rest to the corner; a line it fills is at its
+ceiling to the last bit; and on lines it is the corner. The adstock range cuts the observed range
+further, and falls back to it where the cut box holds no plan on the budget. Water-filling on a
+table spends the budget inside the box within its table's steps of the exact plan, on
+Michaelis-Menten curves and on mixtures with logistic ones; on margins that never fall it is the
+corner, and a margin at most 0 stays at its floor."""
 
 from __future__ import annotations
 
@@ -121,6 +123,28 @@ def test_a_box_no_plan_at_the_budget_fits_in_is_refused(lower, upper, budget):
 def test_margins_that_are_not_finite_are_refused():
     with pytest.raises(ValueError, match="finite"):
         plan_corner([1.0, np.nan], [1.0, 1.0], [2.0, 2.0], 3.0)
+
+
+def test_a_channel_the_corner_fills_is_planned_at_its_ceiling_to_the_last_bit():
+    """`0.7 + (2.9 - 0.7)` is `2.9000000000000004`: the floor plus the room above it misses the
+    ceiling by a unit in the last place, and the plan left its box."""
+    plan = plan_corner([2.0, 1.0], [0.7, 1.0], [2.9, 5.0], 4.0)
+    assert plan[0] == 2.9
+    assert plan[1] == pytest.approx(1.1, rel=1e-15, abs=0.0)
+
+
+@pytest.mark.parametrize("seed", range(40))
+def test_every_channel_the_corner_fills_is_at_its_ceiling_and_none_past_it(seed):
+    """On random boxes, some of whose ceilings the floor plus the room misses either way, a
+    channel within rounding of its ceiling is at it exactly, and none is past it."""
+    rng = np.random.default_rng(seed)
+    count = int(rng.integers(2, 6))
+    quo, margins = rng.uniform(5.0, 50.0, count), rng.uniform(-0.5, 3.0, count)
+    lower, upper = quo * rng.uniform(0.0, 0.9, count), quo * rng.uniform(1.1, 3.0, count)
+    plan = plan_corner(margins, lower, upper, float(quo.sum()))
+    near = np.abs(plan - upper) <= 1e-12 * upper
+    np.testing.assert_array_equal(plan[near], upper[near])
+    assert np.all(plan <= upper)
 
 
 HISTORY = np.array([[4.0, 1.0, 6.0], [6.0, 3.0, 6.0], [5.0, 2.0, 6.0]])
@@ -405,6 +429,21 @@ def test_a_line_is_planned_on_its_margin_whatever_its_slope_reads():
     lower, upper = np.array([5.0, 5.0]), np.array([20.0, 20.0])
     plan = margin_plan.water_fill(margins, slope, np.array([True, False]), lower, upper, 22.0)
     np.testing.assert_array_equal(plan, [5.0, 17.0])
+
+
+def test_a_line_water_filling_fills_is_planned_at_its_ceiling_to_the_last_bit():
+    """The curve at its ceiling, two lines at the price take what is left, the first to its
+    ceiling, which its floor plus its room, `0.7 + (2.9 - 0.7)`, misses by a unit in the last
+    place."""
+    quo = np.array([10.0, 10.0, 10.0])
+    slope = _michaelis_menten(16.0 * quo, quo)
+    margins = np.array([2.0, 1.0, 1.0])
+    lower, upper = np.array([5.0, 0.7, 0.7]), np.array([30.0, 2.9, 20.0])
+    plan = margin_plan.water_fill(
+        margins, slope, np.array([True, False, False]), lower, upper, 35.0
+    )
+    assert (plan[0], plan[1]) == (30.0, 2.9)
+    assert plan[2] == pytest.approx(35.0 - 30.0 - 2.9, rel=1e-12, abs=0.0)
 
 
 @pytest.mark.parametrize("shaped", [False, True])
