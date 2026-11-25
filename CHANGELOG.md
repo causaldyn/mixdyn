@@ -37,6 +37,16 @@ changes a public name.
 
 ### Fixed
 
+- **A geo export's market reads its tests' shares the same under every hash seed.**
+  `scorecard.arms.panel` summed each test's geo populations over a set of geo names, as NumPy
+  floats, which Python's `sum` adds in the set's order without compensation, so a share's last bit
+  followed `PYTHONHASHSEED`. The sum is now exact (`math.fsum`). The arms that fit a geo export's
+  market on those shares (`bayes`, the readers and `switchback`) ran in the confirmatory runs only
+  on M3's exploratory root `xg-f8`, whose readings reproduce under the hash seeds that add in the
+  recorded order and may move in the last bits, or by the sampler's amplification of them, under
+  this sum. No claim arm reads them: `tests/scorecard/test_hash_seed.py` plans one world of
+  `margin`, `anchored` and `geo eb` under two hash seeds and finds the same bytes, and it now checks
+  the shares too.
 - **The security policy supports 0.3.x.** `SECURITY.md` still listed 0.2.x as the supported
   release after 0.3.0 shipped. A test now holds the table to the version in `pyproject.toml`.
 

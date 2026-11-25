@@ -78,6 +78,7 @@ totals, not their cells.
 from __future__ import annotations
 
 import dataclasses
+import math
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -362,7 +363,7 @@ def _in_share(observation: Market) -> dict[str, tuple[LiftEstimate, ...]]:
             dataclasses.replace(
                 row,
                 geos=None,
-                share=float(sum(population[named.index(g)] for g in row.geos or ()))
+                share=math.fsum(population[named.index(g)] for g in row.geos or ())
                 / float(population.sum()),
             )
             for row in rows
