@@ -16,6 +16,7 @@ as the runs' records; each flag's word is checked against its interval apart fro
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import re
 import tomllib
@@ -798,6 +799,19 @@ def test_the_fit_readings_the_text_states_are_the_records() -> None:
         ("meridian", "review r2"),
         ("ridge", "r2"),
     }
+
+
+def test_every_public_planner_of_the_scored_rules_names_its_arm() -> None:
+    """Each function `mixdyn.decisions` lists from `mixdyn.decisions.scored` is a scored rule's
+    planner, and `readme_record.PLANNERS` maps the arm it plans as to it, so the test below holds
+    its docstring to that arm's record."""
+    scored = {
+        name
+        for name in decisions.__all__
+        if inspect.isfunction(value := getattr(decisions, name))
+        and value.__module__ == "mixdyn.decisions.scored"
+    }
+    assert scored == set(readme_record.PLANNERS.values())
 
 
 @pytest.mark.parametrize(("arm", "planner"), readme_record.PLANNERS.items())
