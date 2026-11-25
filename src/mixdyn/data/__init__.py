@@ -16,7 +16,7 @@ from mixdyn.data.panel import (
     MediaPanel,
     Revenue,
 )
-from mixdyn.data.read import ColumnData, Gap, read_panel
+from mixdyn.data.read import ColumnData, ColumnFrame, Gap, read_panel
 from mixdyn.data.recurring import RecurringEvents, recurring_events
 
 __all__ = [
@@ -26,6 +26,7 @@ __all__ = [
     "Cadence",
     "Channel",
     "ColumnData",
+    "ColumnFrame",
     "Combine",
     "Count",
     "Gap",

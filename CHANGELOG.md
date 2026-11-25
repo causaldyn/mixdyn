@@ -7,6 +7,17 @@ changes a public name.
 
 ## [Unreleased]
 
+### Added
+
+- **The Bayesian models' options are public.** `mixdyn.models` lists the classes that
+  `BayesSpec`, `BayesGeoSpec`, `BayesMedia`, `fit_bayes`, `fit_bayes_geo` and `fit_nested` take
+  through their aliases: the return priors `RoiPrior` and `HalfNormalRoi`, the likelihoods
+  `Normal`, `StudentT` and `LogNormal`, the curves `HillCurve` and `TanhCurve`, the starts
+  `UniformStart` and `PathfinderStart`, and the coordinates `NaturalCoordinates` and
+  `QRCoordinates`. `mixdyn.data` lists `ColumnFrame`, the frame `ColumnData` names. Each stays in the module that defines it, so no saved file's class moves.
+  `tests/test_public_api.py` now follows a `type` alias to the classes of its value, which is how
+  these had passed its check that a public name takes no class that no `__all__` lists.
+
 ### Changed
 
 - **Every public name is documented.** The names `tests/test_public_names.py` listed as not

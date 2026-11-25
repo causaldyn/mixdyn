@@ -14,8 +14,9 @@
 - **No public callable or class takes, returns or holds a class of the engine that no `__all__`
   lists**, so a caller never reaches past the public names to build an argument or to name a
   field's type. Each name in an annotation is followed to the class it means where the module that
-  wrote it imports it, under `TYPE_CHECKING` too. A function's parameters and return are read; a
-  class's public fields and its public methods' parameters and returns.
+  wrote it imports it, under `TYPE_CHECKING` too, and a `type` alias to the names of its value, in
+  the module that defines it. A function's parameters and return are read; a class's public fields
+  and its public methods' parameters and returns; a public alias's value.
 """
 
 from __future__ import annotations
@@ -32,14 +33,14 @@ from functools import cache
 from importlib import metadata
 from pathlib import Path
 from types import ModuleType
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAliasType
 
 import pytest
 
 from test_public_names import _source, modules, public
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Iterator
 
 
 @cache
@@ -77,12 +78,37 @@ def _annotations(node: ast.FunctionDef, *, method: bool) -> list[ast.expr | None
     return [a.annotation for a in taken[1 if method else 0 :]] + [node.returns]
 
 
+def _value(alias: TypeAliasType) -> tuple[str, ast.expr | None]:
+    """The module that defines `alias`, and what `alias` stands for as that module writes it."""
+    module = str(alias.__module__)
+    for node in _tree(module).body:
+        if isinstance(node, ast.TypeAlias) and node.name.id == alias.__name__:
+            return module, node.value
+    return module, None
+
+
+def _classes(module: str, annotation: ast.expr | None, seen: set[TypeAliasType]) -> Iterator[type]:
+    """Each class of the engine `annotation` names where `module` writes it, each `type` alias it
+    names followed to the classes of its value, each alias once."""
+    for ident in _names(annotation):
+        meant = _meant(module, ident)
+        if isinstance(meant, TypeAliasType):
+            if meant not in seen:
+                seen.add(meant)
+                yield from _classes(*_value(meant), seen)
+        elif inspect.isclass(meant) and meant.__module__.startswith("mixdyn"):
+            yield meant
+
+
 def _read(value: object) -> list[ast.expr | None]:
-    """Every annotation of a public function or class of the engine; none for anything else."""
-    if not (inspect.isclass(value) or inspect.isfunction(value)):
-        return []
+    """Every annotation of a public function or class of the engine, and the value of a public
+    alias of it; none for anything else."""
     module = getattr(value, "__module__", "")
     if not module.startswith("mixdyn"):
+        return []
+    if isinstance(value, TypeAliasType):
+        return [_value(value)[1]]
+    if not (inspect.isclass(value) or inspect.isfunction(value)):
         return []
     for node in _tree(module).body:
         if isinstance(node, ast.FunctionDef) and node.name == value.__name__:
@@ -111,14 +137,10 @@ def leaks(listed: Iterable[tuple[ModuleType, str]]) -> dict[str, set[str]]:
     found: dict[str, set[str]] = defaultdict(set)
     for m, name, value in values:
         module = getattr(value, "__module__", "")
+        seen: set[TypeAliasType] = set()
         for annotation in _read(value):
-            for ident in _names(annotation):
-                meant = _meant(module, ident)
-                if (
-                    inspect.isclass(meant)
-                    and meant.__module__.startswith("mixdyn")
-                    and (meant.__module__, meant.__qualname__) not in shown
-                ):
+            for meant in _classes(module, annotation, seen):
+                if (meant.__module__, meant.__qualname__) not in shown:
                     found[f"{m.__name__}:{name}"].add(f"{meant.__module__}:{meant.__qualname__}")
     return dict(found)
 
@@ -136,6 +158,14 @@ def test_the_check_finds_a_class_that_no_all_lists() -> None:
         "mixdyn.calibration.anchors:anchor": {"mixdyn.calibration.anchors:Anchored"}
     }
     assert leaks([*planner, (anchors, "Anchored")]) == {}
+
+
+def test_the_check_follows_a_type_alias_to_the_classes_it_names() -> None:
+    """`fit_bayes` takes a `Start`, an alias of `UniformStart | PathfinderStart`: with those two
+    out of the `__all__`s, the check finds them through the alias."""
+    hidden = {"UniformStart", "PathfinderStart"}
+    found = leaks([(m, name) for m, name in public() if name not in hidden])
+    assert found["mixdyn.models:fit_bayes"] == {f"mixdyn.models.bayes_mmm:{n}" for n in hidden}
 
 
 @pytest.mark.parametrize(

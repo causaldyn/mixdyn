@@ -193,6 +193,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `Channel`
 - `ColumnData`: The data `read_panel` reads: a mapping of column name to values, or a frame with
   named columns (`ColumnFrame`).
+- `ColumnFrame`: A frame with named columns, indexable by name: pandas, polars, pyarrow and the
+  like.
 - `Combine`: How the controls of the geos below a node make the node's.
 - `Count`: The KPI counts events (orders, installs, sign-ups) named by `unit`.
 - `Gap`: What a period becomes when a geo has no row for it.
@@ -640,6 +642,10 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `GeoDlmSpec`: The model's structure over geos.
 - `GeoEffects`: Each geo's coefficient on each effect at the last period, `(geo, effect)`: its mean
   and the central interval holding `level` of it, mixed over the spread's draws.
+- `HalfNormalRoi`: A channel's return on its spend over the window, `HalfNormal(scale)`, in the
+  KPI's units per currency unit, counting what `RoiPrior.counts` names: a return that may be 0.
+- `HillCurve`: Each channel saturated by a Hill, its slope sampled: Meridian's and Robyn's family,
+  S-shaped where the slope passes 1.
 - `Lifted`: A fit's posterior given its KPI and its tests.
 - `LiftReading`: The tests a fit reads, each an observation of one coordinate of the state path:
   test `j` reads coordinate `coordinates[j]` at period `t` with weight `weights[j, t]`, zero outside
@@ -647,11 +653,14 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `LinearTrend`: A line through the window's periods, bent at `knots` points spaced evenly inside
   it: the period's place `t` in the window, `trend`, and a hinge `max(0, t - knot)` for each knot,
   `trend_bend_1` on.
+- `LogNormal`: Log-normal noise about the mean, parametrised by it: the KPI's scale proportional to
+  its level, the KPI above 0.
 - `MarginFit`: The margins' posterior, the mixture over the retention combinations.
 - `Media`: A channel of the panel, its spend carried over by `adstock` and saturated by `hill`.
 - `Mixture`: A channel's posterior over its grid, the other channels at their points: `points`, the
   kept points as indices into `POINTS`; `weights`, theirs, summing to 1; and `coefficients`, the
   posterior mean of the channel's coefficient in each geo under each point, `(points, geos)`.
+- `NaturalCoordinates`: The sampler moves on `BayesModel.coordinates` themselves.
 - `NestedFit`: Both stages' posteriors over one geo's window: `stage_one` the mediator's, its
   returns in the mediator's units per currency unit, its spec's priors those it was drawn under, and
   `stage_two` the KPI's, the mediator's coefficient among its controls'.
@@ -661,18 +670,32 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   AR(1)'s shares of the errors' variance `share`, each pair of them an error model, with white
   errors once more where `white`; and the promoted weeks' variance ratios `promoted`, each crossed
   with every one of those.
+- `Normal`: Normal noise.
+- `PathfinderStart`: Each chain starts at a draw of `_PATHS` Pathfinder paths
+  (`mixdyn.inference.pathfinder`), each from a start uniform in `[-2, 2]` on the sampling scale, a
+  path that cannot be approximated dropped, and the rest's draws resampled together, as Stan's
+  multi-path Pathfinder initialises its chains.
 - `PerEffect`: Discounts each effect takes on its own: a grid tries every combination of `values`
   over the effects, the last effect's varying fastest, and counts one parameter an effect.
 - `PooledGeoFit`: The fit of a panel over geos (the module).
+- `QRCoordinates`: The sampler moves the linear block, the level, the calendar's coefficients and
+  the free controls', on the thin QR decomposition of their columns over the observed periods, `X =
+  Q R`, Stan's QR reparameterisation: it samples `R* b`, `R* = R / sqrt(n - 1)`, where `b` is the
+  block's coefficients.
 - `RidgeFit`: The model fitted to one geo over a window of the panel's calendar.
 - `RidgeSpec`: The model: its channels, its controls, its trend and season if any, and the ridge
   `penalty > 0`.
+- `RoiPrior`: A channel's return on its spend over the window, `LogNormal(mu, sigma)`, in the KPI's
+  units per currency unit.
 - `search_media`: Choose each transformed effect's transform on `grid` and the discounts on
   `discounts` by the one-step log-likelihood on one geo, and fit every spec filtered that a
   likelihood-ratio test at `level` does not reject, or with `fitted` at most that many of them.
 - `Season`: Harmonics 1 to `harmonics` of a `period` counted in the panel's periods (52.18 weeks to
   a year is allowed), with one discount.
 - `Statistic`: A test's statistic and its p-value under the model.
+- `StudentT`: Student-t noise, its degrees of freedom sampled with the rest.
+- `TanhCurve`: Each channel saturated by `tanh`: PyMC-Marketing's logistic saturation, concave from
+  no spend.
 - `TransformGrid`: The transforms a search tries for each channel: `retentions`, `half_saturations`
   as multiples of the channel's mean positive spend on the geo, the Bayesian model's unit for them,
   and `shapes`.
@@ -680,6 +703,9 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   channel, as `BayesFit.channels` reads them: its retention, its half-saturation point, its curve, a
   Hill's slope at its median, and the fit's kernel length.
 - `Trend`: A level (`order=1`), or a level and a slope (`order=2`), with one discount.
+- `UniformStart`: Each chain starts where Stan's would, uniform in `[-2, 2]` on the sampling scale;
+  under log-normal noise, where some period's mean would not be above 0, with the intercept raised
+  until the least is the least KPI observed.
 - `vague_geo_prior`: The engine's default prior over geos: weakly informative, on each geo's own
   scale.
 - `vague_prior`: The engine's default prior: weakly informative, on the series' own scale.

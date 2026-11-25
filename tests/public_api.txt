@@ -262,6 +262,8 @@ mixdyn.data:Cadence class(Enum)
   .MONTH = 'month'
 mixdyn.data:Channel = NewType('Channel', str)
 mixdyn.data:ColumnData type = Mapping[str, Any] | ColumnFrame
+mixdyn.data:ColumnFrame class(Protocol)
+  .columns @property def(self) -> Sequence[str]
 mixdyn.data:Combine class(Enum)
   .SUM = 'sum'
   .POPULATION_MEAN = 'population_mean'
@@ -1094,6 +1096,12 @@ mixdyn.models:GeoEffects @dataclass(frozen=True, slots=True, eq=False) class()
   .mean: _Array
   .lower: _Array
   .upper: _Array
+mixdyn.models:HalfNormalRoi @dataclass(frozen=True, slots=True) class()
+  .scale: float = _HALF_NORMAL_SCALE
+  .counts: Literal['window', 'carried'] = 'window'
+mixdyn.models:HillCurve @dataclass(frozen=True, slots=True) class()
+  .slope_location: float = 0.0
+  .slope_scale: float = 0.5
 mixdyn.models:LiftReading @dataclass(frozen=True, slots=True, eq=False) class()
   .channels: tuple[str, ...]
   .coordinates: npt.NDArray[np.intp]
@@ -1116,6 +1124,7 @@ mixdyn.models:LinearTrend @dataclass(frozen=True, slots=True) class()
   .knots: int = 0
   .terms def(self) -> tuple[str, ...]
   .columns def(self, periods: int, *, ahead: int=0) -> _Array
+mixdyn.models:LogNormal @dataclass(frozen=True, slots=True) class()
 mixdyn.models:MarginFit @dataclass(frozen=True, slots=True, eq=False) class()
   .mean: _Array
   .cov: _Array
@@ -1139,6 +1148,7 @@ mixdyn.models:Mixture @dataclass(frozen=True, slots=True, eq=False) class()
   .points: npt.NDArray[np.intp]
   .weights: _Array
   .coefficients: _Array
+mixdyn.models:NaturalCoordinates @dataclass(frozen=True, slots=True) class()
 mixdyn.models:NestedFit @dataclass(frozen=True, slots=True, eq=False) class()
   .spec: NestedSpec
   .stage_one: BayesFit
@@ -1160,6 +1170,8 @@ mixdyn.models:NoiseMixture @dataclass(frozen=True, slots=True) class()
   .white: bool = True
   .pairs def(self) -> list[tuple[float, float]]
   .models def(self) -> list[tuple[float, float, float]]
+mixdyn.models:Normal @dataclass(frozen=True, slots=True) class()
+mixdyn.models:PathfinderStart @dataclass(frozen=True, slots=True) class()
 mixdyn.models:PerEffect @dataclass(frozen=True, slots=True) class()
   .values: tuple[float, ...]
   .held: tuple[str, ...] = ()
@@ -1180,6 +1192,7 @@ mixdyn.models:PooledGeoFit @dataclass(frozen=True, slots=True, eq=False) class()
   .rows: int
   .tests: int
   .cell def(self, geo: Geo | None, channel: Channel) -> CellResponse
+mixdyn.models:QRCoordinates @dataclass(frozen=True, slots=True) class()
 mixdyn.models:RidgeFit @dataclass(frozen=True, slots=True, eq=False) class()
   .spec: RidgeSpec
   .dates: npt.NDArray[np.datetime64]
@@ -1206,6 +1219,10 @@ mixdyn.models:RidgeSpec @dataclass(frozen=True, slots=True) class()
   .season: FourierSeason | None = None
   .terms def(self) -> tuple[str, ...]
   .calendar def(self, periods: int) -> _Array
+mixdyn.models:RoiPrior @dataclass(frozen=True, slots=True) class()
+  .mu: float = 0.2
+  .sigma: float = 0.9
+  .counts: Literal['window', 'carried'] = 'window'
 mixdyn.models:Season @dataclass(frozen=True, slots=True) class()
   .period: float
   .harmonics: int
@@ -1213,6 +1230,8 @@ mixdyn.models:Season @dataclass(frozen=True, slots=True) class()
 mixdyn.models:Statistic @dataclass(frozen=True, slots=True) class()
   .value: float
   .p_value: float
+mixdyn.models:StudentT @dataclass(frozen=True, slots=True) class()
+mixdyn.models:TanhCurve @dataclass(frozen=True, slots=True) class()
 mixdyn.models:TransformGrid @dataclass(frozen=True, slots=True) class()
   .retentions: tuple[float, ...]
   .half_saturations: tuple[float, ...]
@@ -1222,6 +1241,7 @@ mixdyn.models:TransformGrid @dataclass(frozen=True, slots=True) class()
 mixdyn.models:Trend @dataclass(frozen=True, slots=True) class()
   .order: Literal[1, 2]
   .discount: float
+mixdyn.models:UniformStart @dataclass(frozen=True, slots=True) class()
 mixdyn.models:choose_dlm def(panel: MediaPanel, geo: Geo, spec: DlmSpec, grid: DiscountGrid, *, level: float=0.95, estimates: Mapping[str, Sequence[LiftEstimate]] | None=None) -> DlmChoice
 mixdyn.models:decompose_dlm def(fit: DlmFit, *, draws: int, seed: int) -> DlmDecomposition
 mixdyn.models:diagnose_dlm def(fit: DlmFit, arl: float=1000.0) -> DlmDiagnostics
