@@ -4,8 +4,8 @@
 
 | Version | Supported |
 |---|---|
-| 0.2.x | yes |
-| < 0.2 | no |
+| 0.3.x | yes |
+| < 0.3 | no |
 
 This is a single-author engine. Only the latest minor gets fixes; there are no backports. The
 upgrade path is the [changelog](https://github.com/causaldyn/mixdyn/blob/main/CHANGELOG.md), which
