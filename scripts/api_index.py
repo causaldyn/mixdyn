@@ -37,9 +37,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 
 - **A name is public when an `__all__` of a package lists it**, and so are the fields, methods
   and properties of the classes these name that do not start with an underscore (ADR 0062). A
-  name reachable only by its module path is not public yet, however much it is used: the engines'
-  entry points that sit at module paths (`fit_ridge`, `fit_bayes`, `fit_bayes_geo`, `fit_nested`,
-  their specs and fits) among them.
+  name reachable only by its module path is not public, however much it is used.
 - **Every public name imports and is documented**: by a docstring of its own, the string after a
   constant or an alias in the module that defines it, or a page of `docs/` that cites it. This
   page cites every name and so documents none: `tests/test_public_names.py` lists the names not

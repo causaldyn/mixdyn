@@ -9,9 +9,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 
 - **A name is public when an `__all__` of a package lists it**, and so are the fields, methods
   and properties of the classes these name that do not start with an underscore (ADR 0062). A
-  name reachable only by its module path is not public yet, however much it is used: the engines'
-  entry points that sit at module paths (`fit_ridge`, `fit_bayes`, `fit_bayes_geo`, `fit_nested`,
-  their specs and fits) among them.
+  name reachable only by its module path is not public, however much it is used.
 - **Every public name imports and is documented**: by a docstring of its own, the string after a
   constant or an alias in the module that defines it, or a page of `docs/` that cites it. This
   page cites every name and so documents none: `tests/test_public_names.py` lists the names not
@@ -487,6 +485,9 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 
 - `Chains`: Each chain's draws after warm-up, ``(chains, draws)`` leading, with what each transition
   did, and each chain's step size and inverse metric as warm-up left them.
+- `Diagnostics`: Per quantity, ``rhat``, ``ess_bulk`` and ``ess_tail``.
+- `HealthCard`: The health of a Bayesian fit of one geo (`mixdyn.models.bayes_mmm`), each cell its
+  number.
 - `LogDensity`: A log density on the unconstrained space, up to a constant, and its gradient.
 - `Loo`: ``pointwise`` is each observation's log predictive density left out, ``elpd`` their sum and
   ``se`` its standard error; ``p_loo`` the log predictive density in sample less ``elpd``, the
@@ -528,7 +529,23 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 
 ### `mixdyn.models`
 
+- `BayesFit`: The posterior of the model fitted to one geo over a window of the panel's calendar.
+- `BayesGeoFit`: The posterior of the model fitted to every geo of a panel over a window of its
+  calendar.
+- `BayesGeoSpec`: The model over geos: the one-geo model's channels, controls, calendar, noise and
+  curves; the scale of the half-normal prior on each channel's log-SD of its effect over the geos;
+  the channels whose deviations are `centred`, sampled on the scale of that log-SD; and three opt-in
+  choices, the noise scale's prior, `"half-normal"` or `"log-normal"`, the geos' bases',
+  `"log-normal"`, above 0, or `"normal"`, and a Hill's slope, `"sampled"` or `"fixed"` at 1.
+- `BayesMedia`: A channel of the panel and the prior on its return.
+- `BayesSpec`: The model: its channels, its controls, its trend and season if any, its noise, the
+  family every channel's curve is of, and its kernels' length in periods, `kernel`: by default the
+  longest series the model reads, the panel's calendar or a test's, and otherwise the periods
+  stated, the weights normalised over them and a spend's carryover cut after them (ADR 0082).
 - `Bounds`: An interval's ends.
+- `Calibration`: How geo tests entered a fit: `estimates`, each tested channel's coefficient as its
+  tests alone read it, and `weight`, a test period's weight against a KPI period, the KPI's noise
+  variance over the tests'.
 - `CheckCode`
 - `choose_dlm`: Filter `spec` on one geo at every discount of `grid` and choose by one-step
   likelihood; fit the specs a likelihood-ratio test at `level` does not reject, for
@@ -537,6 +554,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   component.
 - `Components`: One array of draws per component: the base (None without a trend), the seasonality
   (None without a season), and each effect's contribution.
+- `Control`: A control of the panel, its coefficient held to `lower <= 0 <= upper`.
 - `decompose_dlm`: Draw `fit`'s states given all its data, `draws` times, and split each draw's mean
   into the base, the seasonality and each effect's contribution.
 - `diagnose_dlm`: Test `fit`'s one-step errors, watch them for drift, and check its decomposition.
@@ -561,13 +579,28 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `Effect`: A channel or control of the panel, with a random-walk coefficient and its discount.
 - `Finding`: A plausibility check the decomposition fails: on which effect, if one, and on which
   dates.
+- `fit_bayes`: Draw the posterior of `spec` on one geo of `panel` over `window`, its first and last
+  dates, by default the whole calendar, its likelihood holding `tests`, each channel's geo tests,
+  `estimates`, each channel's lift estimates, and `series`, each channel's lift series, if given.
+- `fit_bayes_geo`: Draw the posterior of `spec` on every geo of `panel` over `window`, its first and
+  last dates, by default the whole calendar, its likelihood holding `estimates`, each channel's lift
+  estimates, if given.
 - `fit_dlm`: Filter and smooth one geo of `panel` through the model `spec` describes.
 - `fit_geo_dlm`: Fit `spec` to every geo of `panel`, the geos' spread chosen by the marginal
   likelihood.
+- `fit_nested`: Draw both stages' posteriors on one geo of `panel` over `window`, its first and last
+  dates, by default the whole calendar, as `nested_model` reads `estimates`, each channel's lift
+  estimates on the KPI, and `mediator_estimates`, each channel's on the mediator: apart, each stage
+  from a seed spawned from `seed`, or, where a lift on the KPI is of a channel of stage one, as one
+  model from a third.
+- `fit_ridge`: Fit `spec` to one geo of `panel` over `window`, its first and last dates, by default
+  the whole calendar, calibrated by `tests`, each channel's geo tests, if given.
 - `forecast_dlm`: Forecast the `horizon` periods after `fit`'s data, every effect's column taken
   from `plan`.
 - `forecast_draws`: `draws` draws of the KPI over the `horizon` periods after `fit`'s data, the
   effects' columns taken from `plan` as `forecast_dlm` takes them.
+- `FourierSeason`: Harmonics 1 to `harmonics` of a season `period` periods long (52.18 weeks to a
+  year is allowed), counted from the window's first period: `season_cos_h` and `season_sin_h` each.
 - `geo_effects`: Each geo's coefficients at the last period, the national one plus its deviation,
   with the spread's uncertainty: their mixture over the spread's draws, read as one Student t with
   the mixture's variance and the last step's degrees of freedom.
@@ -575,8 +608,23 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `GeoDlmSpec`: The model's structure over geos.
 - `GeoEffects`: Each geo's coefficient on each effect at the last period, `(geo, effect)`: its mean
   and the central interval holding `level` of it, mixed over the spread's draws.
+- `Lifted`: A fit's posterior given its KPI and its tests.
+- `LiftReading`: The tests a fit reads, each an observation of one coordinate of the state path:
+  test `j` reads coordinate `coordinates[j]` at period `t` with weight `weights[j, t]`, zero outside
+  its readout, and its lift `lift[j]` has standard error `se[j]`, both at the market's scale.
+- `LinearTrend`: A line through the window's periods, bent at `knots` points spaced evenly inside
+  it: the period's place `t` in the window, `trend`, and a hinge `max(0, t - knot)` for each knot,
+  `trend_bend_1` on.
+- `Media`: A channel of the panel, its spend carried over by `adstock` and saturated by `hill`.
+- `NestedFit`: Both stages' posteriors over one geo's window: `stage_one` the mediator's, its
+  returns in the mediator's units per currency unit, its spec's priors those it was drawn under, and
+  `stage_two` the KPI's, the mediator's coefficient among its controls'.
+- `NestedSpec`: The two stages and the control of the panel that mediates between them.
 - `PerEffect`: Discounts each effect takes on its own: a grid tries every combination of `values`
   over the effects, the last effect's varying fastest, and counts one parameter an effect.
+- `RidgeFit`: The model fitted to one geo over a window of the panel's calendar.
+- `RidgeSpec`: The model: its channels, its controls, its trend and season if any, and the ridge
+  `penalty > 0`.
 - `search_media`: Choose each transformed effect's transform on `grid` and the discounts on
   `discounts` by the one-step log-likelihood on one geo, and fit every spec filtered that a
   likelihood-ratio test at `level` does not reject, or with `fitted` at most that many of them.

@@ -1,5 +1,7 @@
 """Models fitted to a `MediaPanel`."""
 
+from mixdyn.models.bayes_geo import BayesGeoFit, BayesGeoSpec, fit_bayes_geo
+from mixdyn.models.bayes_mmm import BayesFit, BayesMedia, BayesSpec, fit_bayes
 from mixdyn.models.dlm import (
     DlmFit,
     DlmForecast,
@@ -30,6 +32,7 @@ from mixdyn.models.dlm_diagnostics import (
     Statistic,
     diagnose_dlm,
 )
+from mixdyn.models.dlm_lift import Lifted, LiftReading
 from mixdyn.models.dlm_media import TransformGrid, search_media, transforms_from_bayes
 from mixdyn.models.geo_dlm import (
     GeoDlmFit,
@@ -39,12 +42,30 @@ from mixdyn.models.geo_dlm import (
     geo_effects,
     vague_geo_prior,
 )
+from mixdyn.models.nested import NestedFit, NestedSpec, fit_nested
+from mixdyn.models.ridge_mmm import (
+    Calibration,
+    Control,
+    FourierSeason,
+    LinearTrend,
+    Media,
+    RidgeFit,
+    RidgeSpec,
+    fit_ridge,
+)
 
 __all__ = [
+    "BayesFit",
+    "BayesGeoFit",
+    "BayesGeoSpec",
+    "BayesMedia",
+    "BayesSpec",
     "Bounds",
+    "Calibration",
     "CheckCode",
     "ComponentBounds",
     "Components",
+    "Control",
     "DiscountGrid",
     "DlmChoice",
     "DlmDecomposition",
@@ -56,10 +77,19 @@ __all__ = [
     "Edge",
     "Effect",
     "Finding",
+    "FourierSeason",
     "GeoDlmFit",
     "GeoDlmSpec",
     "GeoEffects",
+    "LiftReading",
+    "Lifted",
+    "LinearTrend",
+    "Media",
+    "NestedFit",
+    "NestedSpec",
     "PerEffect",
+    "RidgeFit",
+    "RidgeSpec",
     "Season",
     "Statistic",
     "TransformGrid",
@@ -67,8 +97,12 @@ __all__ = [
     "choose_dlm",
     "decompose_dlm",
     "diagnose_dlm",
+    "fit_bayes",
+    "fit_bayes_geo",
     "fit_dlm",
     "fit_geo_dlm",
+    "fit_nested",
+    "fit_ridge",
     "forecast_dlm",
     "forecast_draws",
     "geo_effects",
