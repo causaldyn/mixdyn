@@ -17,6 +17,13 @@ changes a public name.
   `QRCoordinates`. `mixdyn.data` lists `ColumnFrame`, the frame `ColumnData` names. Each stays in the module that defines it, so no saved file's class moves.
   `tests/test_public_api.py` now follows a `type` alias to the classes of its value, which is how
   these had passed its check that a public name takes no class that no `__all__` lists.
+- **The last release's snapshot holds the public surface** (ADR 0103). `tests/test_public_api.py`
+  reads `tests/public_api.txt` at the newest release tag the checkout contains and fails on each of
+  its lines that is gone or changed past what its kind of change allows: a name leaves only as the
+  removal rule says; a function or a method may gain parameters with defaults in any release; a
+  default or a value moves only in a minor release; any other change to a public name comes only
+  in a major release from 1.0, and before 1.0 the name is renamed instead. It reads git, and skips
+  where no release tag is reachable, as in a shallow clone.
 
 ### Changed
 

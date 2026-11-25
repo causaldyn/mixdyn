@@ -52,6 +52,12 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   `DeprecationWarning` that names its replacement and the release it leaves in; it leaves in the
   minor release after, and the changelog names it under *Removed*. causal-hybrid-control removes
   its names the same way.
+- **How a public name changes** (ADR 0103): a function or a method may gain parameters with
+  defaults, keyword-only or after its positional ones, in any release; a default or a constant's
+  value moves only in a minor release; any other change to a name's signature, fields or members
+  comes only in a major release from 1.0. Before 1.0, a name whose signature must change takes a
+  new name, and the old one leaves as above. `tests/test_public_api.py` holds each line of the
+  last release's snapshot, `tests/public_api.txt`, to these rules.
 - A renamed class that `save` writes stays in the format's registry under its old key for as long
   as its old name imports, so files that name it still load.
 

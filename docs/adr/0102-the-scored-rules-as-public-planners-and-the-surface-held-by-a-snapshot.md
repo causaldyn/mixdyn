@@ -4,7 +4,9 @@ Status: accepted, 2026-11-25; adds `mixdyn.decisions.plan_margins`, `plan_anchor
 `plan_pooled_geos` and their results, and makes public the engines' fits and specs that public
 functions take or hold; renames `stacked` and `lift_row_pick` by ADR 0062's removal rule; amends
 ADR 0062: every module's `__all__` is public, and `tests/test_public_api.py` holds the surface to a
-snapshot; changes no record, no pre-registration and no arm's name.
+snapshot; changes no record, no pre-registration and no arm's name; amended 2026-11-25 by ADR 0103:
+the snapshot at the last release tag holds the surface, and the check of the classes public names
+take follows a `type` alias to its value.
 
 ## Context
 

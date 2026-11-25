@@ -3,7 +3,8 @@
 Status: accepted, 2026-11-01; amended 2026-11-06: `docs/api/index.md` lists the public surface,
 written by `scripts/api_index.py` and held to it by a test, and documents no name by listing it;
 amended 2026-11-25 by ADR 0102: every module's `__all__` is public, and `tests/test_public_api.py`
-holds the surface to a snapshot of its signatures and to the removal rule
+holds the surface to a snapshot of its signatures and to the removal rule; amended 2026-11-25 by
+ADR 0103: what a release may change of the snapshot the last release shipped, by kind of change
 
 ## Context
 
@@ -82,7 +83,10 @@ without a word.
   page cites every name, so only the other pages count.
 - **Versions.** Before 1.0, a minor release may change the public surface, and only as the rule
   below allows; a patch release never removes or changes a public name. From 1.0, a name leaves
-  only in a major release.
+  only in a major release. *Amended 2026-11-25 (ADR 0103):* a public name's signature, fields and
+  members change by kind. A function or a method may gain parameters with defaults in any release;
+  a default or a value moves only in a minor release; any other change comes only in a major
+  release from 1.0, and before 1.0 not at all: the name is renamed instead.
 - **How a public name is removed:** for one minor release it still imports, and using it raises a
   `DeprecationWarning` that names its replacement and the release it leaves in; it leaves in the
   minor release after, and the changelog names it under *Removed*. causal-hybrid-control removes
