@@ -35,6 +35,17 @@ changes a public name.
   `Update`, `Verdict`, `When`, `Adstock` and `Shape`. The test's list of pending names is gone: a
   public name without documentation fails it.
 
+### Fixed
+
+- **The security policy supports 0.3.x.** `SECURITY.md` still listed 0.2.x as the supported
+  release after 0.3.0 shipped. A test now holds the table to the version in `pyproject.toml`.
+
+### Documentation
+
+- **New behaviour comes with its tests.** `CONTRIBUTING.md` states the rule the project already
+  followed: a pull request that adds or changes behaviour adds its tests, and a bug fix adds a test
+  that fails without the fix.
+
 ## [0.3.0] — 2026-11-25
 
 The rules the benchmark scored are public planners: `plan_margins`, `plan_anchored_margins` and
