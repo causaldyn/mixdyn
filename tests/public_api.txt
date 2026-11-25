@@ -1,0 +1,1277 @@
+mixdyn:Allotment class(Enum)
+  .POPULATION = 'population'
+mixdyn:Baseline class(Enum)
+  .MIN = 'min'
+  .MAX = 'max'
+mixdyn:Cadence class(Enum)
+  .DAY = 'day'
+  .WEEK = 'week'
+  .MONTH = 'month'
+mixdyn:Channel = NewType('Channel', str)
+mixdyn:Combine class(Enum)
+  .SUM = 'sum'
+  .POPULATION_MEAN = 'population_mean'
+mixdyn:Count @dataclass(frozen=True, slots=True) class()
+  .unit: str
+mixdyn:Gap class(Enum)
+  .ERROR = 'error'
+  .STEP = 'step'
+mixdyn:Geo = NewType('Geo', str)
+mixdyn:Issue @dataclass(frozen=True, slots=True) class()
+  .code: IssueCode
+  .severity: Severity
+  .message: str
+  .geo: str | None = None
+  .column: str | None = None
+  .dates: tuple[date, ...] = ()
+  .channel: str | None = None
+mixdyn:IssueCode class(Enum)
+  .MISSING_COLUMN = 'missing_column'
+  .BAD_SPEC = 'bad_spec'
+  .BAD_DATE = 'bad_date'
+  .BAD_GEO = 'bad_geo'
+  .NOT_NUMERIC = 'not_numeric'
+  .NON_FINITE = 'non_finite'
+  .NEGATIVE_SPEND = 'negative_spend'
+  .MISSING_KPI = 'missing_kpi'
+  .OFF_GRID = 'off_grid'
+  .DUPLICATE = 'duplicate'
+  .MISSING_PERIOD = 'missing_period'
+  .CONSTANT = 'constant'
+  .UNIT = 'unit'
+  .HIERARCHY = 'hierarchy'
+  .POPULATION = 'population'
+  .CADENCE = 'cadence'
+  .FEW_OBSERVATIONS = 'few_observations'
+  .ENDOGENOUS_SPEND = 'endogenous_spend'
+mixdyn:Lever @dataclass(frozen=True, slots=True) class()
+  .kind: LeverKind
+  .baseline: Baseline | float = Baseline.MIN
+mixdyn:LeverKind class(Enum)
+  .PRICE = 'price'
+  .PROMOTION = 'promotion'
+  .ORGANIC = 'organic'
+mixdyn:MediaPanel @dataclass(frozen=True, eq=False, slots=True) class()
+  .dates: npt.NDArray[np.datetime64]
+  .cadence: Cadence
+  .geos: tuple[Geo, ...]
+  .channels: tuple[Channel, ...]
+  .controls: tuple[str, ...]
+  .kpi: npt.NDArray[np.float64]
+  .kpi_unit: KpiUnit
+  .spend: npt.NDArray[np.float64]
+  .currency: str
+  .control_values: npt.NDArray[np.float64]
+  .filled: npt.NDArray[np.bool_]
+  .hierarchy: Mapping[Geo, Geo] = field(default_factory=lambda: MappingProxyType({}))
+  .population: npt.NDArray[np.float64] | None = None
+  .national: Mapping[Channel, Allotment] = field(default_factory=lambda: MappingProxyType({}))
+  .issues: tuple[Issue, ...] = ()
+  .levers: Mapping[str, Lever] = field(default_factory=lambda: MappingProxyType({}))
+  .events: Mapping[str, npt.NDArray[np.datetime64]] = field(default_factory=lambda: MappingProxyType({}))
+  .counterfactual def(self, lever: str) -> float
+  .event_column def(self, event: str) -> npt.NDArray[np.float64]
+  .regressors def(self, names: Sequence[str], geo: Geo, periods: npt.NDArray[np.bool_] | None=None) -> npt.NDArray[np.float64]
+  .counterfactuals def(self, controls: Sequence[str]) -> npt.NDArray[np.float64]
+mixdyn:NATIONAL = Geo('national')
+mixdyn:PanelError class(ValueError)
+  .MAX_LISTED = 40
+  .__init__ def(self, issues: tuple[Issue, ...]) -> None
+mixdyn:Revenue @dataclass(frozen=True, slots=True) class()
+mixdyn:Severity class(Enum)
+  .ERROR = 'error'
+  .WARNING = 'warning'
+mixdyn:aggregate def(panel: MediaPanel, nodes: Sequence[str], controls: Mapping[str, Combine] | None=None) -> MediaPanel
+mixdyn:allot_national def(panel: MediaPanel, channel: str, spend: npt.ArrayLike, by: Allotment=Allotment.POPULATION) -> MediaPanel
+mixdyn:read_panel def(data: ColumnData, *, date: str, kpi: str, spend: Mapping[str, str], cadence: Cadence, kpi_unit: KpiUnit, currency: str, geo: str | None=None, controls: Sequence[str]=(), hierarchy: Mapping[str, str] | None=None, population: Mapping[str, float] | str | None=None, gaps: Gap=Gap.ERROR, levers: Mapping[str, Lever] | None=None, events: Mapping[str, npt.ArrayLike] | None=None) -> MediaPanel
+mixdyn.api:Compute @dataclass(frozen=True, slots=True) class()
+  .device: str
+  .wall_seconds: float
+mixdyn.api:DECISION = Schema('mixdyn.decision', 1, Decision)
+mixdyn.api:Decision @dataclass(frozen=True, slots=True) class()
+  .title: str
+  .geo: str
+  .currency: str
+  .periods: int
+  .budget: float
+  .gain: float
+  .current_gain: float
+  .spend: tuple[Spend, ...]
+  .health: Health | Unfilled
+  .reconciliation: Reconciliation | Unfilled
+  .next_test: NextTest | Unfilled
+  .events: tuple[Event, ...]
+  .compute: Compute | Unfilled
+  .unidentified: tuple[str, ...] = ()
+mixdyn.api:Estimand @dataclass(frozen=True, slots=True) class()
+  .channel: str
+  .geos: tuple[str, ...]
+  .share: float
+  .change: str
+  .reading: str
+  .periods: int
+  .readout: int
+  .spend: float
+  .planned: float
+  .first: dt.date | None
+  .last: dt.date | None
+  .end: dt.date | None
+  .estimand: str
+mixdyn.api:Event @dataclass(frozen=True, slots=True) class()
+  .on: dt.date
+  .what: str
+mixdyn.api:FACTSHEET = Schema('mixdyn.factsheet', 1, Factsheet)
+mixdyn.api:Factsheet @dataclass(frozen=True, slots=True) class()
+  .model: str
+  .kpi: str
+  .cadence: str
+  .first: dt.date
+  .last: dt.date
+  .geos: tuple[str, ...]
+  .channels: tuple[str, ...]
+  .sources: tuple[Source, ...]
+  .priors: tuple[Prior, ...]
+  .tests: tuple[Estimand, ...]
+  .holdout: Holdout | Unfilled
+  .returns: tuple[ReturnRange, ...]
+  .power: PowerSummary | Unfilled
+  .refresh: Refresh | Unfilled
+  .limitations: tuple[str, ...]
+mixdyn.api:Health @dataclass(frozen=True, slots=True) class()
+  .max_rhat: float
+  .ppp: float
+  .ppp_se: float
+  .negative_baseline: float
+  .shift: Mapping[str, float]
+  .width: Mapping[str, float]
+  .consistency: Mapping[str, float]
+  .thresholds: Mapping[str, float]
+  .flags: Mapping[str, bool]
+mixdyn.api:Holdout @dataclass(frozen=True, slots=True) class()
+  .first: dt.date
+  .last: dt.date
+  .periods: int
+  .metric: str
+  .error: float
+mixdyn.api:ISSUES = Schema('mixdyn.issues', 1, tuple[Issue, ...])
+mixdyn.api:LIFT_TESTS = Schema('mixdyn.lift_tests', 1, tuple[Estimand, ...])
+mixdyn.api:NextTest @dataclass(frozen=True, slots=True) class()
+  .verdict: str
+  .tests: tuple[str, ...]
+  .channels: tuple[str, ...]
+  .reduction: float
+  .error: float
+  .cost: float
+  .net_value: float
+  .predicted_net_value: float
+  .evpi: float
+  .evpi_error: float
+  .draws: int
+mixdyn.api:Period @dataclass(frozen=True, slots=True) class()
+  .date: dt.date
+  .kpi: float
+  .parts: tuple[float, ...]
+  .total: float
+  .residual: float
+mixdyn.api:PowerSummary @dataclass(frozen=True, slots=True) class()
+  .backtests: int
+  .mde_low: float
+  .mde_high: float
+mixdyn.api:Prior @dataclass(frozen=True, slots=True) class()
+  .parameter: str
+  .distribution: str
+  .provenance: str
+mixdyn.api:Reconciliation @dataclass(frozen=True, slots=True) class()
+  .parts: tuple[str, ...]
+  .periods: tuple[Period, ...]
+mixdyn.api:Refresh @dataclass(frozen=True, slots=True) class()
+  .every: int
+  .cadence: str
+  .last: dt.date
+mixdyn.api:ReturnRange @dataclass(frozen=True, slots=True) class()
+  .channel: str
+  .counts: str
+  .mean: float
+  .low: float
+  .high: float
+  .level: float
+mixdyn.api:Schema @dataclass(frozen=True, slots=True) class()
+  .name: str
+  .version: int
+  .data: Any
+mixdyn.api:SchemaError class(ValueError)
+mixdyn.api:Source @dataclass(frozen=True, slots=True) class()
+  .column: str
+  .role: str
+  .origin: str
+  .transforms: tuple[str, ...]
+mixdyn.api:Spend @dataclass(frozen=True, slots=True) class()
+  .channel: str
+  .current: float
+  .planned: float
+mixdyn.api:Unfilled @dataclass(frozen=True, slots=True) class()
+  .reason: str
+mixdyn.api:decision def(panel: MediaPanel, geo: Geo, plan: PosteriorPlan, *, title: str, card: HealthCard | None=None, thresholds: Mapping[str, float] | None=None, reconciliation: Reconciliation | None=None, choice: ExperimentChoice | None=None, events: Sequence[Event]=(), compute: Compute | None=None) -> Decision
+mixdyn.api:dlm_factsheet def(panel: MediaPanel, geo: Geo, fit: DlmFit, decomposition: DlmDecomposition, *, level: float=0.9, origins: Mapping[str, str] | None=None, estimates: Mapping[str, Sequence[LiftEstimate | LiftSeries]] | None=None, holdout: Holdout | Unfilled=_NO_HOLDOUT, power: PowerSummary | Unfilled=_NO_POWER_AUDIT, refresh: Refresh | Unfilled=_NO_REFRESH, limitations: Sequence[str]=()) -> Factsheet
+mixdyn.api:dumps def(value: Any, schema: Schema) -> str
+mixdyn.api:estimands def(panel: MediaPanel, estimates: Mapping[str, Sequence[LiftEstimate | LiftSeries]]) -> tuple[Estimand, ...]
+mixdyn.api:factsheet def(panel: MediaPanel, geo: Geo, spec: BayesSpec, returns: Mapping[str, npt.ArrayLike], *, level: float=0.9, origins: Mapping[str, str] | None=None, estimates: Mapping[str, Sequence[LiftEstimate | LiftSeries]] | None=None, holdout: Holdout | Unfilled=_NO_HOLDOUT, power: PowerSummary | Unfilled=_NO_POWER_AUDIT, refresh: Refresh | Unfilled=_NO_REFRESH, limitations: Sequence[str]=(), sensitivity: Sequence[MsmSensitivity]=()) -> Factsheet
+mixdyn.api:geo_factsheet def(panel: MediaPanel, fit: BayesGeoFit, *, level: float=0.9, origins: Mapping[str, str] | None=None, estimates: Mapping[str, Sequence[LiftEstimate | LiftSeries]] | None=None, holdout: Holdout | Unfilled=_NO_HOLDOUT, power: PowerSummary | Unfilled=_NO_POWER_AUDIT, refresh: Refresh | Unfilled=_NO_REFRESH, limitations: Sequence[str]=()) -> Factsheet
+mixdyn.api:loads def(text: str, schema: Schema) -> Any
+mixdyn.api:reconcile def(dates: npt.ArrayLike, kpi: npt.ArrayLike, parts: Mapping[str, npt.ArrayLike]) -> Reconciliation
+mixdyn.api:render def(document: Factsheet | Decision) -> str
+mixdyn.api:ridge_factsheet def(panel: MediaPanel, geo: Geo, fit: RidgeFit, *, origins: Mapping[str, str] | None=None, holdout: Holdout | Unfilled=_NO_HOLDOUT, power: PowerSummary | Unfilled=_NO_POWER_AUDIT, refresh: Refresh | Unfilled=_NO_REFRESH, limitations: Sequence[str]=()) -> Factsheet
+mixdyn.api:sensitivity_line def(ridge: RidgeSensitivity | None=None, bayes: MsmSensitivity | None=None, *, control: str | None=None, gamma: float=1.5) -> str
+mixdyn.api.serialize:FORMAT = 'mixdyn'
+mixdyn.api.serialize:FORMAT_VERSION = 1
+mixdyn.api.serialize:FormatError class(ValueError)
+mixdyn.api.serialize:REGISTRY: Mapping[str, type] = MappingProxyType({_name(cls): cls for cls in _CLASSES})
+mixdyn.api.serialize:load def(path: str | Path) -> Any
+mixdyn.api.serialize:save def(obj: object, path: str | Path) -> None
+mixdyn.calibration:Estimates type = dict[str, tuple[LiftEstimate, ...]]
+mixdyn.calibration:LiftEstimate @dataclass(frozen=True, slots=True) class()
+  .spend: _Array
+  .planned: _Array
+  .readout: int
+  .lift: float
+  .se: float
+  .share: float = 1.0
+  .geos: frozenset[Geo] | None = None
+  .end: np.datetime64 | None = None
+mixdyn.calibration:LiftSeries @dataclass(frozen=True, slots=True) class()
+  .spend: _Array
+  .planned: _Array
+  .gaps: _Array
+  .covariance: _Array
+  .share: float = 1.0
+  .geos: frozenset[Geo] | None = None
+  .readout @property def(self) -> int
+  .summed @property def(self) -> LiftEstimate
+mixdyn.calibration:experiment_table def(panel: MediaPanel, estimates: Mapping[str, Sequence[LiftEstimate]]) -> dict[str, list[object]]
+mixdyn.calibration:lift_table def(panel: MediaPanel, estimates: Mapping[str, Sequence[LiftEstimate]], *, periods: int, cooldown: int=0) -> dict[str, list[object]]
+mixdyn.calibration:read_experiments def(panel: MediaPanel, records: ColumnData, *, per_unit: bool=False) -> Estimates
+mixdyn.calibration:read_lift_table def(panel: MediaPanel, table: ColumnData, *, periods: int, cooldown: int=0, geo: str='geo', date: str='date') -> Estimates
+mixdyn.data:Allotment class(Enum)
+  .POPULATION = 'population'
+mixdyn.data:Baseline class(Enum)
+  .MIN = 'min'
+  .MAX = 'max'
+mixdyn.data:Cadence class(Enum)
+  .DAY = 'day'
+  .WEEK = 'week'
+  .MONTH = 'month'
+mixdyn.data:Channel = NewType('Channel', str)
+mixdyn.data:ColumnData type = Mapping[str, Any] | ColumnFrame
+mixdyn.data:Combine class(Enum)
+  .SUM = 'sum'
+  .POPULATION_MEAN = 'population_mean'
+mixdyn.data:Count @dataclass(frozen=True, slots=True) class()
+  .unit: str
+mixdyn.data:Gap class(Enum)
+  .ERROR = 'error'
+  .STEP = 'step'
+mixdyn.data:Geo = NewType('Geo', str)
+mixdyn.data:Issue @dataclass(frozen=True, slots=True) class()
+  .code: IssueCode
+  .severity: Severity
+  .message: str
+  .geo: str | None = None
+  .column: str | None = None
+  .dates: tuple[date, ...] = ()
+  .channel: str | None = None
+mixdyn.data:IssueCode class(Enum)
+  .MISSING_COLUMN = 'missing_column'
+  .BAD_SPEC = 'bad_spec'
+  .BAD_DATE = 'bad_date'
+  .BAD_GEO = 'bad_geo'
+  .NOT_NUMERIC = 'not_numeric'
+  .NON_FINITE = 'non_finite'
+  .NEGATIVE_SPEND = 'negative_spend'
+  .MISSING_KPI = 'missing_kpi'
+  .OFF_GRID = 'off_grid'
+  .DUPLICATE = 'duplicate'
+  .MISSING_PERIOD = 'missing_period'
+  .CONSTANT = 'constant'
+  .UNIT = 'unit'
+  .HIERARCHY = 'hierarchy'
+  .POPULATION = 'population'
+  .CADENCE = 'cadence'
+  .FEW_OBSERVATIONS = 'few_observations'
+  .ENDOGENOUS_SPEND = 'endogenous_spend'
+mixdyn.data:KpiUnit type = Revenue | Count
+mixdyn.data:Lever @dataclass(frozen=True, slots=True) class()
+  .kind: LeverKind
+  .baseline: Baseline | float = Baseline.MIN
+mixdyn.data:LeverKind class(Enum)
+  .PRICE = 'price'
+  .PROMOTION = 'promotion'
+  .ORGANIC = 'organic'
+mixdyn.data:MediaPanel @dataclass(frozen=True, eq=False, slots=True) class()
+  .dates: npt.NDArray[np.datetime64]
+  .cadence: Cadence
+  .geos: tuple[Geo, ...]
+  .channels: tuple[Channel, ...]
+  .controls: tuple[str, ...]
+  .kpi: npt.NDArray[np.float64]
+  .kpi_unit: KpiUnit
+  .spend: npt.NDArray[np.float64]
+  .currency: str
+  .control_values: npt.NDArray[np.float64]
+  .filled: npt.NDArray[np.bool_]
+  .hierarchy: Mapping[Geo, Geo] = field(default_factory=lambda: MappingProxyType({}))
+  .population: npt.NDArray[np.float64] | None = None
+  .national: Mapping[Channel, Allotment] = field(default_factory=lambda: MappingProxyType({}))
+  .issues: tuple[Issue, ...] = ()
+  .levers: Mapping[str, Lever] = field(default_factory=lambda: MappingProxyType({}))
+  .events: Mapping[str, npt.NDArray[np.datetime64]] = field(default_factory=lambda: MappingProxyType({}))
+  .counterfactual def(self, lever: str) -> float
+  .event_column def(self, event: str) -> npt.NDArray[np.float64]
+  .regressors def(self, names: Sequence[str], geo: Geo, periods: npt.NDArray[np.bool_] | None=None) -> npt.NDArray[np.float64]
+  .counterfactuals def(self, controls: Sequence[str]) -> npt.NDArray[np.float64]
+mixdyn.data:NATIONAL = Geo('national')
+mixdyn.data:PanelError class(ValueError)
+  .MAX_LISTED = 40
+  .__init__ def(self, issues: tuple[Issue, ...]) -> None
+mixdyn.data:RecurringEvents @dataclass(frozen=True, slots=True) class()
+  .names: tuple[str, ...]
+  .weeks: tuple[tuple[int, ...], ...]
+  .posterior: npt.NDArray[np.float64]
+  .separation: float
+  .columns def(self, dates: npt.ArrayLike) -> dict[str, npt.NDArray[np.float64]]
+  .days def(self, dates: npt.ArrayLike) -> dict[str, npt.NDArray[np.datetime64]]
+mixdyn.data:Revenue @dataclass(frozen=True, slots=True) class()
+mixdyn.data:Severity class(Enum)
+  .ERROR = 'error'
+  .WARNING = 'warning'
+mixdyn.data:aggregate def(panel: MediaPanel, nodes: Sequence[str], controls: Mapping[str, Combine] | None=None) -> MediaPanel
+mixdyn.data:allot_national def(panel: MediaPanel, channel: str, spend: npt.ArrayLike, by: Allotment=Allotment.POPULATION) -> MediaPanel
+mixdyn.data:read_panel def(data: ColumnData, *, date: str, kpi: str, spend: Mapping[str, str], cadence: Cadence, kpi_unit: KpiUnit, currency: str, geo: str | None=None, controls: Sequence[str]=(), hierarchy: Mapping[str, str] | None=None, population: Mapping[str, float] | str | None=None, gaps: Gap=Gap.ERROR, levers: Mapping[str, Lever] | None=None, events: Mapping[str, npt.ArrayLike] | None=None) -> MediaPanel
+mixdyn.data:recurring_events def(panel: MediaPanel, indicators: Mapping[str, int], *, geo: Geo=NATIONAL, prefix: str='recurring') -> RecurringEvents
+mixdyn.data.feedback:SpendFeedback @dataclass(frozen=True, slots=True) class()
+  .geo: str
+  .channel: str
+  .gamma: float
+  .se: float
+  .lower: float
+  .upper: float
+  .level: float
+  .periods: int
+  .lags: int
+  .follows @property def(self) -> bool
+  .issue def(self) -> Issue | None
+mixdyn.data.feedback:spend_feedback def(panel: MediaPanel, geo: Geo, level: float=0.95, harmonics: int=3) -> tuple[SpendFeedback, ...]
+mixdyn.decisions:Breakdown @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .spend: _Array
+  .against: _Array
+  .gains: _Array
+  .expected: _Array
+  .factor: float
+  .draws: _Array
+mixdyn.decisions:Costs @dataclass(frozen=True, slots=True) class()
+  .spend: float
+  .incremental: float
+  .cost_per_kpi: float | Undefined
+  .marginal_cost_per_kpi: float | Undefined
+mixdyn.decisions:CvarPlan @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .spend: _Array
+  .against: _Array
+  .budget: float
+  .level: float
+  .gain: _Array
+  .cvar: float
+  .bound: float
+  .unidentified: tuple[Channel, ...] = ()
+mixdyn.decisions:FlightPlan @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .budget: float
+  .reading: str | int
+  .level: float
+  .schedule: _Array
+  .continuous: _Array
+  .current: _Array
+  .gains: _Array
+  .expected: _Array
+  .intervals: _Array
+  .edge: _Array
+  .edge_interval: _Array
+  .worth: float
+  .bound: float
+  .stopped: SearchStatus
+  .limit: SearchLimit | None
+  .tolerance: float
+  .recommendation: Recommendation
+  .unidentified: tuple[Channel, ...] = ()
+mixdyn.decisions:GeoLimits @dataclass(frozen=True, slots=True) class()
+  .cells: Mapping[tuple[Geo, Channel], Range]
+  .geos: Mapping[Geo, Range] = field(default_factory=lambda: MappingProxyType({}))
+  .channels: Mapping[Channel, Range] = field(default_factory=lambda: MappingProxyType({}))
+  .national: Mapping[Channel, Range] = field(default_factory=lambda: MappingProxyType({}))
+mixdyn.decisions:GeoPlan @dataclass(frozen=True, slots=True, eq=False) class()
+  .geos: tuple[Geo, ...]
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .spend: _Array
+  .current: _Array
+  .budget: float
+  .gain: float
+  .current_gain: float
+  .shortfall: float
+  .price: float
+  .geo_prices: Mapping[Geo, float]
+  .channel_prices: Mapping[Channel, float]
+  .unidentified: tuple[tuple[Geo, Channel], ...] = ()
+  .return_on_spend @property def(self) -> float
+mixdyn.decisions:Goal type = ReturnTarget | MarginalReturnTarget | ReturnOnSpendTarget
+mixdyn.decisions:MarginPlan @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .spend: _Array
+  .current: _Array
+  .budget: float
+  .margins: _Array
+  .cov: _Array
+  .gain: float
+  .interval: tuple[float, float]
+  .held: tuple[Channel, ...]
+  .record: str | None
+mixdyn.decisions:MarginalReturnTarget from chc.allocation
+mixdyn.decisions:PlanTable @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .level: float
+  .margin: float | None
+  .breakeven: float
+  .current: _Array
+  .spend: _Array
+  .change: _Array
+  .revenue_per_kpi: _Array
+  .kpi: Spread
+  .revenue: Spread
+  .marginal_current: Spread
+  .marginal_planned: Spread
+  .diminishing: tuple[float | None, ...]
+  .total_kpi: Spread
+  .total_revenue: Spread
+  .factor: float
+  .factor_low: float
+  .factor_high: float
+  .rows def(self) -> list[dict[str, object]]
+mixdyn.decisions:PooledGeoPlan @dataclass(frozen=True, slots=True, eq=False) class()
+  .cells: tuple[tuple[Geo | None, Channel], ...]
+  .periods: int
+  .spend: _Array
+  .current: _Array
+  .budget: float
+  .price: float
+  .record: str | None
+mixdyn.decisions:PosteriorPlan @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .spend: _Array
+  .current: _Array
+  .budget: float
+  .gain: float
+  .current_gain: float
+  .grid: int
+  .unidentified: tuple[Channel, ...] = ()
+mixdyn.decisions:Range @dataclass(frozen=True, slots=True) class()
+  .least: float = 0.0
+  .most: float = math.inf
+mixdyn.decisions:Readings @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .retention: _Array
+  .half_saturation: _Array
+  .slope: _Array
+  .coefficient: _Array
+  .tanh: npt.NDArray[np.bool_]
+  .fit: npt.NDArray[np.intp]
+  .chain: npt.NDArray[np.intp]
+  .stacking: _Array
+  .pointwise: _Array | None
+  .length: int
+  .weights @property def(self) -> _Array
+mixdyn.decisions:Recommendation = Literal['flighted', 'continuous']
+mixdyn.decisions:ResponseCurves @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .level: float
+  .rates: _Array
+  .mean: _Array
+  .low: _Array
+  .high: _Array
+  .current: _Array | None
+  .at_current: _Array | None
+mixdyn.decisions:ReturnOnSpendTarget from chc.allocation
+mixdyn.decisions:ReturnTarget from chc.allocation
+mixdyn.decisions:Returns @dataclass(frozen=True, slots=True) class()
+  .spend: float
+  .contribution: float
+  .roi: float
+  .marginal_roi: float
+  .steady_state_marginal_roi: float
+  .carryover: float
+mixdyn.decisions:RobustPlan @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[Channel, ...]
+  .periods: int
+  .spend: _Array
+  .against: _Array
+  .budget: float
+  .scale: float
+  .gain: float
+  .worst: float
+  .grid: int
+  .unidentified: tuple[Channel, ...] = ()
+mixdyn.decisions:Scenario @dataclass(frozen=True, slots=True) class()
+  .name: str
+  .spend: Mapping[str, npt.ArrayLike]
+  .controls: Mapping[str, npt.ArrayLike] = field(default_factory=lambda: MappingProxyType({}))
+mixdyn.decisions:ScenarioComparison @dataclass(frozen=True, slots=True, eq=False) class()
+  .names: tuple[str, ...]
+  .baseline: str
+  .horizon: int
+  .carry_out: int
+  .level: float
+  .totals: _Array
+  .total_mean: _Array
+  .total_low: _Array
+  .total_high: _Array
+  .differences: _Array
+  .difference_mean: _Array
+  .difference_low: _Array
+  .difference_high: _Array
+mixdyn.decisions:Spread @dataclass(frozen=True, slots=True, eq=False) class()
+  .draws: _Array
+  .mean: _Array
+  .low: _Array
+  .high: _Array
+mixdyn.decisions:Undefined @dataclass(frozen=True, slots=True) class()
+  .reason: str
+mixdyn.decisions:Worths @dataclass(frozen=True, slots=True, eq=False) class()
+  .rates: _Array
+  .table: _Array
+mixdyn.decisions:breakdown def(gains: npt.ArrayLike) -> _Array
+mixdyn.decisions:compare_scenarios def(fit: BayesFit, scenarios: Sequence[Scenario], *, baseline: str, horizon: int, draws: int, seed: int, level: float=0.9) -> ScenarioComparison
+mixdyn.decisions:costs def(channel: response.Channel, spend: npt.ArrayLike, window: slice=slice(None)) -> Costs
+mixdyn.decisions:lift_row_pick renamed pick_by_lift_tests, leaves in 1.0.0
+mixdyn.decisions:media_difference def(channel_draws: Sequence[Mapping[str, response.Channel]], history: Mapping[str, npt.ArrayLike], plan_a: Mapping[str, npt.ArrayLike], plan_b: Mapping[str, npt.ArrayLike], periods: int) -> _Array
+mixdyn.decisions:move_between_geos def[G: Hashable, C: Hashable](plan: Mapping[G, Mapping[C, npt.ArrayLike]], channel: C, from_geo: G, to_geo: G, amount: npt.ArrayLike) -> dict[G, dict[C, _Array]]
+mixdyn.decisions:pick_by_lift_tests def(fits: Sequence[BayesFit]) -> _Array | None
+mixdyn.decisions:plan_anchored_margins def(panel: MediaPanel, estimates: Mapping[str, Sequence[LiftEstimate]], budget: float | None, periods: int, limits: Mapping[Channel, Range], *, kernel: int, spend_floor: float | None=SPEND_FLOOR) -> MarginPlan
+mixdyn.decisions:plan_breakdown def(panel: MediaPanel, geo: Geo, readings: Readings, spend: npt.ArrayLike, periods: int, *, against: npt.ArrayLike | None=None) -> Breakdown
+mixdyn.decisions:plan_cvar def(panel: MediaPanel, geo: Geo, readings: Readings, budget: float, periods: int, limits: Mapping[Channel, Range], *, against: npt.ArrayLike, level: float=0.1, draws: int=400) -> CvarPlan
+mixdyn.decisions:plan_flighting def(panel: MediaPanel, geo: Geo, readings: Readings, budget: float, periods: int, limits: Mapping[Channel, Range], *, reading: str | int='median', level: float=0.9) -> FlightPlan
+mixdyn.decisions:plan_geos def(panel: MediaPanel, responses: Mapping[Geo, Mapping[Channel, Response]], target: float | Goal, periods: int, limits: GeoLimits) -> GeoPlan
+mixdyn.decisions:plan_margins def(panel: MediaPanel, budget: float | None, periods: int, limits: Mapping[Channel, Range], *, kernel: int) -> MarginPlan
+mixdyn.decisions:plan_pooled_geos def(panel: MediaPanel, estimates: Mapping[str, Sequence[LiftEstimate]], budget: float | None, periods: int, limits: GeoLimits, *, kernel: int) -> PooledGeoPlan
+mixdyn.decisions:plan_posterior def(panel: MediaPanel, geo: Geo, readings: Readings, budget: float | MarginalReturnTarget | ReturnOnSpendTarget, periods: int, limits: Mapping[Channel, Range], *, grid: int=2048) -> PosteriorPlan
+mixdyn.decisions:plan_robust def(panel: MediaPanel, geo: Geo, readings: Readings, budget: float, periods: int, limits: Mapping[Channel, Range], *, scale: float, against: npt.ArrayLike | None=None, grid: int=2048) -> RobustPlan
+mixdyn.decisions:plan_table def(panel: MediaPanel, geo: Geo, readings: Readings, spend: npt.ArrayLike, periods: int, *, against: npt.ArrayLike | None=None, revenue_per_kpi: float | Mapping[Channel, float]=1.0, margin: float | None=None, level: float=0.9, limits: Mapping[Channel, Range] | None=None) -> PlanTable
+mixdyn.decisions:portfolio_roi def(returns: Iterable[Returns]) -> float
+mixdyn.decisions:ranges_from_current def(current: Mapping[Channel, float], *, least_share: float, most_multiple: float, floors: Mapping[Channel, float] | None=None) -> dict[Channel, Range]
+mixdyn.decisions:readings def(fit: BayesFit, *, draws: int | None=None) -> Readings
+mixdyn.decisions:response_curves def(worths: Worths, readings: Readings, *, level: float, current: Mapping[Channel, float] | None=None) -> ResponseCurves
+mixdyn.decisions:returns def(channel: response.Channel, spend: npt.ArrayLike, window: slice=slice(None), *, revenue_per_kpi: float=1.0) -> Returns
+mixdyn.decisions:stacked renamed stacked_readings, leaves in 1.0.0
+mixdyn.decisions:stacked_readings def(fits: Sequence[BayesFit], *, weights: npt.ArrayLike | None=None, draws: int | None=None) -> Readings
+mixdyn.decisions:worths def(panel: MediaPanel, geo: Geo, readings: Readings, periods: int, limits: Mapping[Channel, Range], *, grid: int=512) -> Worths
+mixdyn.experiments:After @dataclass(frozen=True, slots=True) class()
+  .current: Mapping[Channel, float]
+mixdyn.experiments:Balance @dataclass(frozen=True, slots=True) class()
+  .differences: Mapping[str, float]
+  .largest: float
+mixdyn.experiments:Blocks @dataclass(frozen=True, slots=True) class()
+  .blocks: tuple[tuple[int, ...], ...]
+  .left_out: tuple[int, ...]
+mixdyn.experiments:Candidate @dataclass(frozen=True, slots=True, eq=False) class()
+  .channel: Channel
+  .spend: _Array
+  .planned: _Array
+  .readout: int
+  .se: float
+  .share: float
+  .label: str = ''
+  .estimate def(self, lift: float, se: float | None=None) -> LiftEstimate
+mixdyn.experiments:CarryoverOrder @dataclass(frozen=True, slots=True) class()
+  .order: int
+  .statistic: float
+  .p_value: float
+  .arrangements: int
+  .enumerated: bool
+mixdyn.experiments:Cost type = Gross | Net
+mixdyn.experiments:ExperimentChoice @dataclass(frozen=True, slots=True, eq=False) class()
+  .best: ExperimentValue | None
+  .single: ExperimentValue | None
+  .values: tuple[ExperimentValue, ...]
+  .exhaustive: bool
+  .plan: _Array
+  .evpi: float
+  .evpi_error: float
+  .draws: int
+  .level: float
+  .verdict @property def(self) -> Literal['test', 'plan now']
+mixdyn.experiments:ExperimentValue @dataclass(frozen=True, slots=True, eq=False) class()
+  .candidates: tuple[Candidate, ...]
+  .reduction: float
+  .error: float
+  .predicted: float
+  .interval: tuple[float, float]
+  .reductions: _Array
+  .spend_change: float
+  .opportunity: float
+  .gross: float
+  .net: float
+  .cost: float
+  .per_cost: float
+  .net_value: float
+  .predicted_net_value: float
+  .local: float
+  .model_gap: float
+  .ess: _Array
+  .pareto_k: _Array
+  .fallback: float
+  .refitted: _Array
+mixdyn.experiments:ExperimentValues @dataclass(frozen=True, slots=True, eq=False) class()
+  .values: tuple[ExperimentValue, ...]
+  .plan: _Array
+  .evpi: float
+  .evpi_error: float
+  .draws: int
+  .level: float
+  .ranked @property def(self) -> tuple[ExperimentValue, ...]
+mixdyn.experiments:Gaussian @dataclass(frozen=True, slots=True) class()
+mixdyn.experiments:GeoDesign @dataclass(frozen=True, slots=True) class()
+  .treated: tuple[int, ...]
+  .control: tuple[int, ...]
+mixdyn.experiments:GeoReading @dataclass(frozen=True, slots=True) class()
+  .method: Method
+  .lift: float
+  .se: float
+  .df: float
+  .alpha: float
+  .lower: float
+  .upper: float
+  .p_value: float
+  .verdict: Verdict
+  .permutation_p: float | None = None
+mixdyn.experiments:GeoTest @dataclass(frozen=True, slots=True, eq=False) class()
+  .channel: Channel
+  .treated: tuple[Geo, ...]
+  .control: tuple[Geo, ...]
+  .start: np.datetime64
+  .end: np.datetime64
+  .spend: _Array
+  .planned: _Array
+  .readout: int
+mixdyn.experiments:Gross @dataclass(frozen=True, slots=True) class()
+mixdyn.experiments:GroupNoise @dataclass(frozen=True, slots=True) class()
+  .market_sd: float
+  .se def(self, readout: int, share: float) -> float
+  .covariance def(self, readout: int, share: float) -> _Array
+mixdyn.experiments:Net @dataclass(frozen=True, slots=True) class()
+  .floor: float
+mixdyn.experiments:Noise type = GroupNoise | PlaceboNoise
+mixdyn.experiments:PlaceboNoise @dataclass(frozen=True, slots=True, eq=False) class()
+  .residuals: _Array
+  .pre: int = 26
+  .se def(self, readout: int, share: float) -> float
+  .covariance def(self, readout: int, share: float) -> _Array
+mixdyn.experiments:Power @dataclass(frozen=True, slots=True, eq=False) class()
+  .lifts: _Array
+  .power: _Array
+  .size: float
+  .mde: float
+  .windows: int
+mixdyn.experiments:PowerAudit @dataclass(frozen=True, slots=True, eq=False) class()
+  .lifts: _Array
+  .power: _Array
+  .size: float
+  .mde: float
+  .mde_low: float
+  .mde_high: float
+  .backtests: int
+  .disjoint: int
+  .rejected: int
+  .flag_p_value: float
+  .flagged: bool
+mixdyn.experiments:Reader type = Callable[[_Array, _Array, int], tuple[float, float]]
+mixdyn.experiments:Refit @dataclass(frozen=True, slots=True) class()
+  .draws: int
+  .fit: Callable[[Mapping[Channel, Sequence[LiftEstimate]]], Readings]
+  .then: Reweight | Gaussian = _REWEIGHT
+mixdyn.experiments:Reweight @dataclass(frozen=True, slots=True) class()
+  .ess: float = 100.0
+mixdyn.experiments:SdidFit @dataclass(frozen=True, slots=True) class()
+  .effect: float
+  .unit_weights: _Array
+  .time_weights: _Array
+  .noise: float
+  .zeta: float
+  .kkt: float
+mixdyn.experiments:SdidReading @dataclass(frozen=True, slots=True) class()
+  .method: Literal['sdid']
+  .variance: Variance
+  .lift: float
+  .se: float
+  .lower: float
+  .upper: float
+  .p_value: float
+  .verdict: Verdict
+  .alpha: float
+  .df: float
+  .effect: float
+  .replications: int
+  .controls: tuple[Geo, ...]
+  .unit_weights: _Array
+  .pre: npt.NDArray[np.datetime64]
+  .time_weights: _Array
+mixdyn.experiments:StratifiedDesign @dataclass(frozen=True, slots=True) class()
+  .design: GeoDesign
+  .strata: Blocks
+  .candidates: int
+  .kept: int
+  .r2: float
+  .mde: float
+mixdyn.experiments:SwitchbackDesign @dataclass(frozen=True, slots=True, eq=False) class()
+  .dates: npt.NDArray[np.datetime64]
+  .block: int
+  .washout: int
+  .on: tuple[bool, ...]
+  .share: float
+  .seed: int
+  .periods @property def(self) -> int
+  .blocks @property def(self) -> int
+  .on_blocks @property def(self) -> int
+  .assignment @property def(self) -> npt.NDArray[np.bool_]
+  .kept @property def(self) -> npt.NDArray[np.bool_]
+mixdyn.experiments:SwitchbackReading @dataclass(frozen=True, slots=True) class()
+  .method: Method
+  .lift: float
+  .se: float
+  .df: float
+  .level: float
+  .lower: float
+  .upper: float
+  .p_value: float
+  .verdict: Verdict
+  .arrangements: int
+  .enumerated: bool
+  .carryover: float
+mixdyn.experiments:Update type = Reweight | Gaussian | Refit
+mixdyn.experiments:Verdict type = Literal['up', 'down', 'inconclusive']
+mixdyn.experiments:When type = After | Within
+mixdyn.experiments:Within @dataclass(frozen=True, slots=True) class()
+  .start: int
+mixdyn.experiments:assign def(blocks: Blocks, seed: int, *, share: float=0.5) -> GeoDesign
+mixdyn.experiments:audit_power def(kpi_history: npt.ArrayLike, design: GeoDesign, readout: int, lifts: npt.ArrayLike, *, pre: int, read: Reader=_read_did) -> PowerAudit
+mixdyn.experiments:balance def(design: GeoDesign, features: Mapping[str, npt.ArrayLike]) -> Balance
+mixdyn.experiments:carryover_order def(kpi: npt.ArrayLike, design: SwitchbackDesign, *, order: int | None=None) -> CarryoverOrder
+mixdyn.experiments:choose_tests def(panel: MediaPanel, geo: Geo, readings: Readings, candidates: Sequence[Candidate], budget: float, periods: int, limits: Mapping[Channel, Range], *, test_budget: float, seed: int, cost: Cost=_GROSS, update: Update=_REWEIGHT, draws: int=1024, exhaustive: int=256, level: float=0.9, revenue_per_kpi: float=1.0, uses: float=1.0, grid: int=512) -> ExperimentChoice
+mixdyn.experiments:designs def(panel: MediaPanel, geo: Geo, channels: Sequence[Channel], noise: Noise, *, when: When, multipliers: Sequence[float]=(0.0, 0.5, 1.5, 2.0), durations: Sequence[int]=(2, 4, 8), cooldown: int=8, shares: Sequence[float]=(0.05, 0.1, 0.2, 0.3, 0.5)) -> tuple[Candidate, ...]
+mixdyn.experiments:log_did def(treated: _Array, control: _Array, pre: int) -> tuple[float, float]
+mixdyn.experiments:match_controls def(treated: Sequence[int], candidates: Sequence[int], features: Mapping[str, npt.ArrayLike]) -> GeoDesign
+mixdyn.experiments:pair_geos def(score: npt.ArrayLike, *, size: int=2) -> Blocks
+mixdyn.experiments:power def(kpi_history: npt.ArrayLike, design: GeoDesign, readout: int, lifts: npt.ArrayLike, *, pre: int, reps: int, seed: int, alpha: float=0.05, read: Reader=_read_did) -> Power
+mixdyn.experiments:predicted_lift def(readings: Readings, candidate: Candidate) -> _Array
+mixdyn.experiments:read_did def(panel: MediaPanel, design: GeoTest, *, alpha: float=0.05, warmup: int=13, variance: Literal['placebo', 'unit_placebo']='placebo', pairs: Sequence[tuple[Geo, Geo]] | None=None, seed: int=0) -> tuple[LiftEstimate, GeoReading]
+mixdyn.experiments:read_pairs def(panel: MediaPanel, design: GeoTest, pairs: Sequence[tuple[Geo, Geo]], *, alpha: float=0.05, seed: int=0) -> tuple[LiftEstimate, GeoReading]
+mixdyn.experiments:read_sdid def(panel: MediaPanel, treated: Collection[Geo], start: np.datetime64, end: np.datetime64, *, spend: npt.ArrayLike, planned: npt.ArrayLike, alpha: float=0.05, variance: Variance='placebo', quantile: Quantile='t', replications: int=200, seed: int=0, control: Collection[Geo] | None=None) -> tuple[LiftEstimate, SdidReading]
+mixdyn.experiments:read_switchback def(kpi: npt.ArrayLike, spend: npt.ArrayLike, design: SwitchbackDesign, *, level: float=0.95, method: Method='randomization', bandwidth: Bandwidth='newey-west', burn_in: int | None=None) -> tuple[LiftEstimate, SwitchbackReading]
+mixdyn.experiments:read_synthetic_control def(panel: MediaPanel, design: GeoTest, *, alpha: float=0.05, blank: int=8) -> tuple[LiftEstimate, GeoReading]
+mixdyn.experiments:read_tbr def(panel: MediaPanel, design: GeoTest, *, alpha: float=0.05, warmup: int=13, variance: Literal['placebo', 'iid', 'unit_placebo']='placebo', pairs: Sequence[tuple[Geo, Geo]] | None=None, seed: int=0) -> tuple[LiftEstimate, GeoReading]
+mixdyn.experiments:seesaw def(panel: MediaPanel, geo: Geo, channels: Sequence[Channel], noise: Noise, *, when: When, high: float=1.5, low: float=0.5, block: int=2, blocks: int=8, cooldown: int=8, shares: Sequence[float]=(0.05, 0.1, 0.2, 0.3, 0.5)) -> tuple[Candidate, ...]
+mixdyn.experiments:stratified_design def(kpi_history: npt.ArrayLike, readout: int, *, pre: int, seed: int, candidates: int=200, size: int=2, share: float=0.5) -> StratifiedDesign
+mixdyn.experiments:switchback_design def(periods: npt.ArrayLike, block: int, washout: int, *, seed: int, share: float=0.5) -> SwitchbackDesign
+mixdyn.experiments:synthetic_did def(y: npt.ArrayLike, treated: npt.ArrayLike, post: int, *, weights: Literal['sdid', 'did']='sdid') -> SdidFit
+mixdyn.experiments:value_of_tests def(panel: MediaPanel, geo: Geo, readings: Readings, candidates: Sequence[Candidate], budget: float, periods: int, limits: Mapping[Channel, Range], *, seed: int, cost: Cost=_GROSS, update: Update=_REWEIGHT, draws: int=1024, level: float=0.9, revenue_per_kpi: float=1.0, uses: float=1.0, grid: int=512) -> ExperimentValues
+mixdyn.inference:Chains @dataclass(frozen=True, slots=True) class()
+  .positions: _Array
+  .log_density: _Array
+  .accept: _Array
+  .depth: npt.NDArray[np.int64]
+  .leapfrogs: npt.NDArray[np.int64]
+  .divergent: npt.NDArray[np.bool_]
+  .energy: _Array
+  .step: _Array
+  .inverse_metric: _Array
+mixdyn.inference:Diagnostics @dataclass(frozen=True, slots=True) class()
+  .rhat: _Array
+  .ess_bulk: _Array
+  .ess_tail: _Array
+mixdyn.inference:HealthCard @dataclass(frozen=True, slots=True, eq=False) class()
+  .max_rhat: float
+  .ppp: float
+  .ppp_se: float
+  .total: float
+  .totals: _Array
+  .negative_baseline: float
+  .negative_baseline_periods: _Array
+  .shift: Mapping[str, float]
+  .width: Mapping[str, float]
+  .consistency: Mapping[str, float]
+  .flags def(self, *, max_rhat: float | None=None, min_ppp: float | None=None, max_negative_baseline: float | None=None, max_width: float | None=None, tail: float | None=None) -> dict[str, bool]
+mixdyn.inference:LogDensity type = Callable[[_Array], tuple[float, _Array]]
+mixdyn.inference:Loo @dataclass(frozen=True, slots=True) class()
+  .elpd: float
+  .se: float
+  .p_loo: float
+  .pointwise: _Array
+  .pareto_k: _Array
+  .k_threshold: float
+mixdyn.inference:Psis @dataclass(frozen=True, slots=True) class()
+  .log_weights: _Array
+  .pareto_k: float
+  .k_threshold: float
+  .ess: float
+mixdyn.inference:loo def(log_likelihood: _Array) -> Loo
+mixdyn.inference:psis def(log_ratios: npt.ArrayLike, *, efficiency: float=1.0) -> Psis
+mixdyn.inference:sample def(log_density: LogDensity, initial: _Array, *, seed: int, warmup: int=1000, draws: int=1000, max_depth: int=10, target: float=0.8) -> Chains
+mixdyn.inference:stacking def(pointwise: _Array) -> _Array
+mixdyn.inference.sensitivity:Benchmark @dataclass(frozen=True, slots=True) class()
+  .control: str
+  .r2_treatment: float
+  .r2_outcome: float
+mixdyn.inference.sensitivity:BiasBound @dataclass(frozen=True, slots=True) class()
+  .r2_outcome: float
+  .r2_treatment: float
+  .bias: float
+  .estimate: float
+  .se: float
+  .lower: float
+  .upper: float
+  .label: str = ''
+mixdyn.inference.sensitivity:MsmSensitivity @dataclass(frozen=True, slots=True, eq=False) class()
+  .channel: str
+  .level: float
+  .roi: float
+  .gammas: _Array
+  .lower: _Array
+  .upper: _Array
+  .allowance: _Array
+  .scale: _Array
+  .gamma_star: float
+mixdyn.inference.sensitivity:RidgeSensitivity @dataclass(frozen=True, slots=True, eq=False) class()
+  .channel: str
+  .coefficient: float
+  .estimate: float
+  .se: float
+  .dof: int
+  .level: float
+  .partial_r2: float
+  .robustness: float
+  .robustness_half: float
+  .robustness_interval: float
+  .robustness_interval_half: float
+  .benchmarks: tuple[Benchmark, ...]
+  .bound def(self, r2_outcome: float, r2_treatment: float, label: str='') -> BiasBound
+  .benchmark def(self, control: str, kd: float=1.0, ky: float | None=None) -> BiasBound
+mixdyn.inference.sensitivity:msm_sensitivity def(posterior: BayesFit, channel: str, gammas: Sequence[float] | npt.ArrayLike=(1.0, 1.1, 1.5, 2.0, 3.0), level: float=0.9) -> MsmSensitivity
+mixdyn.inference.sensitivity:ridge_sensitivity def(fit: RidgeFit, channel: str, level: float=0.9) -> RidgeSensitivity
+mixdyn.inference.sensitivity:robustness_value def(t: float, df: int, q: float=1.0, alpha: float | None=None) -> float
+mixdyn.models:BayesFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .spec: BayesSpec
+  .dates: npt.NDArray[np.datetime64]
+  .y: _Array
+  .fitted: npt.NDArray[np.bool_]
+  .draws: Mapping[str, _Array]
+  .log_likelihood: _Array
+  .contributions: Mapping[str, _Array]
+  .estimated: _Array
+  .diagnostics: Mapping[str, Diagnostics]
+  .divergent: npt.NDArray[np.int64]
+  .e_bfmi: _Array
+  .length: int
+  .spend: Mapping[str, _Array]
+  .cadence: Cadence
+  .channels def(self) -> dict[str, response.Channel]
+  .channel_draws def(self, count: int) -> list[dict[str, response.Channel]]
+mixdyn.models:BayesGeoFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .spec: BayesGeoSpec
+  .dates: npt.NDArray[np.datetime64]
+  .geos: tuple[Geo, ...]
+  .population: _Array
+  .y: _Array
+  .fitted: npt.NDArray[np.bool_]
+  .draws: Mapping[str, _Array]
+  .log_likelihood: _Array
+  .contributions: Mapping[str, _Array]
+  .estimated: _Array
+  .diagnostics: Mapping[str, Diagnostics]
+  .divergent: npt.NDArray[np.int64]
+  .e_bfmi: _Array
+  .length: int
+  .channels def(self, geo: Geo) -> dict[str, response.Channel]
+  .channel_draws def(self, geo: Geo, count: int) -> list[dict[str, response.Channel]]
+mixdyn.models:BayesGeoSpec @dataclass(frozen=True, slots=True) class()
+  .media: tuple[BayesMedia, ...]
+  .controls: tuple[Control, ...] = ()
+  .trend: LinearTrend | None = None
+  .season: FourierSeason | None = None
+  .likelihood: GeoLikelihood = field(default_factory=Normal)
+  .saturation: Saturation = field(default_factory=HillCurve)
+  .spread: float = 1.0
+  .centred: frozenset[str] = frozenset()
+  .noise_prior: Literal['half-normal', 'log-normal'] = 'half-normal'
+  .base_prior: Literal['log-normal', 'normal'] = 'log-normal'
+  .slope: Literal['sampled', 'fixed'] = 'sampled'
+  .one_geo def(self) -> BayesSpec
+mixdyn.models:BayesMedia @dataclass(frozen=True, slots=True) class()
+  .channel: str
+  .roi: ReturnPrior = field(default_factory=RoiPrior)
+mixdyn.models:BayesSpec @dataclass(frozen=True, slots=True) class()
+  .media: tuple[BayesMedia, ...]
+  .controls: tuple[Control, ...] = ()
+  .trend: LinearTrend | None = None
+  .season: FourierSeason | None = None
+  .likelihood: Likelihood = field(default_factory=Normal)
+  .saturation: Saturation = field(default_factory=HillCurve)
+  .kernel: int | None = None
+  .calendar_terms def(self) -> tuple[str, ...]
+  .calendar def(self, periods: int, *, ahead: int=0) -> _Array
+mixdyn.models:Bounds @dataclass(frozen=True, slots=True) class()
+  .lower: float
+  .upper: float
+mixdyn.models:Calibration @dataclass(frozen=True, slots=True, eq=False) class()
+  .estimates: Mapping[str, float]
+  .weight: float
+mixdyn.models:CellResponse @dataclass(frozen=True, slots=True, eq=False) class()
+  .history: _Array
+  .scale: float
+  .length: int
+  .weights: _Array
+  .retentions: _Array
+  .curvatures: _Array
+  .coefficients: _Array
+  .slope def(self, weekly: npt.ArrayLike, periods: int) -> _Array
+  .worth def(self, weekly: npt.ArrayLike, periods: int) -> _Array
+mixdyn.models:CheckCode class(Enum)
+  .NEGATIVE_BASE = 'negative_base'
+  .BASE_ABOVE_KPI = 'base_above_kpi'
+  .EFFECT_ABOVE_TWICE_MAX = 'effect_above_twice_max'
+  .UNMIXED = 'unmixed'
+mixdyn.models:ComponentBounds @dataclass(frozen=True, slots=True, eq=False) class()
+  .base: Bounds | None
+  .seasonality: Bounds | None
+  .contributions: Mapping[str, Bounds]
+mixdyn.models:Components @dataclass(frozen=True, slots=True, eq=False) class()
+  .base: _Array | None
+  .seasonality: _Array | None
+  .contributions: Mapping[str, _Array]
+  .total def(self) -> _Array
+mixdyn.models:Control @dataclass(frozen=True, slots=True) class()
+  .column: str
+  .lower: float = -math.inf
+  .upper: float = math.inf
+mixdyn.models:DegenerateFitError class(ValueError)
+mixdyn.models:DiscountGrid @dataclass(frozen=True, slots=True) class()
+  .trend: tuple[float, ...] = ()
+  .season: tuple[float, ...] = ()
+  .effects: tuple[float, ...] | PerEffect = ()
+  .parameters def(self, spec: DlmSpec) -> int
+  .specs def(self, spec: DlmSpec) -> tuple[DlmSpec, ...]
+  .blocks def(self, spec: DlmSpec) -> tuple[tuple[DlmSpec, ...], ...]
+  .edges def(self, kept: Sequence[DlmSpec], best: DlmSpec) -> tuple[Edge, ...]
+mixdyn.models:DlmChoice @dataclass(frozen=True, slots=True, eq=False) class()
+  .specs: tuple[DlmSpec, ...]
+  .filtered: tuple[DLMFit, ...]
+  .best: int
+  .kept: Mapping[int, DlmFit]
+  .edges: tuple[Edge, ...] = ()
+  .lifts: tuple[float, ...] = ()
+  .fit @property def(self) -> DlmFit
+  .log_likelihoods @property def(self) -> tuple[float, ...]
+  .bounds def(self, view: Callable[[DlmDecomposition], Components], *, draws: int, seed: int, level: float=0.9) -> ComponentBounds
+  .coefficient_bounds def(self, level: float=0.9) -> Mapping[str, Bounds]
+  .channels def(self, at: int=-1) -> dict[str, response.Channel]
+  .readings def(self, draws: int, seed: int) -> tuple[tuple[response.Channel, ...], ...]
+  .forecast def(self, horizon: int, plan: Mapping[str, npt.ArrayLike], draws: int, seed: int) -> DlmForecastDraws
+mixdyn.models:DlmDecomposition @dataclass(frozen=True, slots=True, eq=False) class()
+  .dates: _Dates
+  .draws: Components
+  .window def(self, start: np.datetime64, end: np.datetime64) -> Components
+  .change def(self, before: tuple[np.datetime64, np.datetime64], after: tuple[np.datetime64, np.datetime64]) -> Components
+mixdyn.models:DlmDiagnostics @dataclass(frozen=True, slots=True, eq=False) class()
+  .dates: _Dates
+  .scores: _Array
+  .lags: int
+  .ljung_box: Statistic
+  .normality: Statistic
+  .durbin_watson: float
+  .log_likelihood: float
+  .arl: float
+  .drift: _Dates
+  .findings: tuple[Finding, ...]
+mixdyn.models:DlmFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .spec: DlmSpec
+  .dates: npt.NDArray[np.datetime64]
+  .cadence: Cadence
+  .y: _Array
+  .x: _Array
+  .filtered: DLMFit
+  .smoothed: SmoothedStates
+  .signed: ConstrainedDraws | None
+  .base: _Array | None
+  .seasonality: _Array | None
+  .contributions: Mapping[str, _Array]
+  .estimated: _Array
+  .spend: Mapping[str, _Array]
+  .lifted: Lifted | None = None
+  .baselines: Mapping[str, float] = field(default_factory=lambda: MappingProxyType({}))
+  .log_likelihood @property def(self) -> float
+  .last def(self) -> tuple[_Array, _Array, float, float]
+  .channels def(self, at: int=-1) -> dict[str, response.Channel]
+mixdyn.models:DlmForecast @dataclass(frozen=True, slots=True, eq=False) class()
+  .dates: npt.NDArray[np.datetime64]
+  .mean: _Array
+  .scale: _Array
+  .dof: _Array
+  .base: _Array | None
+  .seasonality: _Array | None
+  .contributions: Mapping[str, _Array]
+  .interval def(self, level: float) -> tuple[_Array, _Array]
+mixdyn.models:DlmForecastDraws @dataclass(frozen=True, slots=True, eq=False) class()
+  .dates: npt.NDArray[np.datetime64]
+  .kpi: _Array
+  .acceptance: float
+mixdyn.models:DlmSpec @dataclass(frozen=True, slots=True) class()
+  .effects: tuple[Effect, ...]
+  .trend: Trend | None = None
+  .season: Season | None = None
+  .form: Literal['additive', 'multiplicative'] = 'additive'
+  .variance_discount: float = 1.0
+  .signs def(self) -> dict[int, Sign]
+  .season_observed def(self) -> list[bool]
+  .blocks def(self) -> tuple[Polynomial | Regression | Seasonal, ...]
+mixdyn.models:Edge @dataclass(frozen=True, slots=True) class()
+  .parameter: str
+  .end: float
+  .best: bool
+mixdyn.models:Effect @dataclass(frozen=True, slots=True) class()
+  .column: str
+  .discount: float
+  .hold_when_idle: bool = True
+  .sign: Sign | None = None
+  .transform: Transform | None = None
+mixdyn.models:Finding @dataclass(frozen=True, slots=True, eq=False) class()
+  .code: CheckCode
+  .message: str
+  .effect: str | None
+  .dates: _Dates
+mixdyn.models:FourierSeason @dataclass(frozen=True, slots=True) class()
+  .period: float
+  .harmonics: int
+  .terms def(self) -> tuple[str, ...]
+  .columns def(self, periods: int) -> _Array
+mixdyn.models:GeoDlmFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .spec: GeoDlmSpec
+  .dates: npt.NDArray[np.datetime64]
+  .cadence: Cadence
+  .geos: tuple[Geo, ...]
+  .y: _Array
+  .x: _Array
+  .spread: GeoSpread
+  .smoothed: SmoothedStates
+  .base: _Array | None
+  .seasonality: _Array | None
+  .contributions: Mapping[str, _Array]
+  .estimated: _Array
+mixdyn.models:GeoDlmSpec @dataclass(frozen=True, slots=True) class()
+  .effects: tuple[Effect, ...]
+  .trend: Trend | None = None
+  .season: Season | None = None
+  .form: Literal['additive', 'multiplicative'] = 'additive'
+  .variance_discount: float = 1.0
+  .one_geo def(self) -> DlmSpec
+  .national def(self) -> tuple[Regression, ...]
+  .regional def(self) -> tuple[Polynomial | Regression | Seasonal, ...]
+  .deviations def(self) -> range
+mixdyn.models:GeoEffects @dataclass(frozen=True, slots=True, eq=False) class()
+  .effects: tuple[str, ...]
+  .level: float
+  .mean: _Array
+  .lower: _Array
+  .upper: _Array
+mixdyn.models:LiftReading @dataclass(frozen=True, slots=True, eq=False) class()
+  .channels: tuple[str, ...]
+  .coordinates: npt.NDArray[np.intp]
+  .weights: _Array
+  .lift: _Array
+  .se: _Array
+mixdyn.models:Lifted @dataclass(frozen=True, slots=True, eq=False) class()
+  .reading: LiftReading
+  .log_density: float
+  .mean: _Array
+  .covariance: _Array
+  .dof: float
+  .scale: float
+  .smoothed: SmoothedStates
+  .units: _Array
+  .kpi: _Array
+  .cross: _Array
+  .factor: tuple[_Array, bool]
+mixdyn.models:LinearTrend @dataclass(frozen=True, slots=True) class()
+  .knots: int = 0
+  .terms def(self) -> tuple[str, ...]
+  .columns def(self, periods: int, *, ahead: int=0) -> _Array
+mixdyn.models:MarginFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .mean: _Array
+  .cov: _Array
+  .retention: _Array
+  .top: tuple[float, ...]
+  .top_weight: float
+  .phi: float
+  .phases: tuple[int, ...]
+  .rows: int
+  .burn_in: int
+  .columns: int
+  .prior_share: _Array
+  .spanned: npt.NDArray[np.bool_]
+  .share: float = 1.0
+  .promoted: float = 1.0
+mixdyn.models:Media @dataclass(frozen=True, slots=True) class()
+  .channel: str
+  .adstock: Adstock
+  .hill: Hill
+mixdyn.models:Mixture @dataclass(frozen=True, slots=True, eq=False) class()
+  .points: npt.NDArray[np.intp]
+  .weights: _Array
+  .coefficients: _Array
+mixdyn.models:NestedFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .spec: NestedSpec
+  .stage_one: BayesFit
+  .stage_two: BayesFit
+  .mediated_log_likelihood: _Array
+  .mediator_coefficient def(self) -> _Array
+  .roi def(self) -> dict[str, _Array]
+  .channels def(self) -> dict[str, response.Channel]
+  .channel_draws def(self, count: int) -> list[dict[str, response.Channel]]
+mixdyn.models:NestedSpec @dataclass(frozen=True, slots=True) class()
+  .mediator: str
+  .stage_one: BayesSpec
+  .stage_two: BayesSpec
+mixdyn.models:NoiseMixture @dataclass(frozen=True, slots=True) class()
+  .knot_every: int = MIXTURE_KNOT_EVERY
+  .persistence: tuple[float, ...] = PERSISTENCE
+  .share: tuple[float, ...] = SHARE
+  .promoted: tuple[float, ...] = PROMOTED
+  .white: bool = True
+  .pairs def(self) -> list[tuple[float, float]]
+  .models def(self) -> list[tuple[float, float, float]]
+mixdyn.models:PerEffect @dataclass(frozen=True, slots=True) class()
+  .values: tuple[float, ...]
+  .held: tuple[str, ...] = ()
+  .varied def(self, spec: DlmSpec) -> list[int]
+mixdyn.models:PooledGeoFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .geos: tuple[Geo, ...]
+  .channels: tuple[Channel, ...]
+  .national: frozenset[Channel]
+  .length: int
+  .selected: tuple[int, ...]
+  .mixtures: tuple[Mixture, ...]
+  .shares: _Array
+  .scale: _Array
+  .spend: _Array
+  .sigma: _Array
+  .margin: _Array
+  .prior_sd: _Array
+  .rows: int
+  .tests: int
+  .cell def(self, geo: Geo | None, channel: Channel) -> CellResponse
+mixdyn.models:RidgeFit @dataclass(frozen=True, slots=True, eq=False) class()
+  .spec: RidgeSpec
+  .dates: npt.NDArray[np.datetime64]
+  .y: _Array
+  .fitted: npt.NDArray[np.bool_]
+  .design: _Array
+  .intercept: float
+  .coefficients: Mapping[str, float]
+  .bound: Mapping[str, bool]
+  .half_saturation: Mapping[str, float]
+  .contributions: Mapping[str, _Array]
+  .estimated: _Array
+  .spend: Mapping[str, float]
+  .length: int
+  .calibration: Calibration | None = None
+  .nrmse def(self) -> float
+  .decomp_rssd def(self) -> float
+  .channels def(self) -> dict[str, response.Channel]
+mixdyn.models:RidgeSpec @dataclass(frozen=True, slots=True) class()
+  .media: tuple[Media, ...]
+  .controls: tuple[Control, ...]
+  .penalty: float
+  .trend: LinearTrend | None = None
+  .season: FourierSeason | None = None
+  .terms def(self) -> tuple[str, ...]
+  .calendar def(self, periods: int) -> _Array
+mixdyn.models:Season @dataclass(frozen=True, slots=True) class()
+  .period: float
+  .harmonics: int
+  .discount: float
+mixdyn.models:Statistic @dataclass(frozen=True, slots=True) class()
+  .value: float
+  .p_value: float
+mixdyn.models:TransformGrid @dataclass(frozen=True, slots=True) class()
+  .retentions: tuple[float, ...]
+  .half_saturations: tuple[float, ...]
+  .shapes: tuple[Shape, ...]
+  .parameters @property def(self) -> int
+  .refined def(self, level: int) -> TransformGrid
+mixdyn.models:Trend @dataclass(frozen=True, slots=True) class()
+  .order: Literal[1, 2]
+  .discount: float
+mixdyn.models:choose_dlm def(panel: MediaPanel, geo: Geo, spec: DlmSpec, grid: DiscountGrid, *, level: float=0.95, estimates: Mapping[str, Sequence[LiftEstimate]] | None=None) -> DlmChoice
+mixdyn.models:decompose_dlm def(fit: DlmFit, *, draws: int, seed: int) -> DlmDecomposition
+mixdyn.models:diagnose_dlm def(fit: DlmFit, arl: float=1000.0) -> DlmDiagnostics
+mixdyn.models:fit_bayes def(panel: MediaPanel, geo: Geo, spec: BayesSpec, *, seed: int, window: tuple[np.datetime64, np.datetime64] | None=None, tests: Mapping[str, Sequence[LiftTest]] | None=None, estimates: Mapping[str, Sequence[LiftEstimate]] | None=None, series: Mapping[str, Sequence[LiftSeries]] | None=None, chains: int=4, warmup: int=1000, draws: int=1000, start: Start=_PATHFINDER_START, coordinates: Coordinates=_NATURAL) -> BayesFit
+mixdyn.models:fit_bayes_geo def(panel: MediaPanel, spec: BayesGeoSpec, *, seed: int, window: tuple[np.datetime64, np.datetime64] | None=None, estimates: Mapping[str, Sequence[LiftEstimate]] | None=None, chains: int=4, warmup: int=1000, draws: int=1000, start: Start=_UNIFORM_START) -> BayesGeoFit
+mixdyn.models:fit_dlm def(panel: MediaPanel, geo: Geo, spec: DlmSpec, prior: Prior | None=None, *, draws: int=1000, seed: int=0, estimates: Mapping[str, Sequence[LiftEstimate]] | None=None) -> DlmFit
+mixdyn.models:fit_geo_dlm def(panel: MediaPanel, spec: GeoDlmSpec, prior: Prior | None=None, *, draws: int=64, seed: int=0, level: float=0.9) -> GeoDlmFit
+mixdyn.models:fit_margins def(sales: npt.ArrayLike, spend: npt.ArrayLike, promotion: npt.ArrayLike | None, price: npt.ArrayLike | None, kernel: int, *, noise: NoiseMixture | None=MIXTURE) -> MarginFit
+mixdyn.models:fit_nested def(panel: MediaPanel, geo: Geo, spec: NestedSpec, *, seed: int, window: tuple[np.datetime64, np.datetime64] | None=None, estimates: Mapping[str, Sequence[LiftEstimate]] | None=None, mediator_estimates: Mapping[str, Sequence[LiftEstimate]] | None=None, chains: int=4, warmup: int=1000, draws: int=1000, start: Start=_PATHFINDER_START) -> NestedFit
+mixdyn.models:fit_pooled_geos def(panel: MediaPanel, estimates: Mapping[str, Sequence[LiftEstimate]], length: int) -> PooledGeoFit
+mixdyn.models:fit_ridge def(panel: MediaPanel, geo: Geo, spec: RidgeSpec, window: tuple[np.datetime64, np.datetime64] | None=None, tests: Mapping[str, Sequence[LiftTest]] | None=None) -> RidgeFit
+mixdyn.models:forecast_dlm def(fit: DlmFit, horizon: int, plan: Mapping[str, npt.ArrayLike]) -> DlmForecast
+mixdyn.models:forecast_draws def(fit: DlmFit, horizon: int, plan: Mapping[str, npt.ArrayLike], draws: int, seed: int) -> DlmForecastDraws
+mixdyn.models:geo_effects def(fit: GeoDlmFit, level: float=0.9) -> GeoEffects
+mixdyn.models:search_media def(panel: MediaPanel, geo: Geo, spec: DlmSpec, grid: TransformGrid, discounts: DiscountGrid, *, refinements: int=1, level: float=0.95, fitted: int | None=None, estimates: Mapping[str, Sequence[LiftEstimate]] | None=None, half_saturation_prior: float | None=None) -> DlmChoice
+mixdyn.models:transforms_from_bayes def(fit: BayesFit) -> dict[str, Transform]
+mixdyn.models:vague_geo_prior def(panel: MediaPanel, spec: GeoDlmSpec) -> Prior
+mixdyn.models:vague_prior def(panel: MediaPanel, geo: Geo, spec: DlmSpec) -> Prior
+mixdyn.models.demand:DemandProxy @dataclass(frozen=True, slots=True) class()
+  .column: str
+  .role: Role
+  .searched: tuple[str, ...]
+  .controls def(self) -> tuple[Control, ...]
+  .reading def(self, channel: str) -> Reading
+mixdyn.models.demand:Reading type = Literal['adjusted', 'direct', 'confounded', 'total']
+mixdyn.models.demand:Role type = Literal['confounder', 'mediator']
+mixdyn.transforms:Adstock type = Geometric | WeibullCdf
+mixdyn.transforms:Geometric @dataclass(frozen=True, slots=True) class()
+  .theta: float
+mixdyn.transforms:Hill @dataclass(frozen=True, slots=True) class()
+  .alpha: float
+  .gamma: float
+mixdyn.transforms:HillShape @dataclass(frozen=True, slots=True) class()
+  .slope: float
+mixdyn.transforms:Shape type = TanhShape | HillShape
+mixdyn.transforms:TanhShape @dataclass(frozen=True, slots=True) class()
+mixdyn.transforms:Transform @dataclass(frozen=True, slots=True) class()
+  .retention: float
+  .half_saturation: float
+  .shape: Shape
+  .length: int
+  .kernel def(self) -> response.GeometricAdstock
+  .curve def(self) -> response.Tanh | response.Hill
+  .channel def(self, coefficient: float) -> response.Channel
+  .column def(self, spend: npt.ArrayLike) -> _Array
+mixdyn.transforms:WeibullCdf @dataclass(frozen=True, slots=True) class()
+  .shape: float
+  .scale: float
+mixdyn.transforms:carry_over def(spend: npt.ArrayLike, adstock: Adstock) -> _Array
+mixdyn.transforms:channel def(adstock: Adstock, hill: Hill, half: float, coefficient: float, length: int) -> response.Channel
+mixdyn.transforms:half_saturation def(hill: Hill, window: npt.ArrayLike) -> float
+mixdyn.transforms:robyn_weibull def(shape: float, scale: float, length: int) -> Adstock
+mixdyn.transforms:saturate def(adstocked: npt.ArrayLike, hill: Hill, half: float) -> _Array
