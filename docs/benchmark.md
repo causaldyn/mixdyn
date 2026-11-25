@@ -657,8 +657,16 @@ beats on 4, ties on 2, of 6; against Robyn tuned it beats on 6, of 6.
   every arm and scores every record (its docstring gives the environment); `python -m
   scorecard.claim read --recorded <roots>` reads the claim, the verdicts, Holm's losses and the
   recorded arms less every rival. M5 took 250 CPU-hours, M4 took 1 502 CPU-hours and
-  M3 took 5 201 CPU-hours (Compute, below). Their per-world records are not published yet, so the
-  readings cannot be re-run without re-running the worlds.
+  M3 took 5 201 CPU-hours (Compute, below). Their per-world records are assets of release v0.3.0,
+  under CC BY 4.0. Each run's scores archive ([M5](https://github.com/causaldyn/mixdyn/releases/download/v0.3.0/mixdyn-m5-scores.tar.zst),
+  [M4](https://github.com/causaldyn/mixdyn/releases/download/v0.3.0/mixdyn-m4-scores.tar.zst), [M3](https://github.com/causaldyn/mixdyn/releases/download/v0.3.0/mixdyn-m3-scores.tar.zst)) holds each root's
+  `run.json` and `scores.jsonl`: enough to re-run the reading. Its
+  `mixdyn-<run>-records-part<N>.tar.zst` hold every arm's record and every world's export, a
+  family's roots in one part. [`MANIFEST.json`](https://github.com/causaldyn/mixdyn/releases/download/v0.3.0/MANIFEST.json) says what each archive holds, and
+  [`SHA256SUMS`](https://github.com/causaldyn/mixdyn/releases/download/v0.3.0/SHA256SUMS) checks each one. Home-directory paths and the cloud box's
+  hostname are replaced in them, so a file's SHA-256 differs from the one `evidence/results/` names;
+  `MANIFEST.json` lists both. `claim read --recorded` on the extracted roots prints each run's
+  reading byte for byte.
 - **The tables of the claim, the worlds per cell, the words, the losses, the tuned rivals, the
   versions and the compute are written, not typed.** `scripts/readme_record.py extract` read them
   from each run's records and reading into `evidence/results/m5_record.json`,

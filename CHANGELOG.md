@@ -5,7 +5,7 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
-## [Unreleased]
+## [0.3.0] — 2026-11-25
 
 The rules the benchmark scored are public planners: `plan_margins`, `plan_anchored_margins` and
 `plan_pooled_geos` plan what `margin held`, `anchored floored` and `geo eb` planned, to the last bit
@@ -13,10 +13,16 @@ The rules the benchmark scored are public planners: `plan_margins`, `plan_anchor
 `__all__` is public, and a snapshot holds the surface's signatures. `stacked` and `lift_row_pick`
 are renamed; the old names warn until 1.0.0. The benchmark page reads the claim arms' diagnostic
 flags, post hoc, on M4's and M5's records. The reading changes no verdict. The margin planners set
-a channel they fill to its ceiling exactly, which moves a plan by at most a unit in the last place.
+a channel they fill to its ceiling exactly, which moves a plan by at most a unit in the last place. The
+per-world records of M3, M4 and M5 are assets of this release.
 
 ### Added
 
+- **The per-world records of M3, M4 and M5**, as assets of this release under CC BY 4.0: each
+  run's scores archive, enough to re-run its reading, and its records in parts of a few families.
+  Home-directory paths and the cloud box's hostname are replaced, so a file's SHA-256 differs from
+  the one `evidence/results/` names; `MANIFEST.json` lists both, and `claim read --recorded` on the
+  extracted roots prints each run's reading byte for byte.
 - **The scored rules' public planners** (`mixdyn.decisions`, ADR 0102). `plan_margins` plans as
   `margin held` does, at k = 0; `plan_anchored_margins` as `anchored floored` does at its default
   `spend_floor=0.9`, and as `anchored held` with `spend_floor=None`; `plan_pooled_geos` as `geo eb`
@@ -63,6 +69,9 @@ a channel they fill to its ceiling exactly, which moves a plan by at most a unit
 
 ### Changed
 
+- **`uv.lock` locks causal-hybrid-control 1.5.0**, from 1.3.1. The dependency's floor stays
+  `>=1.2.0`; the changes between them that the engine reads are opt-in or in planners it does not
+  call, and the suite reads as before.
 - **`GeoEbFit` and `fit_geo_eb` are `PooledGeoFit` and `fit_pooled_geos`**, renamed before either
   entered the format's registry, at the module path they had (`mixdyn.models.geo_eb`).
 - **Every module's `__all__` is public** (ADR 0062, amended by ADR 0102), as the API index already

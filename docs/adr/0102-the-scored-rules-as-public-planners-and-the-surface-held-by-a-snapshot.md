@@ -1,6 +1,6 @@
 # 0102. The scored rules as public planners, the spend floor as a parameter, and the surface held by a snapshot
 
-Status: proposed, 2026-11-25; adds `mixdyn.decisions.plan_margins`, `plan_anchored_margins` and
+Status: accepted, 2026-11-25; adds `mixdyn.decisions.plan_margins`, `plan_anchored_margins` and
 `plan_pooled_geos` and their results, and makes public the engines' fits and specs that public
 functions take or hold; renames `stacked` and `lift_row_pick` by ADR 0062's removal rule; amends
 ADR 0062: every module's `__all__` is public, and `tests/test_public_api.py` holds the surface to a

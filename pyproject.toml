@@ -1,6 +1,6 @@
 [project]
 name = "mixdyn"
-version = "0.2.4"
+version = "0.3.0"
 description = "Media-mix modelling engine: dynamic linear models, geo hierarchies and budget plans."
 readme = "README.md"
 requires-python = ">=3.12"
