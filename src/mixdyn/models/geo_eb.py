@@ -54,8 +54,8 @@ likelihood with the others held. Then each channel's posterior over its own grid
 their points and a uniform prior on the grid: its weights above `KEPT`, renormalised, and under
 each kept point the posterior mean of every coefficient.
 
-A cell of a plan (`GeoEbFit.cell`) is a geo's own channel, or a channel bought nationally as one
-spend: split by the population shares, its geos' columns are one channel of the national spend,
+A cell of a plan (`PooledGeoFit.cell`) is a geo's own channel, or a channel bought nationally as
+one spend: split by the population shares, its geos' columns are one channel of the national spend,
 of scale `xbar_c` and coefficient `sum_g p_g b_gc` (`validation/geo_eb.mac`). Its expected worth
 under the posterior (`CellResponse`) is the mixture over the channel's kept points of its worth at
 the posterior mean coefficients, as worth is linear in them;
@@ -212,7 +212,7 @@ class CellResponse:
 
 
 @dataclass(frozen=True, slots=True, eq=False)
-class GeoEbFit:
+class PooledGeoFit:
     """The fit of a panel over geos (the module).
 
     `channels` and `geos` are the panel's, `national` its channels bought nationally, `length` the
@@ -282,9 +282,9 @@ class GeoEbFit:
         )
 
 
-def fit_geo_eb(
+def fit_pooled_geos(
     panel: MediaPanel, estimates: Mapping[str, Sequence[LiftEstimate]], length: int
-) -> GeoEbFit:
+) -> PooledGeoFit:
     """The model over geos (the module) fitted to `panel` with each channel's lift `estimates`,
     its kernel `length` weeks long.
 
@@ -524,7 +524,7 @@ class _Model:
         cand[:, c] = np.arange(self.J)
         return cand
 
-    def fit(self) -> GeoEbFit:
+    def fit(self) -> PooledGeoFit:
         sel = self.reference.copy()
         for _ in range(SWEEPS):
             for c in range(self.C):
@@ -540,7 +540,7 @@ class _Model:
             w = w[keep] / w[keep].sum()
             mixtures.append(Mixture(np.flatnonzero(keep), w, beta[keep][:, :, c]))
         panel = self.panel
-        return GeoEbFit(
+        return PooledGeoFit(
             geos=panel.geos,
             channels=panel.channels,
             national=frozenset(panel.national),

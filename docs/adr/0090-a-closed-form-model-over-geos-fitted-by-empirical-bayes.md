@@ -22,7 +22,7 @@ one that screen froze, before the held-out worlds were read once.
 
 ## Decision
 
-### The model (`mixdyn.models.geo_eb.fit_geo_eb`)
+### The model (`mixdyn.models.fit_pooled_geos`, named `fit_geo_eb` until 0.3.0)
 
 The module's docstring states it in full. In short, from a geo panel, its lift estimates and the
 kernel's length:

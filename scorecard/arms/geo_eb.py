@@ -1,7 +1,7 @@
 """The engine's closed-form model over geos as an arm: one empirical-Bayes fit of a geo export's
 panel, every geo test a row of its likelihood, and one plan of every cell of the export (ADR 0090).
 
-The fit is `mixdyn.models.geo_eb.fit_geo_eb` on the export's geo panel and its tests as estimates
+The fit is `mixdyn.models.fit_pooled_geos` on the export's geo panel and its tests as estimates
 in the geos they name (`scorecard.arms.panel`), its kernel the export's length: each channel's
 curve of spend per head shared by the geos, its margin in a geo pooled about the channel's, each
 geo its own intercept, season and trend, and each channel's posterior over a grid of its
@@ -52,7 +52,7 @@ UNMAPPED = (
 class Fitted:
     """The fit, each cell's expected response in the export's layout, and what a record keeps."""
 
-    fit: geo_eb.GeoEbFit
+    fit: geo_eb.PooledGeoFit
     cells: tuple[geo_eb.CellResponse, ...]
     flags: dict[str, float | int | bool]
     settings: dict[str, Any]
@@ -71,7 +71,7 @@ class GeoEb:
             raise ValueError(msg)
         data = reading.panel(observation)
         tests = reading.estimates(observation)
-        fit = geo_eb.fit_geo_eb(data, tests, int(observation.kernel_length))
+        fit = geo_eb.fit_pooled_geos(data, tests, int(observation.kernel_length))
         cells = tuple(
             fit.cell(None if g is None else data.geos[g], Channel(c))
             for g, c in reading.cells(observation)

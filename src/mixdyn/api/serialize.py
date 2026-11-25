@@ -45,7 +45,7 @@ import numpy as np
 from mixdyn.api import documents
 from mixdyn.calibration import lift
 from mixdyn.data import feedback, issues, panel, recurring
-from mixdyn.decisions import flighting, geo_plan, posterior, scenarios
+from mixdyn.decisions import flighting, geo_plan, posterior, scenarios, scored
 from mixdyn.decisions.plan_table import PlanTable, Spread
 from mixdyn.decisions.returns import Costs, Returns, Undefined
 from mixdyn.experiments import candidates, geo_design, reading, sdid, switchback
@@ -63,6 +63,8 @@ from mixdyn.models import (
     dlm_lift,
     dlm_media,
     geo_dlm,
+    geo_eb,
+    margin_mmm,
     nested,
     ridge_mmm,
     ridge_search,
@@ -176,6 +178,12 @@ _CLASSES: tuple[type, ...] = (
     bayes_geo.BayesGeoFit,
     nested.NestedSpec,
     nested.NestedFit,
+    # the margin regression and the closed-form model over geos
+    margin_mmm.NoiseMixture,
+    margin_mmm.MarginFit,
+    geo_eb.Mixture,
+    geo_eb.CellResponse,
+    geo_eb.PooledGeoFit,
     # the DLMs, and what causal-hybrid-control's filter hands them
     chc.dlm.Polynomial,
     chc.dlm.Seasonal,
@@ -235,6 +243,8 @@ _CLASSES: tuple[type, ...] = (
     scenarios.ScenarioComparison,
     scenarios.ResponseCurves,
     flighting.FlightPlan,
+    scored.MarginPlan,
+    scored.PooledGeoPlan,
     # a geo test's reading
     reading.GeoTest,
     reading.GeoReading,

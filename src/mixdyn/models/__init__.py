@@ -42,6 +42,8 @@ from mixdyn.models.geo_dlm import (
     geo_effects,
     vague_geo_prior,
 )
+from mixdyn.models.geo_eb import CellResponse, Mixture, PooledGeoFit, fit_pooled_geos
+from mixdyn.models.margin_mmm import DegenerateFitError, MarginFit, NoiseMixture, fit_margins
 from mixdyn.models.nested import NestedFit, NestedSpec, fit_nested
 from mixdyn.models.ridge_mmm import (
     Calibration,
@@ -62,10 +64,12 @@ __all__ = [
     "BayesSpec",
     "Bounds",
     "Calibration",
+    "CellResponse",
     "CheckCode",
     "ComponentBounds",
     "Components",
     "Control",
+    "DegenerateFitError",
     "DiscountGrid",
     "DlmChoice",
     "DlmDecomposition",
@@ -84,10 +88,14 @@ __all__ = [
     "LiftReading",
     "Lifted",
     "LinearTrend",
+    "MarginFit",
     "Media",
+    "Mixture",
     "NestedFit",
     "NestedSpec",
+    "NoiseMixture",
     "PerEffect",
+    "PooledGeoFit",
     "RidgeFit",
     "RidgeSpec",
     "Season",
@@ -101,7 +109,9 @@ __all__ = [
     "fit_bayes_geo",
     "fit_dlm",
     "fit_geo_dlm",
+    "fit_margins",
     "fit_nested",
+    "fit_pooled_geos",
     "fit_ridge",
     "forecast_dlm",
     "forecast_draws",

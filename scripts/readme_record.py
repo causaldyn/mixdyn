@@ -690,6 +690,24 @@ def family_rungs(records: Records) -> list[Row]:
     return sorted(held + left, key=lambda r: (r.first["arm"] == "geo eb", r.family, r.k))
 
 
+def _joined(names: list[str]) -> str:
+    return names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"
+
+
+def planner_record(records: Records, arm: str) -> str:
+    """The record of `arm` that its public planner's docstring states: the family-rungs it planned
+    whose verdict holds, by run, and each that does not hold, with the rivals not within δ."""
+    rows = [r for r in family_rungs(records) if r.first["arm"] == arm]
+    held = [r for r in _rows(records) if r.first["arm"] == arm]
+    runs = [run for run in CLAIM_RUNS if any(r.run == run for r in held)]
+    counts = ", ".join(f"{RUNS[run].name} {sum(r.run == run for r in held)}" for run in runs)
+    said = f"within δ = 0.05 of every rival on {len(held)} of {len(rows)} family-rungs ({counts})"
+    for row in (r for r in rows if r not in held):
+        rivals = [NAMES[rival] for rival in RIVALS if row.found[rival]["within"] is False]
+        said += f"; not within δ on family {row.family} at k = {row.k}, against {_joined(rivals)}"
+    return said + "."
+
+
 def _holm(records: Records, row: Row) -> set[str]:
     """The rivals Holm's step-down finds a loss to on `row`'s family and rung."""
     found = records[row.run]["reading"]["holm"]["losses"]

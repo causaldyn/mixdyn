@@ -251,6 +251,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   tie, and 0 on the others; None where the fits read no such observation.
 - `MarginalReturnTarget`: The budget at which one more currency unit returns ``per_unit``: below it
   a unit returns more, past it less.
+- `MarginPlan`: A plan of one national history's channels by a margin rule (`plan_margins`,
+  `plan_anchored_margins`), and the status quo it moves.
 - `media_difference`: What `plan_b` adds to the KPI over `plan_a` at each draw, `(draws,)`, read
   through the channels alone: each draw's channel run over its `history` and each plan's `periods`
   periods of spend and its kernel's reach after them, `length - 1` periods of no spend, and the
@@ -258,6 +260,9 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `move_between_geos`: `plan`, each geo's spend by channel, with `amount` of `channel`'s spend moved
   from `from_geo`'s cell to `to_geo`'s, at each period where the cells are series; every other cell
   as it was.
+- `plan_anchored_margins`: The plan of the panel's channels over `periods` weeks that spends
+  `budget` over them within `limits`, each channel's range a week, by the margin rule anchored on
+  each channel's lift tests, `estimates` by channel.
 - `plan_breakdown`: The breakdown factor of `spend`, a plan of `geo`'s channels a period over
   `periods` periods of the panel's cadence, over `against`, or else each channel's mean spend over
   the geo's last `periods` observed periods as `plan_posterior` reads the current spend: for the
@@ -272,6 +277,11 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   status quo, at every draw.
 - `plan_geos`: The joint plan of every geo's channels over `periods` periods of the panel's cadence
   that spends `target`, a budget over the plan, or meets it, a goal in its place.
+- `plan_margins`: The plan of the panel's channels over `periods` weeks that spends `budget` over
+  them within `limits`, each channel's range a week, by the margin rule with no lift test.
+- `plan_pooled_geos`: The plan of the panel's cells over `periods` weeks that spends `budget` over
+  them, each cell within its range a week in `limits`, by the closed-form model over geos fitted
+  with the geo tests `estimates`, by channel, if any.
 - `plan_posterior`: The plan of `geo`'s channels over `periods` periods of the panel's cadence that
   spends `budget` over them within `limits`, each channel's range a period, for the most expected
   worth over the readings' draws, each channel's mean worth read at `grid` spends evenly across its
@@ -285,6 +295,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   the panel's cadence, against `against`, or else each channel's mean spend over the geo's last
   `periods` observed periods, as `plan_breakdown` reads the current spend.
 - `PlanTable`: A plan of one geo's channels against the current spend, one row a channel.
+- `PooledGeoPlan`: A plan of a geo panel's cells by the model over geos (`plan_pooled_geos`), and
+  the status quo it moves.
 - `portfolio_roi`: Several channels' revenue over their spend: each channel's `roi` weighted by its
   spend.
 - `PosteriorPlan`: A plan of one geo's channels for a posterior's expected return, and the current
@@ -546,6 +558,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `Calibration`: How geo tests entered a fit: `estimates`, each tested channel's coefficient as its
   tests alone read it, and `weight`, a test period's weight against a KPI period, the KPI's noise
   variance over the tests'.
+- `CellResponse`: A cell's expected response to its weekly spend over a plan: a mixture of curves,
+  one a kept grid point, each of its `weights`, `retentions`, `curvatures` and `coefficients`.
 - `CheckCode`
 - `choose_dlm`: Filter `spec` on one geo at every discount of `grid` and choose by one-step
   likelihood; fit the specs a likelihood-ratio test at `level` does not reject, for
@@ -557,6 +571,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `Control`: A control of the panel, its coefficient held to `lower <= 0 <= upper`.
 - `decompose_dlm`: Draw `fit`'s states given all its data, `draws` times, and split each draw's mean
   into the base, the seasonality and each effect's contribution.
+- `DegenerateFitError`: The data leave the margin regression degenerate; the message says how.
 - `diagnose_dlm`: Test `fit`'s one-step errors, watch them for drift, and check its decomposition.
 - `DiscountGrid`: The discounts to try, per family of blocks: the trend's, the season's, and the
   effects', one shared by every effect or with `PerEffect` each effect's own.
@@ -588,11 +603,18 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `fit_dlm`: Filter and smooth one geo of `panel` through the model `spec` describes.
 - `fit_geo_dlm`: Fit `spec` to every geo of `panel`, the geos' spread chosen by the marginal
   likelihood.
+- `fit_margins`: Each channel's margin over the weekly history: `sales` `(weeks,)`, `spend` `(weeks,
+  channels)`, the `promotion` flag and the `price` `(weeks,)`, either None where the history holds
+  none, and the adstock's `kernel` length in weeks; under the mixture of error models `noise`,
+  `MIXTURE` by default, and with None as the research code fitted it, whose margins the sales' level
+  moves.
 - `fit_nested`: Draw both stages' posteriors on one geo of `panel` over `window`, its first and last
   dates, by default the whole calendar, as `nested_model` reads `estimates`, each channel's lift
   estimates on the KPI, and `mediator_estimates`, each channel's on the mediator: apart, each stage
   from a seed spawned from `seed`, or, where a lift on the KPI is of a channel of stage one, as one
   model from a third.
+- `fit_pooled_geos`: The model over geos (the module) fitted to `panel` with each channel's lift
+  `estimates`, its kernel `length` weeks long.
 - `fit_ridge`: Fit `spec` to one geo of `panel` over `window`, its first and last dates, by default
   the whole calendar, calibrated by `tests`, each channel's geo tests, if given.
 - `forecast_dlm`: Forecast the `horizon` periods after `fit`'s data, every effect's column taken
@@ -615,13 +637,23 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `LinearTrend`: A line through the window's periods, bent at `knots` points spaced evenly inside
   it: the period's place `t` in the window, `trend`, and a hinge `max(0, t - knot)` for each knot,
   `trend_bend_1` on.
+- `MarginFit`: The margins' posterior, the mixture over the retention combinations.
 - `Media`: A channel of the panel, its spend carried over by `adstock` and saturated by `hill`.
+- `Mixture`: A channel's posterior over its grid, the other channels at their points: `points`, the
+  kept points as indices into `POINTS`; `weights`, theirs, summing to 1; and `coefficients`, the
+  posterior mean of the channel's coefficient in each geo under each point, `(points, geos)`.
 - `NestedFit`: Both stages' posteriors over one geo's window: `stage_one` the mediator's, its
   returns in the mediator's units per currency unit, its spec's priors those it was drawn under, and
   `stage_two` the KPI's, the mediator's coefficient among its controls'.
 - `NestedSpec`: The two stages and the control of the panel that mediates between them.
+- `NoiseMixture`: The regression's settings under a mixture of error models (the module): the weeks
+  between the trend's interior knots, `knot_every`; the AR(1) coefficients `persistence` and the
+  AR(1)'s shares of the errors' variance `share`, each pair of them an error model, with white
+  errors once more where `white`; and the promoted weeks' variance ratios `promoted`, each crossed
+  with every one of those.
 - `PerEffect`: Discounts each effect takes on its own: a grid tries every combination of `values`
   over the effects, the last effect's varying fastest, and counts one parameter an effect.
+- `PooledGeoFit`: The fit of a panel over geos (the module).
 - `RidgeFit`: The model fitted to one geo over a window of the panel's calendar.
 - `RidgeSpec`: The model: its channels, its controls, its trend and season if any, and the ridge
   `penalty > 0`.

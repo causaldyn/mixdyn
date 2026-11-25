@@ -25,7 +25,7 @@ from mixdyn import Cadence, Channel, Geo, MediaPanel, Revenue, allot_national
 from mixdyn.calibration import LiftEstimate
 from mixdyn.decisions.geo_plan import BISECTIONS, FEASIBLE, GRID_POINTS, plan_mixture
 from mixdyn.models import geo_eb
-from mixdyn.models.geo_eb import POINTS, CellResponse, fit_geo_eb
+from mixdyn.models.geo_eb import POINTS, CellResponse, fit_pooled_geos
 
 NORTH, SOUTH, WEST = Geo("north"), Geo("south"), Geo("west")
 GEOS = (NORTH, SOUTH, WEST)
@@ -238,7 +238,7 @@ def test_the_noise_and_the_pooling_scales_are_the_reference_fits():
     """Each geo's noise variance is its residual sum of squares at the reference point over its
     residual degrees of freedom, by least squares on the nuisance and the channels together; the
     channel's `m` and its prior's width follow the module's formulas from those coefficients."""
-    fit = fit_geo_eb(PANEL, {}, LENGTH)
+    fit = fit_pooled_geos(PANEL, {}, LENGTH)
     rows = np.arange(LENGTH - 1, WEEKS)
     t = (rows + 1).astype(float)
     nuisance = np.column_stack(
@@ -268,7 +268,7 @@ def test_the_noise_and_the_pooling_scales_are_the_reference_fits():
 
 
 def test_the_fit_finds_the_curved_channels_and_keeps_a_posterior_over_each_grid():
-    fit = fit_geo_eb(PANEL, {}, LENGTH)
+    fit = fit_pooled_geos(PANEL, {}, LENGTH)
     assert fit.channels == (SEARCH, SOCIAL, TV)
     assert fit.national == frozenset({TV})
     for mixture in fit.mixtures:
@@ -285,7 +285,7 @@ def test_a_channels_mixture_is_its_grids_posterior_at_the_other_channels_selecti
     """With the other channels at their selected points, a channel's weights are its grid's
     marginal likelihoods normalised, those above `KEPT` of the whole kept and normalised again,
     and its coefficients under a kept point are that channel's posterior means there."""
-    fit = fit_geo_eb(PANEL, ESTIMATES, LENGTH)
+    fit = fit_pooled_geos(PANEL, ESTIMATES, LENGTH)
     model = geo_eb._Model(PANEL, ESTIMATES, LENGTH)
     sizes = []
     for c, mixture in enumerate(fit.mixtures):
@@ -321,14 +321,14 @@ def test_a_lift_read_almost_without_error_is_the_fits_own_reading_of_the_test():
     """With a standard error of a thousandth of the lift, under each grid point the channel's
     posterior keeps, the tested geos' coefficients on the test's row give the lift."""
     tight = {"search": (_estimate(PANEL, SEARCH, (NORTH, WEST), -260.0, 0.26),)}
-    fit = fit_geo_eb(PANEL, tight, LENGTH)
+    fit = fit_pooled_geos(PANEL, tight, LENGTH)
     assert fit.tests == 1
     mixture = fit.mixtures[0]
     for j, b in zip(mixture.points, mixture.coefficients, strict=True):
         z = _row(PANEL, tight["search"][0], POINTS[j], 0)
         assert z[1] == 0.0
         assert float(z @ b) == pytest.approx(-260.0, rel=5e-3, abs=0.0)
-    loose = fit_geo_eb(PANEL, ESTIMATES, LENGTH).mixtures[0]
+    loose = fit_pooled_geos(PANEL, ESTIMATES, LENGTH).mixtures[0]
     j = int(loose.points[0])
     z = _row(PANEL, ESTIMATES["search"][0], POINTS[j], 0)
     assert abs(float(z @ loose.coefficients[0]) + 260.0) > 0.26
@@ -336,24 +336,24 @@ def test_a_lift_read_almost_without_error_is_the_fits_own_reading_of_the_test():
 
 def test_what_the_fit_cannot_read_is_refused():
     with pytest.raises(ValueError, match="the panel has none"):
-        fit_geo_eb(dataclasses.replace(_bare(), population=None), {}, LENGTH)
+        fit_pooled_geos(dataclasses.replace(_bare(), population=None), {}, LENGTH)
     with pytest.raises(ValueError, match="no residual degree of freedom"):
-        fit_geo_eb(PANEL, {}, WEEKS - 8)
+        fit_pooled_geos(PANEL, {}, WEEKS - 8)
     with pytest.raises(ValueError, match="a whole number of weeks"):
-        fit_geo_eb(PANEL, {}, 0)
+        fit_pooled_geos(PANEL, {}, 0)
     row = ESTIMATES["search"][0]
     with pytest.raises(ValueError, match="which the panel does not have"):
-        fit_geo_eb(PANEL, {"radio": (row,)}, LENGTH)
+        fit_pooled_geos(PANEL, {"radio": (row,)}, LENGTH)
     with pytest.raises(ValueError, match=r"in a share 0\.5 of its geos' market"):
-        fit_geo_eb(PANEL, {"search": (dataclasses.replace(row, share=0.5),)}, LENGTH)
+        fit_pooled_geos(PANEL, {"search": (dataclasses.replace(row, share=0.5),)}, LENGTH)
     with pytest.raises(ValueError, match="not a period of the panel"):
-        fit_geo_eb(PANEL, {"search": (dataclasses.replace(row, end=None),)}, LENGTH)
+        fit_pooled_geos(PANEL, {"search": (dataclasses.replace(row, end=None),)}, LENGTH)
     with pytest.raises(ValueError, match="plans spend other than its geos'"):
-        fit_geo_eb(PANEL, {"social": (row,)}, LENGTH)
+        fit_pooled_geos(PANEL, {"social": (row,)}, LENGTH)
     still = PANEL.kpi.copy()
     still[1] = 0.0
     with pytest.raises(ValueError, match=r"the KPI of the geos \['south'\] does not move"):
-        fit_geo_eb(dataclasses.replace(PANEL, kpi=still), {}, LENGTH)
+        fit_pooled_geos(dataclasses.replace(PANEL, kpi=still), {}, LENGTH)
 
 
 def test_a_channel_that_moves_in_no_geo_is_refused_by_name():
@@ -365,18 +365,18 @@ def test_a_channel_that_moves_in_no_geo_is_refused_by_name():
     never = own.spend.copy()
     never[:, :, 0] = 0.0
     with pytest.raises(ValueError, match=r"the channels \['search'\] move in no geo"):
-        fit_geo_eb(dataclasses.replace(own, spend=never), {}, LENGTH)
+        fit_pooled_geos(dataclasses.replace(own, spend=never), {}, LENGTH)
     flat = own.spend.copy()
     flat[:, :, 1] = flat[:, :, 1].mean(axis=1, keepdims=True)
     with pytest.raises(ValueError, match=r"the channels \['social'\] move in no geo"):
-        fit_geo_eb(dataclasses.replace(own, spend=flat), {}, LENGTH)
+        fit_pooled_geos(dataclasses.replace(own, spend=flat), {}, LENGTH)
     both = never.copy()
     both[:, :, 1] = flat[:, :, 1]
     with pytest.raises(ValueError, match=r"the channels \['search', 'social'\] move in no"):
-        fit_geo_eb(dataclasses.replace(own, spend=both), {}, LENGTH)
+        fit_pooled_geos(dataclasses.replace(own, spend=both), {}, LENGTH)
     for national in (np.full(WEEKS, 240.0), np.zeros(WEEKS)):
         with pytest.raises(ValueError, match=r"the channels \['tv'\] move in no geo"):
-            fit_geo_eb(allot_national(own, TV, national), {}, LENGTH)
+            fit_pooled_geos(allot_national(own, TV, national), {}, LENGTH)
     rng = np.random.default_rng(8)
     for jitter, refused in ((1e-4, True), (1e-1, False)):
         near = own.spend.copy()
@@ -385,10 +385,12 @@ def test_a_channel_that_moves_in_no_geo_is_refused_by_name():
         )
         if refused:
             with pytest.raises(ValueError, match="move in no geo"):
-                fit_geo_eb(dataclasses.replace(own, spend=near), {}, LENGTH)
+                fit_pooled_geos(dataclasses.replace(own, spend=near), {}, LENGTH)
         else:
             assert np.all(
-                np.isfinite(fit_geo_eb(dataclasses.replace(own, spend=near), {}, LENGTH).margin)
+                np.isfinite(
+                    fit_pooled_geos(dataclasses.replace(own, spend=near), {}, LENGTH).margin
+                )
             )
 
 
@@ -408,7 +410,7 @@ def test_a_channel_that_does_not_move_in_one_geo_takes_the_channels_margin_there
         np.testing.assert_allclose(beta[0], mean, rtol=1e-5, atol=0.0)
         others = beta[0][[0, 2], 0]
         assert others.min() < beta[0][1, 0] < others.max()
-        fit = fit_geo_eb(panel, {}, LENGTH)
+        fit = fit_pooled_geos(panel, {}, LENGTH)
         assert all(m.points.size >= 1 for m in fit.mixtures)
         assert np.all(np.isfinite(fit.margin))
 
@@ -420,7 +422,7 @@ def test_a_likelihood_that_is_not_finite_is_refused():
         pytest.raises(FloatingPointError, match="not finite at 63 of 63 selections"),
         np.errstate(over="ignore", invalid="ignore"),
     ):
-        fit_geo_eb(dataclasses.replace(PANEL, kpi=PANEL.kpi * 1e155), {}, LENGTH)
+        fit_pooled_geos(dataclasses.replace(PANEL, kpi=PANEL.kpi * 1e155), {}, LENGTH)
 
 
 def test_an_estimate_read_in_the_burn_in_is_refused_by_its_row():
@@ -433,10 +435,10 @@ def test_an_estimate_read_in_the_burn_in_is_refused_by_its_row():
         match=r"search's estimate ending on 2024-02-05 reads from the panel's period 3, in the"
         r" kernel's burn-in of 3 periods",
     ):
-        fit_geo_eb(PANEL, {"search": (early,)}, LENGTH)
+        fit_pooled_geos(PANEL, {"search": (early,)}, LENGTH)
     first = _estimate(PANEL, SEARCH, (NORTH, WEST), -90.0, 40.0, dark=(3, 5), readout=4)
-    assert fit_geo_eb(PANEL, {"search": (first,)}, LENGTH).tests == 1
-    assert fit_geo_eb(PANEL, {"search": (early,)}, 3).tests == 1
+    assert fit_pooled_geos(PANEL, {"search": (first,)}, LENGTH).tests == 1
+    assert fit_pooled_geos(PANEL, {"search": (early,)}, 3).tests == 1
 
 
 @pytest.mark.parametrize("unit", [1e-15, 1e-9, 1e9])
@@ -455,7 +457,7 @@ def test_the_fit_and_the_plan_are_the_same_in_another_unit_of_money(unit):
             lift=row.lift * unit,
             se=row.se * unit,
         )
-        fit = fit_geo_eb(panel, {"search": (row,)}, LENGTH)
+        fit = fit_pooled_geos(panel, {"search": (row,)}, LENGTH)
         cells = [fit.cell(g, c) for c in (SEARCH, SOCIAL) for g in GEOS] + [fit.cell(None, TV)]
         quo = np.array([cell.history[-PERIODS:].mean() for cell in cells])
         plan = plan_mixture(cells, 0.3 * quo, 2.5 * quo, quo.sum() * PERIODS, PERIODS)
@@ -639,7 +641,7 @@ def test_a_channel_bought_nationally_is_one_cell_worth_its_geos_summed():
     """The national cell's worth at a national spend `W` is the sum over the geos of each geo's
     worth at its population share of `W`, under each kept grid point and its posterior-mean
     coefficients; its scale is the channel's national mean spend."""
-    fit = fit_geo_eb(PANEL, ESTIMATES, LENGTH)
+    fit = fit_pooled_geos(PANEL, ESTIMATES, LENGTH)
     cell = fit.cell(None, TV)
     c = fit.channels.index(TV)
     share = POPULATION / POPULATION.sum()

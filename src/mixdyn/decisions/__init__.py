@@ -36,6 +36,13 @@ from mixdyn.decisions.scenarios import (
     move_between_geos,
     response_curves,
 )
+from mixdyn.decisions.scored import (
+    MarginPlan,
+    PooledGeoPlan,
+    plan_anchored_margins,
+    plan_margins,
+    plan_pooled_geos,
+)
 
 __all__ = [
     "Breakdown",
@@ -45,8 +52,10 @@ __all__ = [
     "GeoLimits",
     "GeoPlan",
     "Goal",
+    "MarginPlan",
     "MarginalReturnTarget",
     "PlanTable",
+    "PooledGeoPlan",
     "PosteriorPlan",
     "Range",
     "Readings",
@@ -67,10 +76,13 @@ __all__ = [
     "lift_row_pick",
     "media_difference",
     "move_between_geos",
+    "plan_anchored_margins",
     "plan_breakdown",
     "plan_cvar",
     "plan_flighting",
     "plan_geos",
+    "plan_margins",
+    "plan_pooled_geos",
     "plan_posterior",
     "plan_robust",
     "plan_table",

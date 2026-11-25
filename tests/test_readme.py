@@ -24,9 +24,11 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import pytest
 
 import readme_record
 import record_charts
+from mixdyn import decisions
 
 ROOT = Path(__file__).resolve().parent.parent
 README = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -786,3 +788,18 @@ def test_the_fit_readings_the_text_states_are_the_records() -> None:
         ("meridian", "review r2"),
         ("ridge", "r2"),
     }
+
+
+@pytest.mark.parametrize(
+    ("planner", "arm"),
+    [
+        ("plan_margins", "margin held"),
+        ("plan_anchored_margins", "anchored floored"),
+        ("plan_pooled_geos", "geo eb"),
+    ],
+)
+def test_each_planners_docstring_states_its_arms_record(planner: str, arm: str) -> None:
+    """A planner's docstring names the arm whose records it reproduces and states that arm's record
+    as the records hold it (`readme_record.planner_record`)."""
+    said = " ".join(str(getattr(decisions, planner).__doc__).split())
+    assert f"Its record, as `{arm}`: {readme_record.planner_record(RECORDS, arm)}" in said

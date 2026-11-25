@@ -28,6 +28,8 @@ import jax.numpy as jnp
 import numpy as np
 import pytest
 
+from gs_worlds import WORLDS as TESTED
+from margin_worlds import PARITY, arrays
 from mixdyn import NATIONAL, Baseline, Cadence, Channel, Geo, Lever, LeverKind, MediaPanel, Revenue
 from mixdyn.api import Decision, Estimand, Schema, Spend, Unfilled, estimands
 from mixdyn.api.serialize import FORMAT_VERSION, REGISTRY, FormatError, load, save
@@ -51,10 +53,13 @@ from mixdyn.decisions import (
     Scenario,
     Undefined,
     compare_scenarios,
+    plan_anchored_margins,
     plan_breakdown,
     plan_cvar,
     plan_flighting,
     plan_geos,
+    plan_margins,
+    plan_pooled_geos,
     plan_posterior,
     plan_robust,
     plan_table,
@@ -122,8 +127,8 @@ from mixdyn.models.bayes_mmm import (
     refresh_bayes,
 )
 from mixdyn.models.demand import DemandProxy
-from mixdyn.models.geo_eb import CellResponse, GeoEbFit, Mixture
-from mixdyn.models.margin_mmm import Curve, CurvedFit, MarginFit, NoiseMixture, Projection
+from mixdyn.models.geo_eb import fit_pooled_geos
+from mixdyn.models.margin_mmm import Curve, CurvedFit, NoiseMixture, Projection, fit_margins
 from mixdyn.models.nested import NestedModel, fit_nested
 from mixdyn.models.ridge import Anchor, RidgePath
 from mixdyn.models.ridge_mmm import RidgeSpec, fit_ridge
@@ -143,6 +148,7 @@ from test_geo_dlm import hierarchy
 from test_nested import SPEC as NESTED_SPEC
 from test_nested import TV_ON_SEARCHES, mediation_world
 from test_public_names import modules
+from test_scored import go_darks, national, ranges
 
 SHORT: dict[str, Any] = {"chains": 2, "warmup": 60, "draws": 40, "start": UniformStart()}
 """A posterior too short to read, long enough to have every array a long one has."""
@@ -174,13 +180,8 @@ NOT_SAVED: Mapping[type, str] = MappingProxyType(
         Curves: _RULE,
         MixturePlan: _RULE,
         Shrunk: _RULE,
-        CellResponse: _RULE,
-        GeoEbFit: _RULE,
-        Mixture: _RULE,
         Curve: _RULE,
         CurvedFit: _RULE,
-        MarginFit: _RULE,
-        NoiseMixture: _RULE,
         Projection: _RULE,
     }
 )
@@ -467,6 +468,41 @@ def test_the_nested_fit_returns_the_same(tmp_path: Path) -> None:
         identical(channel_returns(fit.channels(), spend), channel_returns(loaded.channels(), spend))
         == []
     )
+
+
+def test_the_margin_regression_and_the_margin_plans_return_the_same(tmp_path: Path) -> None:
+    world = PARITY[0]
+    fit = fit_margins(*arrays(world))
+    assert identical(fit, roundtrip(fit, tmp_path)) == []
+    roundtrip(NoiseMixture(), tmp_path)
+    kernel = world["kernel_length"]
+    roundtrip(plan_margins(national(world), None, 13, ranges(world), kernel=kernel), tmp_path)
+    tested = TESTED[0]
+    planned = plan_anchored_margins(
+        national(tested), go_darks(tested), None, 13, ranges(tested), kernel=kernel
+    )
+    roundtrip(planned, tmp_path)
+
+
+def test_the_model_over_geos_and_its_plan_return_the_same(tmp_path: Path) -> None:
+    panel = geo_panel()
+    fit = fit_pooled_geos(panel, {}, 4)
+    loaded = roundtrip(fit, tmp_path)
+    for geo in panel.geos:
+        for channel in panel.channels:
+            assert (
+                identical(roundtrip(fit.cell(geo, channel), tmp_path), loaded.cell(geo, channel))
+                == []
+            )
+    current = panel.spend[:, -8:].mean(axis=1)
+    limits = GeoLimits(
+        cells={
+            (geo, c): Range(0.5 * float(current[g, j]), 2.0 * float(current[g, j]))
+            for g, geo in enumerate(panel.geos)
+            for j, c in enumerate(panel.channels)
+        }
+    )
+    roundtrip(plan_pooled_geos(panel, {}, None, 8, limits, kernel=4), tmp_path)
 
 
 @pytest.mark.parametrize("signed", [False, True], ids=["unsigned", "signed"])

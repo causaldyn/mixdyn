@@ -17,7 +17,7 @@ from causaldyn_bench.scorecard.track_m2 import TRACK_M2
 
 from mixdyn import Channel
 from mixdyn.decisions.geo_plan import plan_mixture
-from mixdyn.models.geo_eb import POINTS, fit_geo_eb
+from mixdyn.models.geo_eb import POINTS, fit_pooled_geos
 from scorecard import report, run
 from scorecard.arms import geo_eb
 from scorecard.arms import panel as reading
@@ -49,7 +49,7 @@ def test_the_arm_is_registered_beside_the_bayes_geo_arms_and_reads_the_tests():
 def test_the_fit_is_the_librarys_on_the_exports_panel_and_tests(observed, fitted):
     data = reading.panel(observed)
     tests = reading.estimates(observed)
-    fit = fit_geo_eb(data, tests, observed.kernel_length)
+    fit = fit_pooled_geos(data, tests, observed.kernel_length)
     assert fitted.fit.channels == tuple(observed.channels)
     assert fitted.fit.selected == fit.selected
     assert fitted.flags["lift rows"] == len(observed.lift.channel) == 12
