@@ -4,7 +4,8 @@ Status: accepted, 2026-11-01; amended 2026-11-06: `docs/api/index.md` lists the 
 written by `scripts/api_index.py` and held to it by a test, and documents no name by listing it;
 amended 2026-11-25 by ADR 0102: every module's `__all__` is public, and `tests/test_public_api.py`
 holds the surface to a snapshot of its signatures and to the removal rule; amended 2026-11-25 by
-ADR 0103: what a release may change of the snapshot the last release shipped, by kind of change
+ADR 0103: what a release may change of the snapshot the last release shipped, by kind of change,
+and every public name is documented
 
 ## Context
 
@@ -80,7 +81,8 @@ without a word.
   written by `scripts/api_index.py` from the `__all__`s and each name's first sentence, with this
   ADR's rules for versions, deprecation and the format. `tests/test_public_names.py` fails when
   the page is not the one the script writes. A name the page lists is not documented by it: the
-  page cites every name, so only the other pages count.
+  page cites every name, so only the other pages count. *Amended 2026-11-25 (ADR 0103):* every
+  public name is documented, and the list of names not documented yet is gone.
 - **Versions.** Before 1.0, a minor release may change the public surface, and only as the rule
   below allows; a patch release never removes or changes a public name. From 1.0, a name leaves
   only in a major release. *Amended 2026-11-25 (ADR 0103):* a public name's signature, fields and
