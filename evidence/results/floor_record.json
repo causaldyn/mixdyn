@@ -1,0 +1,186 @@
+{
+ "about": "The spend floor's reading on the scored runs at the tested rung: each family's paired difference in regret, `anchored floored`'s less `anchored held`'s, a euro of budget, over the worlds where both planned, its mean and its Student t interval, written by `scripts/floor_record.py` from each run's scores; each file it read is named by the run's root and its SHA-256. Post hoc and unadjusted: no pre-registration declares it, and it changes no verdict.",
+ "post_hoc": true,
+ "level": 0.95,
+ "runs": {
+  "m4": {
+   "sources": {
+    "roots": {
+     "f0-ts": {
+      "scores.jsonl": "47df8a2485c1d6878819f2dcba7cbbfa53e5e64b462ec5fd10c9bbafd6abc39c"
+     },
+     "f1-ts": {
+      "scores.jsonl": "b46c1cf063a66f264e9a0e38dee7945f3ad3217034e5009f7dbcaa4f5258618a"
+     },
+     "f12-ts": {
+      "scores.jsonl": "e96f160b20b53277f0353530410ef9640788b3f68c59e99b8670dfb21606b47e"
+     },
+     "f13-ts": {
+      "scores.jsonl": "d04e1923713f44282db85e9ffe3b8cd13382bdadc9752b694580ab6b86c8a223"
+     },
+     "f14-ts": {
+      "scores.jsonl": "b30241b301db7b6b11fe7c96e2aaf3ebe361e97ca21a2d8aae28fa95b9518a0d"
+     },
+     "f17-ts": {
+      "scores.jsonl": "0e3e7a21ce094057f15d70afccbc5de3d48a7ae1b76733239f792f7cf01c588c"
+     },
+     "f18-ts": {
+      "scores.jsonl": "e3b8aa4542aa8ecd01ade599d0fdba56fd889643f6c0553e9fc9a2cc7eedfa80"
+     },
+     "f19-ts": {
+      "scores.jsonl": "04c529b442151a948cd233e89d15a3c45576c0998a6bfba6ffae439b0a77da26"
+     },
+     "f2-ts": {
+      "scores.jsonl": "6d7e98a84c40a901e6768f03760f04c9e1eb56a9da9078a97b1f82fc9efdfe5f"
+     },
+     "f20-ts": {
+      "scores.jsonl": "b360d15081ec12b71643c23f7776db2f7586cda97c34db8710fe054535a0138c"
+     },
+     "f3-ts": {
+      "scores.jsonl": "438c558102fdd842f9543b57aaa0d6f6e20a8464d0bc2ecae61ba9a1449d3ee7"
+     },
+     "f4-ts": {
+      "scores.jsonl": "c9adcc4558caf62d618135d938daa1d65124b47b1d56a943c092a6b25bcf4247"
+     },
+     "f5-ts": {
+      "scores.jsonl": "6c9cf1fe1916981627efb34856b62fd054c049f91919e106f257d14692653437"
+     },
+     "f6-ts": {
+      "scores.jsonl": "8cd5b5406e51dfc597d50c907b0bba160747063d052fcd078bcb09e78cde473c"
+     },
+     "f7a-ts": {
+      "scores.jsonl": "84578a121448f7a1101e144ffe52cbbcb6ec12fcc015a6332ce7a2afa68eb002"
+     },
+     "f7b-ts": {
+      "scores.jsonl": "1dfb4d454ee19dbd9fc20bbe06dcaeea09cbe761a7ec570ab6fa336c1a53d1a4"
+     }
+    }
+   },
+   "families": [
+    {
+     "family": 0,
+     "worlds": 310,
+     "mean": 0.0021284143802134912,
+     "low": 0.001718157744644936,
+     "high": 0.0025386710157820464
+    },
+    {
+     "family": 1,
+     "worlds": 522,
+     "mean": 0.0017623015838847738,
+     "low": 0.0012135799029047432,
+     "high": 0.0023110232648648043
+    },
+    {
+     "family": 2,
+     "worlds": 270,
+     "mean": 0.00013158964777614215,
+     "low": 5.600591751241514e-06,
+     "high": 0.0002575787038010428
+    },
+    {
+     "family": 3,
+     "worlds": 270,
+     "mean": 0.00010169786467169973,
+     "low": -3.553336271680391e-05,
+     "high": 0.00023892909206020338
+    },
+    {
+     "family": 4,
+     "worlds": 522,
+     "mean": 0.011718808693975964,
+     "low": 0.009979294525216374,
+     "high": 0.013458322862735555
+    },
+    {
+     "family": 5,
+     "worlds": 240,
+     "mean": 0.00038206566288220655,
+     "low": 0.00011085523894855873,
+     "high": 0.0006532760868158544
+    },
+    {
+     "family": 6,
+     "worlds": 240,
+     "mean": -0.004705292166039984,
+     "low": -0.011900725338746709,
+     "high": 0.002490141006666742
+    },
+    {
+     "family": 7,
+     "worlds": 252,
+     "mean": 0.0007382646332581522,
+     "low": 0.00011840454432625336,
+     "high": 0.0013581247221900509
+    },
+    {
+     "family": 12,
+     "worlds": 460,
+     "mean": 0.0010169957478494184,
+     "low": 0.0003049157188920943,
+     "high": 0.0017290757768067425
+    },
+    {
+     "family": 13,
+     "worlds": 520,
+     "mean": 0.00011756975600084709,
+     "low": -0.0002737591862982964,
+     "high": 0.0005088986982999906
+    },
+    {
+     "family": 14,
+     "worlds": 520,
+     "mean": 0.0037199538204843994,
+     "low": 0.002314648125951696,
+     "high": 0.005125259515017103
+    },
+    {
+     "family": 17,
+     "worlds": 240,
+     "mean": 0.0,
+     "low": 0.0,
+     "high": 0.0
+    },
+    {
+     "family": 18,
+     "worlds": 240,
+     "mean": 0.001337144167718655,
+     "low": 0.0008414570345185431,
+     "high": 0.0018328313009187667
+    },
+    {
+     "family": 19,
+     "worlds": 282,
+     "mean": 0.026907205352423934,
+     "low": 0.017534401041260424,
+     "high": 0.036280009663587444
+    },
+    {
+     "family": 20,
+     "worlds": 240,
+     "mean": 0.004393519323835234,
+     "low": 0.00302730009864544,
+     "high": 0.005759738549025028
+    }
+   ]
+  },
+  "m5": {
+   "sources": {
+    "roots": {
+     "f15-ts": {
+      "scores.jsonl": "276dc3d9c26c64b38a237be2736e55a855596103739c1a4a202304cb885a45c6"
+     }
+    }
+   },
+   "families": [
+    {
+     "family": 15,
+     "worlds": 240,
+     "mean": 0.02558021636969372,
+     "low": 0.024448312626381006,
+     "high": 0.026712120113006433
+    }
+   ]
+  }
+ }
+}

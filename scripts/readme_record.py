@@ -238,6 +238,13 @@ RUNS = {
 }
 # The runs whose verdicts the claim's tables print, in the order a family's rows are taken.
 CLAIM_RUNS = ("m4", "m5", "m3")
+PLANNERS = {
+    "margin held": "plan_margins",
+    "anchored floored": "plan_anchored_margins",
+    "geo eb": "plan_pooled_geos",
+}
+"""Each claim arm's public planner in `mixdyn.decisions`, which plans what the arm planned
+(ADR 0102); the records keep the arm's name."""
 LINE = re.compile(
     r"^  family (?P<family>\d+), k = (?P<k>\d+), (?P<arm>.+?) less (?P<rival>.+?)\s{2,}"
     r"(?P<rest>.+)$"
@@ -753,13 +760,15 @@ def scoreboard(records: Records) -> str:
 
 
 def claim(records: Records) -> str:
-    head = ["Family", "Rung", "Arm", "Run", "Worlds", "Level", *(NAMES[r] for r in RIVALS)]
+    head = ["Family", "Rung", "Arm (planner)", "Run", "Worlds", "Level"]
+    head += [NAMES[r] for r in RIVALS]
     lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
     for row in _rows(records):
         quo = row.found["status quo"]
         holm = _holm(records, row)
         lines.append(
-            f"| {_family(row)} | {_rung(row.first)} | `{row.first['arm']}` | {RUNS[row.run].name} "
+            f"| {_family(row)} | {_rung(row.first)} | `{row.first['arm']}` "
+            f"(`{PLANNERS[row.first['arm']]}`) | {RUNS[row.run].name} "
             f"| {quo['complete'] + quo['default_failed']} | {row.level} | "
             + " | ".join(_compared(row.found[r], holm) for r in RIVALS)
             + " |"

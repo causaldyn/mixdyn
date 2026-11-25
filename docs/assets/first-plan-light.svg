@@ -4,7 +4,7 @@
 <rect x="0.5" y="0.5" width="1013" height="311" rx="10" fill="#fcfcfb" stroke="#0b0b0b" stroke-opacity="0.1"/>
 <text x="24.0" y="40.0" font-size="17" fill="#0b0b0b" font-weight="600">The first plan, drawn</text>
 <text x="24.0" y="64.0" font-size="12.5" fill="#52514e">The example above, on two simulated years of weekly history: each channel’s margin as fitted, against the margin the history was drawn with,</text>
-<text x="24.0" y="81.0" font-size="12.5" fill="#52514e">and next quarter’s weekly spend at the same budget: every floor first, the rest to the highest shrunk margin, inside half to twice the status quo.</text>
+<text x="24.0" y="81.0" font-size="12.5" fill="#52514e">and next quarter’s weekly spend at the same budget, filled along each channel’s curve from its shrunk margin, inside half to twice the status quo.</text>
 <text x="118.0" y="128.0" font-size="13" fill="#0b0b0b" font-weight="600">Margin: sales a unit of weekly spend returns</text>
 <text x="526.0" y="128.0" font-size="13" fill="#0b0b0b" font-weight="600">Weekly spend, next quarter</text>
 <line x1="118.0" y1="140.0" x2="136.0" y2="140.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
@@ -44,37 +44,37 @@
 <circle cx="286.3" cy="178.0" r="4.5" fill="#2a78d6"/>
 <line x1="290.0" y1="169.0" x2="290.0" y2="187.0" stroke="#0b0b0b" stroke-width="2"/>
 </g>
-<g><title>Channel 1: status quo 139.7 a week, plan 110.1, allowed 69.8 to 279.3</title>
-<rect x="606.1" y="172.0" width="240.2" height="12.0" rx="6" fill="#2a78d6" fill-opacity="0.14"/>
-<line x1="686.1" y1="178.0" x2="652.2" y2="178.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
-<circle cx="686.1" cy="178.0" r="4.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
-<circle cx="652.2" cy="178.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<g><title>Channel 1: status quo 130.8 a week, plan 114.7, allowed 65.4 to 261.5</title>
+<rect x="601.0" y="172.0" width="224.9" height="12.0" rx="6" fill="#2a78d6" fill-opacity="0.14"/>
+<line x1="675.9" y1="178.0" x2="657.5" y2="178.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="675.9" cy="178.0" r="4.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="657.5" cy="178.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
 </g>
-<text x="884.0" y="182.0" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">140 → 110</text>
+<text x="884.0" y="182.0" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">131 → 115</text>
 <text x="24.0" y="222.0" font-size="12" fill="#0b0b0b">Channel 2</text>
 <g><title>Channel 2: fitted margin 2.19, 95 % interval [1.24, 3.15], truth 3.00</title>
 <line x1="273.5" y1="218.0" x2="393.4" y2="218.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
 <circle cx="333.5" cy="218.0" r="4.5" fill="#2a78d6"/>
 <line x1="383.8" y1="209.0" x2="383.8" y2="227.0" stroke="#0b0b0b" stroke-width="2"/>
 </g>
-<g><title>Channel 2: status quo 50.0 a week, plan 100.0, allowed 25.0 to 100.0</title>
-<rect x="554.7" y="212.0" width="86.0" height="12.0" rx="6" fill="#2a78d6" fill-opacity="0.14"/>
-<line x1="583.3" y1="218.0" x2="640.6" y2="218.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
-<circle cx="583.3" cy="218.0" r="4.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
-<circle cx="640.6" cy="218.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<g><title>Channel 2: status quo 51.9 a week, plan 77.3, allowed 26.0 to 103.8</title>
+<rect x="555.8" y="212.0" width="89.3" height="12.0" rx="6" fill="#2a78d6" fill-opacity="0.14"/>
+<line x1="585.5" y1="218.0" x2="614.7" y2="218.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="585.5" cy="218.0" r="4.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="614.7" cy="218.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
 </g>
-<text x="884.0" y="222.0" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">50 → 100</text>
+<text x="884.0" y="222.0" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">52 → 77</text>
 <text x="24.0" y="262.0" font-size="12" fill="#0b0b0b">Channel 3</text>
 <g><title>Channel 3: fitted margin 0.21, 95 % interval [-0.98, 1.40], truth 0.50</title>
 <line x1="134.6" y1="258.0" x2="283.8" y2="258.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
 <circle cx="209.2" cy="258.0" r="4.5" fill="#2a78d6"/>
 <line x1="227.5" y1="249.0" x2="227.5" y2="267.0" stroke="#0b0b0b" stroke-width="2"/>
 </g>
-<g><title>Channel 3: status quo 40.7 a week, plan 20.4, allowed 20.4 to 81.5</title>
-<rect x="549.4" y="252.0" width="70.1" height="12.0" rx="6" fill="#2a78d6" fill-opacity="0.14"/>
-<line x1="572.7" y1="258.0" x2="549.4" y2="258.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
-<circle cx="572.7" cy="258.0" r="4.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
-<circle cx="549.4" cy="258.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<g><title>Channel 3: status quo 36.5 a week, plan 27.2, allowed 18.2 to 72.9</title>
+<rect x="546.9" y="252.0" width="62.7" height="12.0" rx="6" fill="#2a78d6" fill-opacity="0.14"/>
+<line x1="567.8" y1="258.0" x2="557.1" y2="258.0" stroke="#2a78d6" stroke-width="2" stroke-linecap="round"/>
+<circle cx="567.8" cy="258.0" r="4.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="557.1" cy="258.0" r="4.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
 </g>
-<text x="884.0" y="262.0" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">41 → 20</text>
+<text x="884.0" y="262.0" font-size="12" fill="#52514e" font-variant-numeric="tabular-nums">36 → 27</text>
 </svg>

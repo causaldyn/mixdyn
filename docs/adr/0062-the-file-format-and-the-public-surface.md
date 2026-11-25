@@ -1,7 +1,9 @@
 # 0062. The file format and the public surface
 
 Status: accepted, 2026-11-01; amended 2026-11-06: `docs/api/index.md` lists the public surface,
-written by `scripts/api_index.py` and held to it by a test, and documents no name by listing it
+written by `scripts/api_index.py` and held to it by a test, and documents no name by listing it;
+amended 2026-11-25 by ADR 0102: every module's `__all__` is public, and `tests/test_public_api.py`
+holds the surface to a snapshot of its signatures and to the removal rule
 
 ## Context
 
@@ -64,7 +66,10 @@ without a word.
   `mixdyn.inference`, `mixdyn.models` and `mixdyn.transforms`, and the `__all__` of
   `mixdyn.api.serialize`. So are the fields, methods and properties of the classes they name that
   do not start with an underscore. A name reachable only by its module path is not public yet,
-  however much it is used; one that should be joins an `__all__`.
+  however much it is used; one that should be joins an `__all__`. *Amended 2026-11-25 (ADR 0102):*
+  every module's `__all__` is public, not the packages' and `mixdyn.api.serialize`'s alone:
+  `mixdyn.data.feedback`, `mixdyn.models.demand` and `mixdyn.inference.sensitivity` have one, and
+  the test and the index read them already.
 - **`tests/test_public_names.py` holds the surface to its documentation.** Every name an
   `__all__` lists imports, none is listed twice or is private, and each is documented: a docstring
   of its own, the string after a constant or alias in the module that defines it, or a page that
@@ -82,7 +87,11 @@ without a word.
   `DeprecationWarning` that names its replacement and the release it leaves in; it leaves in the
   minor release after, and the changelog names it under *Removed*. causal-hybrid-control removes
   its names the same way. A renamed class stays in `REGISTRY` under its old key for as long as its
-  old name imports, so files that name it still load.
+  old name imports, so files that name it still load. *Amended 2026-11-25 (ADR 0102):* the old
+  name leaves its package's `__all__` for the package's `_DEPRECATED`, which names its replacement
+  and its leaving release, and imports through the package's `__getattr__`;
+  `tests/test_public_api.py` holds each to this rule, and the snapshot it reads,
+  `tests/public_api.txt`, is not written again while it would drop a name before its release.
 
 ### The reader's contracts
 
@@ -108,5 +117,7 @@ without a word.
 - A registered class's fields are now part of the format: renaming one is a format change, and
   moves `FORMAT_VERSION` unless it keeps an alias.
 - The engines' entry points that sit at module paths (`fit_ridge`, `fit_bayes`, `fit_bayes_geo`,
-  `fit_nested`, their specs and fits) are not public until an `__all__` lists them.
+  `fit_nested`, their specs and fits) are not public until an `__all__` lists them. *Amended
+  2026-11-25 (ADR 0102):* `mixdyn.models` lists them, and every class a public name takes, returns
+  or holds is public too.
 - A panel too short for its effects carries a warning in `issues` that it did not carry before.

@@ -724,8 +724,10 @@ def example() -> dict[str, Any]:
 
 def first_plan(held: dict[str, Any], theme: Theme) -> str:
     """The example's margins against its truth, and its plan against the status quo."""
-    fit, truth = held["fit"], held["truth"]
-    quo, plan, low, high = (np.asarray(held[k]) for k in ("status_quo", "plan", "low", "high"))
+    fit, truth, quo, plan = held["fit"], held["truth"], held["status_quo"], held["plan"].spend
+    low, high = (
+        np.array([getattr(r, end) for r in held["limits"].values()]) for end in ("least", "most")
+    )
     sd = np.sqrt(np.diag(fit.cov))
     pad, label_w, panel_w, gap, value_w = 24, 86, 360, 48, 112
     width = pad + label_w + panel_w + gap + panel_w + value_w + pad
@@ -745,8 +747,8 @@ def first_plan(held: dict[str, Any], theme: Theme) -> str:
     sub = (
         "The example above, on two simulated years of weekly history: each channel's margin as "
         "fitted, against the margin the history was drawn with,",
-        "and next quarter's weekly spend at the same budget: every floor first, the rest to the "
-        "highest shrunk margin, inside half to twice the status quo.",
+        "and next quarter's weekly spend at the same budget, filled along each channel's curve "
+        "from its shrunk margin, inside half to twice the status quo.",
     )
     for i, line in enumerate(sub):
         svg.text(pad, 64 + 17 * i, line, fill=t.ink2, size=12.5)

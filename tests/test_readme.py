@@ -78,8 +78,13 @@ def test_its_example_runs_and_plans_inside_its_box_at_the_budget() -> None:
     assert len(code) == 1
     namespace: dict[str, object] = {"__name__": "readme"}
     exec(compile(code[0], "README.md", "exec"), namespace)
-    plan, low, high = (np.asarray(namespace[name]) for name in ("plan", "low", "high"))
+    planned: Any = namespace["plan"]
+    limits: Any = namespace["limits"]
+    plan = planned.spend
+    low, high = (np.array([getattr(r, end) for r in limits.values()]) for end in ("least", "most"))
     budget = float(np.asarray(namespace["status_quo"]).sum())
+    assert planned.record == "margin held"
+    assert np.array_equal(planned.current, np.asarray(namespace["status_quo"]))
     assert np.all(low <= plan)
     assert np.all(plan <= high)
     assert abs(float(plan.sum()) - budget) <= 1e-9 * budget
@@ -295,6 +300,11 @@ def test_the_claim_s_table_reads_as_the_runs_readings() -> None:
             (h["family"], h["k"], h["rival"]) for h in RECORDS[run]["reading"]["holm"]["losses"]
         }
         seen.append((run, family, rung))
+        named = re.fullmatch(r"`(.+)` \(`(\w+)`\)", cells[2])
+        assert named is not None, cells[2]
+        arm, planner = named.groups()
+        if not callable(getattr(decisions, planner, None)):
+            off.append((family, rung, "planner"))
         quo = found[family, rung, "status quo"]
         if int(cells[4]) != quo["complete"] + quo["default_failed"]:
             off.append((family, rung, "worlds"))
@@ -308,7 +318,7 @@ def test_the_claim_s_table_reads_as_the_runs_readings() -> None:
                 continue
             typed = re.findall(r"[+\u2212]\d+\.\d+", cell)
             read = [float(c[k]) for k in ("mean", "low", "high")]
-            if [_number(t) for t in typed] != read or c["arm"] != cells[2].strip("`"):
+            if [_number(t) for t in typed] != read or c["arm"] != arm:
                 off.append((family, rung, rival))
             if ("Holm's loss" in cell) != ((family, rung, rival) in holm):
                 off.append((family, rung, rival, "holm"))
@@ -790,16 +800,32 @@ def test_the_fit_readings_the_text_states_are_the_records() -> None:
     }
 
 
-@pytest.mark.parametrize(
-    ("planner", "arm"),
-    [
-        ("plan_margins", "margin held"),
-        ("plan_anchored_margins", "anchored floored"),
-        ("plan_pooled_geos", "geo eb"),
-    ],
-)
-def test_each_planners_docstring_states_its_arms_record(planner: str, arm: str) -> None:
+@pytest.mark.parametrize(("arm", "planner"), readme_record.PLANNERS.items())
+def test_each_planners_docstring_states_its_arms_record(arm: str, planner: str) -> None:
     """A planner's docstring names the arm whose records it reproduces and states that arm's record
     as the records hold it (`readme_record.planner_record`)."""
     said = " ".join(str(getattr(decisions, planner).__doc__).split())
     assert f"Its record, as `{arm}`: {readme_record.planner_record(RECORDS, arm)}" in said
+
+
+def test_adr_0102_quotes_the_floor_s_readings_from_the_floor_record() -> None:
+    """ADR 0102 quotes M4's and M5's readings of the spend floor from the file
+    `scripts/floor_record.py` writes: each family's mean past ±0.003, by run and family, and no
+    other family's."""
+    record = json.loads((ROOT / "evidence/results/floor_record.json").read_text(encoding="utf-8"))
+    runs = record["runs"]
+    assert sorted(runs) == ["m4", "m5"]
+    assert record["post_hoc"] is True
+
+    def said(run: str) -> list[str]:
+        return [
+            f"{f['mean']:+.3f}".replace("-", MINUS) + f" on family {f['family']}"
+            for f in runs[run]["families"]
+            if abs(round(f["mean"], 3)) >= 0.003
+        ]
+
+    m4, m5 = said("m4"), said("m5")
+    assert len(m5) == 1
+    adr = " ".join(next((ROOT / "docs" / "adr").glob("0102-*.md")).read_text("utf-8").split())
+    quoted = f"{', '.join(m4)}, and {m5[0]} (M5). Every other family's is within ±0.003."
+    assert quoted in adr

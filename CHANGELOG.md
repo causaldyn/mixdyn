@@ -7,12 +7,43 @@ changes a public name.
 
 ## [Unreleased]
 
-The benchmark page reads the claim arms' diagnostic flags, post hoc, on M4's and M5's records. The
-reading changes no verdict. The margin planners set a channel they fill to its ceiling exactly,
-which moves a plan by at most a unit in the last place.
+The rules the benchmark scored are public planners: `plan_margins`, `plan_anchored_margins` and
+`plan_pooled_geos` plan what `margin held`, `anchored floored` and `geo eb` planned, to the last bit
+(ADR 0102). The engines' fits and specs that public functions take are public, every module's
+`__all__` is public, and a snapshot holds the surface's signatures. `stacked` and `lift_row_pick`
+are renamed; the old names warn until 1.0.0. The benchmark page reads the claim arms' diagnostic
+flags, post hoc, on M4's and M5's records. The reading changes no verdict. The margin planners set
+a channel they fill to its ceiling exactly, which moves a plan by at most a unit in the last place.
 
 ### Added
 
+- **The scored rules' public planners** (`mixdyn.decisions`, ADR 0102). `plan_margins` plans as
+  `margin held` does, at k = 0; `plan_anchored_margins` as `anchored floored` does at its default
+  `spend_floor=0.9`, and as `anchored held` with `spend_floor=None`; `plan_pooled_geos` as `geo eb`
+  does. Each reads a `MediaPanel`, the channels' `Range`s and, where its rule reads them, the lift
+  tests as `LiftEstimate`s, and returns a `MarginPlan` or a `PooledGeoPlan`, which `save` writes;
+  `record` names the arm whose records the plan reproduces. Each refuses what its rule does not
+  read, and its docstring states its arm's record. `tests/scorecard/test_public_planners.py` holds
+  each to its arm on the arms' fixture worlds, plan, gain and interval to the last bit, and the
+  reduction of a `LiftEstimate` to the bench's lift row bit for bit.
+- **Public engine names.** `mixdyn.models` lists the fits and specs that public functions take,
+  return or hold, with their `fit_*` functions: `BayesSpec`, `BayesFit`, `BayesMedia`,
+  `BayesGeoSpec`, `BayesGeoFit`, `RidgeSpec`, `RidgeFit`, `Media`, `Control`, `LinearTrend`,
+  `FourierSeason`, `Calibration`, `NestedSpec`, `NestedFit`, `Lifted`, `LiftReading`, `fit_bayes`,
+  `fit_bayes_geo`, `fit_ridge` and `fit_nested`; the margin regression, `fit_margins`, `MarginFit`,
+  `NoiseMixture` and `DegenerateFitError`; and the model over geos, `fit_pooled_geos`,
+  `PooledGeoFit`, `Mixture` and `CellResponse`. `mixdyn.inference` lists `Diagnostics` and
+  `HealthCard`. Each stays in the module that defines it, so no saved file's class moves.
+- **`tests/test_public_api.py` and `tests/public_api.txt`** hold the public surface to a snapshot
+  of every public object's signature, fields, members and value, the same on Python 3.12 to 3.15.
+  Its writer refuses to drop a name before the release its package's `_DEPRECATED` names. The test
+  also holds deprecated names to ADR 0062's removal rule, refuses a public name that shadows a
+  submodule but the three that did, and a public name that takes, returns or holds a class no
+  `__all__` lists.
+- **`scripts/floor_record.py`** reads a scored run's scores into
+  `evidence/results/floor_record.json`: at the tested rung, each family's paired difference in
+  regret between `anchored floored` and `anchored held`, post hoc, with the SHA-256 of each
+  `scores.jsonl` it read. ADR 0102 quotes it, and `tests/test_readme.py` holds the quote to it.
 - **What the diagnostics tell (post hoc)**, a section of `docs/benchmark.md`. Each claim arm's
   flags, the plan's share of spend outside the logged range and each channel's, are read as
   classifiers of a regret above the status quo's, family by rung: their AUROC with its bootstrap
@@ -29,6 +60,22 @@ which moves a plan by at most a unit in the last place.
   `report --flags` prints it, its counts and its AUROC with its interval or the reason none is
   read. The report's lines and the record file are formatted from the same rows; the report prints
   as it did, to the byte.
+
+### Changed
+
+- **`GeoEbFit` and `fit_geo_eb` are `PooledGeoFit` and `fit_pooled_geos`**, renamed before either
+  entered the format's registry, at the module path they had (`mixdyn.models.geo_eb`).
+- **Every module's `__all__` is public** (ADR 0062, amended by ADR 0102), as the API index already
+  read them.
+- **The README's first plan calls `plan_margins`**, with public names alone, and its chart shows
+  the plan's fill along the curves. The benchmark page's claim table names each arm's planner.
+
+### Deprecated
+
+- **`mixdyn.decisions.stacked` is `stacked_readings`, and `lift_row_pick` is
+  `pick_by_lift_tests`.** The bare `stacked` is the scorecard's arm, and a lift row is the bench's
+  export, not a public type. The old names import until 1.0.0, with a `DeprecationWarning` that
+  names the replacement.
 
 ### Fixed
 

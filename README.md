@@ -82,32 +82,32 @@ pip install mixdyn        # Python 3.12 or later
 ```python
 import numpy as np
 
-from mixdyn.decisions.margin_plan import plan_corner, shrink_margins, time_held
-from mixdyn.models.margin_mmm import NoiseMixture, adstock, fit_margins
+from mixdyn import Cadence, Revenue, read_panel
+from mixdyn.decisions import Range, plan_margins
+from mixdyn.models import fit_margins
 
 # A stand-in for two years of weekly history: three channels' spend, and sales that each
-# channel's spend lifts through a geometric adstock (retention 0.5, eight weeks).
+# channel's spend lifts through a geometric adstock (retention 0.5 over eight weeks, summing to 1).
 rng = np.random.default_rng(0)
-weeks = 104
+weeks, names = 104, ("tv", "search", "social")
 spend = rng.uniform([60.0, 20.0, 15.0], [180.0, 80.0, 55.0], size=(weeks, 3))
-carried = np.column_stack([adstock(s, 0.5, 8, s[:13].mean()) for s in spend.T])
+kernel = 0.5 ** np.arange(8) / (0.5 ** np.arange(8)).sum()
+carried = np.column_stack([np.convolve(s, kernel)[:weeks] for s in spend.T])
 truth = np.array([1.5, 3.0, 0.5])  # each channel's margin, which the fit does not see
 sales = 5000.0 + carried @ truth + rng.normal(0.0, 25.0, weeks)
-
-# Each channel's margin, the sales one unit of weekly spend returns over the kernel, read under a
-# mixture of error models, then shrunk towards the channels' common level.
-fit = fit_margins(sales, spend, promotion=None, price=None, kernel=8, noise=NoiseMixture())
-shrunk = shrink_margins(fit.mean, fit.cov)
-_, held = time_held(spend)  # a channel whose spend follows the calendar stays where it is
+dates = np.datetime64("2024-01-01") + np.timedelta64(7, "D") * np.arange(weeks)
+data = {"week": dates, "sales": sales} | {c: spend[:, i] for i, c in enumerate(names)}
+panel = read_panel(data, date="week", kpi="sales", spend={c: c for c in names},
+                   cadence=Cadence.WEEK, kpi_unit=Revenue(), currency="EUR")
+fit = fit_margins(sales, spend, None, None, kernel=8)  # each margin, as the regression reads it
 
 # Next quarter's weekly plan at the status quo's budget, each channel between half and twice its
-# status quo: every floor first, then the rest to the highest shrunk margin.
-status_quo = spend[-13:].mean(axis=0)
-low = np.where(held, status_quo, 0.5 * status_quo)
-high = np.where(held, status_quo, 2.0 * status_quo)
-plan = plan_corner(shrunk.mean, low, high, float(status_quo.sum()))
+# status quo, its mean weekly spend over the last 52 weeks: the rule the runs scored at k = 0.
+status_quo = spend[-52:].mean(axis=0)
+limits = {c: Range(0.5 * q, 2.0 * q) for c, q in zip(panel.channels, status_quo, strict=True)}
+plan = plan_margins(panel, None, 13, limits, kernel=8)
 print("margins", fit.mean.round(2), "+/-", np.sqrt(np.diag(fit.cov)).round(2))
-print("status quo", status_quo.round(1), "plan", plan.round(1))
+print("status quo", plan.current.round(1), "plan", plan.spend.round(1), plan.record)
 ```
 <!-- --8<-- [end:example] -->
 
@@ -117,11 +117,11 @@ print("status quo", status_quo.round(1), "plan", plan.round(1))
 </picture>
 
 <!-- --8<-- [start:example-notes] -->
-This is the linear form of `margin held`, the rule the runs scored with no lift test, which adds a
-saturating curve to each channel and fills the budget along the curves (`scorecard/arms/margin.py`).
-These functions sit at module paths, which are not public names yet: before 1.0 they can change in
-any minor release. `SKILL.md` walks one panel through the Bayesian engine, gated at each step:
-read, fit, diagnostics, tests, plan and report.
+`plan_margins` is `margin held`, the rule the runs scored with no lift test
+(`scorecard/arms/margin.py`), in one public call: it reads each channel's margin off the regression
+with a saturating curve, shrinks the margins towards their common level, and fills the budget along
+the curves. `SKILL.md` walks one panel through the Bayesian engine, gated at each step: read, fit,
+diagnostics, tests, plan and report.
 <!-- --8<-- [end:example-notes] -->
 
 ## Learn more
