@@ -280,8 +280,7 @@ class Within:
 
 
 type When = After | Within
-"""When a candidate test runs: after the panel (`After`) or inside its history
-(`Within`)."""
+"""When a candidate test runs: after the panel (`After`) or inside its history (`Within`)."""
 
 
 def designs(

@@ -3,7 +3,8 @@
 Status: accepted, 2026-11-25; amends ADR 0062's rule for versions and ADR 0102's snapshot test:
 each line of the snapshot at the last release tag stays, or changes as its kind of change allows;
 the check that public names take only public classes follows a `type` alias to its value. Adds
-twelve public classes and documents fifteen names; moves no default and no saved file's class.
+twelve public classes and documents the fifteen entries left pending; moves no default and no saved
+file's class.
 
 ## Context
 
@@ -69,8 +70,8 @@ documented yet is gone: a public name without documentation fails `tests/test_pu
 ## Consequences
 
 - A release cannot drop or retype a name its predecessor shipped without the test naming the line
-  and its kind of change. Dropping the two names that leave in 1.0.0 passes once
-  the version is 1.0.0.
+  and its kind of change. Dropping the two names that leave in 1.0.0 passes once the version is
+  1.0.0.
 - A moved default, a planner's included, fails until the change names its minor release in
   `pyproject.toml`. The rest of ADR 0102's rule for a planner's default, an ADR and a *Changed*
   entry, is still held by review.
@@ -83,9 +84,9 @@ documented yet is gone: a public name without documentation fails `tests/test_pu
 
 ## Alternatives considered
 
-- **Every changed line is a removal**, as the 1.0 proposal wrote the rule. Rejected: from 1.0 a
-  keyword parameter with a default could come only in a major release, and a planner's default
-  could not move in the minor release ADR 0102 allows.
+- **Every changed line read as a removal**, which must name a replacement in `_DEPRECATED`.
+  Rejected: from 1.0 a keyword parameter with a default could come only in a major release, and a
+  planner's default could not move in the minor release ADR 0102 allows.
 - **A copy of the released snapshot in the repository**, so that a shallow clone runs the check.
   Rejected: it repeats what the tag holds, and a release commit that does not refresh it holds the
   next release to the one before it.
