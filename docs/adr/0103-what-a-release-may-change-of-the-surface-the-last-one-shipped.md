@@ -75,8 +75,9 @@ documented yet is gone: a public name without documentation fails `tests/test_pu
 - A moved default, a planner's included, fails until the change names its minor release in
   `pyproject.toml`. The rest of ADR 0102's rule for a planner's default, an ADR and a *Changed*
   entry, is still held by review.
-- CI checks out one commit and no tags, so the test skips there until the test jobs' checkout
-  fetches the tags (`fetch-depth: 0`). Until then, it runs only in a full clone.
+- The test jobs of `ci.yml` check out the whole history and its tags (`fetch-depth: 0`), so CI
+  runs the test on every push and pull request. A shallow clone, which `actions/checkout` makes by
+  default, skips it.
 - The check reads text. A parameter type that widens, `float` to `float | None`, breaks no caller
   but reads as changed. A dataclass field added without a default breaks a caller who builds the
   class, but adds a line and drops none, so it passes: the snapshot holds the fields, not the
