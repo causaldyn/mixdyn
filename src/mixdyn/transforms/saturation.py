@@ -56,6 +56,7 @@ class HillShape:
 
 
 type Shape = TanhShape | HillShape
+"""A saturation curve's shape: `TanhShape` or `HillShape`."""
 
 
 @dataclass(frozen=True, slots=True)

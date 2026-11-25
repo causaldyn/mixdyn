@@ -67,6 +67,8 @@ class ColumnFrame(Protocol):
 
 
 type ColumnData = Mapping[str, Any] | ColumnFrame
+"""The data `read_panel` reads: a mapping of column name to values, or a frame with named
+columns (`ColumnFrame`)."""
 
 
 class Gap(Enum):

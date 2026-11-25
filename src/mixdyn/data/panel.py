@@ -24,6 +24,8 @@ import numpy.typing as npt
 from mixdyn.data.issues import Issue
 
 Geo = NewType("Geo", str)
+"""A geo's name, as the data's geo column writes it; a panel read without one has one geo,
+`NATIONAL`."""
 Channel = NewType("Channel", str)
 
 NATIONAL = Geo("national")
@@ -56,6 +58,7 @@ class Count:
 
 
 type KpiUnit = Revenue | Count
+"""What the KPI is: revenue in the panel's currency (`Revenue`) or a count of events (`Count`)."""
 
 
 class Allotment(Enum):

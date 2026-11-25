@@ -1773,6 +1773,13 @@ def sensitivity_line(
 
 
 def dumps(value: Any, schema: Schema) -> str:
+    """`value` as a JSON document of `schema`: its name, its version and the value encoded by the
+    schema's declared type.
+
+    Raises:
+        SchemaError: on a value that does not fit the declared type, or an infinite float; the
+            message names where.
+    """
     document = {
         "schema": schema.name,
         "version": schema.version,
@@ -1782,6 +1789,13 @@ def dumps(value: Any, schema: Schema) -> str:
 
 
 def loads(text: str, schema: Schema) -> Any:
+    """The value a JSON document of `schema` holds, each dataclass rebuilt through its constructor.
+
+    Raises:
+        SchemaError: on text that is not JSON or not a document, a document of another schema or
+            version, and a value that does not fit the declared type or that its class refuses;
+            the message names where.
+    """
     try:
         document = json.loads(text)
     except (ValueError, RecursionError) as error:

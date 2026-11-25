@@ -12,8 +12,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   name reachable only by its module path is not public, however much it is used.
 - **Every public name imports and is documented**: by a docstring of its own, the string after a
   constant or an alias in the module that defines it, or a page of `docs/` that cites it. This
-  page cites every name and so documents none: `tests/test_public_names.py` lists the names not
-  documented yet, and that list only shrinks.
+  page cites every name and so documents none: `tests/test_public_names.py` fails on a name that
+  is not documented.
 
 ## Versions and deprecation
 
@@ -57,7 +57,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `Combine`: How the controls of the geos below a node make the node's.
 - `Count`: The KPI counts events (orders, installs, sign-ups) named by `unit`.
 - `Gap`: What a period becomes when a geo has no row for it.
-- `Geo`
+- `Geo`: A geo's name, as the data's geo column writes it; a panel read without one has one geo,
+  `NATIONAL`.
 - `Issue`: One finding of `read_panel`: what it is, how severe, and where.
 - `IssueCode`: What a finding is about; its value is the code a document of `ISSUES` writes.
 - `Lever`: A control the panel declares a lever: its `kind`, and the level its contribution is
@@ -83,7 +84,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `dlm_factsheet`: The factsheet of the dynamic linear model (`mixdyn.models.dlm`), `fit`, fitted to
   `geo` of `panel`, its returns read off `decomposition`, draws of the fit's decomposition
   (`decompose_dlm`).
-- `dumps`
+- `dumps`: `value` as a JSON document of `schema`: its name, its version and the value encoded by
+  the schema's declared type.
 - `Estimand`: What one lift test of `channel` estimated, as a model reads it.
 - `estimands`: Each test of `estimates`, each channel's in the order given, as the `Estimand` it
   reads on `panel`'s calendar, cadence and currency.
@@ -105,7 +107,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   its forecast of the KPI missed them: `error` by the `metric` named.
 - `ISSUES`: What reading a panel found: `MediaPanel.issues`, or `PanelError.issues`.
 - `LIFT_TESTS`: What each lift test a model reads estimated: `estimands`.
-- `loads`
+- `loads`: The value a JSON document of `schema` holds, each dataclass rebuilt through its
+  constructor.
 - `NextTest`: The next set of lift tests by its value to the plan (`ExperimentChoice`): the
   `verdict`, to `"test"` or to `"plan now"`; the set's `tests` by their labels and their `channels`;
   the regret they are expected to remove, `reduction`, and its Monte Carlo `error`, in the KPI's
@@ -188,14 +191,17 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   observed at, over every geo's periods that were not filled.
 - `Cadence`: The spacing of consecutive periods.
 - `Channel`
-- `ColumnData`
+- `ColumnData`: The data `read_panel` reads: a mapping of column name to values, or a frame with
+  named columns (`ColumnFrame`).
 - `Combine`: How the controls of the geos below a node make the node's.
 - `Count`: The KPI counts events (orders, installs, sign-ups) named by `unit`.
 - `Gap`: What a period becomes when a geo has no row for it.
-- `Geo`
+- `Geo`: A geo's name, as the data's geo column writes it; a panel read without one has one geo,
+  `NATIONAL`.
 - `Issue`: One finding of `read_panel`: what it is, how severe, and where.
 - `IssueCode`: What a finding is about; its value is the code a document of `ISSUES` writes.
-- `KpiUnit`
+- `KpiUnit`: What the KPI is: revenue in the panel's currency (`Revenue`) or a count of events
+  (`Count`).
 - `Lever`: A control the panel declares a lever: its `kind`, and the level its contribution is
   measured against, `baseline`, the lever's observed least or most or a level given in the control's
   own units.
@@ -244,7 +250,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   how each and the status quo score over a posterior's draws.
 - `GeoLimits`: What a plan may spend, by name.
 - `GeoPlan`: A plan of every geo's channels, and the current spend it changes.
-- `Goal`
+- `Goal`: A goal `plan_geos` meets in place of a budget, one of `chc.allocation`'s.
 - `MarginalReturnTarget`: The budget at which one more currency unit returns ``per_unit``: below it
   a unit returns more, past it less.
 - `MarginPlan`: A plan of one national history's channels by a margin rule (`plan_margins`,
@@ -308,7 +314,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `Readings`: A posterior's draws as a planner reads them, each draw weighted.
 - `readings`: `fit`'s posterior as a planner reads it: `draws` of its draws, evenly spaced over its
   chains' draws in order from the first to the last, or every draw, each weighted alike.
-- `Recommendation`
+- `Recommendation`: What a `FlightPlan` recommends: its schedule, `"flighted"`, or the best rate in
+  every period, `"continuous"`.
 - `response_curves`: Each channel's posterior mean worth and its central `level` band at each spend
   a period of `worths`, the draws at `readings.weights`: the band's ends are the weighted quantiles,
   each the least worth whose cumulative weight reaches its share, which at equal weights is
@@ -370,7 +377,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   valued as `value_of_tests` values one test, its tests' likelihoods multiplied: each candidate's
   lift read with its own standard normals, the same in every set it is in, drawn from a stream apart
   from `seed`'s own.
-- `Cost`
+- `Cost`: How `value_of_tests` counts a test's cost: what it puts at risk (`Gross`) or its net cost
+  (`Net`).
 - `designs`: Each of `channels`' candidates on `geo` of `panel`, in the order of the channels, the
   multipliers, the durations and the shares: the channel's spend times the multiplier over the
   duration, then `cooldown` periods at the spend planned, both read, in a group of the share, its
@@ -482,14 +490,16 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   and the `carryover` check, NaN where no block after a switch keeps two periods in each state.
 - `synthetic_did`: Synthetic difference in differences on `y`, units by periods, the units flagged
   in `treated` treated over the last `post` periods.
-- `Update`
+- `Update`: How `value_of_tests` updates each outer draw's posterior with a test's simulated lift:
+  `Reweight`, `Gaussian` or `Refit`.
 - `value_of_tests`: Each candidate's value to the plan of `geo`'s channels that spends `budget` over
   `periods` periods within `limits`, over `draws` outer draws of `readings`, each candidate's lift
   read with the same standard normals, drawn from a stream apart from `seed`'s own, and each outer
   draw's posterior updated by `update`; each channel's mean worth is read at `grid` spends across
   its range.
-- `Verdict`
-- `When`
+- `Verdict`: A `GeoReading`'s verdict: "up" where its interval lies above 0, "down" where it lies
+  below and "inconclusive" where it holds 0.
+- `When`: When a candidate test runs: after the panel (`After`) or inside its history (`Within`).
 - `Within`: A test run inside the panel's history from its period `start`, counted from 0, at the
   market's spend there but for the test's change.
 
@@ -560,7 +570,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   variance over the tests'.
 - `CellResponse`: A cell's expected response to its weekly spend over a plan: a mixture of curves,
   one a kept grid point, each of its `weights`, `retentions`, `curvatures` and `coefficients`.
-- `CheckCode`
+- `CheckCode`: The plausibility check a `Finding` fails.
 - `choose_dlm`: Filter `spec` on one geo at every discount of `grid` and choose by one-step
   likelihood; fit the specs a likelihood-ratio test at `level` does not reject, for
   `DlmChoice.bounds`.
@@ -684,7 +694,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 
 ### `mixdyn.transforms`
 
-- `Adstock`
+- `Adstock`: A carryover kernel: geometric (`Geometric`) or a Weibull survival (`WeibullCdf`).
 - `carry_over`: The adstock of a `(T,)` spend series, its kernel as long as the series.
 - `channel`: The channel `coefficient * saturate(carry_over(spend))` in `chc.response`'s terms, its
   kernel `length` periods long.
@@ -698,7 +708,7 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   series of `length` periods.
 - `saturate`: The Hill curve of slope `hill.alpha` and half-saturation point `half` at adstocked
   values.
-- `Shape`
+- `Shape`: A saturation curve's shape: `TanhShape` or `HillShape`.
 - `TanhShape`: `tanh(atanh(1/2) a / K)`: concave from no spend, half its ceiling at `K`.
 - `Transform`: A channel's spend carried over by a normalised geometric kernel of `retention` and
   `length` periods, then saturated by a curve of `shape` that is half its ceiling where the adstock

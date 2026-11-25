@@ -40,8 +40,8 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
   name reachable only by its module path is not public, however much it is used.
 - **Every public name imports and is documented**: by a docstring of its own, the string after a
   constant or an alias in the module that defines it, or a page of `docs/` that cites it. This
-  page cites every name and so documents none: `tests/test_public_names.py` lists the names not
-  documented yet, and that list only shrinks.
+  page cites every name and so documents none: `tests/test_public_names.py` fails on a name that
+  is not documented.
 
 ## Versions and deprecation
 

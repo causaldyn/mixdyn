@@ -4,10 +4,8 @@ name of the engine the pages cite imports.
 A name is public where a package's `__all__` lists it (ADR 0062). It is documented where it carries
 a docstring of its own: a class's or a function's, or, for a constant or a type alias, the string
 right after it in the module that defines it, as the engine documents them; or where the pages
-cite it. `UNDOCUMENTED` lists the names that are neither yet, each in a module this test's change
-did not touch. A name outside it fails, and so does an entry that is now documented, so the list
-only shrinks. `docs/api/index.md` lists every public name, as `scripts/api_index.py` writes it; it
-cites every name, so it documents none.
+cite it. Every public name is documented. `docs/api/index.md` lists every public name, as
+`scripts/api_index.py` writes it; it cites every name, so it documents none.
 """
 
 from __future__ import annotations
@@ -27,25 +25,6 @@ ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 INDEX = DOCS / "api" / "index.md"
 CITED = re.compile(r"`(mixdyn(?:\.[A-Za-z_]\w*)+)")
-UNDOCUMENTED = frozenset(
-    {
-        "mixdyn.api:dumps",
-        "mixdyn.api:loads",
-        "mixdyn.data:ColumnData",
-        "mixdyn.data:Geo",
-        "mixdyn.data:KpiUnit",
-        "mixdyn.decisions:Goal",
-        "mixdyn.decisions:Recommendation",
-        "mixdyn.experiments:Cost",
-        "mixdyn.experiments:Update",
-        "mixdyn.experiments:Verdict",
-        "mixdyn.experiments:When",
-        "mixdyn.models:CheckCode",
-        "mixdyn.transforms:Adstock",
-        "mixdyn.transforms:Shape",
-        "mixdyn:Geo",
-    }
-)
 
 
 @cache
@@ -156,10 +135,8 @@ def test_no_name_is_listed_twice_or_private() -> None:
         assert [n for n in names if n.startswith("_")] == [], m.__name__
 
 
-def test_nothing_an_all_lists_is_undocumented_but_the_pending_names() -> None:
-    bare = {f"{m.__name__}:{name}" for m, name in public() if not documented(m, name)}
-    assert sorted(bare - UNDOCUMENTED) == []
-    assert sorted(UNDOCUMENTED - bare) == []
+def test_nothing_an_all_lists_is_undocumented() -> None:
+    assert sorted(f"{m.__name__}:{name}" for m, name in public() if not documented(m, name)) == []
 
 
 def test_every_name_of_the_engine_the_pages_cite_imports() -> None:
@@ -187,4 +164,5 @@ def test_the_rules_tell_a_cited_name_from_prose() -> None:
     assert CITED.findall("see `mixdyn.models.nested` and `mixdyn`") == ["mixdyn.models.nested"]
     assert documented(mixdyn, "NATIONAL")
     assert documented(mixdyn, "read_panel")
-    assert not documented(importlib.import_module("mixdyn.data"), "KpiUnit")
+    assert documented(importlib.import_module("mixdyn.data"), "KpiUnit")
+    assert not documented(importlib.import_module("mixdyn.data.panel"), "_CURRENCY")

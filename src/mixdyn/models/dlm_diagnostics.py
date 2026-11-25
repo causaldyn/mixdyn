@@ -42,6 +42,8 @@ class Statistic:
 
 
 class CheckCode(Enum):
+    """The plausibility check a `Finding` fails."""
+
     NEGATIVE_BASE = "negative_base"
     """The base is below zero."""
     BASE_ABOVE_KPI = "base_above_kpi"

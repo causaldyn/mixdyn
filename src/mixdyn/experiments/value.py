@@ -144,6 +144,8 @@ class Net:
 
 
 type Cost = Gross | Net
+"""How `value_of_tests` counts a test's cost: what it puts at risk (`Gross`) or its net cost
+(`Net`)."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -193,6 +195,8 @@ class Refit:
 
 
 type Update = Reweight | Gaussian | Refit
+"""How `value_of_tests` updates each outer draw's posterior with a test's simulated lift:
+`Reweight`, `Gaussian` or `Refit`."""
 
 _GROSS = Gross()
 

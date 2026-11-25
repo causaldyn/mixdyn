@@ -117,6 +117,8 @@ if TYPE_CHECKING:
 type _Array = npt.NDArray[np.float64]
 type Method = Literal["did", "tbr", "synthetic_control", "pairs"]
 type Verdict = Literal["up", "down", "inconclusive"]
+"""A `GeoReading`'s verdict: "up" where its interval lies above 0, "down" where it lies below
+and "inconclusive" where it holds 0."""
 type _Gaps = Callable[[_Array, _Array, int, int], _Array]
 
 _ENUMERATED = 100_000  # the most assignments a randomisation reading enumerates

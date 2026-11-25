@@ -59,6 +59,7 @@ class WeibullCdf:
 
 
 type Adstock = Geometric | WeibullCdf
+"""A carryover kernel: geometric (`Geometric`) or a Weibull survival (`WeibullCdf`)."""
 
 
 @dataclass(frozen=True, slots=True)

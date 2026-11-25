@@ -57,6 +57,8 @@ _HALF = 1e-12
 to be averaged, as `np.median` averages an even count's middle two."""
 
 Recommendation = Literal["flighted", "continuous"]
+"""What a `FlightPlan` recommends: its schedule, `"flighted"`, or the best rate in every period,
+`"continuous"`."""
 
 
 @dataclass(frozen=True, slots=True, eq=False)

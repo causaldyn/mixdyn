@@ -65,6 +65,7 @@ if TYPE_CHECKING:
 
 type _Array = npt.NDArray[np.float64]
 type Goal = ReturnTarget | MarginalReturnTarget | ReturnOnSpendTarget
+"""A goal `plan_geos` meets in place of a budget, one of `chc.allocation`'s."""
 
 GRID_POINTS = 401
 """The spends `plan_mixture` reads each cell's slope at, evenly over its box."""

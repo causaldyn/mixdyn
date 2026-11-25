@@ -5,6 +5,16 @@ Each release's changes. A release's notes on GitHub are its section here, extrac
 before 1.0 a minor release may change the public surface, and a patch release never removes or
 changes a public name.
 
+## [Unreleased]
+
+### Changed
+
+- **Every public name is documented.** The names `tests/test_public_names.py` listed as not
+  documented yet carry a docstring or the string after their alias: `dumps` and `loads`,
+  `CheckCode`, `Geo`, and the aliases `ColumnData`, `KpiUnit`, `Goal`, `Recommendation`, `Cost`,
+  `Update`, `Verdict`, `When`, `Adstock` and `Shape`. The test's list of pending names is gone: a
+  public name without documentation fails it.
+
 ## [0.3.0] — 2026-11-25
 
 The rules the benchmark scored are public planners: `plan_margins`, `plan_anchored_margins` and
