@@ -43,7 +43,7 @@ def test_the_second_stage_reads_the_higher_weighted_family_s_curves_at_discount_
         assert sampler == bayes.SAMPLER
         return fits
 
-    def stacked(given, *, draws):
+    def stacked_readings(given, *, draws):
         assert given == list(fits.values())
         assert draws == bayes.DRAWS
         return SimpleNamespace(stacking=np.array(weights))
@@ -57,7 +57,7 @@ def test_the_second_stage_reads_the_higher_weighted_family_s_curves_at_discount_
         raise Chosen
 
     monkeypatch.setattr(bayes, "family_fits", family_fits)
-    monkeypatch.setattr(dlm, "stacked", stacked)
+    monkeypatch.setattr(dlm, "stacked_readings", stacked_readings)
     monkeypatch.setattr(dlm, "transforms_from_bayes", from_bayes)
     monkeypatch.setattr(dlm, "choose_dlm", choose)
     with pytest.raises(Chosen):
@@ -96,7 +96,7 @@ def test_the_lift_row_pick_s_first_stage_reads_the_family_the_lift_rows_pick(
     fits = {name: object() for name in bayes.FAMILIES}
     handed = {}
 
-    def lift_row_pick(given):
+    def pick_by_lift_tests(given):
         assert given == list(fits.values())
         return None if picked is None else np.array(picked)
 
@@ -106,9 +106,11 @@ def test_the_lift_row_pick_s_first_stage_reads_the_family_the_lift_rows_pick(
 
     monkeypatch.setattr(bayes, "family_fits", lambda seen, sampler: fits)
     monkeypatch.setattr(
-        dlm, "stacked", lambda given, *, draws: SimpleNamespace(stacking=np.array([0.8, 0.2]))
+        dlm,
+        "stacked_readings",
+        lambda given, *, draws: SimpleNamespace(stacking=np.array([0.8, 0.2])),
     )
-    monkeypatch.setattr(dlm, "lift_row_pick", lift_row_pick)
+    monkeypatch.setattr(dlm, "pick_by_lift_tests", pick_by_lift_tests)
     monkeypatch.setattr(dlm, "transforms_from_bayes", from_bayes)
     with pytest.raises(Chosen):
         dlm.DlmTwoStageLiftPick().fit(observation, smoke=False)

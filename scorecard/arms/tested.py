@@ -11,7 +11,7 @@ channel. A candidate (`Candidate`) states three settings, each by default the `b
 
 * `rule`, how the two families' fits are weighed: `"stacking"`, by stacking over every
   observation the fits read; or `"lift rows"`, the whole weight on the family whose leave-one-out
-  density of the lift rows is the larger (`mixdyn.decisions.lift_row_pick`), by stacking where
+  density of the lift rows is the larger (`mixdyn.decisions.pick_by_lift_tests`), by stacking where
   the export holds no test;
 * `slope`, the Hill's slope prior's location and scale (`mixdyn.models.bayes_mmm.HillCurve`);
 * `kernel`, the kernels' length in weeks (`mixdyn.models.bayes_mmm.BayesSpec.kernel`), None the
@@ -38,7 +38,7 @@ import time
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Literal
 
-from mixdyn.decisions import lift_row_pick, stacked
+from mixdyn.decisions import pick_by_lift_tests, stacked_readings
 from mixdyn.inference import loo
 from mixdyn.models.bayes_mmm import HillCurve, TanhCurve
 from scorecard.arms import bayes
@@ -173,10 +173,10 @@ class Tested:
         candidate = self.candidates[variant]
         read = candidate.fits()
         pair = {family: fit.fits[f] for family, f in read.items()}
-        picked = lift_row_pick(list(pair.values())) if candidate.rule == "lift rows" else None
+        picked = pick_by_lift_tests(list(pair.values())) if candidate.rule == "lift rows" else None
         made = bayes.fitted(observation, pair, fit.sampler, given=picked)
         planned = bayes.Bayes().plan(made, bayes.RESPONDS, observation)
-        stacking = stacked(list(pair.values()), draws=1).stacking
+        stacking = stacked_readings(list(pair.values()), draws=1).stacking
         flags = dict(planned.flags) | {"stacking hill weight": float(stacking[0])}
         flags |= {f"{family} lift-row elpd": value for family, value in _lift_rows(pair).items()}
         settings = dict(planned.settings) | {

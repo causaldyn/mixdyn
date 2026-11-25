@@ -2,11 +2,11 @@
 
 A posterior reaches the planner as `Readings`: each channel's retention, half-saturation point,
 Hill slope and coefficient at each draw, as `BayesFit.draws` holds them, and each draw's weight.
-`readings` reads one fit. `stacked` reads several fits of one panel's geo as the mixture of their
-predictive distributions that stacking (Yao, Vehtari, Simpson and Gelman 2018) weights by their
-leave-one-out log predictive densities: each fit's weight spread evenly over its draws. Or it
-reads weights given, as `lift_row_pick` gives them: the whole weight on the fit that predicts the
-lift rows best, left out one at a time.
+`readings` reads one fit. `stacked_readings` reads several fits of one panel's geo as the mixture
+of their predictive distributions that stacking (Yao, Vehtari, Simpson and Gelman 2018) weights by
+their leave-one-out log predictive densities: each fit's weight spread evenly over its draws. Or it
+reads weights given, as `pick_by_lift_tests` gives them: the whole weight on the fit that predicts
+the lift rows best, left out one at a time.
 
 A channel's worth at a draw and a spend a period is what it returns over the plan's periods and the
 kernel's length after them, the history's carryover counted in, as `chc.allocation` reads a
@@ -380,7 +380,7 @@ def readings(fit: BayesFit, *, draws: int | None = None) -> Readings:
     return _read((fit,), np.ones(1), None, draws)
 
 
-def stacked(
+def stacked_readings(
     fits: Sequence[BayesFit],
     *,
     weights: npt.ArrayLike | None = None,
@@ -438,12 +438,12 @@ def stacked(
     return _read(fits, solved, pointwise, draws)
 
 
-def lift_row_pick(fits: Sequence[BayesFit]) -> _Array | None:
+def pick_by_lift_tests(fits: Sequence[BayesFit]) -> _Array | None:
     """Each fit's weight when the lift rows alone choose among `fits`: 1 on the fit whose
     leave-one-out log predictive density, by PSIS-LOO, summed over the observations past the
     KPI's, the geo tests' gaps, the lift estimates and the lift series, is the largest, the first
-    on a tie, and 0 on the others; None where the fits read no such observation. `stacked` reads
-    the weights as given.
+    on a tie, and 0 on the others; None where the fits read no such observation.
+    `stacked_readings` reads the weights as given.
 
     Stacking reads every observation, and over a long panel the KPI's periods outnumber the lift
     rows tenfold. The tests pin each channel's chord from no spend to the spend tested, and a

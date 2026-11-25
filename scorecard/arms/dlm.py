@@ -71,8 +71,8 @@ export, every lift row read (`scorecard.arms.bayes.family_fits`), stacked as tha
 each channel's transform is the higher-weighted family's posterior medians
 (`mixdyn.models.transforms_from_bayes`), the Hill's where the weights tie; or, where its `rule` is
 `"lift rows"`, the family whose leave-one-out density of the lift rows is the larger
-(`mixdyn.decisions.lift_row_pick`, ADR 0082), the higher-weighted where the export holds no test.
-`DlmTwoStageLiftPick`, `dlm two-stage, lift-row pick`, is that arm. Its second stage is the
+(`mixdyn.decisions.pick_by_lift_tests`, ADR 0082), the higher-weighted where the export holds no
+test. `DlmTwoStageLiftPick`, `dlm two-stage, lift-row pick`, is that arm. Its second stage is the
 DLM on those transforms, every effect's discount 1 and the trend's chosen on `TWO_STAGE_DISCOUNTS`
 by `mixdyn.models.choose_dlm`, the lift tests read in its likelihood and posterior as above. CHOICE:
 every effect's discount is 1, since a coefficient that walks lets its last week drift from what the
@@ -104,7 +104,7 @@ from chc.dlm import PosteriorDraws, decompose
 
 from mixdyn import NATIONAL
 from mixdyn.data import RecurringEvents, recurring_events
-from mixdyn.decisions import lift_row_pick, stacked
+from mixdyn.decisions import pick_by_lift_tests, stacked_readings
 from mixdyn.models import (
     DiscountGrid,
     DlmSpec,
@@ -385,10 +385,10 @@ class DlmTwoStage:
         sampler = bayes.SMOKE if smoke else bayes.SAMPLER
         fits = bayes.family_fits(observation, sampler)
         draws = min(bayes.DRAWS, sampler.chains * sampler.draws)
-        posterior = stacked(list(fits.values()), draws=draws)
+        posterior = stacked_readings(list(fits.values()), draws=draws)
         weights = dict(zip(bayes.FAMILIES, map(float, posterior.stacking), strict=True))
         family = max(weights, key=weights.__getitem__)
-        picked = lift_row_pick(list(fits.values())) if self.rule == "lift rows" else None
+        picked = pick_by_lift_tests(list(fits.values())) if self.rule == "lift rows" else None
         if picked is not None:
             family = list(fits)[int(picked.argmax())]
         transforms = transforms_from_bayes(fits[family])

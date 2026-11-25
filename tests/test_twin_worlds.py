@@ -14,7 +14,7 @@ from scipy import stats
 
 import twin_worlds as tw
 from mixdyn import NATIONAL, Channel, MediaPanel
-from mixdyn.decisions import Range, Readings, plan_posterior, readings, stacked
+from mixdyn.decisions import Range, Readings, plan_posterior, readings, stacked_readings
 from mixdyn.experiments import After, Candidate, GroupNoise, designs, predicted_lift, seesaw
 from mixdyn.models import DiscountGrid, DlmSpec, Effect, PerEffect, Trend, choose_dlm
 from mixdyn.models.bayes_mmm import BayesMedia, BayesSpec, HillCurve, TanhCurve, fit_bayes
@@ -120,7 +120,7 @@ def _engines(panel: MediaPanel) -> dict[str, float]:
         )
         out[name] = float(planned.spend[0])
     planned = plan_posterior(
-        panel, NATIONAL, stacked(fits), tw.BUDGET * tw.PERIODS, tw.PERIODS, LIMITS
+        panel, NATIONAL, stacked_readings(fits), tw.BUDGET * tw.PERIODS, tw.PERIODS, LIMITS
     )
     out["stacked"] = float(planned.spend[0])
     choice = choose_dlm(

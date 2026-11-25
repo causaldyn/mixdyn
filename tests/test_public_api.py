@@ -12,11 +12,14 @@ from __future__ import annotations
 import ast
 import importlib
 import inspect
+import re
 from collections import defaultdict
 from functools import cache
 from pathlib import Path
 from types import ModuleType
 from typing import TYPE_CHECKING
+
+import pytest
 
 from test_public_names import public
 
@@ -118,3 +121,23 @@ def test_the_check_finds_a_class_that_no_all_lists() -> None:
         "mixdyn.calibration.anchors:anchor": {"mixdyn.calibration.anchors:Anchored"}
     }
     assert leaks([*planner, (anchors, "Anchored")]) == {}
+
+
+@pytest.mark.parametrize(
+    ("old", "new"), [("stacked", "stacked_readings"), ("lift_row_pick", "pick_by_lift_tests")]
+)
+def test_a_renamed_name_imports_until_the_release_it_leaves_in_and_warns(
+    old: str, new: str
+) -> None:
+    """A renamed public name still imports for one release, and using it warns with its
+    replacement and the release it leaves in (ADR 0062)."""
+    decisions = importlib.import_module("mixdyn.decisions")
+    said = re.escape(
+        f"mixdyn.decisions.{old} is renamed mixdyn.decisions.{new}; the old name leaves in 1.0.0"
+    )
+    with pytest.warns(DeprecationWarning, match=said):
+        found = getattr(decisions, old)
+    assert found is getattr(decisions, new)
+    assert old not in decisions.__all__
+    with pytest.raises(AttributeError, match="no attribute 'stacking'"):
+        decisions.stacking  # noqa: B018

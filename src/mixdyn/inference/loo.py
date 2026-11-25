@@ -25,9 +25,9 @@ effective sample falls to a few per cent of the draws.
 **Stacking.** The weights on the simplex that maximise ``sum_i log sum_k w_k p_k(y_i | y_-i)``. The
 problem is a log-optimal portfolio's, and Cover's (1984) multiplicative iteration solves it: it
 stops once its certificate puts the mean of the observations' logs within ``1e-12`` of its optimum.
-Two models' problem is one-dimensional and concave, and `mixdyn.decisions.stacked` solves it by
-bisection on the objective's slope instead, which ends where Cover's certificate holds and always
-ends.
+Two models' problem is one-dimensional and concave, and `mixdyn.decisions.stacked_readings` solves
+it by bisection on the objective's slope instead, which ends where Cover's certificate holds and
+always ends.
 """
 
 from __future__ import annotations

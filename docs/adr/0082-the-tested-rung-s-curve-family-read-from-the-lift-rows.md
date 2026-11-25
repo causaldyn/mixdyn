@@ -1,9 +1,10 @@
 # 0082. The tested rung's curve family read from the lift rows
 
 Status: proposed, 2026-11-16. The number may move when the M3 branches are integrated. Adds
-three opt-in settings, each off by default: `mixdyn.decisions.lift_row_pick`, a Hill's slope prior
-on `HillCurve`, and a kernel's length on `BayesSpec`; and the scorecard's arms that read them,
-`bayes-concave` and `bayes-lift-pick`, and `dlm-two-stage-lift-pick`. No default changes.
+three opt-in settings, each off by default: `mixdyn.decisions.pick_by_lift_tests` (named
+`lift_row_pick` until 0.3.0), a Hill's slope prior on `HillCurve`, and a kernel's length on
+`BayesSpec`; and the scorecard's arms that read them, `bayes-concave` and `bayes-lift-pick`, and
+`dlm-two-stage-lift-pick`. No default changes.
 
 ## Context
 

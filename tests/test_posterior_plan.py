@@ -37,12 +37,12 @@ from mixdyn import NATIONAL, Cadence, Channel, MediaPanel, Revenue
 from mixdyn.decisions import (
     Range,
     Readings,
-    lift_row_pick,
+    pick_by_lift_tests,
     plan_cvar,
     plan_posterior,
     posterior,
     readings,
-    stacked,
+    stacked_readings,
     worths,
 )
 from mixdyn.decisions.posterior import _alike, _allocated, _fill, _rates
@@ -128,7 +128,7 @@ def _fit(world: dict[str, Any], family: str, log_likelihood: np.ndarray | None =
 def _bench_readings(world: dict[str, Any], arm: str) -> Readings:
     if arm == "stacked":
         weights = [world["stacking"][f] for f in FAMILIES]
-        return stacked([_fit(world, f) for f in FAMILIES], weights=weights)
+        return stacked_readings([_fit(world, f) for f in FAMILIES], weights=weights)
     return readings(_fit(world, arm))
 
 
@@ -439,7 +439,7 @@ def test_a_boxs_fill_bounds_every_split_in_the_box(
 
 def test_the_gains_are_the_draws_mean_gains_against_nothing_in_the_plan() -> None:
     world = WORLDS[1]
-    both = stacked([_fit(world, f) for f in FAMILIES], weights=[0.4, 0.6], draws=7)
+    both = stacked_readings([_fit(world, f) for f in FAMILIES], weights=[0.4, 0.6], draws=7)
     history = np.array(world["history"])
     plan = plan_posterior(
         _panel(world), NATIONAL, both, world["budget"], PERIODS, _limits(world), grid=256
@@ -564,20 +564,20 @@ def test_stacked_solves_the_weights_from_the_fits_leave_one_out_densities() -> N
         for family, centre, seed in (("hill", 0.0, 1), ("tanh", 0.6, 2), ("hill", 0.3, 3))
     ]
     pointwise = np.stack([loo(f.log_likelihood).pointwise for f in fits])
-    one, two, three = stacked(fits[:1]), stacked(fits[:2]), stacked(fits)
+    one, two, three = stacked_readings(fits[:1]), stacked_readings(fits[:2]), stacked_readings(fits)
     np.testing.assert_array_equal(one.stacking, [1.0])
     np.testing.assert_array_equal(two.stacking, _stacking_of_two(pointwise[:2]))
     np.testing.assert_array_equal(three.stacking, stacking(pointwise))
     assert 0.0 < two.stacking[0] < 1.0
     np.testing.assert_array_equal(two.pointwise, pointwise[:2])
-    assert stacked(fits[:2], weights=[0.5, 0.5]).pointwise is None
+    assert stacked_readings(fits[:2], weights=[0.5, 0.5]).pointwise is None
     assert readings(fits[0]).pointwise is None
 
 
 def test_readings_keep_each_fits_draws_evenly_over_its_chains_and_share_its_weight() -> None:
     world = WORLDS[1]
     hill, tanh = (_fit(world, f) for f in FAMILIES)
-    both = stacked([hill, tanh], weights=[0.25, 0.75], draws=10)
+    both = stacked_readings([hill, tanh], weights=[0.25, 0.75], draws=10)
     keep = np.linspace(0, 399, 10).round().astype(np.intp)
     np.testing.assert_array_equal(both.fit, np.repeat([0, 1], 10))
     np.testing.assert_array_equal(both.chain, np.tile(keep // 100, 2))
@@ -671,26 +671,26 @@ def test_stacked_refuses_fits_of_different_panels_and_weights_not_one_a_fit() ->
     hill = _fit(world, "hill")
     other = _fit(WORLDS[1], "tanh")
     with pytest.raises(ValueError, match="at least one fit"):
-        stacked([])
+        stacked_readings([])
     with pytest.raises(ValueError, match=r"fits \[1\] differ"):
-        stacked([hill, other], weights=[0.5, 0.5])
+        stacked_readings([hill, other], weights=[0.5, 0.5])
     shorter = _fit(world, "tanh")
     object.__setattr__(shorter, "length", hill.length - 1)
     with pytest.raises(ValueError, match=r"fits \[1\] differ"):
-        stacked([hill, shorter], weights=[0.5, 0.5])
+        stacked_readings([hill, shorter], weights=[0.5, 0.5])
     observed = _fit(world, "tanh", np.zeros((4, 100, 3)))
     with pytest.raises(ValueError, match=r"fits \[1\] differ"):
-        stacked([hill, observed], weights=[0.5, 0.5])
+        stacked_readings([hill, observed], weights=[0.5, 0.5])
     later = _fit(world, "tanh")
     object.__setattr__(later, "dates", later.dates + np.timedelta64(7, "D"))
     with pytest.raises(ValueError, match=r"fits \[1\] differ"):
-        stacked([hill, later], weights=[0.5, 0.5])
+        stacked_readings([hill, later], weights=[0.5, 0.5])
     unfitted = _fit(world, "tanh")
     object.__setattr__(unfitted, "fitted", np.concatenate([[False], unfitted.fitted[1:]]))
     with pytest.raises(ValueError, match=r"fits \[1\] differ"):
-        stacked([hill, unfitted], weights=[0.5, 0.5])
+        stacked_readings([hill, unfitted], weights=[0.5, 0.5])
     with pytest.raises(ValueError, match=r"weights must be one a fit, \(2,\)"):
-        stacked([hill, _fit(world, "tanh")], weights=[1.0])
+        stacked_readings([hill, _fit(world, "tanh")], weights=[1.0])
 
 
 def test_the_current_spend_is_the_mean_over_the_windows_observed_periods() -> None:
@@ -1023,24 +1023,24 @@ def test_the_lift_rows_pick_the_family_that_reads_them_best_whatever_the_weeks_s
     """The Hill reads the weeks better and the lift rows worse: stacking leans to it, the pick
     takes the `tanh`, and the other way round."""
     hill, tanh = _lifted_fit("hill", 0.3, 1.5, 1), _lifted_fit("tanh", 1.0, 0.3, 2)
-    assert stacked([hill, tanh], draws=1).stacking[0] > 0.5
-    np.testing.assert_array_equal(lift_row_pick([hill, tanh]), [0.0, 1.0])
+    assert stacked_readings([hill, tanh], draws=1).stacking[0] > 0.5
+    np.testing.assert_array_equal(pick_by_lift_tests([hill, tanh]), [0.0, 1.0])
     hill, tanh = _lifted_fit("hill", 1.0, 0.3, 1), _lifted_fit("tanh", 0.3, 1.5, 2)
-    assert stacked([hill, tanh], draws=1).stacking[1] > 0.5
-    np.testing.assert_array_equal(lift_row_pick([hill, tanh]), [1.0, 0.0])
+    assert stacked_readings([hill, tanh], draws=1).stacking[1] > 0.5
+    np.testing.assert_array_equal(pick_by_lift_tests([hill, tanh]), [1.0, 0.0])
 
 
 def test_the_pick_is_the_lift_rows_leave_one_out_density_and_the_first_on_a_tie() -> None:
     fits = [_lifted_fit("hill", 0.3, 0.6, 1), _lifted_fit("tanh", 0.3, 0.5, 2)]
     weeks = len(WORLDS[0]["sales"])
     elpd = [loo(f.log_likelihood[:, :, weeks:]).elpd for f in fits]
-    np.testing.assert_array_equal(lift_row_pick(fits), np.eye(2)[int(np.argmax(elpd))])
-    np.testing.assert_array_equal(lift_row_pick([fits[1], fits[1]]), [1.0, 0.0])
+    np.testing.assert_array_equal(pick_by_lift_tests(fits), np.eye(2)[int(np.argmax(elpd))])
+    np.testing.assert_array_equal(pick_by_lift_tests([fits[1], fits[1]]), [1.0, 0.0])
 
 
 def test_fits_that_read_no_lift_row_are_left_to_stacking() -> None:
     fits = [_lifted_fit(f, 0.3, 0.3, k, rows=0) for k, f in enumerate(FAMILIES)]
-    assert lift_row_pick(fits) is None
+    assert pick_by_lift_tests(fits) is None
 
 
 @pytest.mark.parametrize(
@@ -1055,4 +1055,4 @@ def test_fits_that_read_no_lift_row_are_left_to_stacking() -> None:
 )
 def test_a_pick_refuses_what_it_cannot_read(fits, match: str) -> None:
     with pytest.raises(ValueError, match=match):
-        lift_row_pick(fits())
+        pick_by_lift_tests(fits())

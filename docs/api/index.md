@@ -245,10 +245,6 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `GeoLimits`: What a plan may spend, by name.
 - `GeoPlan`: A plan of every geo's channels, and the current spend it changes.
 - `Goal`
-- `lift_row_pick`: Each fit's weight when the lift rows alone choose among `fits`: 1 on the fit
-  whose leave-one-out log predictive density, by PSIS-LOO, summed over the observations past the
-  KPI's, the geo tests' gaps, the lift estimates and the lift series, is the largest, the first on a
-  tie, and 0 on the others; None where the fits read no such observation.
 - `MarginalReturnTarget`: The budget at which one more currency unit returns ``per_unit``: below it
   a unit returns more, past it less.
 - `MarginPlan`: A plan of one national history's channels by a margin rule (`plan_margins`,
@@ -260,6 +256,10 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `move_between_geos`: `plan`, each geo's spend by channel, with `amount` of `channel`'s spend moved
   from `from_geo`'s cell to `to_geo`'s, at each period where the cells are series; every other cell
   as it was.
+- `pick_by_lift_tests`: Each fit's weight when the lift rows alone choose among `fits`: 1 on the fit
+  whose leave-one-out log predictive density, by PSIS-LOO, summed over the observations past the
+  KPI's, the geo tests' gaps, the lift estimates and the lift series, is the largest, the first on a
+  tie, and 0 on the others; None where the fits read no such observation.
 - `plan_anchored_margins`: The plan of the panel's channels over `periods` weeks that spends
   `budget` over them within `limits`, each channel's range a week, by the margin rule anchored on
   each channel's lift tests, `estimates` by channel.
@@ -331,10 +331,10 @@ methods and the rest are in its docstring. Decisions the names rest on are in `d
 - `Spread`: A quantity over a posterior's draws: `draws`, `(draws, ...)`, each draw's value; `mean`
   their mean by the draws' weights; `low` and `high` their weighted quantiles at `(1 - level) / 2`
   and `(1 + level) / 2`, each `(...)`.
-- `stacked`: The fits' stacked posterior as a planner reads it: each fit's weight, `weights` or else
-  stacking's on the fits' leave-one-out log predictive densities of the observations their
-  likelihoods read, spread evenly over `draws` of its draws, evenly spaced over its chains, or over
-  every draw.
+- `stacked_readings`: The fits' stacked posterior as a planner reads it: each fit's weight,
+  `weights` or else stacking's on the fits' leave-one-out log predictive densities of the
+  observations their likelihoods read, spread evenly over `draws` of its draws, evenly spaced over
+  its chains, or over every draw.
 - `Undefined`: A cost with no value, and why.
 - `Worths`: Each draw's worth of each channel at spends a period across its range: `rates`,
   `(channels, grid)`, the spends, and `table`, `(draws, channels, grid)`, the worths, the channels

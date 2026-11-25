@@ -7,11 +7,11 @@ promotion's coefficient held at or above 0 and every other control free; a trend
 yearly season of 3 harmonics; normal noise; Meridian's default prior on each channel's return; four
 chains of 1000 draws after 1000 of warm-up, from a child of the export's seed, whose own stream drew
 the world. The two fits are stacked by the weights of their leave-one-out densities at every
-observation their likelihoods read (`mixdyn.decisions.stacked`). This is the engine's static model
-as Track M v2's harnesses scored it, and either fit failing fails every variant. On a geo export
-the harness hands the arm the export's market (`scorecard.arms.panel.market`, ADR 0043): it fits
-the geos' sums, reads each test in its geos' share of the market, and plans one weekly spend a
-channel.
+observation their likelihoods read (`mixdyn.decisions.stacked_readings`). This is the engine's
+static model as Track M v2's harnesses scored it, and either fit failing fails every variant. On a
+geo export the harness hands the arm the export's market (`scorecard.arms.panel.market`, ADR
+0043): it fits the geos' sums, reads each test in its geos' share of the market, and plans one
+weekly spend a channel.
 
 The variants:
 
@@ -60,7 +60,7 @@ import numpy as np
 from chc.allocation import cvar_allocate
 
 from mixdyn import NATIONAL, Channel
-from mixdyn.decisions import Range, plan_posterior, stacked
+from mixdyn.decisions import Range, plan_posterior, stacked_readings
 from mixdyn.inference import loo
 from mixdyn.inference.diagnostics import health
 from mixdyn.models.bayes_mmm import (
@@ -261,11 +261,11 @@ def fitted(
     """The arm's fit of `observation` from its two families' `fits`, `family_fits`' of it by
     `sampler`, in `FAMILIES`' order: their stacked posterior and what a record keeps of it; see
     the module. With `given`, one weight a family, the posterior weighs the families by them, not
-    by stacking (`mixdyn.decisions.stacked`)."""
+    by stacking (`mixdyn.decisions.stacked_readings`)."""
     data = reading.panel(observation)
     tests = reading.estimates(observation)
     draws = min(DRAWS, sampler.chains * sampler.draws)
-    posterior = stacked(list(fits.values()), weights=given, draws=draws)
+    posterior = stacked_readings(list(fits.values()), weights=given, draws=draws)
     weights = dict(zip(FAMILIES, map(float, posterior.stacking), strict=True))
     counts = shares(weights["hill"], draws)
     readings, roi = [], []

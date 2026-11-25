@@ -78,7 +78,7 @@ def test_a_candidate_weighs_its_two_fits_by_its_rule(
     _fits(monkeypatch)
     picked, handed = np.array([0.0, 1.0]), {}
 
-    def lift_row_pick(fits):
+    def pick_by_lift_tests(fits):
         handed["picked from"] = [f.drawn for f in fits]
         return picked
 
@@ -86,7 +86,7 @@ def test_a_candidate_weighs_its_two_fits_by_its_rule(
         handed.update(fits=fits, sampler=sampler, weights=given)
         raise Planning
 
-    monkeypatch.setattr(tested, "lift_row_pick", lift_row_pick)
+    monkeypatch.setattr(tested, "pick_by_lift_tests", pick_by_lift_tests)
     monkeypatch.setattr(bayes, "fitted", fitted)
     arm = tested.Tested((candidate,))
     with pytest.raises(Planning):
@@ -120,8 +120,8 @@ def test_a_candidate_plans_as_stacked_and_records_its_settings(
         assert observation is OBSERVATION
         return planned
 
-    monkeypatch.setattr(tested, "lift_row_pick", lambda fits: np.array([0.0, 1.0]))
-    monkeypatch.setattr(tested, "stacked", lambda fits, *, draws: posterior)
+    monkeypatch.setattr(tested, "pick_by_lift_tests", lambda fits: np.array([0.0, 1.0]))
+    monkeypatch.setattr(tested, "stacked_readings", lambda fits, *, draws: posterior)
     monkeypatch.setattr(tested, "_lift_rows", lambda fits: {"hill": -91.0, "tanh": -89.5})
     monkeypatch.setattr(bayes, "fitted", lambda *args, **kwargs: made)
     monkeypatch.setattr(bayes.Bayes, "plan", plan)
@@ -177,7 +177,7 @@ def test_the_concave_arm_plans_both_its_variants_from_one_draw_of_its_two_fits(
     and each hands the posterior its own rule's weights."""
     calls = _fits(monkeypatch)
     picked, handed = np.array([0.0, 1.0]), []
-    monkeypatch.setattr(tested, "lift_row_pick", lambda fits: picked)
+    monkeypatch.setattr(tested, "pick_by_lift_tests", lambda fits: picked)
 
     def fitted(observation, fits, sampler, *, given=None):
         handed.append(([f.drawn for f in fits.values()], given))

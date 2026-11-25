@@ -4,6 +4,8 @@ over effects off by a common factor, and the factor that erases a plan's gain; a
 table of channels, spend scenarios compared with their carry-out, and a flighted schedule scored at
 every draw."""
 
+import warnings
+
 from chc.allocation import MarginalReturnTarget, ReturnOnSpendTarget, ReturnTarget
 
 from mixdyn.decisions.flighting import FlightPlan, Recommendation, plan_flighting
@@ -17,13 +19,13 @@ from mixdyn.decisions.posterior import (
     RobustPlan,
     Worths,
     breakdown,
-    lift_row_pick,
+    pick_by_lift_tests,
     plan_breakdown,
     plan_cvar,
     plan_posterior,
     plan_robust,
     readings,
-    stacked,
+    stacked_readings,
     worths,
 )
 from mixdyn.decisions.returns import Costs, Returns, Undefined, costs, portfolio_roi, returns
@@ -73,9 +75,9 @@ __all__ = [
     "breakdown",
     "compare_scenarios",
     "costs",
-    "lift_row_pick",
     "media_difference",
     "move_between_geos",
+    "pick_by_lift_tests",
     "plan_anchored_margins",
     "plan_breakdown",
     "plan_cvar",
@@ -91,6 +93,27 @@ __all__ = [
     "readings",
     "response_curves",
     "returns",
-    "stacked",
+    "stacked_readings",
     "worths",
 ]
+
+_DEPRECATED = {
+    "lift_row_pick": ("pick_by_lift_tests", "1.0.0"),
+    "stacked": ("stacked_readings", "1.0.0"),
+}
+"""Each name that is leaving the package, with the name that replaces it and the release it leaves
+in. It still imports until then, with a `DeprecationWarning`."""
+
+
+def __getattr__(name: str) -> object:
+    if name in _DEPRECATED:
+        replacement, leaves = _DEPRECATED[name]
+        warnings.warn(
+            f"mixdyn.decisions.{name} is renamed mixdyn.decisions.{replacement}; the old name"
+            f" leaves in {leaves}",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return globals()[replacement]
+    msg = f"module {__name__!r} has no attribute {name!r}"
+    raise AttributeError(msg)

@@ -12,8 +12,8 @@ errors alone, never in their readings.
 
 1. *Before*: the static arm's two fits of the export with the tests before in their likelihoods
    (`scorecard.arms.bayes.family_fits`, `scorecard.arms.bayes.fitted`), stacked over every draw
-   (`mixdyn.decisions.stacked`), their leave-one-out densities kept, so that a test's reading can
-   solve the weights again.
+   (`mixdyn.decisions.stacked_readings`), their leave-one-out densities kept, so that a test's
+   reading can solve the weights again.
 2. *Values*: `mixdyn.experiments.value_of_tests` reads each candidate's expected regret reduction
    for the plan of the quarter, its interval and the expected value of perfect information over
    `OUTER` outer draws, each outer draw's posterior the other chains' draws reweighted by the test's
@@ -84,7 +84,7 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 
 from mixdyn import NATIONAL, Channel
-from mixdyn.decisions import Range, stacked
+from mixdyn.decisions import Range, stacked_readings
 from mixdyn.experiments import Candidate, choose_tests, predicted_lift, value_of_tests
 from scorecard.arms import bayes
 from scorecard.arms import panel as reading
@@ -134,7 +134,9 @@ class Posterior:
 def posterior(observation: Observation, sampler: bayes.Sampler) -> Posterior:
     """The static arm's fit of `observation` by `sampler`, every lift row it holds read."""
     fits = bayes.family_fits(observation, sampler)
-    return Posterior(stacked(list(fits.values())), bayes.fitted(observation, fits, sampler))
+    return Posterior(
+        stacked_readings(list(fits.values())), bayes.fitted(observation, fits, sampler)
+    )
 
 
 @dataclass(frozen=True, slots=True, eq=False)
