@@ -47,7 +47,7 @@ wheels = [
 
 [[package]]
 name = "causal-hybrid-control"
-version = "1.5.0"
+version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "diffrax" },
@@ -57,9 +57,9 @@ dependencies = [
     { name = "optax" },
     { name = "scipy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/73/4c/7cfd02be02586138298fa457573a51f71d422e0c45a9914d03878ae799fe/causal_hybrid_control-1.5.0.tar.gz", hash = "sha256:1e2df6698783425cd1f28d8ad7f47ca501bcab4d29b4edeff7db0e9d233d8020", size = 5349659, upload-time = "2026-11-25T09:49:09.566Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8f/77/394587b544e27602729bbd7f4e39fbea143ac30f20e26a4d133e1ec4580c/causal_hybrid_control-1.6.0.tar.gz", hash = "sha256:b8ebf91e2f466874f46bb7848dbe56e1e09c0556a502c53e94bbc6f9074294fd", size = 5374938, upload-time = "2026-11-26T10:18:03.247Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/63/4e/13748f2ef9ced3d60acda8b8e09f92db4470f4b415085f8692a540b86a02/causal_hybrid_control-1.5.0-py3-none-any.whl", hash = "sha256:0ec387348da30d339ddd0511ea973203132d0f4e2296017fb213018710b9b99f", size = 1096756, upload-time = "2026-11-25T09:49:07.985Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/7c/1f73ec87ce9ebee58ab27b09d1d376d9447918bbe7312e0143850d1e2ca3/causal_hybrid_control-1.6.0-py3-none-any.whl", hash = "sha256:a448292d381916bea7bd185b717422f1d3ec4af44a234adf0697379d5a517b59", size = 1107874, upload-time = "2026-11-26T10:18:01.639Z" },
 ]
 
 [[package]]
